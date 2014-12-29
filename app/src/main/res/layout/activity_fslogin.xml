@@ -5,7 +5,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="org.finlayfamily.littlefamily.activities.FSLoginActivity">
+    tools:context="org.finlayfamily.littlefamily.activities.FSLoginActivity"
+    android:weightSum="1">
 
     <!-- Login progress -->
     <ProgressBar android:id="@+id/login_progress" style="?android:attr/progressBarStyleLarge"
@@ -20,7 +21,9 @@
         android:layout_marginBottom="10dp" />
 
     <ScrollView android:id="@+id/login_form" android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="184dp"
+        android:fillViewport="false"
+        android:layout_weight="0.09">
 
         <LinearLayout android:id="@+id/email_login_form" android:layout_width="match_parent"
             android:layout_height="wrap_content" android:orientation="vertical">
@@ -44,6 +47,22 @@
 
         </LinearLayout>
     </ScrollView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="84dp"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/agreements_text"
+        android:id="@+id/AgreementsTextView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/agreements_text2"
+        android:id="@+id/AgreementsTextView2"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.18" />
 
 </LinearLayout>
 
