@@ -64,6 +64,14 @@
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.18" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/privacy_text"
+        android:id="@+id/PrivacyTextView"
+        android:layout_gravity="center_horizontal" />
+
 </LinearLayout>
 
 
