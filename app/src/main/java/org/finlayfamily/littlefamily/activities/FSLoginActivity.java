@@ -44,6 +44,8 @@ public class FSLoginActivity extends Activity implements LoaderCallbacks<RESTRes
     protected static final String SESSION_ID = "sessionid";
     private static final String FS_IDENTITY_PATH = "https://sandbox.familysearch.org/identity/v2/login";
     private static final String FS_APP_KEY = "a0T3000000BM5hcEAD";
+    private static final String FS_DEFAULT_USER = "tum000205905";
+    private static final String FS_DEFAULT_PASS = "1234pass";
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -58,8 +60,10 @@ public class FSLoginActivity extends Activity implements LoaderCallbacks<RESTRes
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        mEmailView.setText(FS_DEFAULT_USER);
 
         mPasswordView = (EditText) findViewById(R.id.password);
+        mPasswordView.setText(FS_DEFAULT_PASS);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -127,16 +131,10 @@ public class FSLoginActivity extends Activity implements LoaderCallbacks<RESTRes
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            String devKey = (String) getIntent().getSerializableExtra( FS_APP_KEY );
-            if (devKey == null || devKey.length() == 0) {
-                Toast.makeText(this, "Dev Key not set.", Toast.LENGTH_LONG).show();
-                return;
-            }
-            String identityUrl = (String) getIntent().getSerializableExtra( FS_IDENTITY_PATH );
-            Uri uri = Uri.parse(identityUrl);
+            Uri uri = Uri.parse(FS_IDENTITY_PATH);
 
             Bundle params = new Bundle();
-            params.putString("key", devKey);
+            params.putString("key", FS_APP_KEY);
             Bundle headers = new Bundle();
             headers.putString("Authorization", "Basic " + Base64.encodeToString( (username + ":" + password).getBytes(), Base64.NO_WRAP ));
 

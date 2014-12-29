@@ -21,9 +21,8 @@
         android:layout_marginBottom="10dp" />
 
     <ScrollView android:id="@+id/login_form" android:layout_width="match_parent"
-        android:layout_height="184dp"
-        android:fillViewport="false"
-        android:layout_weight="0.09">
+        android:layout_height="match_parent"
+        android:fillViewport="false">
 
         <LinearLayout android:id="@+id/email_login_form" android:layout_width="match_parent"
             android:layout_height="wrap_content" android:orientation="vertical">
@@ -45,32 +44,34 @@
                 android:layout_marginTop="16dp" android:text="@string/action_sign_in_short"
                 android:textStyle="bold" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/agreements_text"
+                android:id="@+id/AgreementsTextView"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/agreements_text2"
+                android:id="@+id/AgreementsTextView2"
+                android:layout_weight="0.18"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/privacy_text"
+                android:id="@+id/PrivacyTextView" />
+
         </LinearLayout>
     </ScrollView>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="84dp"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/agreements_text"
-        android:id="@+id/AgreementsTextView" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/agreements_text2"
-        android:id="@+id/AgreementsTextView2"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="0.18" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/privacy_text"
-        android:id="@+id/PrivacyTextView"
-        android:layout_gravity="center_horizontal" />
 
 </LinearLayout>
 
