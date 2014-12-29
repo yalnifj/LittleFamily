@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Little Family</string>
+    <string name="prompt_fsusername">FamilySearch Username</string>
+</resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/LittleFamily.iml" filepath="$PROJECT_DIR$/LittleFamily.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fs-android/fs-android.iml" filepath="$PROJECT_DIR$/fs-android/fs-android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/littlefamily.iml" filepath="$PROJECT_DIR$/app/littlefamily.iml" />
+    </modules>
+  </component>
+</project>
+
