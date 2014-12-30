@@ -22,6 +22,7 @@ import org.apache.http.util.EntityUtils;
 import org.familysearch.identity.Identity;
 import org.gedcomx.Gedcomx;
 import org.gedcomx.conclusion.Person;
+import org.gedcomx.conclusion.Relationship;
 import org.gedcomx.rt.GedcomxSerializer;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
@@ -51,7 +52,7 @@ public class FamilySearchService {
 
     private String sessionId = null;
     private Person currentPerson = null;
-    private List<Person> closeRelatives = null;
+    private List<Relationship> closeRelatives = null;
     private Map<String, Person> personCache;
 
     private static FamilySearchService ourInstance = new FamilySearchService();
@@ -64,7 +65,7 @@ public class FamilySearchService {
         personCache = new HashMap<>();
     }
 
-    public boolean authenticate(String username, String password) throws FamilySearchException {
+    public FSResult authenticate(String username, String password) throws FamilySearchException {
         Uri action = Uri.parse(FS_IDENTITY_PATH);
 
         Bundle params = new Bundle();
@@ -72,21 +73,20 @@ public class FamilySearchService {
         Bundle headers = new Bundle();
         headers.putString("Authorization", "Basic " + Base64.encodeToString((username + ":" + password).getBytes(), Base64.NO_WRAP));
 
-        String result = getRestData(METHOD_GET, action, params, headers);
-        if (result!=null && !result.isEmpty()) {
+        FSResult data = getRestData(METHOD_GET, action, params, headers);
+        if (data!=null && data.isSuccess()) {
             Serializer serializer = new Persister();
             try {
-                Identity session = serializer.read(Identity.class, result);
+                Identity session = serializer.read(Identity.class, data.getData());
                 this.sessionId = session.getSession().id;
                 Log.i( TAG, "session: " + sessionId );
-                return true;
             }
             catch (Exception e) {
                 Log.e( TAG, "error", e );
             }
         }
 
-        return false;
+        return data;
     }
 
     public String getSessionId() {
@@ -104,25 +104,55 @@ public class FamilySearchService {
             headers.putString("Accept", "application/x-gedcomx-v1+xml");
             Bundle params = new Bundle();
 
-            String result = getRestData(METHOD_GET, uri, params, headers);
-
-            Serializer serializer = GedcomxSerializer.create();
-            try {
-                Gedcomx doc = serializer.read( Gedcomx.class, result );
-                if (doc.getPersons() != null && doc.getPersons().size() > 0) {
-                    currentPerson = doc.getPersons().get( 0 );
-                    personCache.put(currentPerson.getId(), currentPerson);
-                    Log.i( TAG, "persons " + doc.getPersons().size() + ": " + currentPerson.getId() );
+            FSResult result = getRestData(METHOD_GET, uri, params, headers);
+            if (result!=null && result.isSuccess()) {
+                Serializer serializer = GedcomxSerializer.create();
+                try {
+                    Gedcomx doc = serializer.read(Gedcomx.class, result.getData());
+                    if (doc.getPersons() != null && doc.getPersons().size() > 0) {
+                        currentPerson = doc.getPersons().get(0);
+                        personCache.put(currentPerson.getId(), currentPerson);
+                        Log.i(TAG, "persons " + doc.getPersons().size() + ": " + currentPerson.getId());
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "error", e);
                 }
-            }
-            catch (Exception e) {
-                Log.e( TAG, "error", e );
             }
         }
         return currentPerson;
     }
 
-    public List<Person> getCloseRelatives() throws FamilySearchException {
+    public Person getPerson(String personId) throws FamilySearchException {
+        if (sessionId==null) {
+            throw new FamilySearchException("Not Authenticated with FamilySearch.", 0);
+        }
+        if (personCache.get(personId)==null) {
+            Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+personId);
+            Bundle headers = new Bundle();
+            headers.putString("Authorization", "Bearer " + sessionId);
+            headers.putString("Accept", "application/x-gedcomx-v1+xml");
+            Bundle params = new Bundle();
+
+            FSResult result = getRestData(METHOD_GET, uri, params, headers);
+            if (result!=null && result.isSuccess()) {
+                Serializer serializer = GedcomxSerializer.create();
+                try {
+                    Gedcomx doc = serializer.read(Gedcomx.class, result.getData());
+                    if (doc.getPersons() != null && doc.getPersons().size() > 0) {
+                        for(Person p : doc.getPersons()) {
+                            personCache.put(p.getId(), p);
+                        }
+                        Log.i(TAG, "persons " + doc.getPersons().size() + ": " + currentPerson.getId());
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "error", e);
+                }
+            }
+        }
+        return personCache.get(personId);
+    }
+
+    public List<Relationship> getCloseRelatives() throws FamilySearchException {
         if (sessionId==null) {
             throw new FamilySearchException("Not Authenticated with FamilySearch.", 0);
         }
@@ -139,17 +169,18 @@ public class FamilySearchService {
             Bundle params = new Bundle();
             params.putString("person", currentPerson.getId());
 
-            String result = getRestData(METHOD_GET, uri, params, headers);
+            FSResult result = getRestData(METHOD_GET, uri, params, headers);
 
             Serializer serializer = GedcomxSerializer.create();
             try {
-                Gedcomx doc = serializer.read( Gedcomx.class, result );
-                if (doc.getPersons() != null && doc.getPersons().size() > 0) {
-                    closeRelatives = new ArrayList<>(doc.getPersons());
-                    for(Person p : closeRelatives) {
-                        personCache.put(p.getId(), p);
+                Gedcomx doc = serializer.read( Gedcomx.class, result.getData() );
+                if (doc.getRelationships() != null && doc.getRelationships().size() > 0) {
+                    closeRelatives = new ArrayList<>(doc.getRelationships());
+                    for(Relationship r : closeRelatives) {
+                        getPerson(r.getPerson1().getResourceId());
+                        getPerson(r.getPerson2().getResourceId());
                     }
-                    Log.i( TAG, "persons " + doc.getPersons().size() );
+                    Log.i( TAG, "relationships " + doc.getRelationships().size() );
                 }
             }
             catch (Exception e) {
@@ -160,8 +191,8 @@ public class FamilySearchService {
         return closeRelatives;
     }
 
-    private String getRestData(String method, Uri action, Bundle params, Bundle headers) throws FamilySearchException{
-        String data = null;
+    private FSResult getRestData(String method, Uri action, Bundle params, Bundle headers) throws FamilySearchException{
+        FSResult data = new FSResult();
         try {
             // At the very least we always need an action.
             if (action == null) {
@@ -239,12 +270,14 @@ public class FamilySearchService {
                 HttpEntity responseEntity = response.getEntity();
                 StatusLine responseStatus = response.getStatusLine();
                 int        statusCode     = responseStatus != null ? responseStatus.getStatusCode() : 0;
-                if (statusCode != 200) {
-                    throw new FamilySearchException("Invalid response from FamilySearch: "+responseStatus.getReasonPhrase(), statusCode);
+                data.setStatusCode(statusCode);
+                if (statusCode == 200) {
+                    data.setSuccess(true);
                 }
 
                 if (responseEntity!=null) {
-                    data = EntityUtils.toString(responseEntity);
+                    String results = EntityUtils.toString(responseEntity);
+                    data.setData(results);
                 }
             }
         }

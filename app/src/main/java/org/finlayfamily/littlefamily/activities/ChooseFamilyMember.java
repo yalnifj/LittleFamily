@@ -2,26 +2,29 @@ package org.finlayfamily.littlefamily.activities;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.LoaderManager;
-import android.content.AsyncTaskLoader;
-import android.content.Context;
 import android.content.Intent;
-import android.content.Loader;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.Toast;
 
 import org.finlayfamily.littlefamily.R;
-import org.finlayfamily.littlefamily.activities.loaders.FamilyLoader;
+import org.finlayfamily.littlefamily.activities.adapters.FamilyMemberListAdapter;
 import org.finlayfamily.littlefamily.activities.util.SystemUiHider;
+import org.finlayfamily.littlefamily.data.LittlePerson;
 import org.finlayfamily.littlefamily.familysearch.FamilySearchException;
 import org.finlayfamily.littlefamily.familysearch.FamilySearchService;
 import org.gedcomx.conclusion.Person;
+import org.gedcomx.conclusion.Relationship;
+import org.gedcomx.types.RelationshipType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,7 +33,7 @@ import java.util.List;
  *
  * @see SystemUiHider
  */
-public class ChooseFamilyMember extends Activity implements LoaderManager.LoaderCallbacks<List<Person>> {
+public class ChooseFamilyMember extends Activity implements AdapterView.OnItemClickListener {
     private static final int LOGIN_REQUEST = 1;
     private static final int LOADER_FAMILY = 0x1;
     /**
@@ -61,6 +64,9 @@ public class ChooseFamilyMember extends Activity implements LoaderManager.Loader
      */
     private SystemUiHider mSystemUiHider;
 
+    private GridView gridView;
+    private FamilyMemberListAdapter adapter;
+
     private FamilySearchService familySearchService;
 
     @Override
@@ -71,12 +77,13 @@ public class ChooseFamilyMember extends Activity implements LoaderManager.Loader
 
         setContentView(R.layout.activity_choose_family_member);
 
-        final View controlsView = findViewById(R.id.fullscreen_content_controls);
-        final View contentView = findViewById(R.id.fullscreen_content);
+        gridView = (GridView) findViewById(R.id.gridViewFamily);
+        adapter = new FamilyMemberListAdapter(this);
+        gridView.setAdapter(adapter);
 
         // Set up an instance of SystemUiHider to control the system UI for
         // this activity.
-        mSystemUiHider = SystemUiHider.getInstance(this, contentView, HIDER_FLAGS);
+        mSystemUiHider = SystemUiHider.getInstance(this, gridView, HIDER_FLAGS);
         mSystemUiHider.setup();
         mSystemUiHider
                 .setOnVisibilityChangeListener(new SystemUiHider.OnVisibilityChangeListener() {
@@ -87,51 +94,12 @@ public class ChooseFamilyMember extends Activity implements LoaderManager.Loader
                     @Override
                     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
                     public void onVisibilityChange(boolean visible) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-                            // If the ViewPropertyAnimator API is available
-                            // (Honeycomb MR2 and later), use it to animate the
-                            // in-layout UI controls at the bottom of the
-                            // screen.
-                            if (mControlsHeight == 0) {
-                                mControlsHeight = controlsView.getHeight();
-                            }
-                            if (mShortAnimTime == 0) {
-                                mShortAnimTime = getResources().getInteger(
-                                        android.R.integer.config_shortAnimTime);
-                            }
-                            controlsView.animate()
-                                    .translationY(visible ? 0 : mControlsHeight)
-                                    .setDuration(mShortAnimTime);
-                        } else {
-                            // If the ViewPropertyAnimator APIs aren't
-                            // available, simply show or hide the in-layout UI
-                            // controls.
-                            controlsView.setVisibility(visible ? View.VISIBLE : View.GONE);
-                        }
-
                         if (visible && AUTO_HIDE) {
                             // Schedule a hide().
                             delayedHide(AUTO_HIDE_DELAY_MILLIS);
                         }
                     }
                 });
-
-        // Set up the user interaction to manually show or hide the system UI.
-        contentView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (TOGGLE_ON_CLICK) {
-                    mSystemUiHider.toggle();
-                } else {
-                    mSystemUiHider.show();
-                }
-            }
-        });
-
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
-        findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
     }
 
     @Override
@@ -152,8 +120,8 @@ public class ChooseFamilyMember extends Activity implements LoaderManager.Loader
             Intent intent = new Intent( this, FSLoginActivity.class );
             startActivityForResult( intent, LOGIN_REQUEST );
         } else {
-            Bundle args = new Bundle();
-            getLoaderManager().restartLoader(LOADER_FAMILY, args, this);
+            FamilyLoaderTask task = new FamilyLoaderTask();
+            task.execute();
         }
 
     }
@@ -164,8 +132,8 @@ public class ChooseFamilyMember extends Activity implements LoaderManager.Loader
             case LOGIN_REQUEST:
                 if (resultCode == RESULT_OK) {
                     Log.d("onActivityResult", "SESSION_ID:" + familySearchService.getSessionId());
-                    Bundle args = new Bundle();
-                    getLoaderManager().restartLoader(LOADER_FAMILY, args, this);
+                    FamilyLoaderTask task = new FamilyLoaderTask();
+                    task.execute();
                 }
                 break;
         }
@@ -204,29 +172,53 @@ public class ChooseFamilyMember extends Activity implements LoaderManager.Loader
     }
 
     @Override
-    public Loader<List<Person>> onCreateLoader(int id, Bundle args) {
-        return new FamilyLoader(this, args);
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
     }
 
-    @Override
-    public void onLoadFinished(Loader<List<Person>> loader, List<Person> family) {
-        Log.d( getLocalClassName(), "onLoadFinished(" + loader.getId() + ") " + family );
+    public class FamilyLoaderTask extends AsyncTask<String, Integer, List<Relationship>> {
+        @Override
+        protected List<Relationship> doInBackground(String[] params) {
+            FamilySearchService service = FamilySearchService.getInstance();
+            try {
+                List<Relationship> family = service.getCloseRelatives();
+                return family;
+            } catch(FamilySearchException e) {
+                Log.e(this.getClass().getSimpleName(), "error", e);
+                Toast.makeText(ChooseFamilyMember.this, "Error communicating with FamilySearch. " + e, Toast.LENGTH_LONG).show();
+            }
+            return null;
+        }
 
-        if (loader.getId() == LOADER_FAMILY) {
-            if (family!=null) {
-                //TODO - create the pictures on screen
-                for(Person p : family) {
-                    Log.d(getLocalClassName(), "Peron: "+p.getId()+ " "+p.getFullName());
+        @Override
+        protected void onPostExecute(List<Relationship> family) {
+            FamilySearchService service = FamilySearchService.getInstance();
+            List<LittlePerson> familyMembers = new ArrayList<>();
+            try {
+                Person currentPerson = service.getCurrentPerson();
+
+            for(Relationship r : family) {
+                Log.d("onPostExecute", "Relationship " + r.getKnownType() + " with " + r.getPerson1().getResourceId() + ":" + r.getPerson2().getResourceId());
+                //Toast.makeText(ChooseFamilyMember.this, "Relationship "+r.getKnownType()+" with "+r.getPerson1().getResourceId()+":"+r.getPerson2().getResourceId(), Toast.LENGTH_LONG).show();
+                if (!r.getPerson1().getResourceId().equals(currentPerson.getId())) {
+                    Person fsPerson = service.getPerson(r.getPerson1().getResourceId());
+                    LittlePerson person = new LittlePerson();
+                }
+                if (!r.getPerson1().getResourceId().equals(currentPerson.getId())) {
+                    Person fsPerson = service.getPerson(r.getPerson1().getResourceId());
+                    LittlePerson person = new LittlePerson(fsPerson);
+                    familyMembers.add(person);
+                }
+                if (!r.getPerson2().getResourceId().equals(currentPerson.getId())) {
+                    Person fsPerson = service.getPerson(r.getPerson2().getResourceId());
+                    LittlePerson person = new LittlePerson(fsPerson);
+                    familyMembers.add(person);
                 }
             }
-            else {
-                Toast.makeText(this, "Unable to get relatives of current person from FamilySearch.", Toast.LENGTH_LONG).show();
+            } catch (FamilySearchException e) {
+                e.printStackTrace();
             }
+            adapter.setFamily(familyMembers);
         }
-    }
-
-    @Override
-    public void onLoaderReset(Loader<List<Person>> loader) {
-
     }
 }

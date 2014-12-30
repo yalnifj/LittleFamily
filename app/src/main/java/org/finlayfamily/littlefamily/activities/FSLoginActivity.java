@@ -1,9 +1,8 @@
 package org.finlayfamily.littlefamily.activities;
 
 import android.app.Activity;
-import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Intent;
-import android.content.Loader;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -18,12 +17,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.finlayfamily.littlefamily.R;
-import org.finlayfamily.littlefamily.activities.loaders.AuthenticationLoader;
+import org.finlayfamily.littlefamily.familysearch.FSResult;
+import org.finlayfamily.littlefamily.familysearch.FamilySearchException;
+import org.finlayfamily.littlefamily.familysearch.FamilySearchService;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class FSLoginActivity extends Activity implements LoaderCallbacks<String> {
+public class FSLoginActivity extends Activity {
     private static final int LOADER_LOGIN = 0x1;
 
     private static final String FS_DEFAULT_USER = "tum000205905";
@@ -109,10 +110,21 @@ public class FSLoginActivity extends Activity implements LoaderCallbacks<String>
             // form field with an error.
             focusView.requestFocus();
         } else {
+            AuthTask task = new AuthTask();
+            task.execute(username, password);
+
+            /*
             Bundle args = new Bundle();
-            args.putSerializable(AuthenticationLoader.ARG_USERNAME, username);
-            args.putSerializable(AuthenticationLoader.ARG_PASSWORD, password);
+            args.putSerializable(AuthLoader.ARG_USERNAME, username);
+            args.putSerializable(AuthLoader.ARG_PASSWORD, password);
             getLoaderManager().restartLoader(LOADER_LOGIN, args, this);
+            FamilySearchService service = FamilySearchService.getInstance();
+            try {
+                RESTResult result = service.authenticate(username, password);
+            } catch (Exception e) {
+                Toast.makeText(this, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+            }
+            */
         }
     }
 
@@ -124,35 +136,35 @@ public class FSLoginActivity extends Activity implements LoaderCallbacks<String>
         return password.length() > 1;
     }
 
-    @Override
-    public Loader<String> onCreateLoader(int i, Bundle bundle) {
-        return new AuthenticationLoader(this, bundle);
-    }
+    public class AuthTask extends AsyncTask<String, Integer, FSResult> {
+        @Override
+        protected FSResult doInBackground(String[] params) {
+            FSResult result = null;
+            FamilySearchService service = FamilySearchService.getInstance();
+            try {
+                result = service.authenticate(params[0], params[1]);
+            } catch(FamilySearchException e) {
+                Log.e(this.getClass().getSimpleName(), "error", e);
+                result = new FSResult();
+                result.setData(e.getLocalizedMessage());
+            }
+            return result;
+        }
 
-    @Override
-    public void onLoadFinished(Loader<String> loader, String response) {
-        Log.d( getLocalClassName(), "onLoadFinished(" + loader.getId() + ") " + response );
-
-        if (loader.getId() == LOADER_LOGIN) {
-            if (response!=null && !response.isEmpty() && !response.startsWith("ERROR:")) {
+        @Override
+        protected void onPostExecute(FSResult response) {
+            if (response!=null && response.isSuccess()) {
                 Intent intent = new Intent();
                 setResult(Activity.RESULT_OK, intent);
                 finish();
             }
-            else if (response!=null && response.startsWith("ERROR:")) {
-                Toast.makeText(this, response, Toast.LENGTH_LONG).show();
-                setResult( Activity.RESULT_CANCELED, null );
-            }
             else {
-                Toast.makeText(this, "Username and password combination failed.", Toast.LENGTH_LONG).show();
+                String message = "Username and password combination failed. ";
+                if (response!=null) message = response.getData();
+                Toast.makeText(FSLoginActivity.this, message, Toast.LENGTH_LONG).show();
                 setResult( Activity.RESULT_CANCELED, null );
             }
         }
-    }
-
-    @Override
-    public void onLoaderReset(Loader<String> cursorLoader) {
-
     }
 }
 
