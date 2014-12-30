@@ -2,17 +2,27 @@ package org.finlayfamily.littlefamily.activities;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.LoaderManager;
+import android.content.AsyncTaskLoader;
+import android.content.Context;
 import android.content.Intent;
+import android.content.Loader;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import org.finlayfamily.littlefamily.R;
+import org.finlayfamily.littlefamily.activities.loaders.FamilyLoader;
 import org.finlayfamily.littlefamily.activities.util.SystemUiHider;
+import org.finlayfamily.littlefamily.familysearch.FamilySearchException;
 import org.finlayfamily.littlefamily.familysearch.FamilySearchService;
+import org.gedcomx.conclusion.Person;
+
+import java.util.List;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -20,8 +30,9 @@ import org.finlayfamily.littlefamily.familysearch.FamilySearchService;
  *
  * @see SystemUiHider
  */
-public class ChooseFamilyMember extends Activity {
+public class ChooseFamilyMember extends Activity implements LoaderManager.LoaderCallbacks<List<Person>> {
     private static final int LOGIN_REQUEST = 1;
+    private static final int LOADER_FAMILY = 0x1;
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -140,6 +151,9 @@ public class ChooseFamilyMember extends Activity {
         if (familySearchService.getSessionId()==null) {
             Intent intent = new Intent( this, FSLoginActivity.class );
             startActivityForResult( intent, LOGIN_REQUEST );
+        } else {
+            Bundle args = new Bundle();
+            getLoaderManager().restartLoader(LOADER_FAMILY, args, this);
         }
 
     }
@@ -149,9 +163,9 @@ public class ChooseFamilyMember extends Activity {
         switch(requestCode) {
             case LOGIN_REQUEST:
                 if (resultCode == RESULT_OK) {
-                    String sessionId = data.getStringExtra( FSLoginActivity.SESSION_ID );
-                    Log.d("onActivityResult", "SESSION_ID:" + sessionId);
-                    familySearchService.setSessionId(sessionId);
+                    Log.d("onActivityResult", "SESSION_ID:" + familySearchService.getSessionId());
+                    Bundle args = new Bundle();
+                    getLoaderManager().restartLoader(LOADER_FAMILY, args, this);
                 }
                 break;
         }
@@ -187,5 +201,32 @@ public class ChooseFamilyMember extends Activity {
     private void delayedHide(int delayMillis) {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
+    }
+
+    @Override
+    public Loader<List<Person>> onCreateLoader(int id, Bundle args) {
+        return new FamilyLoader(this, args);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<Person>> loader, List<Person> family) {
+        Log.d( getLocalClassName(), "onLoadFinished(" + loader.getId() + ") " + family );
+
+        if (loader.getId() == LOADER_FAMILY) {
+            if (family!=null) {
+                //TODO - create the pictures on screen
+                for(Person p : family) {
+                    Log.d(getLocalClassName(), "Peron: "+p.getId()+ " "+p.getFullName());
+                }
+            }
+            else {
+                Toast.makeText(this, "Unable to get relatives of current person from FamilySearch.", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<Person>> loader) {
+
     }
 }
