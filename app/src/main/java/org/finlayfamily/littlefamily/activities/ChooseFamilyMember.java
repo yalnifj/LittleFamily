@@ -2,7 +2,9 @@ package org.finlayfamily.littlefamily.activities;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,8 +24,9 @@ import org.finlayfamily.littlefamily.familysearch.FamilySearchException;
 import org.finlayfamily.littlefamily.familysearch.FamilySearchService;
 import org.gedcomx.conclusion.Person;
 import org.gedcomx.conclusion.Relationship;
-import org.gedcomx.types.RelationshipType;
+import org.gedcomx.links.Link;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +69,7 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
 
     private GridView gridView;
     private FamilyMemberListAdapter adapter;
+    private ProgressDialog pd;
 
     private FamilySearchService familySearchService;
 
@@ -120,6 +124,7 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
             Intent intent = new Intent( this, FSLoginActivity.class );
             startActivityForResult( intent, LOGIN_REQUEST );
         } else {
+            pd = ProgressDialog.show(this, "Please wait...", "Loading data from FamilySearch", true, false);
             FamilyLoaderTask task = new FamilyLoaderTask();
             task.execute();
         }
@@ -176,49 +181,62 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
 
     }
 
-    public class FamilyLoaderTask extends AsyncTask<String, Integer, List<Relationship>> {
+    public class FamilyLoaderTask extends AsyncTask<String, Integer, List<LittlePerson>> {
         @Override
-        protected List<Relationship> doInBackground(String[] params) {
+        protected List<LittlePerson> doInBackground(String[] params) {
+            List<LittlePerson> familyMembers = new ArrayList<>();
             FamilySearchService service = FamilySearchService.getInstance();
             try {
                 List<Relationship> family = service.getCloseRelatives();
-                return family;
+                Person currentPerson = service.getCurrentPerson();
+
+                for(Relationship r : family) {
+                    Log.d("onPostExecute", "Relationship " + r.getKnownType() + " with " + r.getPerson1().getResourceId() + ":" + r.getPerson2().getResourceId());
+                    if (!r.getPerson1().getResourceId().equals(currentPerson.getId())) {
+                        Person fsPerson = service.getPerson(r.getPerson1().getResourceId());
+                        LittlePerson person = new LittlePerson(fsPerson);
+                        Link portrait = service.getPersonPortrait(fsPerson.getId());
+                        if (portrait!=null) {
+                            String imagePath = null;
+                            try {
+                                Uri uri = Uri.parse(portrait.getHref().toString());
+                                imagePath = service.downloadImage(uri, fsPerson.getId(), ChooseFamilyMember.this);
+                                person.setPhotoPath(imagePath);
+                            } catch (MalformedURLException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        familyMembers.add(person);
+                    }
+                    if (!r.getPerson2().getResourceId().equals(currentPerson.getId())) {
+                        Person fsPerson = service.getPerson(r.getPerson2().getResourceId());
+                        LittlePerson person = new LittlePerson(fsPerson);
+                        Link portrait = service.getPersonPortrait(fsPerson.getId());
+                        if (portrait!=null) {
+                            String imagePath = null;
+                            try {
+                                Uri uri = Uri.parse(portrait.getHref().toString());
+                                imagePath = service.downloadImage(uri, fsPerson.getId(), ChooseFamilyMember.this);
+                                person.setPhotoPath(imagePath);
+                            } catch (MalformedURLException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        familyMembers.add(person);
+                    }
+                }
             } catch(FamilySearchException e) {
                 Log.e(this.getClass().getSimpleName(), "error", e);
                 Toast.makeText(ChooseFamilyMember.this, "Error communicating with FamilySearch. " + e, Toast.LENGTH_LONG).show();
             }
-            return null;
+            return familyMembers;
         }
 
         @Override
-        protected void onPostExecute(List<Relationship> family) {
-            FamilySearchService service = FamilySearchService.getInstance();
-            List<LittlePerson> familyMembers = new ArrayList<>();
-            try {
-                Person currentPerson = service.getCurrentPerson();
-
-            for(Relationship r : family) {
-                Log.d("onPostExecute", "Relationship " + r.getKnownType() + " with " + r.getPerson1().getResourceId() + ":" + r.getPerson2().getResourceId());
-                //Toast.makeText(ChooseFamilyMember.this, "Relationship "+r.getKnownType()+" with "+r.getPerson1().getResourceId()+":"+r.getPerson2().getResourceId(), Toast.LENGTH_LONG).show();
-                if (!r.getPerson1().getResourceId().equals(currentPerson.getId())) {
-                    Person fsPerson = service.getPerson(r.getPerson1().getResourceId());
-                    LittlePerson person = new LittlePerson();
-                }
-                if (!r.getPerson1().getResourceId().equals(currentPerson.getId())) {
-                    Person fsPerson = service.getPerson(r.getPerson1().getResourceId());
-                    LittlePerson person = new LittlePerson(fsPerson);
-                    familyMembers.add(person);
-                }
-                if (!r.getPerson2().getResourceId().equals(currentPerson.getId())) {
-                    Person fsPerson = service.getPerson(r.getPerson2().getResourceId());
-                    LittlePerson person = new LittlePerson(fsPerson);
-                    familyMembers.add(person);
-                }
-            }
-            } catch (FamilySearchException e) {
-                e.printStackTrace();
-            }
+        protected void onPostExecute(List<LittlePerson> familyMembers) {
+            if (pd!=null) pd.dismiss();
             adapter.setFamily(familyMembers);
         }
+
     }
 }

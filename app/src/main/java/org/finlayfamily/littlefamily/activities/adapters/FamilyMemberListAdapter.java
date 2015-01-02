@@ -1,12 +1,17 @@
 package org.finlayfamily.littlefamily.activities.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.data.LittlePerson;
+import org.finlayfamily.littlefamily.util.ImageHelper;
 
 import java.util.List;
 
@@ -51,17 +56,20 @@ public class FamilyMemberListAdapter extends BaseAdapter {
     }
 
     static class ViewHolder {
-        TextView display;
+        ImageView portrait;
+        TextView name;
     }
 
     @Override
     public View getView(int index, View convertView, ViewGroup parent) {
         ViewHolder holder;
+        LayoutInflater inflater = LayoutInflater.from(context);
 
         if (convertView == null) {
-            convertView = new TextView(context);
+            convertView = inflater.inflate(R.layout.person_portait_name, null);
             holder = new ViewHolder();
-            holder.display = (TextView) convertView;
+            holder.portrait = (ImageView) convertView.findViewById(R.id.person_portrait);
+            holder.name = (TextView) convertView.findViewById(R.id.person_name);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -69,7 +77,11 @@ public class FamilyMemberListAdapter extends BaseAdapter {
 
         LittlePerson person = (LittlePerson) getItem(index);
         if (person!=null) {
-            holder.display.setText(person.getName());
+            holder.name.setText(person.getName());
+            if (person.getPhotoPath()!=null) {
+                Bitmap bm = ImageHelper.loadBitmap(person.getPhotoPath(), ImageHelper.getOrientation(person.getPhotoPath()), holder.portrait.getLayoutParams().width, holder.portrait.getLayoutParams().height);
+                holder.portrait.setImageBitmap(bm);
+            }
         }
 
         return convertView;

@@ -1,6 +1,8 @@
 package org.finlayfamily.littlefamily.activities;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -34,6 +36,7 @@ public class FSLoginActivity extends Activity {
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private View mLoginFormView;
+    private ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +113,7 @@ public class FSLoginActivity extends Activity {
             // form field with an error.
             focusView.requestFocus();
         } else {
+            pd = ProgressDialog.show(this, "Please wait...", "Logging into FamilySearch", true, false);
             AuthTask task = new AuthTask();
             task.execute(username, password);
 
@@ -143,6 +147,7 @@ public class FSLoginActivity extends Activity {
             FamilySearchService service = FamilySearchService.getInstance();
             try {
                 result = service.authenticate(params[0], params[1]);
+                service.getCurrentPerson();
             } catch(FamilySearchException e) {
                 Log.e(this.getClass().getSimpleName(), "error", e);
                 result = new FSResult();
@@ -153,6 +158,7 @@ public class FSLoginActivity extends Activity {
 
         @Override
         protected void onPostExecute(FSResult response) {
+            if (pd!=null) pd.dismiss();
             if (response!=null && response.isSuccess()) {
                 Intent intent = new Intent();
                 setResult(Activity.RESULT_OK, intent);

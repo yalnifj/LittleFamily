@@ -1,5 +1,6 @@
 package org.finlayfamily.littlefamily.familysearch;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
@@ -20,21 +21,36 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.familysearch.identity.Identity;
+import org.finlayfamily.littlefamily.util.ImageHelper;
 import org.gedcomx.Gedcomx;
 import org.gedcomx.conclusion.Person;
 import org.gedcomx.conclusion.Relationship;
+import org.gedcomx.links.Link;
 import org.gedcomx.rt.GedcomxSerializer;
+import org.gedcomx.source.SourceDescription;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 
 /**
  * Created by Parents on 12/29/2014.
@@ -54,6 +70,7 @@ public class FamilySearchService {
     private Person currentPerson = null;
     private List<Relationship> closeRelatives = null;
     private Map<String, Person> personCache;
+    private Map<String, Link> linkCache;
 
     private static FamilySearchService ourInstance = new FamilySearchService();
 
@@ -63,6 +80,7 @@ public class FamilySearchService {
 
     private FamilySearchService() {
         personCache = new HashMap<>();
+        linkCache = new HashMap<>();
     }
 
     public FSResult authenticate(String username, String password) throws FamilySearchException {
@@ -150,6 +168,45 @@ public class FamilySearchService {
             }
         }
         return personCache.get(personId);
+    }
+
+    public Link getPersonPortrait(String personId) throws FamilySearchException {
+        if (linkCache.containsKey(personId)) {
+            return linkCache.get(personId);
+        }
+        if (sessionId==null) {
+            throw new FamilySearchException("Not Authenticated with FamilySearch.", 0);
+        }
+
+        Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+personId+"/portraits");
+        Bundle headers = new Bundle();
+        headers.putString("Authorization", "Bearer " + sessionId);
+        headers.putString("Accept", "application/x-gedcomx-v1+xml");
+        Bundle params = new Bundle();
+
+        FSResult result = getRestData(METHOD_GET, uri, params, headers);
+        if (result!=null && result.isSuccess()) {
+            Serializer serializer = GedcomxSerializer.create();
+            try {
+                Gedcomx doc = serializer.read(Gedcomx.class, result.getData());
+                if (doc.getSourceDescriptions()!=null && doc.getSourceDescriptions().size()>0) {
+                    for(SourceDescription sd : doc.getSourceDescriptions()) {
+                        List<Link> links = sd.getLinks();
+                        for(Link link : links) {
+                            if (link.getRel()!=null && link.getRel().equals("image-icon")) {
+                                linkCache.put(personId, link);
+                                return link;
+                            }
+                        }
+                    }
+                    Log.i(TAG, "persons " + doc.getPersons().size() + ": " + currentPerson.getId());
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "error", e);
+            }
+        }
+        linkCache.put(personId, null);
+        return null;
     }
 
     public List<Relationship> getCloseRelatives() throws FamilySearchException {
@@ -338,5 +395,60 @@ public class FamilySearchService {
         }
 
         return formList;
+    }
+
+    public String downloadImage(Uri uri, String fileName, Context context) throws MalformedURLException, FamilySearchException {
+        try {
+            // Here we define our base request object which we will
+            // send to our REST service via HttpClient.
+            HttpRequestBase request =  new HttpGet();
+            attachUriWithQuery(request, uri, null);
+
+            Bundle headers = new Bundle();
+            headers.putString("Authorization", "Bearer " + sessionId);
+            headers.putString("Accept", "application/x-gedcomx-v1+xml");
+
+            HttpClient client = new DefaultHttpClient();
+
+            for (BasicNameValuePair header : paramsToList(headers)) {
+                request.addHeader( header.getName(), header.getValue() );
+            }
+
+            // Let's send some useful debug information so we can monitor things
+            // in LogCat.
+            Log.d(TAG, "Downloading image: "+ uri.toString());
+
+            // Finally, we send our request using HTTP. This is the synchronous
+            // long operation that we need to run on this Loader's thread.
+            HttpResponse response = client.execute(request);
+
+            HttpEntity responseEntity = response.getEntity();
+            StatusLine responseStatus = response.getStatusLine();
+            int        statusCode     = responseStatus != null ? responseStatus.getStatusCode() : 0;
+            if (statusCode == 200) {
+                if (responseEntity!=null) {
+                    InputStream in = responseEntity.getContent();
+                    File dataFolder = ImageHelper.getDataFolder(context);
+                    File imageFile = new File(dataFolder, fileName);
+                    OutputStream out = new FileOutputStream(imageFile);
+
+                    byte[] buffer = new byte[1024];
+                    int loadedSize;
+                    while((loadedSize = in.read(buffer)) != -1) {
+                        out.write(buffer, 0, loadedSize);
+                    }
+
+                    in.close();
+                    out.close();
+                    return imageFile.getAbsolutePath();
+                }
+            }
+        }
+        catch (IOException e) {
+            Log.e(TAG, "There was a problem when sending the request. "+e , e);
+            throw new FamilySearchException("There was a problem when sending the request. "+e, 0, e);
+        }
+
+        return null;
     }
 }
