@@ -193,7 +193,7 @@ public class FamilySearchService {
                     for(SourceDescription sd : doc.getSourceDescriptions()) {
                         List<Link> links = sd.getLinks();
                         for(Link link : links) {
-                            if (link.getRel()!=null && link.getRel().equals("image-icon")) {
+                            if (link.getRel()!=null && link.getRel().equals("image-thumbnail")) {
                                 linkCache.put(personId, link);
                                 return link;
                             }

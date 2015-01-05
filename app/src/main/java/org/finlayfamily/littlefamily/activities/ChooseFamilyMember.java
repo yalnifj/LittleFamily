@@ -189,39 +189,19 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
             try {
                 List<Relationship> family = service.getCloseRelatives();
                 Person currentPerson = service.getCurrentPerson();
+                LittlePerson cp = buildLittlePerson(currentPerson);
+                familyMembers.add(cp);
 
                 for(Relationship r : family) {
                     Log.d("onPostExecute", "Relationship " + r.getKnownType() + " with " + r.getPerson1().getResourceId() + ":" + r.getPerson2().getResourceId());
                     if (!r.getPerson1().getResourceId().equals(currentPerson.getId())) {
                         Person fsPerson = service.getPerson(r.getPerson1().getResourceId());
-                        LittlePerson person = new LittlePerson(fsPerson);
-                        Link portrait = service.getPersonPortrait(fsPerson.getId());
-                        if (portrait!=null) {
-                            String imagePath = null;
-                            try {
-                                Uri uri = Uri.parse(portrait.getHref().toString());
-                                imagePath = service.downloadImage(uri, fsPerson.getId(), ChooseFamilyMember.this);
-                                person.setPhotoPath(imagePath);
-                            } catch (MalformedURLException e) {
-                                e.printStackTrace();
-                            }
-                        }
+                        LittlePerson person = buildLittlePerson(fsPerson);
                         familyMembers.add(person);
                     }
                     if (!r.getPerson2().getResourceId().equals(currentPerson.getId())) {
                         Person fsPerson = service.getPerson(r.getPerson2().getResourceId());
-                        LittlePerson person = new LittlePerson(fsPerson);
-                        Link portrait = service.getPersonPortrait(fsPerson.getId());
-                        if (portrait!=null) {
-                            String imagePath = null;
-                            try {
-                                Uri uri = Uri.parse(portrait.getHref().toString());
-                                imagePath = service.downloadImage(uri, fsPerson.getId(), ChooseFamilyMember.this);
-                                person.setPhotoPath(imagePath);
-                            } catch (MalformedURLException e) {
-                                e.printStackTrace();
-                            }
-                        }
+                        LittlePerson person = buildLittlePerson(fsPerson);
                         familyMembers.add(person);
                     }
                 }
@@ -236,6 +216,23 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
         protected void onPostExecute(List<LittlePerson> familyMembers) {
             if (pd!=null) pd.dismiss();
             adapter.setFamily(familyMembers);
+        }
+
+        public LittlePerson buildLittlePerson(Person fsPerson) throws FamilySearchException {
+            FamilySearchService service = FamilySearchService.getInstance();
+            LittlePerson person = new LittlePerson(fsPerson);
+            Link portrait = service.getPersonPortrait(fsPerson.getId());
+            if (portrait!=null) {
+                String imagePath = null;
+                try {
+                    Uri uri = Uri.parse(portrait.getHref().toString());
+                    imagePath = service.downloadImage(uri, fsPerson.getId(), ChooseFamilyMember.this);
+                    person.setPhotoPath(imagePath);
+                } catch (MalformedURLException e) {
+                    Log.e(this.getClass().getSimpleName(), "error", e);
+                }
+            }
+            return person;
         }
 
     }
