@@ -75,11 +75,16 @@ public class FamilyMemberListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
+        int width = (int) ((parent.getWidth() / 2)-parent.getWidth()*.05);
+        int height = width;
         LittlePerson person = (LittlePerson) getItem(index);
         if (person!=null) {
             holder.name.setText(person.getName());
             if (person.getPhotoPath()!=null) {
-                Bitmap bm = ImageHelper.loadBitmap(person.getPhotoPath(), ImageHelper.getOrientation(person.getPhotoPath()), holder.portrait.getLayoutParams().width, holder.portrait.getLayoutParams().height);
+                Bitmap bm = ImageHelper.loadBitmapFromFile(person.getPhotoPath(), ImageHelper.getOrientation(person.getPhotoPath()), width, height);
+                holder.portrait.setImageBitmap(bm);
+            } else {
+                Bitmap bm = ImageHelper.loadBitmapFromResource(context, person.getDefaultPhotoResource(), 0, width, height);
                 holder.portrait.setImageBitmap(bm);
             }
         }

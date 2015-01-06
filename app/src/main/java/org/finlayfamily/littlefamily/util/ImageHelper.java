@@ -88,13 +88,12 @@ public class ImageHelper {
 		return null;
 	}
 
-	public static Bitmap loadBitmap(String path, int orientation, final int targetWidth, final int targetHeight) {
+	public static Bitmap loadBitmapFromFile(String path, int orientation, final int targetWidth, final int targetHeight) {
 	    Bitmap bitmap = null;
 	    try {
 	        // First decode with inJustDecodeBounds=true to check dimensions
 	        final BitmapFactory.Options options = new BitmapFactory.Options();
 	        options.inJustDecodeBounds = true;
-	        BitmapFactory.decodeFile(path, options);
 
 	        // Adjust extents
 	        int sourceWidth, sourceHeight;
@@ -142,6 +141,60 @@ public class ImageHelper {
 	    }
 	    return bitmap;
 	}
+
+    public static Bitmap loadBitmapFromResource(Context context, int resourceId, int orientation, final int targetWidth, final int targetHeight) {
+        Bitmap bitmap = null;
+        try {
+            // First decode with inJustDecodeBounds=true to check dimensions
+            final BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+
+            // Adjust extents
+            int sourceWidth, sourceHeight;
+            if (orientation == 90 || orientation == 270) {
+                sourceWidth = options.outHeight;
+                sourceHeight = options.outWidth;
+            } else {
+                sourceWidth = options.outWidth;
+                sourceHeight = options.outHeight;
+            }
+
+            // Calculate the maximum required scaling ratio if required and load the bitmap
+            if (sourceWidth > targetWidth || sourceHeight > targetHeight) {
+                float widthRatio = (float)sourceWidth / (float)targetWidth;
+                float heightRatio = (float)sourceHeight / (float)targetHeight;
+                float maxRatio = Math.max(widthRatio, heightRatio);
+                options.inJustDecodeBounds = false;
+                options.inSampleSize = (int)maxRatio;
+                bitmap = BitmapFactory.decodeResource(context.getResources(), resourceId, options);
+            } else {
+                bitmap = BitmapFactory.decodeResource(context.getResources(), resourceId);
+            }
+
+            // Rotate the bitmap if required
+            if (orientation > 0) {
+                Matrix matrix = new Matrix();
+                matrix.postRotate(orientation);
+                bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            }
+
+            if (bitmap!=null) {
+                // Re-scale the bitmap if necessary
+                sourceWidth = bitmap.getWidth();
+                sourceHeight = bitmap.getHeight();
+                if (sourceWidth != targetWidth || sourceHeight != targetHeight) {
+                    float widthRatio = (float) sourceWidth / (float) targetWidth;
+                    float heightRatio = (float) sourceHeight / (float) targetHeight;
+                    float maxRatio = Math.max(widthRatio, heightRatio);
+                    sourceWidth = (int) ((float) sourceWidth / maxRatio);
+                    sourceHeight = (int) ((float) sourceHeight / maxRatio);
+                    bitmap = Bitmap.createScaledBitmap(bitmap, sourceWidth, sourceHeight, true);
+                }
+            }
+        } catch (Exception e) {
+        }
+        return bitmap;
+    }
 	
 	public static int getOrientation(Context context, Uri photoUri) {
 	    /* it's on the external media. */

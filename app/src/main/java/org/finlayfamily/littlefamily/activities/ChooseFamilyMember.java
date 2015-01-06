@@ -22,10 +22,12 @@ import org.finlayfamily.littlefamily.activities.util.SystemUiHider;
 import org.finlayfamily.littlefamily.data.LittlePerson;
 import org.finlayfamily.littlefamily.familysearch.FamilySearchException;
 import org.finlayfamily.littlefamily.familysearch.FamilySearchService;
+import org.finlayfamily.littlefamily.util.ImageHelper;
 import org.gedcomx.conclusion.Person;
 import org.gedcomx.conclusion.Relationship;
 import org.gedcomx.links.Link;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -221,15 +223,22 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
         public LittlePerson buildLittlePerson(Person fsPerson) throws FamilySearchException {
             FamilySearchService service = FamilySearchService.getInstance();
             LittlePerson person = new LittlePerson(fsPerson);
-            Link portrait = service.getPersonPortrait(fsPerson.getId());
-            if (portrait!=null) {
-                String imagePath = null;
-                try {
-                    Uri uri = Uri.parse(portrait.getHref().toString());
-                    imagePath = service.downloadImage(uri, fsPerson.getId(), ChooseFamilyMember.this);
-                    person.setPhotoPath(imagePath);
-                } catch (MalformedURLException e) {
-                    Log.e(this.getClass().getSimpleName(), "error", e);
+            //-- check if we already have a photo downloaded for this person
+            File dataFolder = ImageHelper.getDataFolder(ChooseFamilyMember.this);
+            File imageFile = new File(dataFolder, fsPerson.getId());
+            if (imageFile.exists()) {
+                person.setPhotoPath(imageFile.getAbsolutePath());
+            } else {
+                Link portrait = service.getPersonPortrait(fsPerson.getId());
+                if (portrait != null) {
+                    String imagePath = null;
+                    try {
+                        Uri uri = Uri.parse(portrait.getHref().toString());
+                        imagePath = service.downloadImage(uri, fsPerson.getId(), ChooseFamilyMember.this);
+                        person.setPhotoPath(imagePath);
+                    } catch (MalformedURLException e) {
+                        Log.e(this.getClass().getSimpleName(), "error", e);
+                    }
                 }
             }
             return person;
