@@ -1,10 +1,17 @@
 package org.finlayfamily.littlefamily.data;
 
+import org.gedcomx.conclusion.Name;
+import org.gedcomx.conclusion.NameForm;
+import org.gedcomx.conclusion.NamePart;
 import org.finlayfamily.littlefamily.R;
 import org.gedcomx.conclusion.Fact;
 import org.gedcomx.conclusion.Person;
 import org.gedcomx.types.FactType;
 import org.gedcomx.types.GenderType;
+import org.gedcomx.types.NamePartType;
+import org.gedcomx.types.NamePartType;
+
+import java.util.List;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -21,6 +28,7 @@ import java.util.regex.Pattern;
 public class LittlePerson {
     private long id;
     private String name;
+    private String givenName;
     private String relationship;
     private String familySearchId;
     private String photoPath;
@@ -34,27 +42,57 @@ public class LittlePerson {
         setName(fsPerson.getFullName());
         setFamilySearchId(fsPerson.getId());
         setGender(fsPerson.getGender().getKnownType());
+        Name name = null;
+        for(Name n : fsPerson.getNames()) {
+            if (n.getPreferred()) {
+                name = n;
+            }
+        }
+        //-- get preferred given name
+        if (name!=null) {
+            List<NameForm> forms = name.getNameForms();
+            if (forms!=null && forms.size()>0) {
+                List<NamePart> parts = forms.get(0).getParts();
+                if (parts!=null) {
+                    for (NamePart p : parts) {
+                        if (p.getKnownType()== NamePartType.Given) {
+                            givenName = p.getValue();
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        if (givenName==null && this.name!=null) {
+            String[] parts = this.name.split(" ");
+            givenName = parts[0];
+        }
+        
+        //-- calculate age from birth year
         List<Fact> births = fsPerson.getFacts(FactType.Birth);
         if (births!=null) {
             Fact birth = null;
             for(Fact b : births) {
                 if (b.getDate()!=null && (birth==null || b.getPrimary())) birth = b;
             }
-            if (birth!=null) {
+            if (birth!=null && birth.getDate()!=null) {
                 String birthDateStr = birth.getDate().getFormal();
-                DateFormat df = new SimpleDateFormat("dd MMM yyyy");
-                try {
-                    Date birthDate = df.parse(birthDateStr);
-                    Date today = new Date();
-                    age = (int) (today.getTime() - birthDate.getTime())/(1000*60*60*24*365);
-                } catch (ParseException e) {
-                    Pattern p = Pattern.compile("\\d\\d\\d\\d");
-                    Matcher m = p.matcher(birthDateStr);
-                    if (m.find()) {
-                        String birthYearStr = m.group();
-                        int birthYear = Integer.parseInt(birthYearStr);
-                        Calendar cal = Calendar.getInstance();
-                        age = cal.get(Calendar.YEAR) - birthYear;
+                if (birthDateStr==null) birthDateStr = birth.getDate().getOriginal();
+                if (birthDateStr!=null) {
+                    DateFormat df = new SimpleDateFormat("dd MMM yyyy");
+                    try {
+                        Date birthDate = df.parse(birthDateStr);
+                        Date today = new Date();
+                        age = (int) (today.getTime() - birthDate.getTime()) / (1000 * 60 * 60 * 24 * 365);
+                    } catch (ParseException e) {
+                        Pattern p = Pattern.compile("\\d\\d\\d\\d");
+                        Matcher m = p.matcher(birthDateStr);
+                        if (m.find()) {
+                            String birthYearStr = m.group();
+                            int birthYear = Integer.parseInt(birthYearStr);
+                            Calendar cal = Calendar.getInstance();
+                            age = cal.get(Calendar.YEAR) - birthYear;
+                        }
                     }
                 }
             }
@@ -107,6 +145,14 @@ public class LittlePerson {
 
     public void setGender(GenderType gender) {
         this.gender = gender;
+    }
+
+    public String getGivenName() {
+        return givenName;
+    }
+
+    public void setGivenName(String givenName) {
+        this.givenName = givenName;
     }
 
     public Integer getAge() {
