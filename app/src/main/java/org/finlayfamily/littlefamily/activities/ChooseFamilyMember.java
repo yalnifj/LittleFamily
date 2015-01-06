@@ -95,7 +95,8 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+        Intent intent = new Intent( this, MatchGameActivity.class );
+        startActivity(intent);
     }
 
     public class FamilyLoaderTask extends AsyncTask<String, Integer, List<LittlePerson>> {
