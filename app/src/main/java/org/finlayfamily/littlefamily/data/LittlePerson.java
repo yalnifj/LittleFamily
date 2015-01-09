@@ -11,6 +11,7 @@ import org.gedcomx.types.GenderType;
 import org.gedcomx.types.NamePartType;
 import org.gedcomx.types.NamePartType;
 
+import java.io.Serializable;
 import java.util.List;
 
 import java.text.DateFormat;
@@ -25,7 +26,7 @@ import java.util.regex.Pattern;
 /**
  * Created by jfinlay on 12/30/2014.
  */
-public class LittlePerson {
+public class LittlePerson implements Serializable {
     private long id;
     private String name;
     private String givenName;

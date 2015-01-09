@@ -39,6 +39,7 @@ import java.util.List;
  * @see SystemUiHider
  */
 public class ChooseFamilyMember extends Activity implements AdapterView.OnItemClickListener {
+    public static final String SELECTED_PERSON = "selectedPerson";
     private static final int LOGIN_REQUEST = 1;
 
     private GridView gridView;
@@ -95,7 +96,9 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        LittlePerson person = (LittlePerson) gridView.getItemAtPosition(position);
         Intent intent = new Intent( this, MatchGameActivity.class );
+        intent.putExtra(SELECTED_PERSON, person);
         startActivity(intent);
     }
 

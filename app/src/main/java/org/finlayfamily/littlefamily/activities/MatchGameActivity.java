@@ -1,40 +1,51 @@
 package org.finlayfamily.littlefamily.activities;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 
 import org.finlayfamily.littlefamily.R;
+import org.finlayfamily.littlefamily.data.LittlePerson;
+import org.finlayfamily.littlefamily.familysearch.FamilySearchException;
+import org.finlayfamily.littlefamily.familysearch.FamilySearchService;
+import org.finlayfamily.littlefamily.games.MatchingGame;
+import org.gedcomx.conclusion.Person;
 
-public class MatchGameActivity extends ActionBarActivity {
+import java.util.List;
+
+public class MatchGameActivity extends ActionBarActivity implements AdapterView.OnItemClickListener  {
+
+    private MatchingGame game;
+    private List<LittlePerson> people;
+    private LittlePerson selectedPerson;
+    private FamilySearchService service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_match_game);
-    }
 
+        Intent intent = getIntent();
+        selectedPerson = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_match_game, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        try {
+            Person fsPerson = service.getPerson(selectedPerson.getFamilySearchId());
+            fsPerson.getLinks();
+        } catch (FamilySearchException e) {
+            e.printStackTrace();
         }
 
-        return super.onOptionsItemSelected(item);
+
+        game = new MatchingGame(1, people);
+        game.setupLevel();
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
     }
 }
