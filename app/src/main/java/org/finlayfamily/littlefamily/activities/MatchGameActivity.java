@@ -30,15 +30,10 @@ public class MatchGameActivity extends ActionBarActivity implements AdapterView.
         setContentView(R.layout.activity_match_game);
 
         Intent intent = getIntent();
-        selectedPerson = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
-
-        try {
-            Person fsPerson = service.getPerson(selectedPerson.getFamilySearchId());
-            fsPerson.getLinks();
-        } catch (FamilySearchException e) {
-            e.printStackTrace();
+        people = (List<LittlePerson>) intent.getSerializableExtra(ChooseFamilyMember.FAMILY);
+        if (people!=null && people.size()>0) {
+            selectedPerson = people.get(0);
         }
-
 
         game = new MatchingGame(1, people);
         game.setupLevel();
