@@ -7,6 +7,17 @@ public class MatchPerson {
     private boolean matched;
     private boolean flipped;
     private LittlePerson person;
+	private String frame;
+
+	public void setFrame(String frame)
+	{
+		this.frame = frame;
+	}
+
+	public String getFrame()
+	{
+		return frame;
+	}
 
     public boolean isMatched() {
         return matched;

@@ -68,7 +68,7 @@ public class FamilySearchService {
 
     private String sessionId = null;
     private Person currentPerson = null;
-    private List<Relationship> closeRelatives = null;
+    private Map<String, List<Relationship>> closeRelatives = null;
     private Map<String, Person> personCache;
     private Map<String, Link> linkCache;
 
@@ -81,6 +81,7 @@ public class FamilySearchService {
     private FamilySearchService() {
         personCache = new HashMap<>();
         linkCache = new HashMap<>();
+		closeRelatives = new HashMap<>();
     }
 
     public FSResult authenticate(String username, String password) throws FamilySearchException {
@@ -218,13 +219,26 @@ public class FamilySearchService {
             throw new FamilySearchException("Unable to get current person from FamilySearch", 0);
         }
 
-        if (closeRelatives==null) {
+        return getCloseRelatives(currentPerson.getId());
+    }
+
+	public List<Relationship> getCloseRelatives(String personId) throws FamilySearchException {
+        if (sessionId==null) {
+            throw new FamilySearchException("Not Authenticated with FamilySearch.", 0);
+        }
+
+		Person person = this.getPerson(personId);
+        if (person==null) {
+            throw new FamilySearchException("Unable to get person "+personId+" from FamilySearch", 0);
+        }
+
+        if (closeRelatives.get(person.getId())==null) {
             Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons-with-relationships");
             Bundle headers = new Bundle();
             headers.putString("Authorization", "Bearer " + sessionId);
             headers.putString("Accept", "application/x-gedcomx-v1+xml");
             Bundle params = new Bundle();
-            params.putString("person", currentPerson.getId());
+            params.putString("person", person.getId());
 
             FSResult result = getRestData(METHOD_GET, uri, params, headers);
 
@@ -232,11 +246,12 @@ public class FamilySearchService {
             try {
                 Gedcomx doc = serializer.read( Gedcomx.class, result.getData() );
                 if (doc.getRelationships() != null && doc.getRelationships().size() > 0) {
-                    closeRelatives = new ArrayList<>(doc.getRelationships());
-                    for(Relationship r : closeRelatives) {
+                    List<Relationship> relatives = new ArrayList<>(doc.getRelationships());
+                    for(Relationship r : relatives) {
                         getPerson(r.getPerson1().getResourceId());
                         getPerson(r.getPerson2().getResourceId());
                     }
+					closeRelatives.put(person.getId(), relatives);
                     Log.i( TAG, "relationships " + doc.getRelationships().size() );
                 }
             }
@@ -245,9 +260,9 @@ public class FamilySearchService {
             }
         }
 
-        return closeRelatives;
+        return closeRelatives.get(person.getId);
     }
-
+	
     private FSResult getRestData(String method, Uri action, Bundle params, Bundle headers) throws FamilySearchException{
         FSResult data = new FSResult();
         try {

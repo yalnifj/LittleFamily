@@ -31,6 +31,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
+import android.content.pm.*;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -75,7 +76,8 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
             startActivityForResult( intent, LOGIN_REQUEST );
         } else {
             pd = ProgressDialog.show(this, "Please wait...", "Loading data from FamilySearch", true, false);
-            FamilyLoaderTask task = new FamilyLoaderTask();
+            Person person = familySearchService.getCurrentPerson();
+			FamilyLoaderTask task = new FamilyLoaderTask(person,false);
             task.execute();
         }
 
@@ -87,7 +89,8 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
             case LOGIN_REQUEST:
                 if (resultCode == RESULT_OK) {
                     Log.d("onActivityResult", "SESSION_ID:" + familySearchService.getSessionId());
-                    FamilyLoaderTask task = new FamilyLoaderTask();
+					Person person = service.getCurrentPerson();
+					FamilyLoaderTask task = new FamilyLoaderTask(person);
                     task.execute();
                 }
                 break;
@@ -97,20 +100,26 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         LittlePerson person = (LittlePerson) gridView.getItemAtPosition(position);
-        Intent intent = new Intent( this, MatchGameActivity.class );
-        intent.putExtra(SELECTED_PERSON, person);
-        startActivity(intent);
+        FamilyLoaderTask task = new FamilyLoaderTask(person, true);
+		task.execute();
     }
 
     public class FamilyLoaderTask extends AsyncTask<String, Integer, List<LittlePerson>> {
-        @Override
+        private Person person;
+		private boolean launchGame;
+		
+		public FamilyLoaderTask(Person person, boolean launch) {
+			this.person = person;
+			this.launchGame = launch;
+		}
+		
+		@Override
         protected List<LittlePerson> doInBackground(String[] params) {
             List<LittlePerson> familyMembers = new ArrayList<>();
             FamilySearchService service = FamilySearchService.getInstance();
             try {
-                List<Relationship> family = service.getCloseRelatives();
-                Person currentPerson = service.getCurrentPerson();
-                LittlePerson cp = buildLittlePerson(currentPerson);
+                List<Relationship> family = service.getCloseRelatives(person.getId());
+                LittlePerson cp = buildLittlePerson(person);
                 familyMembers.add(cp);
 
                 for(Relationship r : family) {
@@ -136,7 +145,13 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
         @Override
         protected void onPostExecute(List<LittlePerson> familyMembers) {
             if (pd!=null) pd.dismiss();
-            adapter.setFamily(familyMembers);
+			if (launchGame) {
+				Intent intent = new Intent( this, MatchGameActivity.class );
+				intent.putExtra(SELECTED_PERSON, person);
+				startActivity(intent);
+			} else {
+				adapter.setFamily(familyMembers);
+			}
         }
 
         public LittlePerson buildLittlePerson(Person fsPerson) throws FamilySearchException {
