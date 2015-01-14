@@ -76,8 +76,17 @@ public class MatchGameListAdapter extends BaseAdapter {
         }
 
         int width = (int) ((parent.getWidth()/2)-parent.getWidth()*.05);
-
-        int height = width;
+        int height = (int) ((parent.getHeight()/2)-parent.getHeight()*.05);
+        int rotate = 0;
+        if (height < width) {
+            width = height;
+            rotate = 90;
+        }
+        else {
+            height = width;
+            rotate = 0;
+        }
+        holder.framedPortrait.setRotation(rotate);
         MatchPerson person = (MatchPerson) getItem(index);
 		Resources r = context.getResources();
         if (person!=null) {
@@ -86,7 +95,6 @@ public class MatchGameListAdapter extends BaseAdapter {
                 if (person.getPerson().getPhotoPath() != null) {
                     bm = ImageHelper.loadBitmapFromFile(person.getPerson().getPhotoPath(), ImageHelper.getOrientation(person.getPerson().getPhotoPath()), width, height);
                 } else {
-                   // bm = ImageHelper.loadBitmapFromResource(context, person.getPerson().getDefaultPhotoResource(), 0, width, height);
               		bm = BitmapFactory.decodeResource(r, person.getPerson().getDefaultPhotoResource());
 				}
 				
@@ -95,8 +103,8 @@ public class MatchGameListAdapter extends BaseAdapter {
 
                 holder.framedPortrait.setImageBitmap(overlayed);
             } else {
-                Drawable d = r.getDrawable(person.getFrame());
-                holder.framedPortrait.setImageDrawable(d);
+                Bitmap bm = ImageHelper.loadBitmapFromResource(context, person.getFrame(), 0, width, height);
+                holder.framedPortrait.setImageBitmap(bm);
             }
         }
 

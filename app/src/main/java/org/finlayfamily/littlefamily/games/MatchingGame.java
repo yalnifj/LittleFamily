@@ -69,7 +69,7 @@ public class MatchingGame {
         if (pos1!=pos2 && pos1>=0 && pos2>=0 && pos1<board.size() && pos2<board.size()) {
             MatchPerson p1 = board.get(pos1);
             MatchPerson p2 = board.get(pos2);
-            if (p1==p2) return true;
+            if (p1.getPerson()==p2.getPerson()) return true;
         }
         return false;
     }

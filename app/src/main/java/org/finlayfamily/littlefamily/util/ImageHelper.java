@@ -254,15 +254,19 @@ public class ImageHelper {
             Bitmap bmOverlay = Bitmap.createBitmap(maxWidth, maxHeight,  bmp1.getConfig());
             Canvas canvas = new Canvas(bmOverlay);
             Rect rect = new Rect();
-            int innerWidth = (int) (maxWidth*0.75);
-            int innerHeight = (int) (maxHeight*0.75);
+            int innerWidth = (int) (maxWidth*0.70);
+            int innerHeight = (int) (maxHeight*0.70);
             int left = (maxWidth - innerWidth)/2;
             int top = (maxHeight - innerHeight)/2;
             int right = left + innerWidth;
             int bottom = top + innerHeight;
             rect.set(left, top, right, bottom);
             canvas.drawBitmap(bmp1, null, rect, null);
-            canvas.drawBitmap(bmp2, 0, 0, null);
+
+            Rect rect2 = new Rect();
+            rect2.set(0,0,maxWidth,maxHeight);
+            canvas.drawBitmap(bmp2, null, rect2, null);
+
             return bmOverlay;
 
         } catch (Exception e)
