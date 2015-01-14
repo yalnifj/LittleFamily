@@ -1,16 +1,13 @@
 package org.finlayfamily.littlefamily.util;
 
-import java.io.File;
-import java.io.FileDescriptor;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Rect;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
@@ -19,6 +16,11 @@ import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Contacts.Photo;
 import android.provider.MediaStore;
 import android.util.Log;
+
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class ImageHelper {
 	/**
@@ -243,5 +245,33 @@ public class ImageHelper {
         }
 
         return dataDir;
+    }
+
+    public static Bitmap overlay(Bitmap bmp1, Bitmap bmp2)
+    {
+        try
+        {
+            int maxWidth = bmp2.getWidth();
+            int maxHeight = bmp2.getHeight();
+            Bitmap bmOverlay = Bitmap.createBitmap(maxWidth, maxHeight,  bmp1.getConfig());
+            Canvas canvas = new Canvas(bmOverlay);
+            Rect rect = new Rect();
+            int innerWidth = (int) (maxWidth*0.75);
+            int innerHeight = (int) (maxHeight*0.75);
+            int left = (maxWidth - innerWidth)/2;
+            int top = (maxHeight - innerHeight)/2;
+            int right = left + innerWidth;
+            int bottom = top + innerHeight;
+            rect.set(left, top, right, bottom);
+            canvas.drawBitmap(bmp1, null, rect, null);
+            canvas.drawBitmap(bmp2, 0, 0, null);
+            return bmOverlay;
+
+        } catch (Exception e)
+        {
+            // TODO: handle exception
+            e.printStackTrace();
+            return null;
+        }
     }
 }

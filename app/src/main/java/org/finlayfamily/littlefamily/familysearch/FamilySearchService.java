@@ -131,7 +131,7 @@ public class FamilySearchService {
                     if (doc.getPersons() != null && doc.getPersons().size() > 0) {
                         currentPerson = doc.getPersons().get(0);
                         personCache.put(currentPerson.getId(), currentPerson);
-                        Log.i(TAG, "persons " + doc.getPersons().size() + ": " + currentPerson.getId());
+                        Log.i(TAG, "getCurrentPerson " + doc.getPersons().size() + ": " + currentPerson.getId());
                     }
                 } catch (Exception e) {
                     Log.e(TAG, "error", e);
@@ -161,7 +161,7 @@ public class FamilySearchService {
                         for(Person p : doc.getPersons()) {
                             personCache.put(p.getId(), p);
                         }
-                        Log.i(TAG, "persons " + doc.getPersons().size() + ": " + currentPerson.getId());
+                        Log.i(TAG, "getPerson " + doc.getPersons().size() + ": " + personId);
                     }
                 } catch (Exception e) {
                     Log.e(TAG, "error", e);
@@ -200,7 +200,7 @@ public class FamilySearchService {
                             }
                         }
                     }
-                    Log.i(TAG, "persons " + doc.getPersons().size() + ": " + currentPerson.getId());
+                    Log.i(TAG, "getPersonPortrait " + doc.getPersons().size() + ": " + currentPerson.getId());
                 }
             } catch (Exception e) {
                 Log.e(TAG, "error", e);
@@ -252,7 +252,7 @@ public class FamilySearchService {
                         getPerson(r.getPerson2().getResourceId());
                     }
 					closeRelatives.put(person.getId(), relatives);
-                    Log.i( TAG, "relationships " + doc.getRelationships().size() );
+                    Log.i( TAG, "getCloseRelatives " + doc.getRelationships().size() +": "+personId);
                 }
             }
             catch (Exception e) {
@@ -260,7 +260,7 @@ public class FamilySearchService {
             }
         }
 
-        return closeRelatives.get(person.getId);
+        return closeRelatives.get(person.getId());
     }
 	
     private FSResult getRestData(String method, Uri action, Bundle params, Bundle headers) throws FamilySearchException{

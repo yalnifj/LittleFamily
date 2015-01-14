@@ -26,12 +26,16 @@ public class MatchingGame {
         board = new ArrayList<>(gridSize*2);
         for(int i=0; i<gridSize; i++) {
             LittlePerson p = peoplePool.get(i % peoplePool.size());
-            MatchPerson m = new MatchPerson();
-            m.setFlipped(false);
-            m.setMatched(false);
-            m.setPerson(p);
-            board.add(m);
-            board.add(m);
+            MatchPerson m1 = new MatchPerson();
+            m1.setFlipped(false);
+            m1.setMatched(false);
+            m1.setPerson(p);
+            board.add(m1);
+            MatchPerson m2 = new MatchPerson();
+            m2.setFlipped(false);
+            m2.setMatched(false);
+            m2.setPerson(p);
+            board.add(m2);
         }
 
         randomizeBoard();

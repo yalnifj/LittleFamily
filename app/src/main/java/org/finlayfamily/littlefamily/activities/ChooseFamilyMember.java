@@ -3,27 +3,22 @@ package org.finlayfamily.littlefamily.activities;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.activities.adapters.FamilyMemberListAdapter;
 import org.finlayfamily.littlefamily.activities.tasks.FamilyLoaderTask;
 import org.finlayfamily.littlefamily.activities.util.SystemUiHider;
-import org.finlayfamily.littlefamily.data.DataHelper;
 import org.finlayfamily.littlefamily.data.LittlePerson;
 import org.finlayfamily.littlefamily.familysearch.FamilySearchException;
 import org.finlayfamily.littlefamily.familysearch.FamilySearchService;
 import org.gedcomx.conclusion.Person;
-import org.gedcomx.conclusion.Relationship;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -46,14 +41,15 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_choose_family_member);
 
         this.familySearchService = FamilySearchService.getInstance();
 
-        setContentView(R.layout.activity_choose_family_member);
 
         gridView = (GridView) findViewById(R.id.gridViewFamily);
         adapter = new FamilyMemberListAdapter(this);
         gridView.setAdapter(adapter);
+        gridView.setOnItemClickListener(this);
     }
 
     @Override
@@ -73,8 +69,7 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
             LittlePerson littlePerson = null;
             try {
                 Person person = familySearchService.getCurrentPerson();
-                littlePerson = DataHelper.buildLittlePerson(person, this);
-                FamilyLoaderTask task = new FamilyLoaderTask(littlePerson, this, this);
+                FamilyLoaderTask task = new FamilyLoaderTask(person, this, this);
                 task.execute();
             } catch (FamilySearchException e) {
                 e.printStackTrace();
@@ -92,8 +87,7 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
                     Person person = null;
                     try {
                         person = familySearchService.getCurrentPerson();
-                        LittlePerson littlePerson = DataHelper.buildLittlePerson(person, this);
-                        FamilyLoaderTask task = new FamilyLoaderTask(littlePerson, this, this);
+                        FamilyLoaderTask task = new FamilyLoaderTask(person, this, this);
                         task.execute();
                     } catch (FamilySearchException e) {
                         e.printStackTrace();
@@ -108,7 +102,13 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
         pd = ProgressDialog.show(this, "Please wait...", "Loading data from FamilySearch", true, false);
         launchGame = true;
         LittlePerson person = (LittlePerson) gridView.getItemAtPosition(position);
-        FamilyLoaderTask task = new FamilyLoaderTask(person, this, this);
+        Person fsPerson = null;
+        try {
+            fsPerson = familySearchService.getPerson(person.getFamilySearchId());
+        } catch (FamilySearchException e) {
+            e.printStackTrace();
+        }
+        FamilyLoaderTask task = new FamilyLoaderTask(fsPerson, this, this);
 		task.execute();
     }
 

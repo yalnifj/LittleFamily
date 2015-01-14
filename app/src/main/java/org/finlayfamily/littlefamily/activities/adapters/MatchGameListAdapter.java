@@ -1,13 +1,18 @@
 package org.finlayfamily.littlefamily.activities.adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.view.LayoutInflater;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
+import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.data.MatchPerson;
 import org.finlayfamily.littlefamily.util.ImageHelper;
 
@@ -60,7 +65,6 @@ public class MatchGameListAdapter extends BaseAdapter {
     @Override
     public View getView(int index, View convertView, ViewGroup parent) {
         ViewHolder holder;
-        LayoutInflater inflater = LayoutInflater.from(context);
 
         if (convertView == null) {
             convertView = new ImageView(context);
@@ -71,16 +75,34 @@ public class MatchGameListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        int width = (int) ((parent.getWidth() / 2)-parent.getWidth()*.05);
+        int items = getCount();
+        int width = (int) ((parent.getWidth()/1.5)-parent.getWidth()*.05);
+        int rowcount = items/2;
+        if (rowcount * width < parent.getHeight()) {
+            rowcount = items / 3;
+            width = (int) ((parent.getWidth() / 2)-parent.getWidth()*.05);
+        }
+
         int height = width;
         MatchPerson person = (MatchPerson) getItem(index);
         if (person!=null) {
-            if (person.getPerson().getPhotoPath()!=null) {
-                Bitmap bm = ImageHelper.loadBitmapFromFile(person.getPerson().getPhotoPath(), ImageHelper.getOrientation(person.getPerson().getPhotoPath()), width, height);
-                holder.framedPortrait.setImageBitmap(bm);
+            if (person.isFlipped()) {
+                Bitmap bm = null;
+                if (person.getPerson().getPhotoPath() != null) {
+                    bm = ImageHelper.loadBitmapFromFile(person.getPerson().getPhotoPath(), ImageHelper.getOrientation(person.getPerson().getPhotoPath()), width, height);
+                } else {
+                    bm = ImageHelper.loadBitmapFromResource(context, person.getPerson().getDefaultPhotoResource(), 0, width, height);
+                }
+
+                Resources r = context.getResources();
+                Bitmap frame = BitmapFactory.decodeResource(r, R.drawable.frame1);
+                Bitmap overlayed = ImageHelper.overlay(bm, frame);
+
+                holder.framedPortrait.setImageBitmap(overlayed);
             } else {
-                Bitmap bm = ImageHelper.loadBitmapFromResource(context, person.getPerson().getDefaultPhotoResource(), 0, width, height);
-                holder.framedPortrait.setImageBitmap(bm);
+                Resources r = context.getResources();
+                Drawable d = r.getDrawable(R.drawable.frame1);
+                holder.framedPortrait.setImageDrawable(d);
             }
         }
 
