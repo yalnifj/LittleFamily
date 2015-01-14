@@ -28,6 +28,8 @@ public class MatchGameActivity extends Activity implements AdapterView.OnItemCli
     private GridView gridView;
     private int flipCount;
     private Handler flipHandler;
+	private int flip1 = -1;
+	private int flip2 = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +58,23 @@ public class MatchGameActivity extends Activity implements AdapterView.OnItemCli
         if (flipCount<2) {
             MatchPerson person = (MatchPerson) adapter.getItem(position);
             if (!person.isFlipped()) {
+				if (flip1<0) flip1 = position;
+				else flip2 = position;
                 person.setFlipped(true);
                 flipCount++;
                 if (flipCount==2) {
+					if (game.isMatch(flip1, flip2)) {
+						MatchPerson person1 = (MatchPerson) adapter.getItem(flip1);
+						MatchPerson person2 = (MatchPerson) adapter.getItem(flip2);
+						person1.setMatched(true);
+						person2.setMatched(true);
+						if (game.allMatched()) {
+							game.levelUp();
+							adapter.setFamily(game.getBoard());
+						}
+					}
+					flip1 = -1;
+					flip2 = -1;
                     flipHandler = new Handler();
                     flipHandler.postDelayed(new flipOverHandler(), FLIP_OVER_DELAY);
                 }

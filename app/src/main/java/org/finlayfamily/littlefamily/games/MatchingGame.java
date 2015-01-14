@@ -72,6 +72,11 @@ public class MatchingGame {
     public void setLevel(int level) {
         this.level = level;
     }
+	
+	public void levelUp() {
+		this.level++;
+		setupLevel();
+	}
 
     public List<MatchPerson> getBoard() {
         return board;
