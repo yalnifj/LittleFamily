@@ -6,6 +6,7 @@ import org.finlayfamily.littlefamily.data.MatchPerson;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import org.finlayfamily.littlefamily.R;
 
 /**
  * Created by jfinlay on 1/9/2015.
@@ -14,6 +15,14 @@ public class MatchingGame {
     private int level;
     private List<LittlePerson> peoplePool;
     private List<MatchPerson> board;
+	private int[] frames = { 
+		R.drawable.frame1,
+		R.drawable.frame2,
+		R.drawable.frame3,
+		R.drawable.frame4,
+		R.drawable.frame5,
+		R.drawable.frame6
+	};
 
     public MatchingGame(int startLevel, List<LittlePerson> people) {
         this.level = startLevel;
@@ -23,6 +32,7 @@ public class MatchingGame {
 
     public void setupLevel() {
         int gridSize = level+1;
+		Random rand = new Random();
         board = new ArrayList<>(gridSize*2);
         for(int i=0; i<gridSize; i++) {
             LittlePerson p = peoplePool.get(i % peoplePool.size());
@@ -30,11 +40,13 @@ public class MatchingGame {
             m1.setFlipped(false);
             m1.setMatched(false);
             m1.setPerson(p);
+			m1.setFrame(rand.nextInt(frames.length));
             board.add(m1);
             MatchPerson m2 = new MatchPerson();
             m2.setFlipped(false);
             m2.setMatched(false);
             m2.setPerson(p);
+			m2.setFrame(rand.nextInt(frames.length));
             board.add(m2);
         }
 

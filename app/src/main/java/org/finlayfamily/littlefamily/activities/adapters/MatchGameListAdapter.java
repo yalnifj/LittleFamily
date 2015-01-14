@@ -95,13 +95,13 @@ public class MatchGameListAdapter extends BaseAdapter {
                 }
 
                 Resources r = context.getResources();
-                Bitmap frame = BitmapFactory.decodeResource(r, R.drawable.frame1);
+                Bitmap frame = BitmapFactory.decodeResource(r, person.getFrame());
                 Bitmap overlayed = ImageHelper.overlay(bm, frame);
 
                 holder.framedPortrait.setImageBitmap(overlayed);
             } else {
                 Resources r = context.getResources();
-                Drawable d = r.getDrawable(R.drawable.frame1);
+                Drawable d = r.getDrawable(person.getFrame());
                 holder.framedPortrait.setImageDrawable(d);
             }
         }

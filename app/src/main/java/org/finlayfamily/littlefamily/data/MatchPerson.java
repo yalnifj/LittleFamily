@@ -7,14 +7,14 @@ public class MatchPerson {
     private boolean matched;
     private boolean flipped;
     private LittlePerson person;
-	private String frame;
+	private int frame;
 
-	public void setFrame(String frame)
+	public void setFrame(int frame)
 	{
 		this.frame = frame;
 	}
 
-	public String getFrame()
+	public int getFrame()
 	{
 		return frame;
 	}
