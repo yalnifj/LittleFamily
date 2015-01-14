@@ -75,32 +75,26 @@ public class MatchGameListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        int items = getCount();
-        int width = (int) ((parent.getWidth()/1.5)-parent.getWidth()*.05);
-        int rowcount = items/2;
-        if (rowcount * width < parent.getHeight()) {
-            rowcount = items / 3;
-            width = (int) ((parent.getWidth() / 2)-parent.getWidth()*.05);
-        }
+        int width = (int) ((parent.getWidth()/2)-parent.getWidth()*.05);
 
         int height = width;
         MatchPerson person = (MatchPerson) getItem(index);
+		Resources r = context.getResources();
         if (person!=null) {
             if (person.isFlipped()) {
                 Bitmap bm = null;
                 if (person.getPerson().getPhotoPath() != null) {
                     bm = ImageHelper.loadBitmapFromFile(person.getPerson().getPhotoPath(), ImageHelper.getOrientation(person.getPerson().getPhotoPath()), width, height);
                 } else {
-                    bm = ImageHelper.loadBitmapFromResource(context, person.getPerson().getDefaultPhotoResource(), 0, width, height);
-                }
-
-                Resources r = context.getResources();
+                   // bm = ImageHelper.loadBitmapFromResource(context, person.getPerson().getDefaultPhotoResource(), 0, width, height);
+              		bm = BitmapFactory.decodeResource(r, person.getPerson().getDefaultPhotoResource());
+				}
+				
                 Bitmap frame = BitmapFactory.decodeResource(r, person.getFrame());
-                Bitmap overlayed = ImageHelper.overlay(bm, frame);
+                Bitmap overlayed = ImageHelper.overlay(bm, frame, width, height);
 
                 holder.framedPortrait.setImageBitmap(overlayed);
             } else {
-                Resources r = context.getResources();
                 Drawable d = r.getDrawable(person.getFrame());
                 holder.framedPortrait.setImageDrawable(d);
             }

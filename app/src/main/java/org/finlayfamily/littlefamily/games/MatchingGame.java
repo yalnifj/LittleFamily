@@ -40,13 +40,13 @@ public class MatchingGame {
             m1.setFlipped(false);
             m1.setMatched(false);
             m1.setPerson(p);
-			m1.setFrame(rand.nextInt(frames.length));
+			m1.setFrame(frames[rand.nextInt(frames.length)]);
             board.add(m1);
             MatchPerson m2 = new MatchPerson();
             m2.setFlipped(false);
             m2.setMatched(false);
             m2.setPerson(p);
-			m2.setFrame(rand.nextInt(frames.length));
+			m2.setFrame(frames[rand.nextInt(frames.length)]);
             board.add(m2);
         }
 

@@ -247,12 +247,10 @@ public class ImageHelper {
         return dataDir;
     }
 
-    public static Bitmap overlay(Bitmap bmp1, Bitmap bmp2)
+    public static Bitmap overlay(Bitmap bmp1, Bitmap bmp2, int maxWidth, int maxHeight)
     {
         try
         {
-            int maxWidth = bmp2.getWidth();
-            int maxHeight = bmp2.getHeight();
             Bitmap bmOverlay = Bitmap.createBitmap(maxWidth, maxHeight,  bmp1.getConfig());
             Canvas canvas = new Canvas(bmOverlay);
             Rect rect = new Rect();
