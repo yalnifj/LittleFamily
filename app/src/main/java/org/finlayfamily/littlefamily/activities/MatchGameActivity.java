@@ -68,10 +68,6 @@ public class MatchGameActivity extends Activity implements AdapterView.OnItemCli
 						MatchPerson person2 = (MatchPerson) adapter.getItem(flip2);
 						person1.setMatched(true);
 						person2.setMatched(true);
-						if (game.allMatched()) {
-							game.levelUp();
-							adapter.setFamily(game.getBoard());
-						}
 					}
 					flip1 = -1;
 					flip2 = -1;
@@ -86,6 +82,10 @@ public class MatchGameActivity extends Activity implements AdapterView.OnItemCli
     public class flipOverHandler implements Runnable {
         @Override
         public void run() {
+            if (game.allMatched()) {
+                game.levelUp();
+                adapter.setFamily(game.getBoard());
+            }
             for(MatchPerson p : game.getBoard()) {
                 if (!p.isMatched()) p.setFlipped(false);
             }
