@@ -277,14 +277,18 @@ public class ImageHelper {
             int w = maxWidth;
             int h = maxHeight;
 
-            double ratio2 = bmp2.getWidth()/bmp2.getHeight();
-            if (ratio > 1) {
-                h = (int) (h / ratio);
+            double ratio2 = ((double) bmp2.getWidth()) / ((double) bmp2.getHeight());
+            int t = 0;
+            int l = 0;
+            if (ratio2 > 1) {
+                h = (int) (h / ratio2);
+                t = (maxHeight - h) / 2;
             }
-            if (ratio < 1) {
-                w = (int) (w * ratio);
+            if (ratio2 < 1) {
+                w = (int) (w * ratio2);
+                l = (maxWidth - w) / 2;
             }
-            rect2.set(0,0,w,h);
+            rect2.set(l,t,w,h);
             canvas.drawBitmap(bmp2, null, rect2, null);
 
             return bmOverlay;

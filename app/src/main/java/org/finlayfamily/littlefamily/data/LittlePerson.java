@@ -182,4 +182,21 @@ public class LittlePerson implements Serializable {
             return R.drawable.dad;
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        LittlePerson that = (LittlePerson) o;
+
+        if (!familySearchId.equals(that.familySearchId)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return familySearchId.hashCode();
+    }
 }
