@@ -21,7 +21,8 @@ public class MatchingGame {
 		R.drawable.frame3,
 		R.drawable.frame4,
 		R.drawable.frame5,
-		R.drawable.frame6
+		R.drawable.frame6,
+        R.drawable.frame7
 	};
 
     public MatchingGame(int startLevel, List<LittlePerson> people) {

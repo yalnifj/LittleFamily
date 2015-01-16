@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -75,7 +76,8 @@ public class FamilyMemberListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        int width = (int) ((parent.getWidth() / 2)-parent.getWidth()*.05);
+        GridView gridView = (GridView) parent;
+        int width = (int) ((parent.getWidth() / gridView.getNumColumns())-parent.getWidth()*.05);
         int height = width;
         LittlePerson person = (LittlePerson) getItem(index);
         if (person!=null) {

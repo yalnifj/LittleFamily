@@ -1,11 +1,16 @@
 package org.finlayfamily.littlefamily.activities;
 
+import android.animation.AnimatorInflater;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.tts.TextToSpeech;
+import android.view.Display;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -26,7 +31,8 @@ import java.util.Locale;
 
 public class MatchGameActivity extends Activity implements AdapterView.OnItemClickListener, TextToSpeech.OnInitListener, FamilyLoaderTask.Listener {
 
-    private static long FLIP_OVER_DELAY = 1500;
+    private static long FLIP_OVER_DELAY = 2000;
+    private static long FLIP_TIME = 700;
     private MatchingGame game;
     private List<LittlePerson> people;
     private LittlePerson selectedPerson;
@@ -62,6 +68,7 @@ public class MatchGameActivity extends Activity implements AdapterView.OnItemCli
         adapter.setFamily(game.getBoard());
         gridView.setAdapter(adapter);
         gridView.setOnItemClickListener(this);
+        updateColumns();
 
         tts = new TextToSpeech(this, this);
 
@@ -95,6 +102,12 @@ public class MatchGameActivity extends Activity implements AdapterView.OnItemCli
             tts.shutdown();
         }
         super.onDestroy();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        updateColumns();
     }
 
     @Override
@@ -136,6 +149,10 @@ public class MatchGameActivity extends Activity implements AdapterView.OnItemCli
 				flipHandler = new Handler();
 				flipHandler.postDelayed(new flipOverHandler(), FLIP_OVER_DELAY);
 			}
+            ObjectAnimator anim = (ObjectAnimator) AnimatorInflater.loadAnimator(this, R.animator.flipping);
+            anim.setTarget(view);
+            anim.setDuration(FLIP_TIME);
+            anim.start();
 			adapter.notifyDataSetChanged();
 		}
     }
@@ -163,12 +180,35 @@ public class MatchGameActivity extends Activity implements AdapterView.OnItemCli
             if (game.allMatched()) {
                 game.levelUp();
                 adapter.setFamily(game.getBoard());
+                updateColumns();
             }
+            int pos = 0;
             for(MatchPerson p : game.getBoard()) {
-                if (!p.isMatched()) p.setFlipped(false);
+                if (!p.isMatched()) {
+                    if (p.isFlipped()) {
+                        ObjectAnimator anim = (ObjectAnimator) AnimatorInflater.loadAnimator(MatchGameActivity.this, R.animator.flipping);
+                        View view = gridView.getChildAt(pos);
+                        anim.setTarget(view);
+                        anim.setDuration(FLIP_TIME);
+                        anim.start();
+                        p.setFlipped(false);
+                    }
+                }
+                pos++;
             }
             flipCount = 0;
             adapter.notifyDataSetChanged();
         }
+    }
+
+    private void updateColumns() {
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
+        int cols = 2;
+        while(cols < 12 && (width / cols) * Math.ceil(((double)adapter.getCount()) / cols) > height) cols++;
+        gridView.setNumColumns(cols);
     }
 }

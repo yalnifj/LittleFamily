@@ -3,8 +3,11 @@ package org.finlayfamily.littlefamily.activities;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -55,6 +58,7 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
+        updateColumns();
     }
 
     @Override
@@ -76,6 +80,12 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
             }
         }
 
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        updateColumns();
     }
 
     @Override
@@ -122,7 +132,19 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
             intent.putExtra(FAMILY, familyMembers);
             startActivity(intent);
         } else {
+            updateColumns();
             adapter.setFamily(familyMembers);
         }
+    }
+
+    private void updateColumns() {
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
+        int cols = 2;
+        while(cols < 12 && (width / cols) * Math.ceil(((double)adapter.getCount()) / cols) > height) cols++;
+        gridView.setNumColumns(cols);
     }
 }

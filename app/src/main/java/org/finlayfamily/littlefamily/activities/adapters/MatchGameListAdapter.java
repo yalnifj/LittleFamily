@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
@@ -82,7 +83,7 @@ public class MatchGameListAdapter extends BaseAdapter {
         if (height < width) {
             height = (int) (height / (Math.max(8, getCount()) / 8.0));
             width = height;
-            rotate = 90;
+            rotate = 270;
         }
         else {
             width = (int) (width / (Math.max(8, getCount()) / 8.0));
@@ -90,9 +91,11 @@ public class MatchGameListAdapter extends BaseAdapter {
             rotate = 0;
         }
 
+        //holder.framedPortrait.setRotation(rotate);
         MatchPerson person = (MatchPerson) getItem(index);
 		Resources r = context.getResources();
         if (person!=null) {
+            Bitmap toDraw = null;
             if (person.isFlipped()) {
                 Bitmap bm = null;
                 if (person.getPerson().getPhotoPath() != null) {
@@ -103,15 +106,14 @@ public class MatchGameListAdapter extends BaseAdapter {
 				}
 				
                 Bitmap frame = BitmapFactory.decodeResource(r, person.getFrame());
-                Bitmap overlayed = ImageHelper.overlay(bm, frame, width, height);
-
-                holder.framedPortrait.setImageBitmap(overlayed);
+                toDraw = ImageHelper.overlay(bm, frame, width, height);
             } else {
-                Bitmap bm = ImageHelper.loadBitmapFromResource(context, person.getFrame(), 0, width, height);
-                holder.framedPortrait.setImageBitmap(bm);
+                 toDraw = ImageHelper.loadBitmapFromResource(context, person.getFrame(), 0, width, height);
             }
-
-            holder.framedPortrait.setRotation(rotate);
+           // if (rotate!=0) {
+           //    toDraw = ImageHelper.rotateBitmap(toDraw, rotate);
+           // }
+            holder.framedPortrait.setImageBitmap(toDraw);
         }
 
         return convertView;
