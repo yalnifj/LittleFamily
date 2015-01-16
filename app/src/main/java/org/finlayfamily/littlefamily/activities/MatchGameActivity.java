@@ -81,7 +81,7 @@ public class MatchGameActivity extends Activity implements AdapterView.OnItemCli
     public void onInit(int code) {
         if (code == TextToSpeech.SUCCESS) {
             tts.setLanguage(Locale.getDefault());
-            tts.setSpeechRate(1.5f);
+            tts.setSpeechRate(0.5f);
         } else {
             tts = null;
             //Toast.makeText(this, "Failed to initialize TTS engine.", Toast.LENGTH_SHORT).show();
@@ -99,39 +99,45 @@ public class MatchGameActivity extends Activity implements AdapterView.OnItemCli
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (flipCount<2) {
-            MatchPerson person = (MatchPerson) adapter.getItem(position);
-            if (tts!=null) {
-                String name = person.getPerson().getGivenName();
-                //-- TODO get relationship name
-                if (name!=null) {
-                    if (Build.VERSION.SDK_INT > 20) {
-                        tts.speak(name, TextToSpeech.QUEUE_FLUSH, null, null);
-                    } else {
-                        tts.speak(name, TextToSpeech.QUEUE_FLUSH, null);
-                    }
-                }
-            }
-            if (!person.isFlipped()) {
-				if (flip1<0) flip1 = position;
-				else flip2 = position;
-                person.setFlipped(true);
-                flipCount++;
-                if (flipCount==2) {
-					if (game.isMatch(flip1, flip2)) {
-						MatchPerson person1 = (MatchPerson) adapter.getItem(flip1);
-						MatchPerson person2 = (MatchPerson) adapter.getItem(flip2);
-						person1.setMatched(true);
-						person2.setMatched(true);
-					}
-					flip1 = -1;
-					flip2 = -1;
-                    flipHandler = new Handler();
-                    flipHandler.postDelayed(new flipOverHandler(), FLIP_OVER_DELAY);
-                }
-                adapter.notifyDataSetChanged();
-            }
-        }
+        if (flipCount>=2) {
+			// user clicked before the previous images flipped so 
+			// speed up the flipover by clearing the handler and
+			// flipping in the same thread. then proceed to flip the next card
+			flipHandler.removeCallbacksAndMessages(null);
+			new flipOverHandler().run();
+		}
+		MatchPerson person = (MatchPerson) adapter.getItem(position);
+		if (tts != null) {
+			String name = person.getPerson().getGivenName();
+			//-- TODO get relationship name
+			if (name != null) {
+				if (Build.VERSION.SDK_INT > 20) {
+					tts.speak(name, TextToSpeech.QUEUE_FLUSH, null, null);
+				}
+				else {
+					tts.speak(name, TextToSpeech.QUEUE_FLUSH, null);
+				}
+			}
+		}
+		if (!person.isFlipped()){
+			if (flip1 < 0) flip1 = position;
+			else flip2 = position;
+			person.setFlipped(true);
+			flipCount++;
+			if (flipCount == 2) {
+				if (game.isMatch(flip1, flip2)) {
+					MatchPerson person1 = (MatchPerson) adapter.getItem(flip1);
+					MatchPerson person2 = (MatchPerson) adapter.getItem(flip2);
+					person1.setMatched(true);
+					person2.setMatched(true);
+				}
+				flip1 = -1;
+				flip2 = -1;
+				flipHandler = new Handler();
+				flipHandler.postDelayed(new flipOverHandler(), FLIP_OVER_DELAY);
+			}
+			adapter.notifyDataSetChanged();
+		}
     }
 
     @Override

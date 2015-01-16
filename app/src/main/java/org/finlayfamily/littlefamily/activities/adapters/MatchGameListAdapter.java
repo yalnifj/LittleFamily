@@ -80,12 +80,12 @@ public class MatchGameListAdapter extends BaseAdapter {
 
         int rotate = 0;
         if (height < width) {
-            height = (int) (height / (Math.max(6, getCount()) / 8.0));
+            height = (int) (height / (Math.max(8, getCount()) / 8.0));
             width = height;
             rotate = 90;
         }
         else {
-            width = (int) (width / (Math.max(6, getCount()) / 8.0));
+            width = (int) (width / (Math.max(8, getCount()) / 8.0));
             height = width;
             rotate = 0;
         }
