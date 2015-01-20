@@ -209,6 +209,7 @@ public class MatchGameActivity extends Activity implements AdapterView.OnItemCli
         int height = size.y;
         int cols = 2;
         while(cols < 12 && (width / cols) * Math.ceil(((double)adapter.getCount()) / cols) > height) cols++;
+        if (adapter.getCount() % cols > 0) cols--;
         gridView.setNumColumns(cols);
     }
 }
