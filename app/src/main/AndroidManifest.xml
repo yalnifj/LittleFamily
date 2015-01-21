@@ -39,6 +39,10 @@
             android:name=".activities.MatchGameActivity"
             android:label="@string/title_activity_match_game" >
         </activity>
+        <activity
+            android:name=".activities.ChooseGameActivity"
+            android:label="@string/title_activity_choose_game" >
+        </activity>
     </application>
 
 </manifest>
