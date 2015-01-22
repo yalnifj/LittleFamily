@@ -128,7 +128,7 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
         if (pd!=null) pd.dismiss();
         if (launchGame) {
             launchGame = false;
-            Intent intent = new Intent( this, MatchGameActivity.class );
+            Intent intent = new Intent( this, ChooseGameActivity.class );
             intent.putExtra(FAMILY, familyMembers);
             startActivity(intent);
         } else {

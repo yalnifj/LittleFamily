@@ -164,7 +164,7 @@ public class MatchGameActivity extends Activity implements AdapterView.OnItemCli
         }
 
         backgroundLoadIndex++;
-        if (backgroundLoadIndex < people.size()) {
+        if (backgroundLoadIndex < game.getBoard().size()/2) {
             try {
                 FamilyLoaderTask task = new FamilyLoaderTask(service.getPerson(people.get(backgroundLoadIndex).getFamilySearchId()), this, this);
                 task.execute();

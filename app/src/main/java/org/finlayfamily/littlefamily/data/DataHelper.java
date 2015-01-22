@@ -20,10 +20,9 @@ public class DataHelper {
     public static LittlePerson buildLittlePerson(Person fsPerson, Context context) throws FamilySearchException {
         FamilySearchService service = FamilySearchService.getInstance();
         LittlePerson person = new LittlePerson(fsPerson);
-        //-- check if we already have a photo downloaded for this person
-        File dataFolder = ImageHelper.getDataFolder(context);
-        File imageFile = new File(dataFolder, fsPerson.getId());
-        if (imageFile.exists()) {
+
+        File imageFile = getImageFile(fsPerson.getId(), "portrait.jpg", context);
+        if (imageFile!=null && imageFile.exists()) {
             person.setPhotoPath(imageFile.getAbsolutePath());
         } else {
             Link portrait = service.getPersonPortrait(fsPerson.getId());
@@ -31,7 +30,7 @@ public class DataHelper {
                 String imagePath = null;
                 try {
                     Uri uri = Uri.parse(portrait.getHref().toString());
-                    imagePath = service.downloadImage(uri, fsPerson.getId(), context);
+                    imagePath = service.downloadImage(uri, fsPerson.getId(), "portrait.jpg", context);
                     person.setPhotoPath(imagePath);
                 } catch (MalformedURLException e) {
                     Log.e("DataHelper.buildLittlePerson", "error", e);
@@ -39,5 +38,44 @@ public class DataHelper {
             }
         }
         return person;
+    }
+
+    public static File getImageFile(String folderName, String fileName, Context context) {
+        //-- check if we already have a photo downloaded for this person
+        File dataFolder = ImageHelper.getDataFolder(context);
+        File folder = new File(dataFolder, folderName);
+        if (!folder.exists()) {
+            return null;
+        } else if (!folder.isDirectory()) {
+            return null;
+        }
+        File imageFile = new File(folder, fileName);
+        return imageFile;
+    }
+
+    public static String downloadFile(String href, String folderName, String fileName, Context context) throws FamilySearchException {
+        FamilySearchService service = FamilySearchService.getInstance();
+        String imagePath = null;
+        try {
+            File imageFile = getImageFile(folderName,fileName, context);
+            if (imageFile!=null && imageFile.exists()) {
+                return imageFile.getAbsolutePath();
+            } else {
+                Uri uri = Uri.parse(href);
+                imagePath = service.downloadImage(uri, folderName, fileName, context);
+                return imagePath;
+            }
+        } catch (MalformedURLException e) {
+            Log.e("DataHelper.downloadFile", "error", e);
+        }
+        return null;
+    }
+
+    public static String lastPath(String href) {
+        String[] parts = href.split("/");
+        for(int i = parts.length-1; i>=0; i--) {
+            if (parts[i]!=null && !parts[i].isEmpty()) return parts[i];
+        }
+        return href;
     }
 }

@@ -71,6 +71,7 @@ public class FamilySearchService {
     private Map<String, List<Relationship>> closeRelatives = null;
     private Map<String, Person> personCache;
     private Map<String, Link> linkCache;
+    private Map<String, List<Link>> memories = null;
 
     private static FamilySearchService ourInstance = new FamilySearchService();
 
@@ -82,6 +83,7 @@ public class FamilySearchService {
         personCache = new HashMap<>();
         linkCache = new HashMap<>();
 		closeRelatives = new HashMap<>();
+        memories = new HashMap<>();
     }
 
     public FSResult authenticate(String username, String password) throws FamilySearchException {
@@ -200,7 +202,7 @@ public class FamilySearchService {
                             }
                         }
                     }
-                    Log.i(TAG, "getPersonPortrait " + doc.getPersons().size() + ": " + currentPerson.getId());
+                    Log.i(TAG, "getPersonPortrait " + doc.getPersons().size() + ": " + personId);
                 }
             } catch (Exception e) {
                 Log.e(TAG, "error", e);
@@ -261,6 +263,54 @@ public class FamilySearchService {
         }
 
         return closeRelatives.get(person.getId());
+    }
+
+    public List<Link> getPersonMemories(String personId) throws FamilySearchException {
+        if (sessionId==null) {
+            throw new FamilySearchException("Not Authenticated with FamilySearch.", 0);
+        }
+
+        Person person = this.getPerson(personId);
+        if (person==null) {
+            throw new FamilySearchException("Unable to get person "+personId+" from FamilySearch", 0);
+        }
+
+        if (memories.get(personId)==null){
+            Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+personId+"/memories");
+            Bundle headers = new Bundle();
+            headers.putString("Authorization", "Bearer " + sessionId);
+            headers.putString("Accept", "application/x-gedcomx-v1+xml");
+
+            Bundle params = new Bundle();
+            params.putString("type", "photo"); //-- limit to photos for now
+
+            FSResult result = getRestData(METHOD_GET, uri, params, headers);
+
+            Serializer serializer = GedcomxSerializer.create();
+            try {
+                Gedcomx doc = serializer.read( Gedcomx.class, result.getData() );
+                if (doc.getSourceDescriptions()!=null && doc.getSourceDescriptions().size()>0) {
+                    List<Link> photos = new ArrayList<>(doc.getSourceDescriptions().size());
+                    for(SourceDescription sd : doc.getSourceDescriptions()) {
+                        List<Link> links = sd.getLinks();
+                        if (links!=null) {
+                            for (Link link : links) {
+                                if (link.getRel() != null && link.getRel().equals("image")) {
+                                    photos.add(link);
+                                }
+                            }
+                        }
+                    }
+                    memories.put(personId, photos);
+                    Log.i(TAG, "getPersonMemories found " + photos.size() + " photos for " + personId);
+                }
+            }
+            catch (Exception e) {
+                Log.e( TAG, "error", e );
+            }
+        }
+
+        return memories.get(personId);
     }
 	
     private FSResult getRestData(String method, Uri action, Bundle params, Bundle headers) throws FamilySearchException{
@@ -412,7 +462,7 @@ public class FamilySearchService {
         return formList;
     }
 
-    public String downloadImage(Uri uri, String fileName, Context context) throws MalformedURLException, FamilySearchException {
+    public String downloadImage(Uri uri, String folderName, String fileName, Context context) throws MalformedURLException, FamilySearchException {
         try {
             // Here we define our base request object which we will
             // send to our REST service via HttpClient.
@@ -444,7 +494,15 @@ public class FamilySearchService {
                 if (responseEntity!=null) {
                     InputStream in = responseEntity.getContent();
                     File dataFolder = ImageHelper.getDataFolder(context);
-                    File imageFile = new File(dataFolder, fileName);
+                    File folder = new File(dataFolder, folderName);
+                    if (!folder.exists()) {
+                        folder.mkdir();
+                    }
+                    else if (!folder.isDirectory()) {
+                        folder.delete();
+                        folder.mkdir();
+                    }
+                    File imageFile = new File(folder, fileName);
                     OutputStream out = new FileOutputStream(imageFile);
 
                     byte[] buffer = new byte[1024];
