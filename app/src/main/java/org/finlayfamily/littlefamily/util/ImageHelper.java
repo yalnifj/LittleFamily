@@ -90,7 +90,7 @@ public class ImageHelper {
 		return null;
 	}
 
-	public static Bitmap loadBitmapFromFile(String path, int orientation, final int targetWidth, final int targetHeight) {
+	public static Bitmap loadBitmapFromFile(String path, int orientation, final int targetWidth, final int targetHeight, boolean forceSize) {
 	    Bitmap bitmap = null;
 	    try {
 	        // First decode with inJustDecodeBounds=true to check dimensions
@@ -108,12 +108,14 @@ public class ImageHelper {
 	        }
 
 	        // Calculate the maximum required scaling ratio if required and load the bitmap
-	        if (sourceWidth > targetWidth || sourceHeight > targetHeight) {
+	        if (forceSize || sourceWidth > targetWidth || sourceHeight > targetHeight) {
 	            float widthRatio = (float)sourceWidth / (float)targetWidth;
 	            float heightRatio = (float)sourceHeight / (float)targetHeight;
 	            float maxRatio = Math.max(widthRatio, heightRatio);
 	            options.inJustDecodeBounds = false;
 	            options.inSampleSize = (int)maxRatio;
+                options.outHeight = targetHeight;
+                options.outWidth = targetWidth;
 	            bitmap = BitmapFactory.decodeFile(path, options);
 	        } else {
 	            bitmap = BitmapFactory.decodeFile(path);

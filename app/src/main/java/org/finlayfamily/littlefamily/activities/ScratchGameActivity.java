@@ -3,13 +3,7 @@ package org.finlayfamily.littlefamily.activities;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.widget.ImageView;
 
@@ -23,6 +17,7 @@ import org.finlayfamily.littlefamily.familysearch.FamilySearchService;
 import org.finlayfamily.littlefamily.util.ImageHelper;
 import org.gedcomx.conclusion.Person;
 import org.gedcomx.links.Link;
+import org.gedcomx.source.SourceDescription;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,15 +99,22 @@ public class ScratchGameActivity extends Activity implements MemoriesLoaderTask.
     }
 
     @Override
-    public void onComplete(ArrayList<Link> photos) {
+    public void onComplete(ArrayList<SourceDescription> photos) {
         if (photos==null || photos.size()==0) {
             loadMoreFamilyMembers();
         } else {
             Random rand = new Random();
-            Link photoLink = photos.get(rand.nextInt(photos.size()));
+            SourceDescription photoSd = photos.get(rand.nextInt(photos.size()));
 
-            FileDownloaderTask task = new FileDownloaderTask(photoLink.getHref().toString(), selectedPerson.getFamilySearchId(), this, this);
-            task.execute();
+            List<Link> links = photoSd.getLinks();
+            if (links!=null) {
+                for (Link photoLink : links) {
+                    if (photoLink.getRel() != null && photoLink.getRel().equals("image")) {
+                        FileDownloaderTask task = new FileDownloaderTask(photoLink.getHref().toString(), selectedPerson.getFamilySearchId(), this, this);
+                        task.execute();
+                    }
+                }
+            }
         }
     }
 
@@ -136,7 +138,7 @@ public class ScratchGameActivity extends Activity implements MemoriesLoaderTask.
                 pd.dismiss();
                 pd = null;
             }
-            imageBitmap = ImageHelper.loadBitmapFromFile(imagePath, 0, layeredImage.getWidth(), layeredImage.getHeight());
+            imageBitmap = ImageHelper.loadBitmapFromFile(imagePath, 0, layeredImage.getWidth(), layeredImage.getHeight(), true);
             setupCanvas();
         } else {
             loadRandomImage();

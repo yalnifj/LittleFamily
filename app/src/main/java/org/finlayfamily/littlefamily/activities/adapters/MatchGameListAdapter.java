@@ -99,7 +99,7 @@ public class MatchGameListAdapter extends BaseAdapter {
             if (person.isFlipped()) {
                 Bitmap bm = null;
                 if (person.getPerson().getPhotoPath() != null) {
-                    bm = ImageHelper.loadBitmapFromFile(person.getPerson().getPhotoPath(), ImageHelper.getOrientation(person.getPerson().getPhotoPath()), width, height);
+                    bm = ImageHelper.loadBitmapFromFile(person.getPerson().getPhotoPath(), ImageHelper.getOrientation(person.getPerson().getPhotoPath()), width, height, false);
                 } else {
                     bm = ImageHelper.loadBitmapFromResource(context, person.getPerson().getDefaultPhotoResource(), 0, width, height);
               		//bm = BitmapFactory.decodeResource(r, person.getPerson().getDefaultPhotoResource());

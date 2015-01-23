@@ -71,7 +71,7 @@ public class FamilySearchService {
     private Map<String, List<Relationship>> closeRelatives = null;
     private Map<String, Person> personCache;
     private Map<String, Link> linkCache;
-    private Map<String, List<Link>> memories = null;
+    private Map<String, List<SourceDescription>> memories = null;
 
     private static FamilySearchService ourInstance = new FamilySearchService();
 
@@ -265,7 +265,7 @@ public class FamilySearchService {
         return closeRelatives.get(person.getId());
     }
 
-    public List<Link> getPersonMemories(String personId) throws FamilySearchException {
+    public List<SourceDescription> getPersonMemories(String personId) throws FamilySearchException {
         if (sessionId==null) {
             throw new FamilySearchException("Not Authenticated with FamilySearch.", 0);
         }
@@ -290,19 +290,8 @@ public class FamilySearchService {
             try {
                 Gedcomx doc = serializer.read( Gedcomx.class, result.getData() );
                 if (doc.getSourceDescriptions()!=null && doc.getSourceDescriptions().size()>0) {
-                    List<Link> photos = new ArrayList<>(doc.getSourceDescriptions().size());
-                    for(SourceDescription sd : doc.getSourceDescriptions()) {
-                        List<Link> links = sd.getLinks();
-                        if (links!=null) {
-                            for (Link link : links) {
-                                if (link.getRel() != null && link.getRel().equals("image")) {
-                                    photos.add(link);
-                                }
-                            }
-                        }
-                    }
-                    memories.put(personId, photos);
-                    Log.i(TAG, "getPersonMemories found " + photos.size() + " photos for " + personId);
+                    memories.put(personId, doc.getSourceDescriptions());
+                    Log.i(TAG, "getPersonMemories found " + doc.getSourceDescriptions().size() + " photos for " + personId);
                 }
             }
             catch (Exception e) {

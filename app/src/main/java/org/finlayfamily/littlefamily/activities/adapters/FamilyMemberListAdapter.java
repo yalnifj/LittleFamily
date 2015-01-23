@@ -87,7 +87,7 @@ public class FamilyMemberListAdapter extends BaseAdapter {
                 holder.name.setText(person.getName());
             }
             if (person.getPhotoPath()!=null) {
-                Bitmap bm = ImageHelper.loadBitmapFromFile(person.getPhotoPath(), ImageHelper.getOrientation(person.getPhotoPath()), width, height);
+                Bitmap bm = ImageHelper.loadBitmapFromFile(person.getPhotoPath(), ImageHelper.getOrientation(person.getPhotoPath()), width, height, false);
                 holder.portrait.setImageBitmap(bm);
             } else {
                 Bitmap bm = ImageHelper.loadBitmapFromResource(context, person.getDefaultPhotoResource(), 0, width, height);
