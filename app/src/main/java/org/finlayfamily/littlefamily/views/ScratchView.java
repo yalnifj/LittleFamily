@@ -58,7 +58,7 @@ public class ScratchView extends ImageView {
 
         mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         mCanvas = new Canvas(mBitmap);
-        mPaint.setStrokeWidth(w<h?w*0.20f:h*0.20f);
+        mPaint.setStrokeWidth(w<h?w*0.15f:h*0.15f);
         Paint background = new Paint();
         background.setColor(Color.GRAY);
         mCanvas.drawRect(0,0,w,h,background);
@@ -103,7 +103,7 @@ public class ScratchView extends ImageView {
             mCanvas.drawPath(mPath,  mPaint);
 
             circlePath.reset();
-            circlePath.addCircle(mX, mY, 50, Path.Direction.CW);
+            circlePath.addCircle(mX, mY, 40, Path.Direction.CW);
         }
     }
 

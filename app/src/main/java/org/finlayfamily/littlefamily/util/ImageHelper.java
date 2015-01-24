@@ -96,6 +96,7 @@ public class ImageHelper {
 	        // First decode with inJustDecodeBounds=true to check dimensions
 	        final BitmapFactory.Options options = new BitmapFactory.Options();
 	        options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(path, options);
 
 	        // Adjust extents
 	        int sourceWidth, sourceHeight;
@@ -109,13 +110,8 @@ public class ImageHelper {
 
 	        // Calculate the maximum required scaling ratio if required and load the bitmap
 	        if (forceSize || sourceWidth > targetWidth || sourceHeight > targetHeight) {
-	            float widthRatio = (float)sourceWidth / (float)targetWidth;
-	            float heightRatio = (float)sourceHeight / (float)targetHeight;
-	            float maxRatio = Math.max(widthRatio, heightRatio);
 	            options.inJustDecodeBounds = false;
-	            options.inSampleSize = (int)maxRatio;
-                options.outHeight = targetHeight;
-                options.outWidth = targetWidth;
+	            options.inSampleSize = calculateInSampleSize(options, targetWidth, targetHeight);
 	            bitmap = BitmapFactory.decodeFile(path, options);
 	        } else {
 	            bitmap = BitmapFactory.decodeFile(path);
@@ -152,6 +148,7 @@ public class ImageHelper {
             // First decode with inJustDecodeBounds=true to check dimensions
             final BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
+            BitmapFactory.decodeResource(context.getResources(), resourceId, options);
 
             // Adjust extents
             int sourceWidth, sourceHeight;
@@ -169,7 +166,7 @@ public class ImageHelper {
                 float heightRatio = (float)sourceHeight / (float)targetHeight;
                 float maxRatio = Math.max(widthRatio, heightRatio);
                 options.inJustDecodeBounds = false;
-                options.inSampleSize = (int)maxRatio;
+                options.inSampleSize = calculateInSampleSize(options, targetWidth, targetHeight);
                 bitmap = BitmapFactory.decodeResource(context.getResources(), resourceId, options);
             } else {
                 bitmap = BitmapFactory.decodeResource(context.getResources(), resourceId);
@@ -313,5 +310,28 @@ public class ImageHelper {
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+    }
+
+    public static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) > reqHeight
+                    && (halfWidth / inSampleSize) > reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
     }
 }
