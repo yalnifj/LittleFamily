@@ -12,6 +12,9 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by jfinlay on 1/22/2015.
  */
@@ -44,7 +47,7 @@ public class ScratchView extends ImageView {
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setDither(true);
-        mPaint.setAlpha(0);
+        mPaint.setAlpha(220);
         mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeJoin(Paint.Join.ROUND);
@@ -80,6 +83,14 @@ public class ScratchView extends ImageView {
     public void setImageBitmap(Bitmap bm)
     {
         super.setImageBitmap(bm);
+        int w = this.getWidth();
+        int h = this.getHeight();
+        mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        mCanvas = new Canvas(mBitmap);
+        mPaint.setStrokeWidth(w<h?w*0.15f:h*0.15f);
+        Paint background = new Paint();
+        background.setColor(Color.GRAY);
+        mCanvas.drawRect(0,0,w,h,background);
     }
 
     private float mX, mY;
@@ -114,6 +125,24 @@ public class ScratchView extends ImageView {
         mCanvas.drawPath(mPath,  mPaint);
         // kill this so we don't double draw
         mPath.reset();
+
+        // check if scratch is complete
+        int xd = (int) mPaint.getStrokeWidth()/2;
+        int yd = (int) mPaint.getStrokeWidth()/2;
+        int count = 0;
+        int total = 0;
+        for(int y=yd; y<this.getHeight(); y+=yd) {
+            for(int x=xd; x<this.getWidth(); x+=xd) {
+                total++;
+                int pixel = mBitmap.getPixel(x,y);
+                if (Color.alpha(pixel) < 200) count++;
+            }
+        }
+        if (count > total * 0.90) {
+            for(ScratchCompleteListener l : listeners) {
+                l.onScratchComplete();
+            }
+        }
     }
 
     @Override
@@ -138,4 +167,11 @@ public class ScratchView extends ImageView {
         return true;
     }
 
+    private List<ScratchCompleteListener> listeners = new ArrayList<>();
+    public void registerListener(ScratchCompleteListener l) {
+        listeners.add(l);
+    }
+    public interface ScratchCompleteListener {
+        public void onScratchComplete();
+    }
 }

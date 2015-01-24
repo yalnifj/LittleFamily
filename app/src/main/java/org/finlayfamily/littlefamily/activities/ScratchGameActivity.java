@@ -15,6 +15,7 @@ import org.finlayfamily.littlefamily.data.LittlePerson;
 import org.finlayfamily.littlefamily.familysearch.FamilySearchException;
 import org.finlayfamily.littlefamily.familysearch.FamilySearchService;
 import org.finlayfamily.littlefamily.util.ImageHelper;
+import org.finlayfamily.littlefamily.views.ScratchView;
 import org.gedcomx.conclusion.Person;
 import org.gedcomx.links.Link;
 import org.gedcomx.source.SourceDescription;
@@ -23,14 +24,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class ScratchGameActivity extends Activity implements MemoriesLoaderTask.Listener, FileDownloaderTask.Listener {
+public class ScratchGameActivity extends Activity implements MemoriesLoaderTask.Listener, FileDownloaderTask.Listener, ScratchView.ScratchCompleteListener {
 
     private List<LittlePerson> people;
     private LittlePerson selectedPerson;
     private FamilySearchService service;
 
     private ProgressDialog pd;
-    private ImageView layeredImage;
+    private ScratchView layeredImage;
     private String imagePath;
     private Bitmap imageBitmap;
 
@@ -42,7 +43,8 @@ public class ScratchGameActivity extends Activity implements MemoriesLoaderTask.
         setContentView(R.layout.activity_scratch_game);
 
         service = FamilySearchService.getInstance();
-        layeredImage = (ImageView) findViewById(R.id.layeredImage);
+        layeredImage = (ScratchView) findViewById(R.id.layeredImage);
+        layeredImage.registerListener(this);
 
         Intent intent = getIntent();
         people = (List<LittlePerson>) intent.getSerializableExtra(ChooseFamilyMember.FAMILY);
@@ -116,6 +118,11 @@ public class ScratchGameActivity extends Activity implements MemoriesLoaderTask.
                 }
             }
         }
+    }
+
+    @Override
+    public void onScratchComplete() {
+        loadMoreFamilyMembers();
     }
 
     public class FamilyLoaderListener implements FamilyLoaderTask.Listener {

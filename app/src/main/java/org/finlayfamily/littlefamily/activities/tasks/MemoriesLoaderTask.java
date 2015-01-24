@@ -41,14 +41,16 @@ public class MemoriesLoaderTask extends AsyncTask<String, Integer, ArrayList<Sou
         FamilySearchService service = FamilySearchService.getInstance();
         try {
             List<SourceDescription> sds = service.getPersonMemories(person.getId());
-            photos.addAll(sds);
-            if (download){
-                for(SourceDescription sd : photos) {
-                    List<Link> links = sd.getLinks();
-                    if (links!=null) {
-                        for (Link link : links) {
-                            if (link.getRel() != null && link.getRel().equals("image")) {
-                                DataHelper.downloadFile(link.getHref().toString(), person.getId(), DataHelper.lastPath(link.getHref().toString()), context);
+            if (sds!=null) {
+                photos.addAll(sds);
+                if (download) {
+                    for (SourceDescription sd : photos) {
+                        List<Link> links = sd.getLinks();
+                        if (links != null) {
+                            for (Link link : links) {
+                                if (link.getRel() != null && link.getRel().equals("image")) {
+                                    DataHelper.downloadFile(link.getHref().toString(), person.getId(), DataHelper.lastPath(link.getHref().toString()), context);
+                                }
                             }
                         }
                     }
