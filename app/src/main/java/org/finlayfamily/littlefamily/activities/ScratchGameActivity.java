@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.widget.ImageView;
 
 import org.finlayfamily.littlefamily.R;
@@ -22,9 +24,11 @@ import org.gedcomx.source.SourceDescription;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
-public class ScratchGameActivity extends Activity implements MemoriesLoaderTask.Listener, FileDownloaderTask.Listener, ScratchView.ScratchCompleteListener {
+public class ScratchGameActivity extends Activity implements TextToSpeech.OnInitListener,
+            MemoriesLoaderTask.Listener, FileDownloaderTask.Listener, ScratchView.ScratchCompleteListener {
 
     private List<LittlePerson> people;
     private LittlePerson selectedPerson;
@@ -34,8 +38,11 @@ public class ScratchGameActivity extends Activity implements MemoriesLoaderTask.
     private ScratchView layeredImage;
     private String imagePath;
     private Bitmap imageBitmap;
+    private SourceDescription photoSd;
 
     private int backgroundLoadIndex = 1;
+
+    private TextToSpeech tts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +55,28 @@ public class ScratchGameActivity extends Activity implements MemoriesLoaderTask.
 
         Intent intent = getIntent();
         people = (List<LittlePerson>) intent.getSerializableExtra(ChooseFamilyMember.FAMILY);
+
+        tts = new TextToSpeech(this, this);
+    }
+
+    @Override
+    public void onInit(int code) {
+        if (code == TextToSpeech.SUCCESS) {
+            tts.setLanguage(Locale.getDefault());
+            tts.setSpeechRate(0.5f);
+        } else {
+            tts = null;
+            //Toast.makeText(this, "Failed to initialize TTS engine.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (tts!=null) {
+            tts.stop();
+            tts.shutdown();
+        }
+        super.onDestroy();
     }
 
     @Override
@@ -79,11 +108,11 @@ public class ScratchGameActivity extends Activity implements MemoriesLoaderTask.
         }
     }
 
-    private void loadMoreFamilyMembers() {
+    private void loadMoreFamilyMembers(boolean showdialog) {
         if (backgroundLoadIndex < people.size() && backgroundLoadIndex < 10) {
             try {
                 FamilyLoaderTask task = new FamilyLoaderTask(service.getPerson(people.get(backgroundLoadIndex).getFamilySearchId()), new FamilyLoaderListener(), this);
-                if (pd==null) pd = ProgressDialog.show(this, "Please wait...", "Loading data from FamilySearch", true, false);
+                if (pd==null && showdialog) pd = ProgressDialog.show(this, "Please wait...", "Loading data from FamilySearch", true, false);
                 task.execute();
             } catch (FamilySearchException e) {
                 e.printStackTrace();
@@ -94,19 +123,22 @@ public class ScratchGameActivity extends Activity implements MemoriesLoaderTask.
                 pd.dismiss();
                 pd = null;
             }
-            //-- could not find any images, fallback to a default image
-            imageBitmap = ImageHelper.loadBitmapFromResource(this, selectedPerson.getDefaultPhotoResource(), 0, layeredImage.getWidth(), layeredImage.getHeight());
-            setupCanvas();
+            loadRandomImage();
         }
     }
 
     @Override
     public void onComplete(ArrayList<SourceDescription> photos) {
         if (photos==null || photos.size()==0) {
-            loadMoreFamilyMembers();
+            if (backgroundLoadIndex < 10) loadMoreFamilyMembers(true);
+            else {
+                //-- could not find any images, fallback to a default image
+                imageBitmap = ImageHelper.loadBitmapFromResource(this, selectedPerson.getDefaultPhotoResource(), 0, layeredImage.getWidth(), layeredImage.getHeight());
+                setupCanvas();
+            }
         } else {
             Random rand = new Random();
-            SourceDescription photoSd = photos.get(rand.nextInt(photos.size()));
+            photoSd = photos.get(rand.nextInt(photos.size()));
 
             List<Link> links = photoSd.getLinks();
             if (links!=null) {
@@ -122,7 +154,18 @@ public class ScratchGameActivity extends Activity implements MemoriesLoaderTask.
 
     @Override
     public void onScratchComplete() {
-        loadMoreFamilyMembers();
+        loadMoreFamilyMembers(false);
+        if (tts != null) {
+            String name = selectedPerson.getGivenName();
+            if (name != null) {
+                if (Build.VERSION.SDK_INT > 20) {
+                    tts.speak(name, TextToSpeech.QUEUE_FLUSH, null, null);
+                }
+                else {
+                    tts.speak(name, TextToSpeech.QUEUE_FLUSH, null);
+                }
+            }
+        }
     }
 
     public class FamilyLoaderListener implements FamilyLoaderTask.Listener {
