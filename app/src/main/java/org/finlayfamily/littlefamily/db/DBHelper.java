@@ -1,12 +1,12 @@
 package org.finlayfamily.littlefamily.db;
 
-import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import org.finlayfamily.littlefamily.data.*;
 import android.content.*;
+import android.database.*;
+import android.database.sqlite.*;
 import android.util.*;
+import java.util.*;
+import org.finlayfamily.littlefamily.data.*;
+import org.gedcomx.types.*;
 
 public class DBHelper extends SQLiteOpenHelper {
 	private static final int DATABASE_VERSION = 1;
@@ -73,5 +73,80 @@ public class DBHelper extends SQLiteOpenHelper {
 			Log.d("DBHelper", "updated " + count + " rows");
 		}
 		db.close();
+	}
+	
+	public LittlePerson getPersonById(int id) {
+		SQLiteDatabase db = getReadableDatabase();
+		String[] projection = {
+			COL_GIVEN_NAME, COL_GENDER, COL_PHOTO_PATH, COL_NAME,
+			COL_NAME, COL_AGE, COL_BIRTH_DATE, COL_FAMILY_SEARCH_ID, 
+			COL_ID
+		};
+		String selection = COL_ID + " LIKE ?";
+		String[] selectionArgs = { String.valueOf(id) };
+		String tables = TABLE_LITTLE_PERSON;
+		
+		LittlePerson person = null;
+		Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, COL_ID);
+		while (c.moveToNext()) {
+			person = personFromCursor(c);
+		}
+		
+		c.close();
+		db.close();
+		
+		return person;
+	}
+	
+	public LittlePerson getPersonByFamilySearchId(String fsid) {
+		SQLiteDatabase db = getReadableDatabase();
+		String[] projection = {
+			COL_GIVEN_NAME, COL_GENDER, COL_PHOTO_PATH, COL_NAME,
+			COL_NAME, COL_AGE, COL_BIRTH_DATE, COL_FAMILY_SEARCH_ID, 
+			COL_ID
+		};
+		String selection = COL_FAMILY_SEARCH_ID + " LIKE ?";
+		String[] selectionArgs = { fsid };
+		String tables = TABLE_LITTLE_PERSON;
+
+		LittlePerson person = null;
+		Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, COL_FAMILY_SEARCH_ID);
+		while (c.moveToNext()) {
+			person = personFromCursor(c);
+		}
+
+		c.close();
+		db.close();
+
+		return person;
+	}
+	
+	public LittlePerson personFromCursor(Cursor c) {
+		LittlePerson person = new LittlePerson();
+		person.setAge(c.getInt( c.getColumnIndexOrThrow(COL_AGE) ));
+		if (!c.isNull(c.getColumnIndexOrThrow(COL_BIRTH_DATE))) {
+			long birthtime = c.getLong(c.getColumnIndexOrThrow(COL_BIRTH_DATE));
+			person.setBirthDate(new Date(birthtime));
+		}
+		person.setFamilySearchId(c.getString(c.getColumnIndexOrThrow(COL_FAMILY_SEARCH_ID)));
+		if (!c.isNull(c.getColumnIndexOrThrow(COL_GENDER))) {
+			String gender = c.getString(c.getColumnIndexOrThrow(COL_GENDER));
+			switch(gender) {
+				case "M":
+					person.setGender(GenderType.Male);
+					break;
+				case "M":
+					person.setGender(GenderType.Female);
+					break;
+				default:
+					person.setGender(GenderType.Unknown);
+					break;
+			}
+		}
+		person.setGivenName(c.getString(c.getColumnIndexOrThrow(COL_GIVEN_NAME)));
+		person.setId(c.getInt(c.getColumnIndexOrThrow(COL_ID)));
+		person.setName(c.getString(c.getColumnIndexOrThrow(COL_NAME)));
+		person.setPhotoPath(c.getString(c.getColumnIndexOrThrow(COL_PHOTO_PATH)));
+		return person;
 	}
 }
