@@ -34,6 +34,7 @@ public class LittlePerson implements Serializable {
     private String familySearchId;
     private String photoPath;
     private GenderType gender;
+	private Date birthDate;
     private Integer age;
 
     public LittlePerson() {
@@ -82,7 +83,7 @@ public class LittlePerson implements Serializable {
                 if (birthDateStr!=null) {
                     DateFormat df = new SimpleDateFormat("dd MMM yyyy");
                     try {
-                        Date birthDate = df.parse(birthDateStr);
+                        this.birthDate = df.parse(birthDateStr);
                         Date today = new Date();
                         age = (int) (today.getTime() - birthDate.getTime()) / (1000 * 60 * 60 * 24 * 365);
                     } catch (ParseException e) {
@@ -99,6 +100,16 @@ public class LittlePerson implements Serializable {
             }
         }
     }
+
+	public void setBirthDate(Date birthDate)
+	{
+		this.birthDate = birthDate;
+	}
+
+	public Date getBirthDate()
+	{
+		return birthDate;
+	}
 
     public long getId() {
         return id;
