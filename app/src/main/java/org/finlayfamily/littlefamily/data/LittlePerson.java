@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
  * Created by jfinlay on 12/30/2014.
  */
 public class LittlePerson implements Serializable {
-    private long id;
+    private int id;
     private String name;
     private String givenName;
     private String relationship;
@@ -36,6 +36,7 @@ public class LittlePerson implements Serializable {
     private GenderType gender;
 	private Date birthDate;
     private Integer age;
+    private Date lastSync;
 
     public LittlePerson() {
     }
@@ -111,11 +112,11 @@ public class LittlePerson implements Serializable {
 		return birthDate;
 	}
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -209,5 +210,13 @@ public class LittlePerson implements Serializable {
     @Override
     public int hashCode() {
         return familySearchId.hashCode();
+    }
+
+    public Date getLastSync() {
+        return lastSync;
+    }
+
+    public void setLastSync(Date lastSync) {
+        this.lastSync = lastSync;
     }
 }

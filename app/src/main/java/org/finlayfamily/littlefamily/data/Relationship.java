@@ -2,6 +2,7 @@ package org.finlayfamily.littlefamily.data;
 
 public class Relationship
 {
+    private int id;
 	private int id1;
 	private int id2;
 	private RelationshipType type;
@@ -35,4 +36,12 @@ public class Relationship
 	{
 		return id1;
 	}
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }

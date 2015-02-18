@@ -109,7 +109,7 @@ public class ScratchGameActivity extends Activity implements TextToSpeech.OnInit
     }
 
     private void loadMoreFamilyMembers(boolean showdialog) {
-        if (backgroundLoadIndex < people.size() && backgroundLoadIndex < 10) {
+        if (backgroundLoadIndex < people.size() && backgroundLoadIndex < 20) {
             try {
                 FamilyLoaderTask task = new FamilyLoaderTask(service.getPerson(people.get(backgroundLoadIndex).getFamilySearchId()), new FamilyLoaderListener(), this);
                 if (pd==null && showdialog) pd = ProgressDialog.show(this, "Please wait...", "Loading data from FamilySearch", true, false);
@@ -130,7 +130,7 @@ public class ScratchGameActivity extends Activity implements TextToSpeech.OnInit
     @Override
     public void onComplete(ArrayList<SourceDescription> photos) {
         if (photos==null || photos.size()==0) {
-            if (backgroundLoadIndex < 10) loadMoreFamilyMembers(true);
+            if (backgroundLoadIndex < 20) loadMoreFamilyMembers(true);
             else {
                 //-- could not find any images, fallback to a default image
                 imageBitmap = ImageHelper.loadBitmapFromResource(this, selectedPerson.getDefaultPhotoResource(), 0, layeredImage.getWidth(), layeredImage.getHeight());

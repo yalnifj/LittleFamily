@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -72,6 +73,8 @@ public class FamilySearchService {
     private Map<String, Person> personCache;
     private Map<String, Link> linkCache;
     private Map<String, List<SourceDescription>> memories = null;
+    private String encodedAuthToken = null;
+    private int delayCount = 0;
 
     private static FamilySearchService ourInstance = new FamilySearchService();
 
@@ -87,23 +90,34 @@ public class FamilySearchService {
     }
 
     public FSResult authenticate(String username, String password) throws FamilySearchException {
-        Uri action = Uri.parse(FS_IDENTITY_PATH);
+        encodedAuthToken = Base64.encodeToString((username + ":" + password).getBytes(), Base64.NO_WRAP);
 
+        return authWithToken();
+    }
+
+    private FSResult authWithToken() throws FamilySearchException {
+        if (encodedAuthToken==null) {
+            throw new FamilySearchException("Unable to authenticate with FamilySearch", 401);
+        }
+        Uri action = Uri.parse(FS_IDENTITY_PATH);
         Bundle params = new Bundle();
         params.putString("key", FS_APP_KEY);
         Bundle headers = new Bundle();
-        headers.putString("Authorization", "Basic " + Base64.encodeToString((username + ":" + password).getBytes(), Base64.NO_WRAP));
+        headers.putString("Authorization", "Basic " + encodedAuthToken);
 
         FSResult data = getRestData(METHOD_GET, action, params, headers);
-        if (data!=null && data.isSuccess()) {
-            Serializer serializer = new Persister();
-            try {
-                Identity session = serializer.read(Identity.class, data.getData());
-                this.sessionId = session.getSession().id;
-                Log.i( TAG, "session: " + sessionId );
-            }
-            catch (Exception e) {
-                Log.e( TAG, "error", e );
+        if (data!=null) {
+            if (data.isSuccess()) {
+                Serializer serializer = new Persister();
+                try {
+                    Identity session = serializer.read(Identity.class, data.getData());
+                    this.sessionId = session.getSession().id;
+                    Log.i(TAG, "session: " + sessionId);
+                } catch (Exception e) {
+                    Log.e(TAG, "error", e);
+                }
+            } else {
+                this.sessionId = null;
             }
         }
 
@@ -126,17 +140,24 @@ public class FamilySearchService {
             Bundle params = new Bundle();
 
             FSResult result = getRestData(METHOD_GET, uri, params, headers);
-            if (result!=null && result.isSuccess()) {
-                Serializer serializer = GedcomxSerializer.create();
-                try {
-                    Gedcomx doc = serializer.read(Gedcomx.class, result.getData());
-                    if (doc.getPersons() != null && doc.getPersons().size() > 0) {
-                        currentPerson = doc.getPersons().get(0);
-                        personCache.put(currentPerson.getId(), currentPerson);
-                        Log.i(TAG, "getCurrentPerson " + doc.getPersons().size() + ": " + currentPerson.getId());
+            if (result!=null) {
+                if (result.isSuccess()) {
+                    Serializer serializer = GedcomxSerializer.create();
+                    try {
+                        Gedcomx doc = serializer.read(Gedcomx.class, result.getData());
+                        if (doc.getPersons() != null && doc.getPersons().size() > 0) {
+                            currentPerson = doc.getPersons().get(0);
+                            personCache.put(currentPerson.getId(), currentPerson);
+                            Log.i(TAG, "getCurrentPerson " + doc.getPersons().size() + ": " + currentPerson.getId());
+                        }
+                    } catch (Exception e) {
+                        Log.e(TAG, "error", e);
                     }
-                } catch (Exception e) {
-                    Log.e(TAG, "error", e);
+                } else {
+                    //-- check status and retry if possible
+                    if (handleStatusCodes(result)) {
+                        return getCurrentPerson();
+                    }
                 }
             }
         }
@@ -155,18 +176,36 @@ public class FamilySearchService {
             Bundle params = new Bundle();
 
             FSResult result = getRestData(METHOD_GET, uri, params, headers);
-            if (result!=null && result.isSuccess()) {
-                Serializer serializer = GedcomxSerializer.create();
-                try {
-                    Gedcomx doc = serializer.read(Gedcomx.class, result.getData());
-                    if (doc.getPersons() != null && doc.getPersons().size() > 0) {
-                        for(Person p : doc.getPersons()) {
-                            personCache.put(p.getId(), p);
+            if (result!=null) {
+                if (result.isSuccess()) {
+                    Serializer serializer = GedcomxSerializer.create();
+                    try {
+                        Gedcomx doc = serializer.read(Gedcomx.class, result.getData());
+                        if (doc.getPersons() != null && doc.getPersons().size() > 0) {
+                            for (Person p : doc.getPersons()) {
+                                personCache.put(p.getId(), p);
+                            }
+                            Log.i(TAG, "getPerson " + doc.getPersons().size() + ": " + personId);
                         }
-                        Log.i(TAG, "getPerson " + doc.getPersons().size() + ": " + personId);
+                    } catch (Exception e) {
+                        Log.e(TAG, "error", e);
                     }
-                } catch (Exception e) {
-                    Log.e(TAG, "error", e);
+                }
+                //-- person merged to a new id
+                else if(result.getStatusCode()==301) {
+                    Header[] responseHeaders = result.getResponse().getHeaders("X-Entity-Forwarded-Id");
+                    if (responseHeaders!=null && responseHeaders.length>0) {
+                        Header header = responseHeaders[0];
+                        String newFSId = header.getValue();
+                        Person person = getPerson(newFSId);
+                        personCache.put(personId, person);
+                    }
+                }
+                else {
+                    //-- check status and retry if possible
+                    if (handleStatusCodes(result)) {
+                        return getPerson(personId);
+                    }
                 }
             }
         }
@@ -188,24 +227,32 @@ public class FamilySearchService {
         Bundle params = new Bundle();
 
         FSResult result = getRestData(METHOD_GET, uri, params, headers);
-        if (result!=null && result.isSuccess()) {
-            Serializer serializer = GedcomxSerializer.create();
-            try {
-                Gedcomx doc = serializer.read(Gedcomx.class, result.getData());
-                if (doc.getSourceDescriptions()!=null && doc.getSourceDescriptions().size()>0) {
-                    for(SourceDescription sd : doc.getSourceDescriptions()) {
-                        List<Link> links = sd.getLinks();
-                        for(Link link : links) {
-                            if (link.getRel()!=null && link.getRel().equals("image-thumbnail")) {
-                                linkCache.put(personId, link);
-                                return link;
+        if (result!=null) {
+            if (result.isSuccess()) {
+                Serializer serializer = GedcomxSerializer.create();
+                try {
+                    Gedcomx doc = serializer.read(Gedcomx.class, result.getData());
+                    if (doc.getSourceDescriptions() != null && doc.getSourceDescriptions().size() > 0) {
+                        for (SourceDescription sd : doc.getSourceDescriptions()) {
+                            List<Link> links = sd.getLinks();
+                            for (Link link : links) {
+                                if (link.getRel() != null && link.getRel().equals("image-thumbnail")) {
+                                    linkCache.put(personId, link);
+                                    return link;
+                                }
                             }
                         }
+                        Log.i(TAG, "getPersonPortrait " + doc.getPersons().size() + ": " + personId);
                     }
-                    Log.i(TAG, "getPersonPortrait " + doc.getPersons().size() + ": " + personId);
+                } catch (Exception e) {
+                    Log.e(TAG, "error", e);
                 }
-            } catch (Exception e) {
-                Log.e(TAG, "error", e);
+            }
+            else {
+                //-- check status and retry if possible
+                if (handleStatusCodes(result)) {
+                    return getPersonPortrait(personId);
+                }
             }
         }
         linkCache.put(personId, null);
@@ -243,22 +290,29 @@ public class FamilySearchService {
             params.putString("person", person.getId());
 
             FSResult result = getRestData(METHOD_GET, uri, params, headers);
-
-            Serializer serializer = GedcomxSerializer.create();
-            try {
-                Gedcomx doc = serializer.read( Gedcomx.class, result.getData() );
-                if (doc.getRelationships() != null && doc.getRelationships().size() > 0) {
-                    List<Relationship> relatives = new ArrayList<>(doc.getRelationships());
-                    for(Relationship r : relatives) {
-                        getPerson(r.getPerson1().getResourceId());
-                        getPerson(r.getPerson2().getResourceId());
+            if (result!=null) {
+                if (result.isSuccess()) {
+                    Serializer serializer = GedcomxSerializer.create();
+                    try {
+                        Gedcomx doc = serializer.read(Gedcomx.class, result.getData());
+                        if (doc.getRelationships() != null && doc.getRelationships().size() > 0) {
+                            List<Relationship> relatives = new ArrayList<>(doc.getRelationships());
+                            for (Relationship r : relatives) {
+                                getPerson(r.getPerson1().getResourceId());
+                                getPerson(r.getPerson2().getResourceId());
+                            }
+                            closeRelatives.put(person.getId(), relatives);
+                            Log.i(TAG, "getCloseRelatives " + doc.getRelationships().size() + ": " + personId);
+                        }
+                    } catch (Exception e) {
+                        Log.e(TAG, "error", e);
                     }
-					closeRelatives.put(person.getId(), relatives);
-                    Log.i( TAG, "getCloseRelatives " + doc.getRelationships().size() +": "+personId);
+                } else {
+                    //-- check status and retry if possible
+                    if (handleStatusCodes(result)) {
+                        return getCloseRelatives(personId);
+                    }
                 }
-            }
-            catch (Exception e) {
-                Log.e( TAG, "error", e );
             }
         }
 
@@ -285,21 +339,71 @@ public class FamilySearchService {
             params.putString("type", "photo"); //-- limit to photos for now
 
             FSResult result = getRestData(METHOD_GET, uri, params, headers);
-
-            Serializer serializer = GedcomxSerializer.create();
-            try {
-                Gedcomx doc = serializer.read( Gedcomx.class, result.getData() );
-                if (doc.getSourceDescriptions()!=null && doc.getSourceDescriptions().size()>0) {
-                    memories.put(personId, doc.getSourceDescriptions());
-                    Log.i(TAG, "getPersonMemories found " + doc.getSourceDescriptions().size() + " photos for " + personId);
+            if (result!=null) {
+                if (result.isSuccess()) {
+                    Serializer serializer = GedcomxSerializer.create();
+                    try {
+                        Gedcomx doc = serializer.read(Gedcomx.class, result.getData());
+                        if (doc.getSourceDescriptions() != null && doc.getSourceDescriptions().size() > 0) {
+                            memories.put(personId, doc.getSourceDescriptions());
+                            Log.i(TAG, "getPersonMemories found " + doc.getSourceDescriptions().size() + " photos for " + personId);
+                        }
+                    } catch (Exception e) {
+                        Log.e(TAG, "error", e);
+                    }
+                } else {
+                    //-- check status and retry if possible
+                    if (handleStatusCodes(result)) {
+                        return getPersonMemories(personId);
+                    }
                 }
-            }
-            catch (Exception e) {
-                Log.e( TAG, "error", e );
             }
         }
 
         return memories.get(personId);
+    }
+
+    private boolean handleStatusCodes(FSResult data) throws FamilySearchException {
+        //-- not authenticated
+        if (data.getStatusCode()==401 && sessionId!=null) {
+            FSResult res = authWithToken();
+            if (res.isSuccess()) {
+                return true;
+            }
+        }
+        if (data.getStatusCode()==400) {
+            Log.e(TAG, "Bad Request: "+data.getData());
+            return false;
+        }
+        if (data.getStatusCode()==403) {
+            Log.e(TAG, "Forbidden: "+data.getData());
+            return false;
+        }
+        if (data.getStatusCode()==404) {
+            Log.e(TAG, "Not Found: "+data.getData());
+            return false;
+        }
+        if (data.getStatusCode()==429) {
+            Log.d(TAG, "Connection throttled.  Delay and retry.");
+            try {
+                //-- allow up to 20 retries of throttled connections
+                if (delayCount >= 20) {
+                    return false;
+                }
+                delayCount++;
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                Log.e(TAG, e.getMessage(), e);
+                return false;
+            }
+            return true;
+        }
+        if (data.getStatusCode()>=500) {
+            Log.e(TAG, "Internal Server Error: "+data.getData());
+            return false;
+        }
+        return false;
     }
 	
     private FSResult getRestData(String method, Uri action, Bundle params, Bundle headers) throws FamilySearchException{
@@ -377,6 +481,7 @@ public class FamilySearchService {
                 // Finally, we send our request using HTTP. This is the synchronous
                 // long operation that we need to run on this Loader's thread.
                 HttpResponse response = client.execute(request);
+                data.setResponse(response);
 
                 HttpEntity responseEntity = response.getEntity();
                 StatusLine responseStatus = response.getStatusLine();

@@ -15,7 +15,9 @@ import android.widget.GridView;
 import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.activities.adapters.FamilyMemberListAdapter;
 import org.finlayfamily.littlefamily.activities.tasks.FamilyLoaderTask;
+import org.finlayfamily.littlefamily.activities.tasks.PersonLoaderTask;
 import org.finlayfamily.littlefamily.activities.util.SystemUiHider;
+import org.finlayfamily.littlefamily.data.DataService;
 import org.finlayfamily.littlefamily.data.LittlePerson;
 import org.finlayfamily.littlefamily.familysearch.FamilySearchException;
 import org.finlayfamily.littlefamily.familysearch.FamilySearchService;
@@ -29,7 +31,7 @@ import java.util.ArrayList;
  *
  * @see SystemUiHider
  */
-public class ChooseFamilyMember extends Activity implements AdapterView.OnItemClickListener, FamilyLoaderTask.Listener {
+public class ChooseFamilyMember extends Activity implements AdapterView.OnItemClickListener, FamilyLoaderTask.Listener, PersonLoaderTask.Listener {
     public static final String SELECTED_PERSON = "selectedPerson";
     public static final String FAMILY = "family";
     private static final int LOGIN_REQUEST = 1;
@@ -39,14 +41,15 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
     private ProgressDialog pd;
     private boolean launchGame = false;
 
-    private FamilySearchService familySearchService;
+    private DataService dataService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_family_member);
 
-        this.familySearchService = FamilySearchService.getInstance();
+        this.dataService = DataService.getInstance();
+        this.dataService.setContext(this);
 
 
         gridView = (GridView) findViewById(R.id.gridViewFamily);
@@ -65,19 +68,16 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
     protected void onStart() {
         super.onStart();
 
-        if (familySearchService.getSessionId()==null) {
-            Intent intent = new Intent( this, FSLoginActivity.class );
-            startActivityForResult( intent, LOGIN_REQUEST );
-        } else {
-            pd = ProgressDialog.show(this, "Please wait...", "Loading data from FamilySearch", true, false);
-            LittlePerson littlePerson = null;
-            try {
-                Person person = familySearchService.getCurrentPerson();
-                FamilyLoaderTask task = new FamilyLoaderTask(person, this, this);
+        try {
+            if (!dataService.hasData()) {
+                Intent intent = new Intent( this, FSLoginActivity.class );
+                startActivityForResult( intent, LOGIN_REQUEST );
+            } else {
+                PersonLoaderTask task = new PersonLoaderTask(null, this, this);
                 task.execute();
-            } catch (FamilySearchException e) {
-                e.printStackTrace();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }
@@ -93,15 +93,8 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
         switch(requestCode) {
             case LOGIN_REQUEST:
                 if (resultCode == RESULT_OK) {
-                    Log.d("onActivityResult", "SESSION_ID:" + familySearchService.getSessionId());
-                    Person person = null;
-                    try {
-                        person = familySearchService.getCurrentPerson();
-                        FamilyLoaderTask task = new FamilyLoaderTask(person, this, this);
-                        task.execute();
-                    } catch (FamilySearchException e) {
-                        e.printStackTrace();
-                    }
+                    PersonLoaderTask task = new PersonLoaderTask(null, this, this);
+                    task.execute();
                 }
                 break;
         }
@@ -112,13 +105,7 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
         pd = ProgressDialog.show(this, "Please wait...", "Loading data from FamilySearch", true, false);
         launchGame = true;
         LittlePerson person = (LittlePerson) gridView.getItemAtPosition(position);
-        Person fsPerson = null;
-        try {
-            fsPerson = familySearchService.getPerson(person.getFamilySearchId());
-        } catch (FamilySearchException e) {
-            e.printStackTrace();
-        }
-        FamilyLoaderTask task = new FamilyLoaderTask(fsPerson, this, this);
+        FamilyLoaderTask task = new FamilyLoaderTask(person, this, this);
 		task.execute();
     }
 
@@ -146,5 +133,11 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
         int cols = 2;
         while(cols < 12 && (width / cols) * Math.ceil(((double)adapter.getCount()) / cols) > height) cols++;
         gridView.setNumColumns(cols);
+    }
+
+    @Override
+    public void onComplete(LittlePerson person) {
+        FamilyLoaderTask task = new FamilyLoaderTask(person, this, this);
+        task.execute();
     }
 }

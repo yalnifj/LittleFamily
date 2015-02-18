@@ -5,8 +5,13 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.finlayfamily.littlefamily.data.DataHelper;
 import org.finlayfamily.littlefamily.data.DataService;
 import org.finlayfamily.littlefamily.data.LittlePerson;
+import org.finlayfamily.littlefamily.familysearch.FamilySearchException;
+import org.finlayfamily.littlefamily.familysearch.FamilySearchService;
+import org.gedcomx.conclusion.Person;
+import org.gedcomx.conclusion.Relationship;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,14 +19,14 @@ import java.util.List;
 /**
  * Created by jfinlay on 1/12/2015.
  */
-public class FamilyLoaderTask extends AsyncTask<String, Integer, ArrayList<LittlePerson>> {
-    private LittlePerson person;
+public class PersonLoaderTask extends AsyncTask<String, Integer, LittlePerson> {
+    private Integer id;
     private Listener listener;
     private Context context;
     private DataService dataService;
 
-    public FamilyLoaderTask(LittlePerson person, Listener listener, Context context) {
-        this.person = person;
+    public PersonLoaderTask(Integer id, Listener listener, Context context) {
+        this.id = id;
         this.listener = listener;
         this.context = context;
         dataService = DataService.getInstance();
@@ -29,28 +34,29 @@ public class FamilyLoaderTask extends AsyncTask<String, Integer, ArrayList<Littl
     }
 
     @Override
-    protected ArrayList<LittlePerson> doInBackground(String[] params) {
-        ArrayList<LittlePerson> familyMembers = new ArrayList<>();
+    protected LittlePerson doInBackground(String[] params) {
+        LittlePerson person = null;
         try {
-            List<LittlePerson> people = dataService.getFamilyMembers(person);
-            if (people!=null) {
-                familyMembers.addAll(people);
+            if (id==null) {
+                person = dataService.getDefaultPerson();
+            } else {
+                person = dataService.getPersonById(id);
             }
         } catch(Exception e) {
             Log.e(this.getClass().getSimpleName(), "error", e);
             Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
         }
-        return familyMembers;
+        return person;
     }
 
     @Override
-    protected void onPostExecute(ArrayList<LittlePerson> familyMembers) {
+    protected void onPostExecute(LittlePerson person) {
         if (listener!=null) {
-            listener.onComplete(familyMembers);
+            listener.onComplete(person);
         }
     }
 
     public interface Listener {
-        public void onComplete(ArrayList<LittlePerson> family);
+        public void onComplete(LittlePerson person);
     }
 }

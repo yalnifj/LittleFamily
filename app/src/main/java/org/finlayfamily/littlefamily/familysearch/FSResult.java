@@ -1,5 +1,7 @@
 package org.finlayfamily.littlefamily.familysearch;
 
+import org.apache.http.HttpResponse;
+
 /**
  * Created by jfinlay on 12/30/2014.
  */
@@ -7,6 +9,7 @@ public class FSResult {
     private int statusCode;
     private String data;
     private boolean success=false;
+    private HttpResponse response;
 
     public int getStatusCode() {
         return statusCode;
@@ -30,5 +33,13 @@ public class FSResult {
 
     public void setSuccess(boolean success) {
         this.success = success;
+    }
+
+    public HttpResponse getResponse() {
+        return response;
+    }
+
+    public void setResponse(HttpResponse response) {
+        this.response = response;
     }
 }
