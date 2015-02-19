@@ -19,6 +19,7 @@ import android.widget.Toast;
 import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.activities.adapters.MatchGameListAdapter;
 import org.finlayfamily.littlefamily.activities.tasks.FamilyLoaderTask;
+import org.finlayfamily.littlefamily.data.DataService;
 import org.finlayfamily.littlefamily.data.LittlePerson;
 import org.finlayfamily.littlefamily.data.MatchPerson;
 import org.finlayfamily.littlefamily.familysearch.FamilySearchException;
@@ -36,7 +37,6 @@ public class MatchGameActivity extends Activity implements AdapterView.OnItemCli
     private MatchingGame game;
     private List<LittlePerson> people;
     private LittlePerson selectedPerson;
-    private FamilySearchService service;
     private MatchGameListAdapter adapter;
     private GridView gridView;
     private int flipCount;
@@ -72,15 +72,9 @@ public class MatchGameActivity extends Activity implements AdapterView.OnItemCli
 
         tts = new TextToSpeech(this, this);
 
-        service = FamilySearchService.getInstance();
-
-        try {
-            if (people!=null && people.size()>1) {
-                FamilyLoaderTask task = new FamilyLoaderTask(service.getPerson(people.get(backgroundLoadIndex).getFamilySearchId()), this, this);
-                task.execute();
-            }
-        } catch (FamilySearchException e) {
-            e.printStackTrace();
+        if (people!=null && people.size()>1) {
+            FamilyLoaderTask task = new FamilyLoaderTask(people.get(backgroundLoadIndex), this, this);
+            task.execute();
         }
     }
 
@@ -165,12 +159,8 @@ public class MatchGameActivity extends Activity implements AdapterView.OnItemCli
 
         backgroundLoadIndex++;
         if (backgroundLoadIndex < game.getBoard().size()/2) {
-            try {
-                FamilyLoaderTask task = new FamilyLoaderTask(service.getPerson(people.get(backgroundLoadIndex).getFamilySearchId()), this, this);
-                task.execute();
-            } catch (FamilySearchException e) {
-                e.printStackTrace();
-            }
+            FamilyLoaderTask task = new FamilyLoaderTask(people.get(backgroundLoadIndex), this, this);
+            task.execute();
         }
     }
 

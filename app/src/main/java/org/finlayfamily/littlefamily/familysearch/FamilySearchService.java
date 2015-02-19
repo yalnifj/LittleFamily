@@ -24,6 +24,8 @@ import org.apache.http.util.EntityUtils;
 import org.familysearch.identity.Identity;
 import org.finlayfamily.littlefamily.util.ImageHelper;
 import org.gedcomx.Gedcomx;
+import org.gedcomx.atom.Entry;
+import org.gedcomx.atom.Feed;
 import org.gedcomx.conclusion.Person;
 import org.gedcomx.conclusion.Relationship;
 import org.gedcomx.links.Link;
@@ -92,10 +94,11 @@ public class FamilySearchService {
     public FSResult authenticate(String username, String password) throws FamilySearchException {
         encodedAuthToken = Base64.encodeToString((username + ":" + password).getBytes(), Base64.NO_WRAP);
 
-        return authWithToken();
+        return authWithToken(encodedAuthToken);
     }
 
-    private FSResult authWithToken() throws FamilySearchException {
+    public FSResult authWithToken(String token) throws FamilySearchException {
+        encodedAuthToken = token;
         if (encodedAuthToken==null) {
             throw new FamilySearchException("Unable to authenticate with FamilySearch", 401);
         }
@@ -126,6 +129,9 @@ public class FamilySearchService {
 
     public String getSessionId() {
         return sessionId;
+    }
+    public String getEncodedAuthToken() {
+        return encodedAuthToken;
     }
 
     public Person getCurrentPerson() throws FamilySearchException {
@@ -164,11 +170,11 @@ public class FamilySearchService {
         return currentPerson;
     }
 
-    public Person getPerson(String personId) throws FamilySearchException {
+    public Person getPerson(String personId, boolean checkCache) throws FamilySearchException {
         if (sessionId==null) {
             throw new FamilySearchException("Not Authenticated with FamilySearch.", 0);
         }
-        if (personCache.get(personId)==null) {
+        if (!checkCache || personCache.get(personId)==null) {
             Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+personId);
             Bundle headers = new Bundle();
             headers.putString("Authorization", "Bearer " + sessionId);
@@ -197,14 +203,14 @@ public class FamilySearchService {
                     if (responseHeaders!=null && responseHeaders.length>0) {
                         Header header = responseHeaders[0];
                         String newFSId = header.getValue();
-                        Person person = getPerson(newFSId);
+                        Person person = getPerson(newFSId, checkCache);
                         personCache.put(personId, person);
                     }
                 }
                 else {
                     //-- check status and retry if possible
                     if (handleStatusCodes(result)) {
-                        return getPerson(personId);
+                        return getPerson(personId, checkCache);
                     }
                 }
             }
@@ -212,8 +218,59 @@ public class FamilySearchService {
         return personCache.get(personId);
     }
 
-    public Link getPersonPortrait(String personId) throws FamilySearchException {
-        if (linkCache.containsKey(personId)) {
+    public Entry getLastChangeForPerson(String personId) throws FamilySearchException {
+        if (sessionId==null) {
+            throw new FamilySearchException("Not Authenticated with FamilySearch.", 0);
+        }
+
+        Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+personId+"/changes");
+        Bundle headers = new Bundle();
+        headers.putString("Authorization", "Bearer " + sessionId);
+        headers.putString("Accept", "application/atom+xml");
+        Bundle params = new Bundle();
+        params.putInt("count", 1);
+
+        Entry entry = null;
+        FSResult result = getRestData(METHOD_GET, uri, params, headers);
+        if (result!=null) {
+            if (result.isSuccess()) {
+                Serializer serializer = GedcomxSerializer.create();
+                try {
+                    Feed feed = serializer.read(Feed.class, result.getData());
+                    if (feed.getEntries() != null && feed.getEntries().size() > 0) {
+                        for (Entry e : feed.getEntries()) {
+                            if (entry==null) {
+                                entry = e;
+                                break;
+                            }
+                        }
+                        Log.i(TAG, "getLastChangeForPerson " + feed.getEntries().size() + ": " + personId);
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "error", e);
+                }
+            }
+            //-- person merged to a new id
+            else if(result.getStatusCode()==301) {
+                Header[] responseHeaders = result.getResponse().getHeaders("X-Entity-Forwarded-Id");
+                if (responseHeaders!=null && responseHeaders.length>0) {
+                    Header header = responseHeaders[0];
+                    String newFSId = header.getValue();
+                    return getLastChangeForPerson(newFSId);
+                }
+            }
+            else {
+                //-- check status and retry if possible
+                if (handleStatusCodes(result)) {
+                    return getLastChangeForPerson(personId);
+                }
+            }
+        }
+        return entry;
+    }
+
+    public Link getPersonPortrait(String personId, boolean checkCache) throws FamilySearchException {
+        if (checkCache && linkCache.containsKey(personId)) {
             return linkCache.get(personId);
         }
         if (sessionId==null) {
@@ -251,7 +308,7 @@ public class FamilySearchService {
             else {
                 //-- check status and retry if possible
                 if (handleStatusCodes(result)) {
-                    return getPersonPortrait(personId);
+                    return getPersonPortrait(personId, checkCache);
                 }
             }
         }
@@ -259,7 +316,7 @@ public class FamilySearchService {
         return null;
     }
 
-    public List<Relationship> getCloseRelatives() throws FamilySearchException {
+    public List<Relationship> getCloseRelatives(boolean checkCache) throws FamilySearchException {
         if (sessionId==null) {
             throw new FamilySearchException("Not Authenticated with FamilySearch.", 0);
         }
@@ -268,20 +325,20 @@ public class FamilySearchService {
             throw new FamilySearchException("Unable to get current person from FamilySearch", 0);
         }
 
-        return getCloseRelatives(currentPerson.getId());
+        return getCloseRelatives(currentPerson.getId(), checkCache);
     }
 
-	public List<Relationship> getCloseRelatives(String personId) throws FamilySearchException {
+	public List<Relationship> getCloseRelatives(String personId, boolean checkCache) throws FamilySearchException {
         if (sessionId==null) {
             throw new FamilySearchException("Not Authenticated with FamilySearch.", 0);
         }
 
-		Person person = this.getPerson(personId);
+		Person person = this.getPerson(personId, checkCache);
         if (person==null) {
             throw new FamilySearchException("Unable to get person "+personId+" from FamilySearch", 0);
         }
 
-        if (closeRelatives.get(person.getId())==null) {
+        if (!checkCache || closeRelatives.get(person.getId())==null) {
             Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons-with-relationships");
             Bundle headers = new Bundle();
             headers.putString("Authorization", "Bearer " + sessionId);
@@ -298,8 +355,8 @@ public class FamilySearchService {
                         if (doc.getRelationships() != null && doc.getRelationships().size() > 0) {
                             List<Relationship> relatives = new ArrayList<>(doc.getRelationships());
                             for (Relationship r : relatives) {
-                                getPerson(r.getPerson1().getResourceId());
-                                getPerson(r.getPerson2().getResourceId());
+                                getPerson(r.getPerson1().getResourceId(), checkCache);
+                                getPerson(r.getPerson2().getResourceId(), checkCache);
                             }
                             closeRelatives.put(person.getId(), relatives);
                             Log.i(TAG, "getCloseRelatives " + doc.getRelationships().size() + ": " + personId);
@@ -310,7 +367,7 @@ public class FamilySearchService {
                 } else {
                     //-- check status and retry if possible
                     if (handleStatusCodes(result)) {
-                        return getCloseRelatives(personId);
+                        return getCloseRelatives(personId, checkCache);
                     }
                 }
             }
@@ -319,17 +376,17 @@ public class FamilySearchService {
         return closeRelatives.get(person.getId());
     }
 
-    public List<SourceDescription> getPersonMemories(String personId) throws FamilySearchException {
+    public List<SourceDescription> getPersonMemories(String personId, boolean checkCache) throws FamilySearchException {
         if (sessionId==null) {
             throw new FamilySearchException("Not Authenticated with FamilySearch.", 0);
         }
 
-        Person person = this.getPerson(personId);
+        Person person = this.getPerson(personId, checkCache);
         if (person==null) {
             throw new FamilySearchException("Unable to get person "+personId+" from FamilySearch", 0);
         }
 
-        if (memories.get(personId)==null){
+        if (!checkCache || memories.get(personId)==null){
             Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+personId+"/memories");
             Bundle headers = new Bundle();
             headers.putString("Authorization", "Bearer " + sessionId);
@@ -354,7 +411,7 @@ public class FamilySearchService {
                 } else {
                     //-- check status and retry if possible
                     if (handleStatusCodes(result)) {
-                        return getPersonMemories(personId);
+                        return getPersonMemories(personId, checkCache);
                     }
                 }
             }
@@ -366,7 +423,7 @@ public class FamilySearchService {
     private boolean handleStatusCodes(FSResult data) throws FamilySearchException {
         //-- not authenticated
         if (data.getStatusCode()==401 && sessionId!=null) {
-            FSResult res = authWithToken();
+            FSResult res = authWithToken(encodedAuthToken);
             if (res.isSuccess()) {
                 return true;
             }

@@ -38,7 +38,6 @@ public class FamilyLoaderTask extends AsyncTask<String, Integer, ArrayList<Littl
             }
         } catch(Exception e) {
             Log.e(this.getClass().getSimpleName(), "error", e);
-            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
         }
         return familyMembers;
     }

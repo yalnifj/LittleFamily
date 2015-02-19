@@ -12,20 +12,22 @@ import org.gedcomx.links.Link;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.util.Date;
 
 /**
  * Created by jfinlay on 1/12/2015.
  */
 public class DataHelper {
-    public static LittlePerson buildLittlePerson(Person fsPerson, Context context) throws FamilySearchException {
+    public static LittlePerson buildLittlePerson(Person fsPerson, Context context, boolean checkCache) throws FamilySearchException {
         FamilySearchService service = FamilySearchService.getInstance();
         LittlePerson person = new LittlePerson(fsPerson);
+        person.setLastSync(new Date());
 
         File imageFile = getImageFile(fsPerson.getId(), "portrait.jpg", context);
-        if (imageFile!=null && imageFile.exists()) {
+        if (checkCache && imageFile!=null && imageFile.exists()) {
             person.setPhotoPath(imageFile.getAbsolutePath());
         } else {
-            Link portrait = service.getPersonPortrait(fsPerson.getId());
+            Link portrait = service.getPersonPortrait(fsPerson.getId(), checkCache);
             if (portrait != null) {
                 String imagePath = null;
                 try {

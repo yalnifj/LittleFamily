@@ -1,16 +1,25 @@
 package org.finlayfamily.littlefamily.data;
 
 import android.content.Context;
+import android.util.Log;
+import android.widget.Toast;
 
+import org.finlayfamily.littlefamily.activities.tasks.AuthTask;
 import org.finlayfamily.littlefamily.db.DBHelper;
+import org.finlayfamily.littlefamily.familysearch.FamilySearchException;
 import org.finlayfamily.littlefamily.familysearch.FamilySearchService;
-import org.gedcomx.conclusion.*;
+import org.gedcomx.atom.Entry;
+import org.gedcomx.conclusion.Person;
 import org.gedcomx.conclusion.Relationship;
-import org.gedcomx.types.*;
+import org.gedcomx.links.Link;
+import org.gedcomx.source.SourceDescription;
 import org.gedcomx.types.RelationshipType;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * Created by jfinlay on 2/18/2015.
@@ -21,6 +30,9 @@ public class DataService {
     private DBHelper dbHelper = null;
     private Context context = null;
 
+    private Queue<LittlePerson> syncQ;
+    private boolean running = true;
+
     private static DataService ourInstance = new DataService();
 
     public static DataService getInstance() {
@@ -29,9 +41,12 @@ public class DataService {
 
     private DataService() {
         fsService = FamilySearchService.getInstance();
+        syncQ = new LinkedList<>();
+        SyncThread syncer = new SyncThread();
+        syncer.start();
     }
 
-    private DBHelper getDBHelper() throws Exception {
+    public DBHelper getDBHelper() throws Exception {
         if (dbHelper==null) {
             if (this.context==null) {
                 throw new Exception("Context must be set before using the DataService.");
@@ -43,6 +58,17 @@ public class DataService {
 
     public void setContext(Context context) {
         this.context = context;
+        if (fsService.getSessionId()==null) {
+            try {
+                String token = getDBHelper().getTokenForSystemId("FamilySearch");
+                if (token!=null) {
+                    AuthTask task = new AuthTask(null);
+                    task.execute(token);
+                }
+            } catch (Exception e) {
+                Log.e("SyncThread", "Error authenticating with FamilySearch", e);
+            }
+        }
     }
 
     public boolean hasData() throws Exception {
@@ -51,13 +77,150 @@ public class DataService {
         return false;
     }
 
+    private class SyncThread extends Thread {
+        public void run() {
+            while(running) {
+                while (syncQ.size() == 0) {
+                    try {
+                        synchronized (syncQ) {
+                            syncQ.wait();
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                LittlePerson person = syncQ.poll();
+                try {
+                    Entry entry = fsService.getLastChangeForPerson(person.getFamilySearchId());
+                    if (entry.getPublished().after(person.getLastSync())) {
+                        Person fsPerson = fsService.getPerson(person.getFamilySearchId(), false);
+                        LittlePerson updated = DataHelper.buildLittlePerson(fsPerson, context, false);
+                        updated.setId(person.getId());
+                        getDBHelper().persistLittlePerson(updated);
+                        person.setLastSync(updated.getLastSync());
+                        person.setPhotoPath(updated.getPhotoPath());
+                        person.setAge(updated.getAge());
+                        person.setBirthDate(updated.getBirthDate());
+                        person.setFamilySearchId(updated.getFamilySearchId());
+                        person.setGender(updated.getGender());
+                        person.setGivenName(updated.getGivenName());
+                        person.setName(updated.getName());
+
+
+                        List<Relationship> closeRelatives = fsService.getCloseRelatives(person.getFamilySearchId(), false);
+                        if (closeRelatives!=null) {
+                            List<org.finlayfamily.littlefamily.data.Relationship> oldRelations = getDBHelper().getRelationshipsForPerson(person.getId());
+                            for(Relationship r : closeRelatives) {
+                                org.finlayfamily.littlefamily.data.RelationshipType type = org.finlayfamily.littlefamily.data.RelationshipType.PARENTCHILD;
+                                if (r.getKnownType()== RelationshipType.Couple) {
+                                    type = org.finlayfamily.littlefamily.data.RelationshipType.SPOUSE;
+                                }
+                                if (!r.getPerson1().getResourceId().equals(person.getFamilySearchId())) {
+                                    org.finlayfamily.littlefamily.data.Relationship rel = syncRelationship(person, r.getPerson1().getResourceId(), type);
+                                    if (rel!=null) {
+                                        oldRelations.remove(rel);
+                                    }
+                                }
+                                if (!r.getPerson2().getResourceId().equals(person.getFamilySearchId())) {
+                                    org.finlayfamily.littlefamily.data.Relationship rel = syncRelationship(person, r.getPerson2().getResourceId(), type);
+                                    if (rel!=null) {
+                                        oldRelations.remove(rel);
+                                    }
+                                }
+                            }
+
+                            for(org.finlayfamily.littlefamily.data.Relationship rel : oldRelations) {
+                                getDBHelper().deleteRelationshipById(rel.getId());
+                            }
+                        }
+
+                        List<SourceDescription> sds = fsService.getPersonMemories(person.getFamilySearchId(), true);
+                        if (sds!=null) {
+                            List<Media> oldMedia = getDBHelper().getMediaForPerson(person.getId());
+                            for (SourceDescription sd : sds) {
+                                Media med = getDBHelper().getMediaByFamilySearchId(sd.getId());
+                                if (med==null) {
+                                    List<Link> links = sd.getLinks();
+                                    if (links != null) {
+                                        for (Link link : links) {
+                                            if (link.getRel() != null && link.getRel().equals("image")) {
+                                                med = new Media();
+                                                med.setType("photo");
+                                                med.setFamilySearchId(sd.getId());
+                                                String localPath = DataHelper.downloadFile(link.getHref().toString(), person.getFamilySearchId(), DataHelper.lastPath(link.getHref().toString()), context);
+                                                if (localPath!=null) {
+                                                    med.setLocalPath(localPath);
+                                                    getDBHelper().persistMedia(med);
+                                                    Tag tag = new Tag();
+                                                    tag.setMediaId(med.getId());
+                                                    tag.setPersonId(person.getId());
+                                                    getDBHelper().persistTag(tag);
+                                                }
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    oldMedia.remove(med);
+                                }
+                            }
+
+                            for(Media old : oldMedia) {
+
+                            }
+                        }
+                    } else {
+                        person.setLastSync(new java.util.Date());
+                        getDBHelper().persistLittlePerson(person);
+                    }
+                } catch (FamilySearchException e) {
+                    Log.e("SyncThread", "Error reading from FamilySearch", e);
+                } catch (Exception e) {
+                    Log.e("SyncThread", "Error syncing person", e);
+                }
+            }
+        }
+
+        private org.finlayfamily.littlefamily.data.Relationship syncRelationship(LittlePerson person, String fsid, org.finlayfamily.littlefamily.data.RelationshipType type) throws Exception {
+            LittlePerson relative = getDBHelper().getPersonByFamilySearchId(fsid);
+            if (relative==null) {
+                Person fsPerson2 = fsService.getPerson(fsid, false);
+                relative = DataHelper.buildLittlePerson(fsPerson2, context, false);
+                getDBHelper().persistLittlePerson(relative);
+            }
+            if (relative!=null) {
+                org.finlayfamily.littlefamily.data.Relationship rel = getDBHelper().getRelationship(person.getId(), relative.getId(), type);
+                if (rel==null) {
+                    rel = new org.finlayfamily.littlefamily.data.Relationship();
+                    rel.setId1(person.getId());
+                    rel.setId2(relative.getId());
+                    rel.setType(type);
+                    getDBHelper().persistRelationship(rel);
+                }
+                return rel;
+            }
+            return null;
+        }
+    }
+
+    public void addToSyncQ(LittlePerson person) {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.HOUR, -1);
+        if (person.getLastSync().before(cal.getTime())) {
+            syncQ.add(person);
+            syncQ.notifyAll();
+        }
+    }
+
     public LittlePerson getDefaultPerson() throws Exception {
         LittlePerson person = getDBHelper().getFirstPerson();
 
         if (person==null) {
             Person fsPerson = fsService.getCurrentPerson();
-            person = DataHelper.buildLittlePerson(fsPerson, context);
+            person = DataHelper.buildLittlePerson(fsPerson, context, true);
             getDBHelper().persistLittlePerson(person);
+        } else {
+            addToSyncQ(person);
         }
 
         return person;
@@ -65,6 +228,7 @@ public class DataService {
 
     public LittlePerson getPersonById(int id) throws Exception {
         LittlePerson person = getDBHelper().getPersonById(id);
+        if (person!=null) addToSyncQ(person);
         return person;
     }
 
@@ -72,15 +236,19 @@ public class DataService {
         List<LittlePerson> family = getDBHelper().getRelativesForPerson(person.getId());
         if (family==null || family.size()==0) {
             family = new ArrayList<>();
-            List<Relationship> closeRelatives = fsService.getCloseRelatives(person.getFamilySearchId());
+            List<Relationship> closeRelatives = fsService.getCloseRelatives(person.getFamilySearchId(), true);
             if (closeRelatives!=null) {
                 for(Relationship r : closeRelatives) {
                     if (!r.getPerson1().getResourceId().equals(person.getFamilySearchId())) {
-                        Person fsPerson = fsService.getPerson(r.getPerson1().getResourceId());
-                        LittlePerson relative = DataHelper.buildLittlePerson(fsPerson, context);
+                        Person fsPerson = fsService.getPerson(r.getPerson1().getResourceId(), true);
+                        LittlePerson relative = getDBHelper().getPersonByFamilySearchId(fsPerson.getId());
+                        if (relative==null) {
+                            relative = DataHelper.buildLittlePerson(fsPerson, context, true);
+                        }
                         if (relative!=null) {
                             getDBHelper().persistLittlePerson(relative);
                             family.add(relative);
+                            addToSyncQ(relative);
                             org.finlayfamily.littlefamily.data.Relationship rel = new org.finlayfamily.littlefamily.data.Relationship();
                             rel.setId1(person.getId());
                             rel.setId2(relative.getId());
@@ -94,11 +262,15 @@ public class DataService {
                         }
                     }
                     if (!r.getPerson2().getResourceId().equals(person.getFamilySearchId())) {
-                        Person fsPerson = fsService.getPerson(r.getPerson2().getResourceId());
-                        LittlePerson relative = DataHelper.buildLittlePerson(fsPerson, context);
+                        Person fsPerson = fsService.getPerson(r.getPerson2().getResourceId(), true);
+                        LittlePerson relative = getDBHelper().getPersonByFamilySearchId(fsPerson.getId());
+                        if (relative==null) {
+                            relative = DataHelper.buildLittlePerson(fsPerson, context, true);
+                        }
                         if (relative!=null) {
                             getDBHelper().persistLittlePerson(relative);
                             family.add(relative);
+                            addToSyncQ(relative);
                             org.finlayfamily.littlefamily.data.Relationship rel = new org.finlayfamily.littlefamily.data.Relationship();
                             rel.setId1(person.getId());
                             rel.setId2(relative.getId());
@@ -115,5 +287,46 @@ public class DataService {
             }
         }
         return family;
+    }
+
+    public List<Media> getMediaForPerson(LittlePerson person) throws Exception {
+        List<Media> media = getDBHelper().getMediaForPerson(person.getId());
+        if (media==null || media.size()==0) {
+            media = new ArrayList<>();
+            try {
+                List<SourceDescription> sds = fsService.getPersonMemories(person.getFamilySearchId(), true);
+                if (sds!=null) {
+                    for (SourceDescription sd : sds) {
+                        Media med = getDBHelper().getMediaByFamilySearchId(sd.getId());
+                        if (med==null) {
+                            List<Link> links = sd.getLinks();
+                            if (links != null) {
+                                for (Link link : links) {
+                                    if (link.getRel() != null && link.getRel().equals("image")) {
+                                        med = new Media();
+                                        med.setType("photo");
+                                        med.setFamilySearchId(sd.getId());
+                                        String localPath = DataHelper.downloadFile(link.getHref().toString(), person.getFamilySearchId(), DataHelper.lastPath(link.getHref().toString()), context);
+                                        if (localPath!=null) {
+                                            med.setLocalPath(localPath);
+                                            getDBHelper().persistMedia(med);
+                                            media.add(med);
+                                            Tag tag = new Tag();
+                                            tag.setMediaId(med.getId());
+                                            tag.setPersonId(person.getId());
+                                            getDBHelper().persistTag(tag);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch(FamilySearchException e) {
+                Log.e(this.getClass().getSimpleName(), "error", e);
+                Toast.makeText(context, "Error communicating with FamilySearch. " + e, Toast.LENGTH_LONG).show();
+            }
+        }
+        return media;
     }
 }

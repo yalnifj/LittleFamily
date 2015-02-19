@@ -44,7 +44,6 @@ public class PersonLoaderTask extends AsyncTask<String, Integer, LittlePerson> {
             }
         } catch(Exception e) {
             Log.e(this.getClass().getSimpleName(), "error", e);
-            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
         }
         return person;
     }

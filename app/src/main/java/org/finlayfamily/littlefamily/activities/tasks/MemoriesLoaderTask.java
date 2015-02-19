@@ -6,7 +6,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 import org.finlayfamily.littlefamily.data.DataHelper;
+import org.finlayfamily.littlefamily.data.DataService;
 import org.finlayfamily.littlefamily.data.LittlePerson;
+import org.finlayfamily.littlefamily.data.Media;
 import org.finlayfamily.littlefamily.familysearch.FamilySearchException;
 import org.finlayfamily.littlefamily.familysearch.FamilySearchService;
 import org.gedcomx.conclusion.Person;
@@ -22,55 +24,39 @@ import javax.xml.transform.Source;
 /**
  * Created by jfinlay on 1/12/2015.
  */
-public class MemoriesLoaderTask extends AsyncTask<String, Integer, ArrayList<SourceDescription>> {
-    private Person person;
+public class MemoriesLoaderTask extends AsyncTask<String, Integer, ArrayList<Media>> {
+    private LittlePerson person;
     private Listener listener;
-    private boolean download;
     private Context context;
+    private DataService dataService;
 
-    public MemoriesLoaderTask(Person person, boolean download, Listener listener, Context context) {
+    public MemoriesLoaderTask(LittlePerson person, Listener listener, Context context) {
         this.person = person;
         this.listener = listener;
         this.context = context;
-        this.download = download;
+        dataService = DataService.getInstance();
+        dataService.setContext(context);
     }
 
     @Override
-    protected ArrayList<SourceDescription> doInBackground(String[] params) {
-        ArrayList<SourceDescription> photos = new ArrayList<>();
-        FamilySearchService service = FamilySearchService.getInstance();
+    protected ArrayList<Media> doInBackground(String[] params) {
+        ArrayList<Media> mediaList = new ArrayList<>();
         try {
-            List<SourceDescription> sds = service.getPersonMemories(person.getId());
-            if (sds!=null) {
-                photos.addAll(sds);
-                if (download) {
-                    for (SourceDescription sd : photos) {
-                        List<Link> links = sd.getLinks();
-                        if (links != null) {
-                            for (Link link : links) {
-                                if (link.getRel() != null && link.getRel().equals("image")) {
-                                    DataHelper.downloadFile(link.getHref().toString(), person.getId(), DataHelper.lastPath(link.getHref().toString()), context);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        } catch(FamilySearchException e) {
-            Log.e(this.getClass().getSimpleName(), "error", e);
-            Toast.makeText(context, "Error communicating with FamilySearch. " + e, Toast.LENGTH_LONG).show();
+            mediaList.addAll(dataService.getMediaForPerson(person));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return photos;
+        return mediaList;
     }
 
     @Override
-    protected void onPostExecute(ArrayList<SourceDescription> photos) {
+    protected void onPostExecute(ArrayList<Media> photos) {
         if (listener!=null) {
             listener.onComplete(photos);
         }
     }
 
     public interface Listener {
-        public void onComplete(ArrayList<SourceDescription> photos);
+        public void onComplete(ArrayList<Media> photos);
     }
 }

@@ -14,6 +14,7 @@ import org.finlayfamily.littlefamily.activities.tasks.FamilyLoaderTask;
 import org.finlayfamily.littlefamily.activities.tasks.FileDownloaderTask;
 import org.finlayfamily.littlefamily.activities.tasks.MemoriesLoaderTask;
 import org.finlayfamily.littlefamily.data.LittlePerson;
+import org.finlayfamily.littlefamily.data.Media;
 import org.finlayfamily.littlefamily.familysearch.FamilySearchException;
 import org.finlayfamily.littlefamily.familysearch.FamilySearchService;
 import org.finlayfamily.littlefamily.util.ImageHelper;
@@ -28,17 +29,16 @@ import java.util.Locale;
 import java.util.Random;
 
 public class ScratchGameActivity extends Activity implements TextToSpeech.OnInitListener,
-            MemoriesLoaderTask.Listener, FileDownloaderTask.Listener, ScratchView.ScratchCompleteListener {
+            MemoriesLoaderTask.Listener, ScratchView.ScratchCompleteListener {
 
     private List<LittlePerson> people;
     private LittlePerson selectedPerson;
-    private FamilySearchService service;
 
     private ProgressDialog pd;
     private ScratchView layeredImage;
     private String imagePath;
     private Bitmap imageBitmap;
-    private SourceDescription photoSd;
+    private Media photo;
 
     private int backgroundLoadIndex = 1;
 
@@ -49,7 +49,6 @@ public class ScratchGameActivity extends Activity implements TextToSpeech.OnInit
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scratch_game);
 
-        service = FamilySearchService.getInstance();
         layeredImage = (ScratchView) findViewById(R.id.layeredImage);
         layeredImage.registerListener(this);
 
@@ -94,29 +93,15 @@ public class ScratchGameActivity extends Activity implements TextToSpeech.OnInit
         if (people!=null && people.size()>0) {
             Random rand = new Random();
             selectedPerson = people.get(rand.nextInt(people.size()));
-
-            if (pd==null) pd = ProgressDialog.show(this, "Please wait...", "Loading data from FamilySearch", true, false);
-            try {
-                Person person = service.getPerson(selectedPerson.getFamilySearchId());
-                if (person!=null) {
-                    MemoriesLoaderTask task = new MemoriesLoaderTask(person, false, this, this);
-                    task.execute();
-                }
-            } catch (FamilySearchException e) {
-                e.printStackTrace();
-            }
+            MemoriesLoaderTask task = new MemoriesLoaderTask(selectedPerson, this, this);
+            task.execute();
         }
     }
 
-    private void loadMoreFamilyMembers(boolean showdialog) {
+    private void loadMoreFamilyMembers() {
         if (backgroundLoadIndex < people.size() && backgroundLoadIndex < 20) {
-            try {
-                FamilyLoaderTask task = new FamilyLoaderTask(service.getPerson(people.get(backgroundLoadIndex).getFamilySearchId()), new FamilyLoaderListener(), this);
-                if (pd==null && showdialog) pd = ProgressDialog.show(this, "Please wait...", "Loading data from FamilySearch", true, false);
-                task.execute();
-            } catch (FamilySearchException e) {
-                e.printStackTrace();
-            }
+            FamilyLoaderTask task = new FamilyLoaderTask(people.get(backgroundLoadIndex), new FamilyLoaderListener(), this);
+            task.execute();
         }
         else {
             if (pd!=null) {
@@ -128,9 +113,9 @@ public class ScratchGameActivity extends Activity implements TextToSpeech.OnInit
     }
 
     @Override
-    public void onComplete(ArrayList<SourceDescription> photos) {
+    public void onComplete(ArrayList<Media> photos) {
         if (photos==null || photos.size()==0) {
-            if (backgroundLoadIndex < 20) loadMoreFamilyMembers(true);
+            if (backgroundLoadIndex < 20) loadMoreFamilyMembers();
             else {
                 //-- could not find any images, fallback to a default image
                 imageBitmap = ImageHelper.loadBitmapFromResource(this, selectedPerson.getDefaultPhotoResource(), 0, layeredImage.getWidth(), layeredImage.getHeight());
@@ -138,23 +123,24 @@ public class ScratchGameActivity extends Activity implements TextToSpeech.OnInit
             }
         } else {
             Random rand = new Random();
-            photoSd = photos.get(rand.nextInt(photos.size()));
-
-            List<Link> links = photoSd.getLinks();
-            if (links!=null) {
-                for (Link photoLink : links) {
-                    if (photoLink.getRel() != null && photoLink.getRel().equals("image")) {
-                        FileDownloaderTask task = new FileDownloaderTask(photoLink.getHref().toString(), selectedPerson.getFamilySearchId(), this, this);
-                        task.execute();
-                    }
+            photo = photos.get(rand.nextInt(photos.size()));
+            imagePath = photo.getLocalPath();
+            if (imagePath!=null) {
+                if (pd!=null) {
+                    pd.dismiss();
+                    pd = null;
                 }
+                imageBitmap = ImageHelper.loadBitmapFromFile(imagePath, 0, layeredImage.getWidth(), layeredImage.getHeight(), true);
+                setupCanvas();
+            } else {
+                loadRandomImage();
             }
         }
     }
 
     @Override
     public void onScratchComplete() {
-        loadMoreFamilyMembers(false);
+        loadMoreFamilyMembers();
         if (tts != null) {
             String name = selectedPerson.getGivenName();
             if (name != null) {
@@ -176,21 +162,6 @@ public class ScratchGameActivity extends Activity implements TextToSpeech.OnInit
             }
 
             backgroundLoadIndex++;
-            loadRandomImage();
-        }
-    }
-
-    @Override
-    public void onComplete(String photoPath) {
-        imagePath = photoPath;
-        if (imagePath!=null) {
-            if (pd!=null) {
-                pd.dismiss();
-                pd = null;
-            }
-            imageBitmap = ImageHelper.loadBitmapFromFile(imagePath, 0, layeredImage.getWidth(), layeredImage.getHeight(), true);
-            setupCanvas();
-        } else {
             loadRandomImage();
         }
     }

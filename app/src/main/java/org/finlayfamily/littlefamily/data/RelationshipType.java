@@ -6,7 +6,7 @@ public enum RelationshipType
 	PARENTCHILD(0), SPOUSE(1);
 	
 	int id;
-	public RelationshipType(int id) {
+	RelationshipType(int id) {
 		this.id = id;
 	}
 	public int getId() {

@@ -2,12 +2,9 @@ package org.finlayfamily.littlefamily.activities;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,14 +16,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.finlayfamily.littlefamily.R;
+import org.finlayfamily.littlefamily.activities.tasks.AuthTask;
+import org.finlayfamily.littlefamily.data.DataService;
 import org.finlayfamily.littlefamily.familysearch.FSResult;
-import org.finlayfamily.littlefamily.familysearch.FamilySearchException;
 import org.finlayfamily.littlefamily.familysearch.FamilySearchService;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class FSLoginActivity extends Activity {
+public class FSLoginActivity extends Activity implements AuthTask.Listener {
     private static final int LOADER_LOGIN = 0x1;
 
     private static final String FS_DEFAULT_USER = "tum000205905";
@@ -37,6 +35,7 @@ public class FSLoginActivity extends Activity {
     private EditText mPasswordView;
     private View mLoginFormView;
     private ProgressDialog pd;
+    private DataService dataService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +66,9 @@ public class FSLoginActivity extends Activity {
                 attemptLogin();
             }
         });
+
+        dataService = DataService.getInstance();
+        dataService.setContext(this);
 
         mLoginFormView = findViewById(R.id.login_form);
     }
@@ -114,7 +116,7 @@ public class FSLoginActivity extends Activity {
             focusView.requestFocus();
         } else {
             pd = ProgressDialog.show(this, "Please wait...", "Logging into FamilySearch", true, false);
-            AuthTask task = new AuthTask();
+            AuthTask task = new AuthTask(this);
             task.execute(username, password);
 
             /*
@@ -140,36 +142,24 @@ public class FSLoginActivity extends Activity {
         return password.length() > 1;
     }
 
-    public class AuthTask extends AsyncTask<String, Integer, FSResult> {
-        @Override
-        protected FSResult doInBackground(String[] params) {
-            FSResult result = null;
-            FamilySearchService service = FamilySearchService.getInstance();
+    @Override
+    public void onComplete(FSResult response) {
+        if (pd!=null) pd.dismiss();
+        if (response!=null && response.isSuccess()) {
+            Intent intent = new Intent();
+            setResult(Activity.RESULT_OK, intent);
             try {
-                result = service.authenticate(params[0], params[1]);
-                service.getCurrentPerson();
-            } catch(FamilySearchException e) {
-                Log.e(this.getClass().getSimpleName(), "error", e);
-                result = new FSResult();
-                result.setData(e.getLocalizedMessage());
+                dataService.getDBHelper().saveToken("FamilySearch", FamilySearchService.getInstance().getEncodedAuthToken());
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            return result;
+            finish();
         }
-
-        @Override
-        protected void onPostExecute(FSResult response) {
-            if (pd!=null) pd.dismiss();
-            if (response!=null && response.isSuccess()) {
-                Intent intent = new Intent();
-                setResult(Activity.RESULT_OK, intent);
-                finish();
-            }
-            else {
-                String message = "Username and password combination failed. ";
-                if (response!=null) message = response.getData();
-                Toast.makeText(FSLoginActivity.this, message, Toast.LENGTH_LONG).show();
-                setResult( Activity.RESULT_CANCELED, null );
-            }
+        else {
+            String message = "Username and password combination failed. ";
+            if (response!=null) message = response.getData();
+            Toast.makeText(FSLoginActivity.this, message, Toast.LENGTH_LONG).show();
+            setResult( Activity.RESULT_CANCELED, null );
         }
     }
 }
