@@ -39,6 +39,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	private static final String COL_BIRTH_DATE = "birthDate";
 	private static final String COL_AGE = "age";
 	private static final String COL_GENDER = "gender";
+    private static final String COL_ALIVE = "alive";
 	private static final String COL_ID1 = "id1";
 	private static final String COL_ID2 = "id2";
 	private static final String COL_TYPE = "type";
@@ -55,7 +56,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	private static final String CREATE_LITTLE_PERSON = "create table "+TABLE_LITTLE_PERSON+" ( " +
 			" "+COL_ID+" integer primary key, "+COL_GIVEN_NAME+" text, "+COL_NAME+" text, " +
 			" "+COL_FAMILY_SEARCH_ID+" text, "+COL_PHOTO_PATH+" text, "+COL_BIRTH_DATE+" integer, "
-			+COL_AGE+" integer, "+COL_GENDER+" char, "+COL_LAST_SYNC+" INTEGER );";
+			+COL_AGE+" integer, "+COL_GENDER+" char, "+COL_ALIVE+" char, "+COL_LAST_SYNC+" INTEGER );";
 
 	private static final String CREATE_RELATIONSHIP = "create table " + TABLE_RELATIONSHIP + " ( "
             +COL_ID +" integer primary key, "
@@ -104,6 +105,11 @@ public class DBHelper extends SQLiteOpenHelper {
         return date.getTime();
     }
 
+    private String getYorNForBoolean(boolean b) {
+        if (b) return "Y";
+        return "N";
+    }
+
 	public void persistLittlePerson(LittlePerson person) {
 		SQLiteDatabase db = getWritableDatabase();
 
@@ -116,6 +122,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		values.put(COL_BIRTH_DATE, dateToLong(person.getBirthDate()));
 		values.put(COL_FAMILY_SEARCH_ID, person.getFamilySearchId());
         values.put(COL_LAST_SYNC, dateToLong(person.getLastSync()));
+        values.put(COL_ALIVE, getYorNForBoolean(person.isAlive()));
 		
 		// -- add
 		if (person.getId() == 0) {
@@ -143,7 +150,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		String[] projection = {
 			COL_GIVEN_NAME, COL_GENDER, COL_PHOTO_PATH, COL_NAME,
 			COL_NAME, COL_AGE, COL_BIRTH_DATE, COL_FAMILY_SEARCH_ID, 
-			COL_ID, COL_LAST_SYNC
+			COL_ID, COL_LAST_SYNC, COL_ALIVE
 		};
 		String selection = COL_ID + " LIKE ?";
 		String[] selectionArgs = { String.valueOf(id) };
@@ -198,7 +205,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		String[] projection = {
 			COL_GIVEN_NAME, COL_GENDER, COL_PHOTO_PATH, COL_NAME,
 			COL_NAME, COL_AGE, COL_BIRTH_DATE, COL_FAMILY_SEARCH_ID, COL_LAST_SYNC,
-			COL_ID
+			COL_ID, COL_ALIVE
 		};
 		String selection = COL_FAMILY_SEARCH_ID + " LIKE ?";
 		String[] selectionArgs = { fsid };
@@ -221,7 +228,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		String[] projection = {
 			COL_GIVEN_NAME, COL_GENDER, COL_PHOTO_PATH, COL_NAME,
 			COL_NAME, COL_AGE, COL_BIRTH_DATE, COL_FAMILY_SEARCH_ID, COL_LAST_SYNC,
-			"p."+COL_ID
+			"p."+COL_ID, COL_ALIVE
 		};
 		String selection = "r."+COL_ID1 + " LIKE ? or r."+COL_ID2+" LIKE ?";
 
@@ -272,6 +279,7 @@ public class DBHelper extends SQLiteOpenHelper {
             long synctime = c.getLong(c.getColumnIndexOrThrow(COL_LAST_SYNC));
             person.setLastSync(new Date(synctime));
         }
+        person.setAlive(c.getString(c.getColumnIndexOrThrow(COL_ALIVE)).equals("Y") ? true : false);
 		return person;
 	}
 	
@@ -422,14 +430,14 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         String[] projection = {
                 COL_LOCAL_PATH, COL_TYPE, COL_FAMILY_SEARCH_ID,
-                COL_ID
+                "m."+COL_ID
         };
         String selection = COL_PERSON_ID + " LIKE ?";
         String[] selectionArgs = { String.valueOf(personId) };
         String tables = TABLE_MEDIA + " m join "+TABLE_TAGS+" t on m."+COL_ID+"=t."+COL_MEDIA_ID;
 
         List<Media> mediaList = new ArrayList<>();
-        Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, COL_ID);
+        Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, "m."+COL_ID);
         while (c.moveToNext()) {
             Media media = mediaFromCursor(c);
             mediaList.add(media);

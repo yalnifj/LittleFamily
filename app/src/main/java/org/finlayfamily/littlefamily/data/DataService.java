@@ -93,7 +93,7 @@ public class DataService {
                 LittlePerson person = syncQ.poll();
                 try {
                     Entry entry = fsService.getLastChangeForPerson(person.getFamilySearchId());
-                    if (entry.getPublished().after(person.getLastSync())) {
+                    if (entry==null || entry.getUpdated().after(person.getLastSync())) {
                         Person fsPerson = fsService.getPerson(person.getFamilySearchId(), false);
                         LittlePerson updated = DataHelper.buildLittlePerson(fsPerson, context, false);
                         updated.setId(person.getId());
@@ -207,8 +207,10 @@ public class DataService {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.HOUR, -1);
         if (person.getLastSync().before(cal.getTime())) {
-            syncQ.add(person);
-            syncQ.notifyAll();
+            synchronized (syncQ) {
+                syncQ.add(person);
+                syncQ.notifyAll();
+            }
         }
     }
 

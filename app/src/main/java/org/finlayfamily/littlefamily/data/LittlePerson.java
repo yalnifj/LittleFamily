@@ -36,6 +36,7 @@ public class LittlePerson implements Serializable {
     private GenderType gender;
 	private Date birthDate;
     private Integer age;
+    private boolean alive;
     private Date lastSync;
 
     public LittlePerson() {
@@ -99,6 +100,11 @@ public class LittlePerson implements Serializable {
                     }
                 }
             }
+        }
+
+        Boolean living = fsPerson.getLiving();
+        if (living==null || living==true) {
+            setAlive(true);
         }
     }
 
@@ -195,6 +201,22 @@ public class LittlePerson implements Serializable {
         }
     }
 
+    public Date getLastSync() {
+        return lastSync;
+    }
+
+    public void setLastSync(Date lastSync) {
+        this.lastSync = lastSync;
+    }
+
+    public boolean isAlive() {
+        return alive;
+    }
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -210,13 +232,5 @@ public class LittlePerson implements Serializable {
     @Override
     public int hashCode() {
         return familySearchId.hashCode();
-    }
-
-    public Date getLastSync() {
-        return lastSync;
-    }
-
-    public void setLastSync(Date lastSync) {
-        this.lastSync = lastSync;
     }
 }

@@ -44,7 +44,7 @@ public class MemoriesLoaderTask extends AsyncTask<String, Integer, ArrayList<Med
         try {
             mediaList.addAll(dataService.getMediaForPerson(person));
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(this.getClass().getSimpleName(), "error", e);
         }
         return mediaList;
     }
