@@ -24,14 +24,12 @@ import javax.xml.transform.Source;
 /**
  * Created by jfinlay on 1/12/2015.
  */
-public class MemoriesLoaderTask extends AsyncTask<String, Integer, ArrayList<Media>> {
-    private LittlePerson person;
+public class MemoriesLoaderTask extends AsyncTask<LittlePerson, Integer, ArrayList<Media>> {
     private Listener listener;
     private Context context;
     private DataService dataService;
 
-    public MemoriesLoaderTask(LittlePerson person, Listener listener, Context context) {
-        this.person = person;
+    public MemoriesLoaderTask(Listener listener, Context context) {
         this.listener = listener;
         this.context = context;
         dataService = DataService.getInstance();
@@ -39,12 +37,14 @@ public class MemoriesLoaderTask extends AsyncTask<String, Integer, ArrayList<Med
     }
 
     @Override
-    protected ArrayList<Media> doInBackground(String[] params) {
+    protected ArrayList<Media> doInBackground(LittlePerson[] params) {
         ArrayList<Media> mediaList = new ArrayList<>();
-        try {
-            mediaList.addAll(dataService.getMediaForPerson(person));
-        } catch (Exception e) {
-            Log.e(this.getClass().getSimpleName(), "error", e);
+        for(LittlePerson person : params) {
+            try {
+                mediaList.addAll(dataService.getMediaForPerson(person));
+            } catch (Exception e) {
+                Log.e(this.getClass().getSimpleName(), "error", e);
+            }
         }
         return mediaList;
     }

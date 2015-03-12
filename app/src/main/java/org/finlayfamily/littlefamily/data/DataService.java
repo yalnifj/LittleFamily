@@ -92,12 +92,13 @@ public class DataService {
 
                 LittlePerson person = syncQ.poll();
                 try {
+                    Log.d("SyncThread", "Synchronizing person "+person.getId()+" "+person.getFamilySearchId()+" "+person.getName());
                     Entry entry = fsService.getLastChangeForPerson(person.getFamilySearchId());
+                    Log.d("SyncThread", "Synchronizing person local date="+person.getLastSync()+" remote date="+entry.getUpdated());
                     if (entry==null || entry.getUpdated().after(person.getLastSync())) {
                         Person fsPerson = fsService.getPerson(person.getFamilySearchId(), false);
                         LittlePerson updated = DataHelper.buildLittlePerson(fsPerson, context, false);
                         updated.setId(person.getId());
-                        getDBHelper().persistLittlePerson(updated);
                         person.setLastSync(updated.getLastSync());
                         person.setPhotoPath(updated.getPhotoPath());
                         person.setAge(updated.getAge());
@@ -106,7 +107,7 @@ public class DataService {
                         person.setGender(updated.getGender());
                         person.setGivenName(updated.getGivenName());
                         person.setName(updated.getName());
-
+                        getDBHelper().persistLittlePerson(person);
 
                         List<Relationship> closeRelatives = fsService.getCloseRelatives(person.getFamilySearchId(), false);
                         if (closeRelatives!=null) {
@@ -166,7 +167,7 @@ public class DataService {
                             }
 
                             for(Media old : oldMedia) {
-
+                                getDBHelper().deleteMediaById(old.getId());
                             }
                         }
                     } else {

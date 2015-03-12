@@ -51,12 +51,13 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String COL_BOTTOM = "bottom";
     private static final String COL_PERSON_ID = "person_id";
     private static final String COL_LAST_SYNC = "last_sync";
+    private static final String COL_ACTIVE = "active";
 
 	
 	private static final String CREATE_LITTLE_PERSON = "create table "+TABLE_LITTLE_PERSON+" ( " +
 			" "+COL_ID+" integer primary key, "+COL_GIVEN_NAME+" text, "+COL_NAME+" text, " +
 			" "+COL_FAMILY_SEARCH_ID+" text, "+COL_PHOTO_PATH+" text, "+COL_BIRTH_DATE+" integer, "
-			+COL_AGE+" integer, "+COL_GENDER+" char, "+COL_ALIVE+" char, "+COL_LAST_SYNC+" INTEGER );";
+			+COL_AGE+" integer, "+COL_GENDER+" char, "+COL_ALIVE+" char, "+COL_ACTIVE+" char, "+COL_LAST_SYNC+" INTEGER );";
 
 	private static final String CREATE_RELATIONSHIP = "create table " + TABLE_RELATIONSHIP + " ( "
             +COL_ID +" integer primary key, "
@@ -123,6 +124,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		values.put(COL_FAMILY_SEARCH_ID, person.getFamilySearchId());
         values.put(COL_LAST_SYNC, dateToLong(person.getLastSync()));
         values.put(COL_ALIVE, getYorNForBoolean(person.isAlive()));
+        values.put(COL_ACTIVE, getYorNForBoolean(person.isActive()));
 		
 		// -- add
 		if (person.getId() == 0) {
@@ -150,7 +152,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		String[] projection = {
 			COL_GIVEN_NAME, COL_GENDER, COL_PHOTO_PATH, COL_NAME,
 			COL_NAME, COL_AGE, COL_BIRTH_DATE, COL_FAMILY_SEARCH_ID, 
-			COL_ID, COL_LAST_SYNC, COL_ALIVE
+			COL_ID, COL_LAST_SYNC, COL_ALIVE, COL_ACTIVE
 		};
 		String selection = COL_ID + " LIKE ?";
 		String[] selectionArgs = { String.valueOf(id) };
@@ -171,7 +173,7 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         LittlePerson person = null;
 
-        Cursor c = db.rawQuery("select * from "+TABLE_LITTLE_PERSON+" order by "+COL_ID+" LIMIT 1", null);
+        Cursor c = db.rawQuery("select * from "+TABLE_LITTLE_PERSON+" where active='Y' order by "+COL_ID+" LIMIT 1", null);
         while (c.moveToNext()) {
             person = personFromCursor(c);
         }
@@ -205,7 +207,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		String[] projection = {
 			COL_GIVEN_NAME, COL_GENDER, COL_PHOTO_PATH, COL_NAME,
 			COL_NAME, COL_AGE, COL_BIRTH_DATE, COL_FAMILY_SEARCH_ID, COL_LAST_SYNC,
-			COL_ID, COL_ALIVE
+			COL_ID, COL_ALIVE, COL_ACTIVE
 		};
 		String selection = COL_FAMILY_SEARCH_ID + " LIKE ?";
 		String[] selectionArgs = { fsid };
@@ -228,9 +230,9 @@ public class DBHelper extends SQLiteOpenHelper {
 		String[] projection = {
 			COL_GIVEN_NAME, COL_GENDER, COL_PHOTO_PATH, COL_NAME,
 			COL_NAME, COL_AGE, COL_BIRTH_DATE, COL_FAMILY_SEARCH_ID, COL_LAST_SYNC,
-			"p."+COL_ID, COL_ALIVE
+			"p."+COL_ID, COL_ALIVE, COL_ACTIVE
 		};
-		String selection = "r."+COL_ID1 + " LIKE ? or r."+COL_ID2+" LIKE ?";
+		String selection = "(r."+COL_ID1 + " LIKE ? or r."+COL_ID2+" LIKE ?) and p.active='Y'";
 
 		String[] selectionArgs = { String.valueOf(id), String.valueOf(id) };
 		String tables = TABLE_LITTLE_PERSON + " p join " + TABLE_RELATIONSHIP + " r on r."+COL_ID1+"=p."+COL_ID
@@ -280,6 +282,7 @@ public class DBHelper extends SQLiteOpenHelper {
             person.setLastSync(new Date(synctime));
         }
         person.setAlive(c.getString(c.getColumnIndexOrThrow(COL_ALIVE)).equals("Y") ? true : false);
+        person.setActive(c.getString(c.getColumnIndexOrThrow(COL_ACTIVE)).equals("Y") ? true : false);
 		return person;
 	}
 	
@@ -448,7 +451,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return mediaList;
     }
 
-    private void deleteMediaById(int mid) {
+    public void deleteMediaById(int mid) {
         if (mid>0) {
             SQLiteDatabase db = getWritableDatabase();
             String[] selectionArgs = { String.valueOf(mid) };

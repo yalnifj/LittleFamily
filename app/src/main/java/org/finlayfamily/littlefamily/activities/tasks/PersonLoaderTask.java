@@ -19,14 +19,12 @@ import java.util.List;
 /**
  * Created by jfinlay on 1/12/2015.
  */
-public class PersonLoaderTask extends AsyncTask<String, Integer, LittlePerson> {
-    private Integer id;
+public class PersonLoaderTask extends AsyncTask<Integer, Integer, LittlePerson> {
     private Listener listener;
     private Context context;
     private DataService dataService;
 
-    public PersonLoaderTask(Integer id, Listener listener, Context context) {
-        this.id = id;
+    public PersonLoaderTask(Listener listener, Context context) {
         this.listener = listener;
         this.context = context;
         dataService = DataService.getInstance();
@@ -34,13 +32,13 @@ public class PersonLoaderTask extends AsyncTask<String, Integer, LittlePerson> {
     }
 
     @Override
-    protected LittlePerson doInBackground(String[] params) {
+    protected LittlePerson doInBackground(Integer[] id) {
         LittlePerson person = null;
         try {
-            if (id==null) {
+            if (id==null || id.length==0) {
                 person = dataService.getDefaultPerson();
             } else {
-                person = dataService.getPersonById(id);
+                person = dataService.getPersonById(id[0]);
             }
         } catch(Exception e) {
             Log.e(this.getClass().getSimpleName(), "error", e);

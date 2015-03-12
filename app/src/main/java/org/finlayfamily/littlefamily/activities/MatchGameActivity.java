@@ -73,8 +73,8 @@ public class MatchGameActivity extends Activity implements AdapterView.OnItemCli
         tts = new TextToSpeech(this, this);
 
         if (people!=null && people.size()>1) {
-            FamilyLoaderTask task = new FamilyLoaderTask(people.get(backgroundLoadIndex), this, this);
-            task.execute();
+            FamilyLoaderTask task = new FamilyLoaderTask(this, this);
+            task.execute(people.get(backgroundLoadIndex));
         }
     }
 
@@ -159,8 +159,8 @@ public class MatchGameActivity extends Activity implements AdapterView.OnItemCli
 
         backgroundLoadIndex++;
         if (backgroundLoadIndex < game.getBoard().size()/2) {
-            FamilyLoaderTask task = new FamilyLoaderTask(people.get(backgroundLoadIndex), this, this);
-            task.execute();
+            FamilyLoaderTask task = new FamilyLoaderTask(this, this);
+            task.execute(people.get(backgroundLoadIndex));
         }
     }
 

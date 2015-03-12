@@ -7,21 +7,14 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
-import android.widget.ImageView;
 
 import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.activities.tasks.FamilyLoaderTask;
-import org.finlayfamily.littlefamily.activities.tasks.FileDownloaderTask;
 import org.finlayfamily.littlefamily.activities.tasks.MemoriesLoaderTask;
 import org.finlayfamily.littlefamily.data.LittlePerson;
 import org.finlayfamily.littlefamily.data.Media;
-import org.finlayfamily.littlefamily.familysearch.FamilySearchException;
-import org.finlayfamily.littlefamily.familysearch.FamilySearchService;
 import org.finlayfamily.littlefamily.util.ImageHelper;
 import org.finlayfamily.littlefamily.views.ScratchView;
-import org.gedcomx.conclusion.Person;
-import org.gedcomx.links.Link;
-import org.gedcomx.source.SourceDescription;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,15 +86,15 @@ public class ScratchGameActivity extends Activity implements TextToSpeech.OnInit
         if (people!=null && people.size()>0) {
             Random rand = new Random();
             selectedPerson = people.get(rand.nextInt(people.size()));
-            MemoriesLoaderTask task = new MemoriesLoaderTask(selectedPerson, this, this);
-            task.execute();
+            MemoriesLoaderTask task = new MemoriesLoaderTask(this, this);
+            task.execute(selectedPerson);
         }
     }
 
     private void loadMoreFamilyMembers() {
         if (backgroundLoadIndex < people.size() && backgroundLoadIndex < 20) {
-            FamilyLoaderTask task = new FamilyLoaderTask(people.get(backgroundLoadIndex), new FamilyLoaderListener(), this);
-            task.execute();
+            FamilyLoaderTask task = new FamilyLoaderTask(new FamilyLoaderListener(), this);
+            task.execute(people.get(backgroundLoadIndex));
         }
         else {
             if (pd!=null) {

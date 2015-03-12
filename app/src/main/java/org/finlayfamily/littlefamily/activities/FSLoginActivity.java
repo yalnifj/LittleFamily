@@ -17,14 +17,19 @@ import android.widget.Toast;
 
 import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.activities.tasks.AuthTask;
+import org.finlayfamily.littlefamily.activities.tasks.FamilyLoaderTask;
+import org.finlayfamily.littlefamily.activities.tasks.PersonLoaderTask;
 import org.finlayfamily.littlefamily.data.DataService;
+import org.finlayfamily.littlefamily.data.LittlePerson;
 import org.finlayfamily.littlefamily.familysearch.FSResult;
 import org.finlayfamily.littlefamily.familysearch.FamilySearchService;
+
+import java.util.ArrayList;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class FSLoginActivity extends Activity implements AuthTask.Listener {
+public class FSLoginActivity extends Activity implements AuthTask.Listener, PersonLoaderTask.Listener, FamilyLoaderTask.Listener {
     private static final int LOADER_LOGIN = 0x1;
 
     private static final String FS_DEFAULT_USER = "tum000205905";
@@ -144,7 +149,6 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener {
 
     @Override
     public void onComplete(FSResult response) {
-        if (pd!=null) pd.dismiss();
         if (response!=null && response.isSuccess()) {
             Intent intent = new Intent();
             setResult(Activity.RESULT_OK, intent);
@@ -153,7 +157,9 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            finish();
+            pd.setMessage("Loading person data from FamilySearch...");
+            PersonLoaderTask task = new PersonLoaderTask(this, this);
+            task.execute();
         }
         else {
             String message = "Username and password combination failed. ";
@@ -161,6 +167,19 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener {
             Toast.makeText(FSLoginActivity.this, message, Toast.LENGTH_LONG).show();
             setResult( Activity.RESULT_CANCELED, null );
         }
+    }
+
+    @Override
+    public void onComplete(LittlePerson person) {
+        pd.setMessage("Loading close family members from FamilySearch...");
+        FamilyLoaderTask task = new FamilyLoaderTask(this, this);
+        task.execute(person);
+    }
+
+    @Override
+    public void onComplete(ArrayList<LittlePerson> familyMembers) {
+        if (pd!=null) pd.dismiss();
+        finish();
     }
 }
 

@@ -14,14 +14,12 @@ import java.util.List;
 /**
  * Created by jfinlay on 1/12/2015.
  */
-public class FamilyLoaderTask extends AsyncTask<String, Integer, ArrayList<LittlePerson>> {
-    private LittlePerson person;
+public class FamilyLoaderTask extends AsyncTask<LittlePerson, Integer, ArrayList<LittlePerson>> {
     private Listener listener;
     private Context context;
     private DataService dataService;
 
-    public FamilyLoaderTask(LittlePerson person, Listener listener, Context context) {
-        this.person = person;
+    public FamilyLoaderTask(Listener listener, Context context) {
         this.listener = listener;
         this.context = context;
         dataService = DataService.getInstance();
@@ -29,15 +27,17 @@ public class FamilyLoaderTask extends AsyncTask<String, Integer, ArrayList<Littl
     }
 
     @Override
-    protected ArrayList<LittlePerson> doInBackground(String[] params) {
+    protected ArrayList<LittlePerson> doInBackground(LittlePerson[] persons) {
         ArrayList<LittlePerson> familyMembers = new ArrayList<>();
-        try {
-            List<LittlePerson> people = dataService.getFamilyMembers(person);
-            if (people!=null) {
-                familyMembers.addAll(people);
+        for (LittlePerson person : persons) {
+            try {
+                List<LittlePerson> people = dataService.getFamilyMembers(person);
+                if (people != null) {
+                    familyMembers.addAll(people);
+                }
+            } catch (Exception e) {
+                Log.e(this.getClass().getSimpleName(), "error", e);
             }
-        } catch(Exception e) {
-            Log.e(this.getClass().getSimpleName(), "error", e);
         }
         return familyMembers;
     }

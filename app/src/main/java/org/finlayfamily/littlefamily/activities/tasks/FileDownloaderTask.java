@@ -20,11 +20,10 @@ import java.util.List;
 public class FileDownloaderTask extends AsyncTask<String, Integer, String> {
     private Listener listener;
     private Context context;
-    private String href;
     private String folderName;
 
-    public FileDownloaderTask(String href, String folderName, Listener listener, Context context) {
-        this.href = href;
+    public FileDownloaderTask(String folderName, Listener listener, Context context) {
+
         this.folderName = folderName;
         this.listener = listener;
         this.context = context;
@@ -33,10 +32,12 @@ public class FileDownloaderTask extends AsyncTask<String, Integer, String> {
     @Override
     protected String doInBackground(String[] params) {
         String imgPath = null;
-        try {
-            imgPath = DataHelper.downloadFile(href, folderName, DataHelper.lastPath(href), context);
-        } catch (FamilySearchException e) {
-            e.printStackTrace();
+        for (String href : params) {
+            try {
+                imgPath = DataHelper.downloadFile(href, folderName, DataHelper.lastPath(href), context);
+            } catch (FamilySearchException e) {
+                e.printStackTrace();
+            }
         }
         return imgPath;
     }

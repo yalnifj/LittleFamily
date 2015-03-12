@@ -35,7 +35,7 @@ public class DataHelper {
                     imagePath = service.downloadImage(uri, fsPerson.getId(), "portrait.jpg", context);
                     person.setPhotoPath(imagePath);
                 } catch (MalformedURLException e) {
-                    Log.e("DataHelper.buildLittlePerson", "error", e);
+                    Log.e("buildLittlePerson", "error", e);
                 }
             }
         }

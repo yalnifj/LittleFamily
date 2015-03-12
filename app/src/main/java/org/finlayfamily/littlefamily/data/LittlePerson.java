@@ -38,6 +38,7 @@ public class LittlePerson implements Serializable {
     private Integer age;
     private boolean alive;
     private Date lastSync;
+    private boolean active;
 
     public LittlePerson() {
     }
@@ -106,6 +107,8 @@ public class LittlePerson implements Serializable {
         if (living==null || living==true) {
             setAlive(true);
         }
+
+        setActive(true);
     }
 
 	public void setBirthDate(Date birthDate)
@@ -215,6 +218,14 @@ public class LittlePerson implements Serializable {
 
     public void setAlive(boolean alive) {
         this.alive = alive;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     @Override

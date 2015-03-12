@@ -73,7 +73,7 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
                 Intent intent = new Intent( this, FSLoginActivity.class );
                 startActivityForResult( intent, LOGIN_REQUEST );
             } else {
-                PersonLoaderTask task = new PersonLoaderTask(null, this, this);
+                PersonLoaderTask task = new PersonLoaderTask(this, this);
                 task.execute();
             }
         } catch (Exception e) {
@@ -93,7 +93,7 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
         switch(requestCode) {
             case LOGIN_REQUEST:
                 if (resultCode == RESULT_OK) {
-                    PersonLoaderTask task = new PersonLoaderTask(null, this, this);
+                    PersonLoaderTask task = new PersonLoaderTask(this, this);
                     task.execute();
                 }
                 break;
@@ -105,8 +105,8 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
         pd = ProgressDialog.show(this, "Please wait...", "Loading data from FamilySearch", true, false);
         launchGame = true;
         LittlePerson person = (LittlePerson) gridView.getItemAtPosition(position);
-        FamilyLoaderTask task = new FamilyLoaderTask(person, this, this);
-		task.execute();
+        FamilyLoaderTask task = new FamilyLoaderTask(this, this);
+		task.execute(person);
     }
 
 
@@ -137,7 +137,7 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
 
     @Override
     public void onComplete(LittlePerson person) {
-        FamilyLoaderTask task = new FamilyLoaderTask(person, this, this);
-        task.execute();
+        FamilyLoaderTask task = new FamilyLoaderTask(this, this);
+        task.execute(person);
     }
 }
