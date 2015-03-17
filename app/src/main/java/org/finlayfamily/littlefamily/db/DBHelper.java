@@ -52,11 +52,12 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String COL_PERSON_ID = "person_id";
     private static final String COL_LAST_SYNC = "last_sync";
     private static final String COL_ACTIVE = "active";
+    private static final String COL_BIRTH_PLACE = "birthPlace";
 
 	
 	private static final String CREATE_LITTLE_PERSON = "create table "+TABLE_LITTLE_PERSON+" ( " +
 			" "+COL_ID+" integer primary key, "+COL_GIVEN_NAME+" text, "+COL_NAME+" text, " +
-			" "+COL_FAMILY_SEARCH_ID+" text, "+COL_PHOTO_PATH+" text, "+COL_BIRTH_DATE+" integer, "
+			" "+COL_FAMILY_SEARCH_ID+" text, "+COL_PHOTO_PATH+" text, "+COL_BIRTH_DATE+" integer, " + COL_BIRTH_PLACE+" text, "
 			+COL_AGE+" integer, "+COL_GENDER+" char, "+COL_ALIVE+" char, "+COL_ACTIVE+" char, "+COL_LAST_SYNC+" INTEGER );";
 
 	private static final String CREATE_RELATIONSHIP = "create table " + TABLE_RELATIONSHIP + " ( "
@@ -125,6 +126,7 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put(COL_LAST_SYNC, dateToLong(person.getLastSync()));
         values.put(COL_ALIVE, getYorNForBoolean(person.isAlive()));
         values.put(COL_ACTIVE, getYorNForBoolean(person.isActive()));
+        values.put(COL_BIRTH_PLACE, person.getBirthPlace());
 		
 		// -- add
 		if (person.getId() == 0) {
@@ -151,7 +153,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		SQLiteDatabase db = getReadableDatabase();
 		String[] projection = {
 			COL_GIVEN_NAME, COL_GENDER, COL_PHOTO_PATH, COL_NAME,
-			COL_NAME, COL_AGE, COL_BIRTH_DATE, COL_FAMILY_SEARCH_ID, 
+			COL_AGE, COL_BIRTH_DATE, COL_BIRTH_PLACE, COL_FAMILY_SEARCH_ID,
 			COL_ID, COL_LAST_SYNC, COL_ALIVE, COL_ACTIVE
 		};
 		String selection = COL_ID + " LIKE ?";
@@ -206,7 +208,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		SQLiteDatabase db = getReadableDatabase();
 		String[] projection = {
 			COL_GIVEN_NAME, COL_GENDER, COL_PHOTO_PATH, COL_NAME,
-			COL_NAME, COL_AGE, COL_BIRTH_DATE, COL_FAMILY_SEARCH_ID, COL_LAST_SYNC,
+			COL_AGE, COL_BIRTH_DATE, COL_BIRTH_PLACE, COL_FAMILY_SEARCH_ID, COL_LAST_SYNC,
 			COL_ID, COL_ALIVE, COL_ACTIVE
 		};
 		String selection = COL_FAMILY_SEARCH_ID + " LIKE ?";
@@ -229,7 +231,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		SQLiteDatabase db = getReadableDatabase();
 		String[] projection = {
 			COL_GIVEN_NAME, COL_GENDER, COL_PHOTO_PATH, COL_NAME,
-			COL_NAME, COL_AGE, COL_BIRTH_DATE, COL_FAMILY_SEARCH_ID, COL_LAST_SYNC,
+			COL_AGE, COL_BIRTH_DATE, COL_BIRTH_PLACE, COL_FAMILY_SEARCH_ID, COL_LAST_SYNC,
 			"p."+COL_ID, COL_ALIVE, COL_ACTIVE
 		};
 		String selection = "(r."+COL_ID1 + " LIKE ? or r."+COL_ID2+" LIKE ?) and p.active='Y'";
@@ -250,6 +252,32 @@ public class DBHelper extends SQLiteOpenHelper {
 
 		return people;
 	}
+
+    public List<LittlePerson> getParentsForPerson(int id) {
+        List<LittlePerson> people = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+        String[] projection = {
+                COL_GIVEN_NAME, COL_GENDER, COL_PHOTO_PATH, COL_NAME,
+                COL_AGE, COL_BIRTH_DATE, COL_BIRTH_PLACE, COL_FAMILY_SEARCH_ID, COL_LAST_SYNC,
+                "p."+COL_ID, COL_ALIVE, COL_ACTIVE
+        };
+        String selection = "r."+COL_ID2+" LIKE ? and r."+COL_TYPE+"=? and p.active='Y'";
+
+        String[] selectionArgs = { String.valueOf(id), String.valueOf(RelationshipType.PARENTCHILD.getId()) };
+        String tables = TABLE_LITTLE_PERSON + " p join " + TABLE_RELATIONSHIP + " r on r."+COL_ID1+"=p."+COL_ID;
+
+        Map<Integer, LittlePerson> personMap = new HashMap<>();
+        Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, "p."+COL_ID);
+        while (c.moveToNext()) {
+            LittlePerson p = personFromCursor(c);
+            personMap.put(p.getId(), p);
+        }
+
+        c.close();
+        people.addAll(personMap.values());
+
+        return people;
+    }
 	
 	public LittlePerson personFromCursor(Cursor c) {
 		LittlePerson person = new LittlePerson();
@@ -258,6 +286,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			long birthtime = c.getLong(c.getColumnIndexOrThrow(COL_BIRTH_DATE));
 			person.setBirthDate(new Date(birthtime));
 		}
+        person.setBirthPlace(c.getString(c.getColumnIndexOrThrow(COL_BIRTH_PLACE)));
 		person.setFamilySearchId(c.getString(c.getColumnIndexOrThrow(COL_FAMILY_SEARCH_ID)));
 		if (!c.isNull(c.getColumnIndexOrThrow(COL_GENDER))) {
 			String gender = c.getString(c.getColumnIndexOrThrow(COL_GENDER));

@@ -6,6 +6,8 @@ import org.gedcomx.conclusion.NamePart;
 import org.finlayfamily.littlefamily.R;
 import org.gedcomx.conclusion.Fact;
 import org.gedcomx.conclusion.Person;
+import org.gedcomx.conclusion.PlaceReference;
+import org.gedcomx.records.Field;
 import org.gedcomx.types.FactType;
 import org.gedcomx.types.GenderType;
 import org.gedcomx.types.NamePartType;
@@ -35,6 +37,7 @@ public class LittlePerson implements Serializable {
     private String photoPath;
     private GenderType gender;
 	private Date birthDate;
+    private String birthPlace;
     private Integer age;
     private boolean alive;
     private Date lastSync;
@@ -81,6 +84,16 @@ public class LittlePerson implements Serializable {
                 if (b.getDate()!=null && (birth==null || b.getPrimary())) birth = b;
             }
             if (birth!=null && birth.getDate()!=null) {
+                birthPlace = null;
+                if (birth.getPlace()!=null) {
+                    PlaceReference place = birth.getPlace();
+                    if (place.getNormalized()==null || place.getNormalized().size()==0) {
+                        birthPlace = birth.getPlace().getOriginal();
+                    } else {
+                        birthPlace = place.getNormalized().get(0).getValue();
+                    }
+                }
+
                 String birthDateStr = birth.getDate().getFormal();
                 if (birthDateStr==null) birthDateStr = birth.getDate().getOriginal();
                 if (birthDateStr!=null) {
@@ -120,6 +133,14 @@ public class LittlePerson implements Serializable {
 	{
 		return birthDate;
 	}
+
+    public String getBirthPlace() {
+        return birthPlace;
+    }
+
+    public void setBirthPlace(String birthPlace) {
+        this.birthPlace = birthPlace;
+    }
 
     public int getId() {
         return id;

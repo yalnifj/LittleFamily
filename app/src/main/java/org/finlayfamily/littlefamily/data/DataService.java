@@ -90,7 +90,10 @@ public class DataService {
                     }
                 }
 
-                LittlePerson person = syncQ.poll();
+                LittlePerson person = null;
+                synchronized (syncQ) {
+                    person = syncQ.poll();
+                }
                 try {
                     Log.d("SyncThread", "Synchronizing person "+person.getId()+" "+person.getFamilySearchId()+" "+person.getName());
                     Entry entry = fsService.getLastChangeForPerson(person.getFamilySearchId());
@@ -209,8 +212,10 @@ public class DataService {
         cal.add(Calendar.HOUR, -1);
         if (person.getLastSync().before(cal.getTime())) {
             synchronized (syncQ) {
-                syncQ.add(person);
-                syncQ.notifyAll();
+                if (!syncQ.contains(person)) {
+                    syncQ.add(person);
+                    syncQ.notifyAll();
+                }
             }
         }
     }
@@ -253,8 +258,8 @@ public class DataService {
                             family.add(relative);
                             addToSyncQ(relative);
                             org.finlayfamily.littlefamily.data.Relationship rel = new org.finlayfamily.littlefamily.data.Relationship();
-                            rel.setId1(person.getId());
-                            rel.setId2(relative.getId());
+                            rel.setId1(relative.getId());
+                            rel.setId2(person.getId());
                             if (r.getKnownType()== RelationshipType.Couple) {
                                 rel.setType(org.finlayfamily.littlefamily.data.RelationshipType.SPOUSE);
                             }
@@ -290,6 +295,18 @@ public class DataService {
             }
         }
         return family;
+    }
+
+    public List<LittlePerson> getParents(LittlePerson person) throws Exception {
+        List<LittlePerson> parents = getDBHelper().getParentsForPerson(person.getId());
+        if (parents==null || parents.size()==0) {
+            getFamilyMembers(person);
+            parents = getDBHelper().getParentsForPerson(person.getId());
+            if (parents==null) {
+                parents = new ArrayList<>();
+            }
+        }
+        return parents;
     }
 
     public List<Media> getMediaForPerson(LittlePerson person) throws Exception {
