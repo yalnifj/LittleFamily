@@ -12,11 +12,17 @@ import android.graphics.Bitmap;
 public class LaplaceFilter {
 
     protected void getRGB( Bitmap image, int x, int y, int width, int height, int[] pixels ) {
-        image.getPixels(pixels, 0, image.getWidth(), x, y, width, height);
+        //image.getPixels(pixels, 0, image.getWidth(), x, y, width, height);
+        for(int i=0; i<width; i++) {
+            pixels[i] = image.getPixel(x+i, y);
+        }
     }
 
     protected void setRGB( Bitmap image, int x, int y, int width, int height, int[] pixels ) {
-        image.setPixels(pixels, 0, image.getWidth(), x, y, width, height);
+        //image.setPixels(pixels, 0, image.getWidth(), x, y, width, height);
+        for(int i=0; i<width; i++) {
+            image.setPixel(x+i, y, pixels[i]);
+        }
     }
 
     private void brightness( int[] row ) {
@@ -33,6 +39,7 @@ public class LaplaceFilter {
         int width = src.getWidth();
         int height = src.getHeight();
 
+        src.prepareToDraw();
         int[] row1 = null;
         int[] row2 = null;
         int[] row3 = null;

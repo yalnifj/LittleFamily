@@ -13,34 +13,14 @@ import org.finlayfamily.littlefamily.familysearch.FamilySearchException;
 import org.finlayfamily.littlefamily.familysearch.FamilySearchService;
 import org.gedcomx.conclusion.Person;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
-* Created by jfinlay on 2/19/2015.
-*/
+ * Created by jfinlay on 2/19/2015.
+ */
 public class AuthTask extends AsyncTask<String, Integer, FSResult> {
-    private List<Listener> listeners;
+    private Listener listener;
 
-    private static AuthTask singleton;
-
-    public static AuthTask getInstance() {
-        if (singleton==null) {
-            singleton = new AuthTask();
-        }
-        return singleton;
-    }
-
-    private AuthTask() {
-        this.listeners = new ArrayList<>();
-    }
-
-    public void addListener(Listener listener) {
-        this.listeners.add(listener);
-    }
-
-    public void removeListener(Listener listener) {
-        this.listeners.remove(listener);
+    public AuthTask(Listener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -69,7 +49,7 @@ public class AuthTask extends AsyncTask<String, Integer, FSResult> {
 
     @Override
     protected void onPostExecute(FSResult response) {
-        for(Listener listener : listeners) {
+        if (listener!=null) {
             listener.onComplete(response);
         }
     }
