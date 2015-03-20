@@ -27,4 +27,15 @@
         android:layout_toEndOf="@+id/matchGameBtn"
         android:layout_marginLeft="30dp"
         android:layout_marginStart="30dp" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/coloringGameBtn"
+        android:src="@drawable/scratchgamebtn"
+        android:onClick="startColoringGame"
+        android:layout_marginTop="24dp"
+        android:layout_below="@+id/matchGameBtn"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

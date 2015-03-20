@@ -38,6 +38,7 @@ public class MemoriesLoaderTask extends AsyncTask<LittlePerson, Integer, ArrayLi
 
     @Override
     protected ArrayList<Media> doInBackground(LittlePerson[] params) {
+        Log.d(this.getClass().getSimpleName(), "Starting MemoriesLoaderTask.doInBackground "+params);
         ArrayList<Media> mediaList = new ArrayList<>();
         for(LittlePerson person : params) {
             try {

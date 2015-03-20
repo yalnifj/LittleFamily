@@ -31,6 +31,7 @@ public class FileDownloaderTask extends AsyncTask<String, Integer, String> {
 
     @Override
     protected String doInBackground(String[] params) {
+        Log.d(this.getClass().getSimpleName(), "Starting FileDownloaderTask.doInBackground "+params);
         String imgPath = null;
         for (String href : params) {
             try {

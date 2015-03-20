@@ -119,8 +119,8 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
             intent.putExtra(FAMILY, familyMembers);
             startActivity(intent);
         } else {
-            updateColumns();
             adapter.setFamily(familyMembers);
+            updateColumns();
         }
     }
 

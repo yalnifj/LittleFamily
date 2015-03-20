@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -121,6 +122,7 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
             focusView.requestFocus();
         } else {
             pd = ProgressDialog.show(this, "Please wait...", "Logging into FamilySearch", true, false);
+            Log.d(this.getClass().getSimpleName(), "Launching new AuthTask for user entered credentials username="+username);
             AuthTask task = new AuthTask(this);
             task.execute(username, password);
 

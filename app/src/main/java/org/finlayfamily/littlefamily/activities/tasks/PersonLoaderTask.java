@@ -33,6 +33,7 @@ public class PersonLoaderTask extends AsyncTask<Integer, Integer, LittlePerson> 
 
     @Override
     protected LittlePerson doInBackground(Integer[] id) {
+        Log.d(this.getClass().getSimpleName(), "Starting PersonLoaderTask.doInBackground "+id);
         LittlePerson person = null;
         try {
             if (id==null || id.length==0) {

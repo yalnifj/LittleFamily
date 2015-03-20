@@ -3,15 +3,12 @@ package org.finlayfamily.littlefamily.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
 import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.data.LittlePerson;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ChooseGameActivity extends Activity {
 
@@ -39,6 +36,12 @@ public class ChooseGameActivity extends Activity {
 
     public void startScratchGame(View view) {
         Intent intent = new Intent( this, ScratchGameActivity.class );
+        intent.putExtra(ChooseFamilyMember.FAMILY, people);
+        startActivity(intent);
+    }
+
+    public void startColoringGame(View view) {
+        Intent intent = new Intent( this, ColoringGameActivity.class );
         intent.putExtra(ChooseFamilyMember.FAMILY, people);
         startActivity(intent);
     }

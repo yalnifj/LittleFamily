@@ -13,18 +13,39 @@ import org.finlayfamily.littlefamily.familysearch.FamilySearchException;
 import org.finlayfamily.littlefamily.familysearch.FamilySearchService;
 import org.gedcomx.conclusion.Person;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
 * Created by jfinlay on 2/19/2015.
 */
 public class AuthTask extends AsyncTask<String, Integer, FSResult> {
-    private Listener listener;
+    private List<Listener> listeners;
 
-    public AuthTask(Listener listener) {
-        this.listener = listener;
+    private static AuthTask singleton;
+
+    public static AuthTask getInstance() {
+        if (singleton==null) {
+            singleton = new AuthTask();
+        }
+        return singleton;
+    }
+
+    private AuthTask() {
+        this.listeners = new ArrayList<>();
+    }
+
+    public void addListener(Listener listener) {
+        this.listeners.add(listener);
+    }
+
+    public void removeListener(Listener listener) {
+        this.listeners.remove(listener);
     }
 
     @Override
     protected FSResult doInBackground(String[] params) {
+        Log.d(this.getClass().getSimpleName(), "Starting AuthTask.doInBackground "+params);
         FSResult result = null;
         FamilySearchService service = FamilySearchService.getInstance();
         try {
@@ -33,7 +54,7 @@ public class AuthTask extends AsyncTask<String, Integer, FSResult> {
             } else {
                 result = service.authWithToken(params[0]);
             }
-            Person person = service.getCurrentPerson();
+            //Person person = service.getCurrentPerson();
 
         } catch(FamilySearchException e) {
             Log.e(this.getClass().getSimpleName(), "error", e);
@@ -48,7 +69,7 @@ public class AuthTask extends AsyncTask<String, Integer, FSResult> {
 
     @Override
     protected void onPostExecute(FSResult response) {
-        if (listener!=null) {
+        for(Listener listener : listeners) {
             listener.onComplete(response);
         }
     }

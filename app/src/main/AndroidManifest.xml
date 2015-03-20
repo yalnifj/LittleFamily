@@ -51,6 +51,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.finlayfamily.littlefamily.activities.ChooseGameActivity" />
         </activity>
+        <activity
+            android:name=".activities.ColoringGameActivity"
+            android:label="@string/title_activity_coloring_game"
+            android:parentActivityName=".activities.ChooseGameActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.finlayfamily.littlefamily.activities.ChooseGameActivity" />
+        </activity>
     </application>
 
 </manifest>

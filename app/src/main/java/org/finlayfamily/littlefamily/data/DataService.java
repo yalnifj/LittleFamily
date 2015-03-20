@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import org.finlayfamily.littlefamily.activities.tasks.AuthTask;
 import org.finlayfamily.littlefamily.db.DBHelper;
+import org.finlayfamily.littlefamily.familysearch.FSResult;
 import org.finlayfamily.littlefamily.familysearch.FamilySearchException;
 import org.finlayfamily.littlefamily.familysearch.FamilySearchService;
 import org.gedcomx.atom.Entry;
@@ -20,11 +21,15 @@ import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Created by jfinlay on 2/18/2015.
  */
-public class DataService {
+public class DataService implements AuthTask.Listener {
 
     private FamilySearchService fsService;
     private DBHelper dbHelper = null;
@@ -58,17 +63,27 @@ public class DataService {
 
     public void setContext(Context context) {
         this.context = context;
-        if (fsService.getSessionId()==null) {
+        if (fsService.getSessionId() == null) {
             try {
                 String token = getDBHelper().getTokenForSystemId("FamilySearch");
-                if (token!=null) {
-                    AuthTask task = new AuthTask(null);
-                    task.execute(token);
+                if (token != null) {
+                    if (fsService.getSessionId() == null) {
+                        Log.d(this.getClass().getSimpleName(), "Launching new AuthTask for stored credentials");
+                        AuthTask task = AuthTask.getInstance();
+                        task.addListener(this);
+                        task.execute(token);
+                    }
                 }
             } catch (Exception e) {
-                Log.e("SyncThread", "Error authenticating with FamilySearch", e);
+                Log.e("DataService", "Error checking authentication", e);
             }
         }
+    }
+
+    @Override
+    public void onComplete(FSResult result) {
+        AuthTask task = AuthTask.getInstance();
+        task.removeListener(this);
     }
 
     public boolean hasData() throws Exception {

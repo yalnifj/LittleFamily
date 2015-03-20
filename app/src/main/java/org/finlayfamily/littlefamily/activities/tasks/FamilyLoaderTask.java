@@ -28,6 +28,7 @@ public class FamilyLoaderTask extends AsyncTask<LittlePerson, Integer, ArrayList
 
     @Override
     protected ArrayList<LittlePerson> doInBackground(LittlePerson[] persons) {
+        Log.d(this.getClass().getSimpleName(), "Starting FamilyLoaderTask.doInBackground "+persons);
         ArrayList<LittlePerson> familyMembers = new ArrayList<>();
         for (LittlePerson person : persons) {
             try {
