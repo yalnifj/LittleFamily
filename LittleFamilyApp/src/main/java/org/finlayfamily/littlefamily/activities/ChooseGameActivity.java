@@ -45,4 +45,10 @@ public class ChooseGameActivity extends Activity {
         intent.putExtra(ChooseFamilyMember.FAMILY, people);
         startActivity(intent);
     }
+
+    public void startHeritageDressUpGame(View view) {
+        Intent intent = new Intent( this, HeritageDressUpActivity.class );
+        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, selectedPerson);
+        startActivity(intent);
+    }
 }

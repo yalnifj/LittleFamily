@@ -33,6 +33,8 @@ public class ColoringGameActivity extends Activity implements TextToSpeech.OnIni
     private Bitmap imageBitmap;
     private Media photo;
 
+    private List<Media> usedPhotos;
+
     private int backgroundLoadIndex = 1;
 
     private TextToSpeech tts;
@@ -48,7 +50,11 @@ public class ColoringGameActivity extends Activity implements TextToSpeech.OnIni
         Intent intent = getIntent();
         people = (List<LittlePerson>) intent.getSerializableExtra(ChooseFamilyMember.FAMILY);
 
+        usedPhotos = new ArrayList<>(3);
+
         tts = new TextToSpeech(this, this);
+
+        loadRandomImage();
     }
 
     @Override
@@ -69,13 +75,6 @@ public class ColoringGameActivity extends Activity implements TextToSpeech.OnIni
             tts.shutdown();
         }
         super.onDestroy();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        loadRandomImage();
     }
 
     public void setupCanvas() {
@@ -116,13 +115,29 @@ public class ColoringGameActivity extends Activity implements TextToSpeech.OnIni
             }
         } else {
             Random rand = new Random();
-            photo = photos.get(rand.nextInt(photos.size()));
+            int index = rand.nextInt(photos.size());
+            int origIndex = index;
+            photo = photos.get(index);
+            while(usedPhotos.contains(photo)) {
+                index++;
+                if (index >= photos.size()) index = 0;
+                photo = photos.get(index);
+                //-- stop if we've used all of these images
+                if (index==origIndex) {
+                    loadRandomImage();
+                    return;
+                }
+            }
             imagePath = photo.getLocalPath();
             if (imagePath!=null) {
                 if (pd!=null) {
                     pd.dismiss();
                     pd = null;
                 }
+                if (usedPhotos.size()>=3) {
+                    usedPhotos.remove(0);
+                }
+                usedPhotos.add(photo);
                 imageBitmap = ImageHelper.loadBitmapFromFile(imagePath, 0, layeredImage.getWidth(), layeredImage.getHeight(), true);
                 setupCanvas();
             } else {
@@ -133,7 +148,6 @@ public class ColoringGameActivity extends Activity implements TextToSpeech.OnIni
 
     @Override
     public void onColoringComplete() {
-        loadMoreFamilyMembers();
         if (tts != null) {
             String name = selectedPerson.getGivenName();
             if (name != null) {
@@ -145,6 +159,7 @@ public class ColoringGameActivity extends Activity implements TextToSpeech.OnIni
                 }
             }
         }
+        loadMoreFamilyMembers();
     }
 
     public class FamilyLoaderListener implements FamilyLoaderTask.Listener {
