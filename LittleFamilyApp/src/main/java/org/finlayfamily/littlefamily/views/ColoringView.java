@@ -65,7 +65,7 @@ public class ColoringView extends ImageView implements ColoringImageFilterTask.L
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setDither(true);
-        mPaint.setAlpha(220);
+        mPaint.setAlpha(100);
         mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeJoin(Paint.Join.ROUND);
@@ -102,8 +102,8 @@ public class ColoringView extends ImageView implements ColoringImageFilterTask.L
             spinner.draw(canvas);
         } else {
             canvas.drawBitmap(originalBitmap, 0, 0, paint2);
-            canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
             if (!complete) {
+                canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
                 if (outlineBitmap != null) {
                     canvas.drawBitmap(outlineBitmap, 0, 0, paint2);
                 }

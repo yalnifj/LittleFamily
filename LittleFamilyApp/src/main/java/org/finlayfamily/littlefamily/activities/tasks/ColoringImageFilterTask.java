@@ -27,7 +27,7 @@ public class ColoringImageFilterTask extends AsyncTask<Bitmap, Integer, Bitmap> 
         AlphaFilter alphaFilter = new AlphaFilter();
         Bitmap orig = params[0];
         //-- scale down
-        Bitmap bm = Bitmap.createScaledBitmap(orig, Math.min(300, orig.getWidth()), Math.min(300, orig.getHeight()), true);
+        Bitmap bm = Bitmap.createScaledBitmap(orig, Math.min(250, orig.getWidth()), Math.min(250, orig.getHeight()), true);
         int[] src = AndroidUtils.bitmapToIntArray(bm);
         long starttime = System.currentTimeMillis();
         int[] dst = filter.filter(src, bm.getWidth(), bm.getHeight());
