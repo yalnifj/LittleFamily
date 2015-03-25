@@ -1,5 +1,6 @@
 package org.finlayfamily.littlefamily.util;
 
+import java.util.Arrays;
 import java.util.Locale;
 
 /**
@@ -26,6 +27,18 @@ public class PlaceHelper {
             "oh","ok","or","pa","ri","sc","sd","tn","tx","ut","vt","va","wa","wv","wi","wy"
 
             };
+
+    static {
+        Arrays.sort(abbvStates);
+    }
+
+    public static boolean isInUS(String place) {
+        if (place.equals("United States")) return true;
+        int i = Arrays.binarySearch(usStates, place);
+        if (i>=0) return true;
+        i = Arrays.binarySearch(abbvStates, place);
+        return (i >= 0);
+    }
 
     public static String getCountryLanguage(String country) {
         for(Locale locale : Locale.getAvailableLocales()) {

@@ -42,6 +42,7 @@ public class LittlePerson implements Serializable {
     private boolean alive;
     private Date lastSync;
     private boolean active;
+    private String nationality;
 
     public LittlePerson() {
     }
@@ -122,6 +123,11 @@ public class LittlePerson implements Serializable {
         }
 
         setActive(true);
+
+        Fact nFact = fsPerson.getFirstFactOfType(FactType.Nationality);
+        if (nFact!=null) {
+            nationality = nFact.getValue();
+        }
     }
 
 	public void setBirthDate(Date birthDate)
@@ -247,6 +253,14 @@ public class LittlePerson implements Serializable {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public String getNationality() {
+        return nationality;
+    }
+
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
     }
 
     @Override

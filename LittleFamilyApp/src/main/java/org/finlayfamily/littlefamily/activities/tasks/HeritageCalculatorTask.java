@@ -7,6 +7,7 @@ import android.util.Log;
 import org.finlayfamily.littlefamily.data.DataService;
 import org.finlayfamily.littlefamily.data.HeritagePath;
 import org.finlayfamily.littlefamily.data.LittlePerson;
+import org.finlayfamily.littlefamily.util.PlaceHelper;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -16,6 +17,7 @@ import java.util.List;
  * Created by jfinlay on 1/12/2015.
  */
 public class HeritageCalculatorTask extends AsyncTask<LittlePerson, Integer, ArrayList<HeritagePath>> {
+    private static final int MAX_PATHS=13;
     private Listener listener;
     private Context context;
     private DataService dataService;
@@ -35,9 +37,13 @@ public class HeritageCalculatorTask extends AsyncTask<LittlePerson, Integer, Arr
         LinkedList<HeritagePath> paths = new LinkedList<>();
         LittlePerson person = persons[0];
 
+        String origin = PlaceHelper.getTopPlace(person.getBirthPlace());
+        if (origin==null) origin = "Unknown";
+        if (!origin.equals("United States") && PlaceHelper.isInUS(origin)) origin = "United States";
+
         HeritagePath first = new HeritagePath();
         first.setPercent(1.0);
-        first.setPlace(person.getBirthPlace());
+        first.setPlace(origin);
         first.setTreePath(new ArrayList<LittlePerson>(1));
         first.getTreePath().add(person);
         paths.add(first);
@@ -45,9 +51,27 @@ public class HeritageCalculatorTask extends AsyncTask<LittlePerson, Integer, Arr
         while(paths.size() > 0) {
             try {
                 HeritagePath path = paths.removeFirst();
-                List<LittlePerson> people = dataService.getParents(path.getTreePath().get(path.getTreePath().size()-1));
-                if (people != null) {
-
+                if (path.getTreePath().size()>=MAX_PATHS || !path.getPlace().equals(origin)) {
+                    returnPaths.add(path);
+                }
+                else {
+                    List<LittlePerson> parents = dataService.getParents(path.getTreePath().get(path.getTreePath().size() - 1));
+                    if (parents != null) {
+                        for (LittlePerson parent : parents) {
+                            HeritagePath ppath = new HeritagePath();
+                            ppath.setPercent(path.getPercent() / 2);
+                            String place = PlaceHelper.getTopPlace(parent.getBirthPlace());
+                            if (place == null) place = "Unknown";
+                            if (!place.equals("United States") && PlaceHelper.isInUS(place))
+                                place = "United States";
+                            ppath.setPlace(place);
+                            ppath.setTreePath(new ArrayList<LittlePerson>(path.getTreePath()));
+                            ppath.getTreePath().add(person);
+                            paths.add(ppath);
+                        }
+                    } else {
+                        returnPaths.add(path);
+                    }
                 }
             } catch (Exception e) {
                 Log.e(this.getClass().getSimpleName(), "error", e);
