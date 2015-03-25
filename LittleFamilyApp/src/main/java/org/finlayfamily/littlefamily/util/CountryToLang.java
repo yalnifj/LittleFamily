@@ -9,7 +9,7 @@ public class CountryToLang {
 				return locale.getDisplayLanguage();
 			}
 		}
-		return "Other";
+		return country;
 	}
 	
 	public static String getTopPlace(String place) {
