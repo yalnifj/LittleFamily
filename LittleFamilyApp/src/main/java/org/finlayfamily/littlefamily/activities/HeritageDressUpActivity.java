@@ -1,17 +1,18 @@
 package org.finlayfamily.littlefamily.activities;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.ActionBarActivity;
 
 import org.finlayfamily.littlefamily.R;
-import org.finlayfamily.littlefamily.data.LittlePerson;
 import org.finlayfamily.littlefamily.activities.tasks.HeritageCalculatorTask;
-import java.util.*;
-import org.finlayfamily.littlefamily.data.*;
-import org.finlayfamily.littlefamily.util.*;
+import org.finlayfamily.littlefamily.data.HeritagePath;
+import org.finlayfamily.littlefamily.data.LittlePerson;
+import org.finlayfamily.littlefamily.util.ValueComparator;
+
+import java.util.ArrayList;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 public class HeritageDressUpActivity extends ActionBarActivity implements HeritageCalculatorTask.Listener {
 
@@ -31,7 +32,7 @@ public class HeritageDressUpActivity extends ActionBarActivity implements Herita
 	public void onComplete(ArrayList<HeritagePath> paths)
 	{
 		ValueComparator vc = new ValueComparator();
-		cultures = new TreeMap<>(vc);
+		cultures = new TreeMap<String, Double>(vc);
 		
 		Double total = 0.0;
 		for(HeritagePath path : paths) {
