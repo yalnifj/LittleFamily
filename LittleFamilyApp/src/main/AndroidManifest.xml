@@ -67,6 +67,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.finlayfamily.littlefamily.activities.ChooseGameActivity" />
         </activity>
+        <activity
+            android:name=".activities.ChooseCultureActivity"
+            android:label="@string/title_activity_choose_culture" >
+        </activity>
     </application>
 
 </manifest>

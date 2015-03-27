@@ -13,5 +13,6 @@
     <string name="title_activity_scratch_game">ScratchGameActivity</string>
     <string name="title_activity_coloring_game">ColoringGameActivity</string>
     <string name="title_activity_heritage_dress_up">HeritageDressUpActivity</string>
+    <string name="title_activity_choose_culture">ChooseCultureActivity</string>
 
 </resources>
