@@ -119,7 +119,17 @@ public class DBHelper extends SQLiteOpenHelper {
 		ContentValues values = new ContentValues();
 		values.put(COL_NAME, person.getName());
 		values.put(COL_GIVEN_NAME, person.getGivenName());
-		values.put(COL_GENDER, person.getGender().toString());
+        switch(person.getGender()) {
+            case Male:
+		        values.put(COL_GENDER, "M");
+                break;
+            case Female:
+                values.put(COL_GENDER, "F");
+                break;
+            default:
+                values.put(COL_GENDER, "U");
+                break;
+        }
 		values.put(COL_PHOTO_PATH, person.getPhotoPath());
 		values.put(COL_AGE, person.getAge());
 		values.put(COL_BIRTH_DATE, dateToLong(person.getBirthDate()));
@@ -229,12 +239,16 @@ public class DBHelper extends SQLiteOpenHelper {
 	}
 	
 	public List<LittlePerson> getRelativesForPerson(int id) {
+        return this.getRelativesForPerson(id, true);
+    }
+
+    public List<LittlePerson> getRelativesForPerson(int id, boolean followSpouse) {
 		List<LittlePerson> people = new ArrayList<>();
 		SQLiteDatabase db = getReadableDatabase();
 		String[] projection = {
 			COL_GIVEN_NAME, COL_GENDER, COL_PHOTO_PATH, COL_NAME,
 			COL_AGE, COL_BIRTH_DATE, COL_BIRTH_PLACE, COL_NATIONALITY, COL_FAMILY_SEARCH_ID, COL_LAST_SYNC,
-			"p."+COL_ID, COL_ALIVE, COL_ACTIVE
+			"p."+COL_ID, COL_ALIVE, COL_ACTIVE, "r."+COL_TYPE
 		};
 		String selection = "(r."+COL_ID1 + " LIKE ? or r."+COL_ID2+" LIKE ?) and p.active='Y'";
 
@@ -244,10 +258,21 @@ public class DBHelper extends SQLiteOpenHelper {
 
 		Map<Integer, LittlePerson> personMap = new HashMap<>();
 		Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, "p."+COL_ID);
+        Integer spouseId = null;
 		while (c.moveToNext()) {
 			LittlePerson p = personFromCursor(c);
 			personMap.put(p.getId(), p);
+            int type = c.getInt(c.getColumnIndexOrThrow(COL_TYPE));
+            RelationshipType rt = RelationshipType.getTypeFromId(type);
+            if (rt==RelationshipType.SPOUSE) spouseId = p.getId();
 		}
+
+        if (followSpouse && spouseId!=null) {
+            List<LittlePerson> spouseFamily = this.getRelativesForPerson(spouseId, false);
+            for(LittlePerson p : spouseFamily) {
+                personMap.put(p.getId(), p);
+            }
+        }
 
 		c.close();
 		people.addAll(personMap.values());
@@ -333,7 +358,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 return -1;
             // -- add
             rowid = db.insert(TABLE_RELATIONSHIP, null, values);
-            Log.d("DBHelper", "persistRelationship added relationship id " + rowid);
+            Log.d("DBHelper", "persistRelationship added relationship id " + rowid + " id1="+r.getId1()+" id2="+r.getId2()+" type="+r.getType());
         } else {
             String selection = COL_ID + " LIKE ?";
             String[] selectionArgs = { String.valueOf(r.getId()) };

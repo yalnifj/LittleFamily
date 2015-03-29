@@ -62,14 +62,18 @@
         <activity
             android:name=".activities.HeritageDressUpActivity"
             android:label="@string/title_activity_heritage_dress_up"
-            android:parentActivityName=".activities.ChooseGameActivity" >
+            android:parentActivityName=".activities.ChooseCultureActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.finlayfamily.littlefamily.activities.ChooseGameActivity" />
+                android:value="org.finlayfamily.littlefamily.activities.ChooseCultureActivity" />
         </activity>
         <activity
             android:name=".activities.ChooseCultureActivity"
-            android:label="@string/title_activity_choose_culture" >
+            android:label="@string/title_activity_choose_culture"
+            android:parentActivityName=".activities.ChooseGameActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.finlayfamily.littlefamily.activities.ChooseGameActivity" />
         </activity>
     </application>
 

@@ -38,4 +38,17 @@
         android:layout_below="@+id/matchGameBtn"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dressUpGameBtn"
+        android:src="@android:drawable/btn_star_big_on"
+        android:onClick="startHeritageDressUpGame"
+        android:layout_alignTop="@+id/coloringGameBtn"
+        android:layout_alignLeft="@+id/scratchGameBtn"
+        android:layout_alignStart="@+id/scratchGameBtn"
+        android:layout_alignBottom="@+id/coloringGameBtn"
+        android:layout_alignRight="@+id/scratchGameBtn"
+        android:layout_alignEnd="@+id/scratchGameBtn" />
 </RelativeLayout>

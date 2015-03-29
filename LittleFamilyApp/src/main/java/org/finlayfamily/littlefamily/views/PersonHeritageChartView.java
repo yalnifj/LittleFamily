@@ -64,9 +64,9 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
 
     private void loadBitmap() {
         if (person.getGender()== GenderType.Female) {
-            outlineBitmap = ImageHelper.loadBitmapFromResource(context, R.drawable.girl_outline, 0, this.getWidth(), this.getHeight());
+            outlineBitmap = ImageHelper.loadBitmapFromResource(context, R.drawable.girloutline, 0, this.getWidth(), this.getHeight());
         } else {
-            outlineBitmap = ImageHelper.loadBitmapFromResource(context, R.drawable.girl_outline, 0, this.getWidth(), this.getHeight());
+            outlineBitmap = ImageHelper.loadBitmapFromResource(context, R.drawable.boyoutline, 0, this.getWidth(), this.getHeight());
         }
     }
 
@@ -102,6 +102,7 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
 
     public void doDraw(Canvas canvas) {
         if (outlineBitmap!=null) {
+            canvas.drawARGB(255, 255, 255, 255);
             if (cultures!=null) {
                 int top = 0;
                 int r = 255;
@@ -138,7 +139,6 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
                 paint.setShader(new LinearGradient(0, 0, 0, this.getHeight() - distance, Color.WHITE, Color.RED, Shader.TileMode.MIRROR));
                 canvas.drawRect(0, 0, this.getWidth(), this.getHeight(), paint);
             }
-            canvas.drawARGB(255, 255, 255, 255);
             canvas.drawBitmap(outlineBitmap, 0, 0, null);
 
             if (cultures !=null) {

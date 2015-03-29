@@ -47,7 +47,7 @@ public class ChooseGameActivity extends Activity {
     }
 
     public void startHeritageDressUpGame(View view) {
-        Intent intent = new Intent( this, HeritageDressUpActivity.class );
+        Intent intent = new Intent( this, ChooseCultureActivity.class );
         intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, selectedPerson);
         startActivity(intent);
     }

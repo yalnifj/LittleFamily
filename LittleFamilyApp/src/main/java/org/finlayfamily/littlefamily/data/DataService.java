@@ -276,57 +276,98 @@ public class DataService implements AuthTask.Listener {
     }
 
     public List<LittlePerson> getFamilyMembers(LittlePerson person) throws Exception {
-        List<LittlePerson> family = getDBHelper().getRelativesForPerson(person.getId());
+        return getFamilyMembers(person, true);
+    }
+
+    public List<LittlePerson> getFamilyMembers(LittlePerson person, boolean loadSpouse) throws Exception {
+        List<LittlePerson> family = getDBHelper().getRelativesForPerson(person.getId(), loadSpouse);
         if (family==null || family.size()==0) {
-            family = new ArrayList<>();
             waitForAuth();
+            LittlePerson spouse = null;
             List<Relationship> closeRelatives = fsService.getCloseRelatives(person.getFamilySearchId(), true);
             if (closeRelatives!=null) {
-                for(Relationship r : closeRelatives) {
-                    if (!r.getPerson1().getResourceId().equals(person.getFamilySearchId())) {
-                        Person fsPerson = fsService.getPerson(r.getPerson1().getResourceId(), true);
-                        LittlePerson relative = getDBHelper().getPersonByFamilySearchId(fsPerson.getId());
-                        if (relative==null) {
-                            relative = DataHelper.buildLittlePerson(fsPerson, context, true);
-                        }
-                        if (relative!=null) {
-                            getDBHelper().persistLittlePerson(relative);
-                            family.add(relative);
-                            addToSyncQ(relative);
-                            org.finlayfamily.littlefamily.data.Relationship rel = new org.finlayfamily.littlefamily.data.Relationship();
-                            rel.setId1(relative.getId());
-                            rel.setId2(person.getId());
-                            if (r.getKnownType()== RelationshipType.Couple) {
-                                rel.setType(org.finlayfamily.littlefamily.data.RelationshipType.SPOUSE);
+                family = processRelatives(closeRelatives, person);
+            }
+            if (loadSpouse) {
+                List<LittlePerson> spouseParents = new ArrayList<>();
+                for(LittlePerson p : family) {
+                    if ("spouse".equals(p.getRelationship())) {
+                        List<Relationship> spouseRelatives = fsService.getCloseRelatives(p.getFamilySearchId(), false);
+                        List<LittlePerson> spouseFamily = processRelatives(spouseRelatives, p);
+                        for(LittlePerson parent : spouseFamily) {
+                            if ("parent".equals(parent.getRelationship()) && !family.contains(parent)) {
+                                spouseParents.add(parent);
                             }
-                            else {
-                                rel.setType(org.finlayfamily.littlefamily.data.RelationshipType.PARENTCHILD);
-                            }
-                            getDBHelper().persistRelationship(rel);
                         }
                     }
-                    if (!r.getPerson2().getResourceId().equals(person.getFamilySearchId())) {
-                        Person fsPerson = fsService.getPerson(r.getPerson2().getResourceId(), true);
-                        LittlePerson relative = getDBHelper().getPersonByFamilySearchId(fsPerson.getId());
-                        if (relative==null) {
-                            relative = DataHelper.buildLittlePerson(fsPerson, context, true);
-                        }
-                        if (relative!=null) {
-                            getDBHelper().persistLittlePerson(relative);
-                            family.add(relative);
-                            addToSyncQ(relative);
-                            org.finlayfamily.littlefamily.data.Relationship rel = new org.finlayfamily.littlefamily.data.Relationship();
-                            rel.setId1(person.getId());
-                            rel.setId2(relative.getId());
-                            if (r.getKnownType()== RelationshipType.Couple) {
-                                rel.setType(org.finlayfamily.littlefamily.data.RelationshipType.SPOUSE);
-                            }
-                            else {
-                                rel.setType(org.finlayfamily.littlefamily.data.RelationshipType.PARENTCHILD);
-                            }
-                            getDBHelper().persistRelationship(rel);
+                }
+                family.addAll(spouseParents);
+            }
+        }
+        return family;
+    }
+
+    private List<LittlePerson> processRelatives(List<Relationship> closeRelatives, LittlePerson person) throws Exception {
+        List<LittlePerson> family = new ArrayList<>();
+        for(Relationship r : closeRelatives) {
+            if (!r.getPerson1().getResourceId().equals(person.getFamilySearchId())) {
+                Person fsPerson = fsService.getPerson(r.getPerson1().getResourceId(), true);
+                LittlePerson relative = getDBHelper().getPersonByFamilySearchId(fsPerson.getId());
+                if (relative==null) {
+                    relative = DataHelper.buildLittlePerson(fsPerson, context, true);
+                }
+                if (relative!=null) {
+                    family.add(relative);
+                    addToSyncQ(relative);
+                    org.finlayfamily.littlefamily.data.Relationship rel = new org.finlayfamily.littlefamily.data.Relationship();
+                    rel.setId2(person.getId());
+                    if (r.getKnownType()== RelationshipType.Couple) {
+                        rel.setType(org.finlayfamily.littlefamily.data.RelationshipType.SPOUSE);
+                        relative.setRelationship("spouse");
+                        if (relative.getAge()==null && person.getAge()!=null) {
+                            relative.setAge(person.getAge());
                         }
                     }
+                    else {
+                        rel.setType(org.finlayfamily.littlefamily.data.RelationshipType.PARENTCHILD);
+                        relative.setRelationship("parent");
+                        if (relative.getAge()==null && person.getAge()!=null) {
+                            relative.setAge(person.getAge()+25);
+                        }
+                    }
+                    getDBHelper().persistLittlePerson(relative);
+                    rel.setId1(relative.getId());
+                    getDBHelper().persistRelationship(rel);
+                }
+            }
+            if (!r.getPerson2().getResourceId().equals(person.getFamilySearchId())) {
+                Person fsPerson = fsService.getPerson(r.getPerson2().getResourceId(), true);
+                LittlePerson relative = getDBHelper().getPersonByFamilySearchId(fsPerson.getId());
+                if (relative==null) {
+                    relative = DataHelper.buildLittlePerson(fsPerson, context, true);
+                }
+                if (relative!=null) {
+                    family.add(relative);
+                    addToSyncQ(relative);
+                    org.finlayfamily.littlefamily.data.Relationship rel = new org.finlayfamily.littlefamily.data.Relationship();
+                    rel.setId1(person.getId());
+                    if (r.getKnownType()== RelationshipType.Couple) {
+                        rel.setType(org.finlayfamily.littlefamily.data.RelationshipType.SPOUSE);
+                        relative.setRelationship("spouse");
+                        if (relative.getAge()==null && person.getAge()!=null) {
+                            relative.setAge(person.getAge());
+                        }
+                    }
+                    else {
+                        rel.setType(org.finlayfamily.littlefamily.data.RelationshipType.PARENTCHILD);
+                        relative.setRelationship("child");
+                        if (relative.getAge()==null && person.getAge()!=null) {
+                            relative.setAge(person.getAge()-20);
+                        }
+                    }
+                    getDBHelper().persistLittlePerson(relative);
+                    rel.setId2(relative.getId());
+                    getDBHelper().persistRelationship(rel);
                 }
             }
         }
