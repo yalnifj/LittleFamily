@@ -13,12 +13,12 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import org.finlayfamily.littlefamily.R;
+import org.finlayfamily.littlefamily.data.HeritagePath;
 import org.finlayfamily.littlefamily.data.LittlePerson;
 import org.finlayfamily.littlefamily.util.ImageHelper;
 import org.gedcomx.types.GenderType;
 
 import java.util.Map;
-import java.util.SortedMap;
 
 /**
  * Created by jfinlay on 3/27/2015.
@@ -26,7 +26,7 @@ import java.util.SortedMap;
 public class PersonHeritageChartView extends SurfaceView implements SurfaceHolder.Callback {
     private LittlePerson person;
     private Bitmap outlineBitmap;
-    private SortedMap<String, Double> cultures;
+    private Map<String, HeritagePath> cultures;
     private Context context;
     private AnimationThread animationThread;
 
@@ -70,7 +70,7 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
         }
     }
 
-    public void setHeritageMap(SortedMap<String, Double> cultures) {
+    public void setHeritageMap(Map<String, HeritagePath> cultures) {
         this.cultures = cultures;
     }
 
@@ -109,12 +109,12 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
                 int g = 0;
                 int b = 0;
                 int count = 0;
-                for(Map.Entry<String, Double> entry : cultures.entrySet()) {
+                for(Map.Entry<String, HeritagePath> entry : cultures.entrySet()) {
                     Paint paint = new Paint();
                     paint.setStyle(Paint.Style.FILL);
-                    int color1 = Color.argb((int)(255*entry.getValue()), r, g, b);
+                    int color1 = Color.argb((int)(255*entry.getValue().getPercent()), r, g, b);
                     int color2 = Color.argb(255, r, g, b);
-                    paint.setShader(new LinearGradient(0, top, 0, top + (int)(this.getHeight()*entry.getValue()), color1, color2, Shader.TileMode.MIRROR));
+                    paint.setShader(new LinearGradient(0, top, 0, top + (int)(this.getHeight()*entry.getValue().getPercent()), color1, color2, Shader.TileMode.MIRROR));
                     canvas.drawRect(0, 0, this.getWidth(), this.getHeight(), paint);
                     int t = b;
                     b = g;
@@ -130,26 +130,26 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
                         }
                     }
 
-                    top += this.getHeight()*entry.getValue();
+                    top += this.getHeight()*entry.getValue().getPercent();
                 }
             } else {
                 Paint paint = new Paint();
                 paint.setStyle(Paint.Style.FILL);
                 paint.setColor(Color.RED);
-                paint.setShader(new LinearGradient(0, 0, 0, this.getHeight() - distance, Color.WHITE, Color.RED, Shader.TileMode.MIRROR));
+                paint.setShader(new LinearGradient(0, 0, 0, this.getHeight() - distance, Color.WHITE, Color.RED, Shader.TileMode.REPEAT));
                 canvas.drawRect(0, 0, this.getWidth(), this.getHeight(), paint);
             }
             canvas.drawBitmap(outlineBitmap, 0, 0, null);
 
             if (cultures !=null) {
                 int top = 0;
-                for(Map.Entry<String, Double> entry : cultures.entrySet()) {
+                for(Map.Entry<String, HeritagePath> entry : cultures.entrySet()) {
                     Paint p = new Paint();
                     p.setTextSize(10);
                     p.setColor(Color.BLACK);
                     p.setTextAlign(Paint.Align.CENTER);
                     canvas.drawText(entry.getKey(), 0, top, p);
-                    top += this.getHeight()*entry.getValue();
+                    top += this.getHeight()*entry.getValue().getPercent();
                 }
             }
         }

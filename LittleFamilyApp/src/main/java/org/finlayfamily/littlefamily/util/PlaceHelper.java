@@ -51,7 +51,7 @@ public class PlaceHelper {
 
     public static String getTopPlace(String place) {
         if (place==null) return null;
-        String[] parts = place.split("[, ]+");
-        return parts[parts.length-1];
+        String[] parts = place.split("[,]+");
+        return parts[parts.length-1].trim();
     }
 }

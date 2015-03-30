@@ -8,17 +8,16 @@ import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.activities.tasks.HeritageCalculatorTask;
 import org.finlayfamily.littlefamily.data.HeritagePath;
 import org.finlayfamily.littlefamily.data.LittlePerson;
-import org.finlayfamily.littlefamily.util.ValueComparator;
 import org.finlayfamily.littlefamily.views.PersonHeritageChartView;
 
 import java.util.ArrayList;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ChooseCultureActivity extends Activity implements HeritageCalculatorTask.Listener {
 
     private LittlePerson person;
-    private SortedMap<String, Double> cultures;
+    private Map<String, HeritagePath> cultures;
     private PersonHeritageChartView chartView;
 
     @Override
@@ -31,32 +30,30 @@ public class ChooseCultureActivity extends Activity implements HeritageCalculato
         Intent intent = getIntent();
         person = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
         chartView.setPerson(person);
+
+        HeritageCalculatorTask task = new HeritageCalculatorTask(this, this);
+        task.execute(person);
     }
 
     @Override
     public void onComplete(ArrayList<HeritagePath> paths)
     {
-        ValueComparator vc = new ValueComparator();
-        cultures = new TreeMap<String, Double>(vc);
+        cultures = new HashMap<String, HeritagePath>();
 
-        Double total = 0.0;
         for(HeritagePath path : paths) {
             String place = path.getPlace();
-            total += path.getPercent();
             if (cultures.get(place)==null) {
-                cultures.put(place, path.getPercent());
+                cultures.put(place, path);
             } else {
-                cultures.put(place, cultures.get(place) + path.getPercent());
+                Double percent = cultures.get(place).getPercent() + path.getPercent();
+                if (cultures.get(place).getTreePath().size() <= path.getTreePath().size()) {
+                    cultures.get(place).setPercent(percent);
+                } else {
+                    path.setPercent(percent);
+                    cultures.put(place, path);
+                }
             }
         }
-        if (total < 1.0) {
-            if (cultures.get("Unknown")==null) {
-                cultures.put("Unknown", 1.0 - total);
-            } else {
-                cultures.put("Unknown", cultures.get("Unknown") + 1.0 - total);
-            }
-        }
-
         chartView.setHeritageMap(cultures);
     }
 }
