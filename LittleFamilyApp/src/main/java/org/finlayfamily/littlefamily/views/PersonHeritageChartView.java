@@ -72,6 +72,8 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
 
     public void setHeritageMap(Map<String, HeritagePath> cultures) {
         this.cultures = cultures;
+		for(Map.Entry<String, HeritagePath> entry : cultures.entrySet()) 
+			Log.d("PersonHeritageChartView", entry.getKey()+entry.getValue().getPercent());
     }
 
     @Override
@@ -110,7 +112,7 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
                 int b = 0;
                 int count = 0;
                 for(Map.Entry<String, HeritagePath> entry : cultures.entrySet()) {
-                    Paint paint = new Paint();
+					Paint paint = new Paint();
                     paint.setStyle(Paint.Style.FILL);
                     int color1 = Color.argb((int)(255*entry.getValue().getPercent()), r, g, b);
                     int color2 = Color.argb(255, r, g, b);
