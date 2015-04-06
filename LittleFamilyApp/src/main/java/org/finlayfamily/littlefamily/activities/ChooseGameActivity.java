@@ -22,10 +22,10 @@ public class ChooseGameActivity extends Activity {
 
         Intent intent = getIntent();
         people = (ArrayList<LittlePerson>) intent.getSerializableExtra(ChooseFamilyMember.FAMILY);
-        if (people!=null && people.size()>0) {
+        selectedPerson = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
+        if (selectedPerson==null && people!=null && people.size()>0) {
             selectedPerson = people.get(0);
         }
-
     }
 
     public void startMatchGame(View view) {

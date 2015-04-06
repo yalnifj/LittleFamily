@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,9 +18,6 @@ import org.finlayfamily.littlefamily.activities.tasks.PersonLoaderTask;
 import org.finlayfamily.littlefamily.activities.util.SystemUiHider;
 import org.finlayfamily.littlefamily.data.DataService;
 import org.finlayfamily.littlefamily.data.LittlePerson;
-import org.finlayfamily.littlefamily.familysearch.FamilySearchException;
-import org.finlayfamily.littlefamily.familysearch.FamilySearchService;
-import org.gedcomx.conclusion.Person;
 
 import java.util.ArrayList;
 
@@ -42,6 +38,7 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
     private boolean launchGame = false;
 
     private DataService dataService;
+    private LittlePerson selectedPerson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,9 +101,9 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         pd = ProgressDialog.show(this, "Please wait...", "Loading data from FamilySearch", true, false);
         launchGame = true;
-        LittlePerson person = (LittlePerson) gridView.getItemAtPosition(position);
+        selectedPerson = (LittlePerson) gridView.getItemAtPosition(position);
         FamilyLoaderTask task = new FamilyLoaderTask(this, this);
-		task.execute(person);
+		task.execute(selectedPerson);
     }
 
 
@@ -116,6 +113,7 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
         if (launchGame) {
             launchGame = false;
             Intent intent = new Intent( this, ChooseGameActivity.class );
+            intent.putExtra(SELECTED_PERSON, selectedPerson);
             intent.putExtra(FAMILY, familyMembers);
             startActivity(intent);
         } else {

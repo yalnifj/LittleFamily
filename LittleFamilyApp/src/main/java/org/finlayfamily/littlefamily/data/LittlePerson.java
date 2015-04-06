@@ -84,7 +84,7 @@ public class LittlePerson implements Serializable {
             for(Fact b : births) {
                 if (b.getDate()!=null && (birth==null || b.getPrimary())) birth = b;
             }
-            if (birth!=null && birth.getDate()!=null) {
+            if (birth!=null) {
                 birthPlace = null;
                 if (birth.getPlace()!=null) {
                     PlaceReference place = birth.getPlace();
@@ -94,23 +94,24 @@ public class LittlePerson implements Serializable {
                         birthPlace = place.getNormalized().get(0).getValue();
                     }
                 }
-
-                String birthDateStr = birth.getDate().getFormal();
-                if (birthDateStr==null) birthDateStr = birth.getDate().getOriginal();
-                if (birthDateStr!=null) {
-                    DateFormat df = new SimpleDateFormat("dd MMM yyyy");
-                    try {
-                        this.birthDate = df.parse(birthDateStr);
-                        Date today = new Date();
-                        age = (int) (today.getTime() - birthDate.getTime()) / (1000 * 60 * 60 * 24 * 365);
-                    } catch (ParseException e) {
-                        Pattern p = Pattern.compile("\\d\\d\\d\\d");
-                        Matcher m = p.matcher(birthDateStr);
-                        if (m.find()) {
-                            String birthYearStr = m.group();
-                            int birthYear = Integer.parseInt(birthYearStr);
-                            Calendar cal = Calendar.getInstance();
-                            age = cal.get(Calendar.YEAR) - birthYear;
+                if (birth.getDate()!=null) {
+                    String birthDateStr = birth.getDate().getFormal();
+                    if (birthDateStr == null) birthDateStr = birth.getDate().getOriginal();
+                    if (birthDateStr != null) {
+                        DateFormat df = new SimpleDateFormat("dd MMM yyyy");
+                        try {
+                            this.birthDate = df.parse(birthDateStr);
+                            Date today = new Date();
+                            age = (int) (today.getTime() - birthDate.getTime()) / (1000 * 60 * 60 * 24 * 365);
+                        } catch (ParseException e) {
+                            Pattern p = Pattern.compile("\\d\\d\\d\\d");
+                            Matcher m = p.matcher(birthDateStr);
+                            if (m.find()) {
+                                String birthYearStr = m.group();
+                                int birthYear = Integer.parseInt(birthYearStr);
+                                Calendar cal = Calendar.getInstance();
+                                age = cal.get(Calendar.YEAR) - birthYear;
+                            }
                         }
                     }
                 }

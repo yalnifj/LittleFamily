@@ -56,7 +56,7 @@ public class HeritageCalculatorTask extends AsyncTask<LittlePerson, Integer, Arr
                 }
                 else {
                     List<LittlePerson> parents = dataService.getParents(path.getTreePath().get(path.getTreePath().size() - 1));
-                    if (parents != null) {
+                    if (parents != null && parents.size()>0) {
                         for (LittlePerson parent : parents) {
                             HeritagePath ppath = new HeritagePath();
                             ppath.setPercent(path.getPercent() / 2);
@@ -66,7 +66,7 @@ public class HeritageCalculatorTask extends AsyncTask<LittlePerson, Integer, Arr
                                 place = "United States";
                             ppath.setPlace(place);
                             ppath.setTreePath(new ArrayList<LittlePerson>(path.getTreePath()));
-                            ppath.getTreePath().add(person);
+                            ppath.getTreePath().add(parent);
                             paths.add(ppath);
                         }
                     } else {

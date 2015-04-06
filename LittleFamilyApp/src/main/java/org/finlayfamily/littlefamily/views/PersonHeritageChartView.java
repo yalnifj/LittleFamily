@@ -72,8 +72,6 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
 
     public void setHeritageMap(Map<String, HeritagePath> cultures) {
         this.cultures = cultures;
-		for(Map.Entry<String, HeritagePath> entry : cultures.entrySet()) 
-			Log.d("PersonHeritageChartView", entry.getKey()+entry.getValue().getPercent());
     }
 
     @Override
@@ -112,7 +110,7 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
                 int b = 0;
                 int count = 0;
                 for(Map.Entry<String, HeritagePath> entry : cultures.entrySet()) {
-					Paint paint = new Paint();
+                    Paint paint = new Paint();
                     paint.setStyle(Paint.Style.FILL);
                     int color1 = Color.argb((int)(255*entry.getValue().getPercent()), r, g, b);
                     int color2 = Color.argb(255, r, g, b);
@@ -138,7 +136,7 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
                 Paint paint = new Paint();
                 paint.setStyle(Paint.Style.FILL);
                 paint.setColor(Color.RED);
-                paint.setShader(new LinearGradient(0, 0, 0, this.getHeight() - distance, Color.WHITE, Color.RED, Shader.TileMode.REPEAT));
+                paint.setShader(new LinearGradient(0, distance, 0, 50, Color.WHITE, Color.RED, Shader.TileMode.REPEAT));
                 canvas.drawRect(0, 0, this.getWidth(), this.getHeight(), paint);
             }
             canvas.drawBitmap(outlineBitmap, 0, 0, null);
@@ -147,10 +145,10 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
                 int top = 0;
                 for(Map.Entry<String, HeritagePath> entry : cultures.entrySet()) {
                     Paint p = new Paint();
-                    p.setTextSize(10);
+                    p.setTextSize(30);
                     p.setColor(Color.BLACK);
                     p.setTextAlign(Paint.Align.CENTER);
-                    canvas.drawText(entry.getKey(), 0, top, p);
+                    canvas.drawText(entry.getKey() + " "+(entry.getValue().getPercent()*100)+"%", this.getWidth()/2, top+20, p);
                     top += this.getHeight()*entry.getValue().getPercent();
                 }
             }

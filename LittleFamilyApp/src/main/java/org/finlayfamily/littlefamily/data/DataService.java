@@ -282,27 +282,33 @@ public class DataService implements AuthTask.Listener {
     public List<LittlePerson> getFamilyMembers(LittlePerson person, boolean loadSpouse) throws Exception {
         List<LittlePerson> family = getDBHelper().getRelativesForPerson(person.getId(), loadSpouse);
         if (family==null || family.size()==0) {
-            waitForAuth();
-            LittlePerson spouse = null;
-            List<Relationship> closeRelatives = fsService.getCloseRelatives(person.getFamilySearchId(), true);
-            if (closeRelatives!=null) {
-                family = processRelatives(closeRelatives, person);
-            }
-            if (loadSpouse) {
-                List<LittlePerson> spouseParents = new ArrayList<>();
-                for(LittlePerson p : family) {
-                    if ("spouse".equals(p.getRelationship())) {
-                        List<Relationship> spouseRelatives = fsService.getCloseRelatives(p.getFamilySearchId(), false);
-                        List<LittlePerson> spouseFamily = processRelatives(spouseRelatives, p);
-                        for(LittlePerson parent : spouseFamily) {
-                            if ("parent".equals(parent.getRelationship()) && !family.contains(parent)) {
-                                spouseParents.add(parent);
-                            }
+            family = getFamilyMembersFromFamilySearch(person, loadSpouse);
+        }
+        return family;
+    }
+
+    public List<LittlePerson> getFamilyMembersFromFamilySearch(LittlePerson person, boolean loadSpouse) throws Exception {
+        List<LittlePerson> family = new ArrayList<>();
+        waitForAuth();
+        LittlePerson spouse = null;
+        List<Relationship> closeRelatives = fsService.getCloseRelatives(person.getFamilySearchId(), true);
+        if (closeRelatives!=null) {
+            family = processRelatives(closeRelatives, person);
+        }
+        if (loadSpouse) {
+            List<LittlePerson> spouseParents = new ArrayList<>();
+            for(LittlePerson p : family) {
+                if ("spouse".equals(p.getRelationship())) {
+                    List<Relationship> spouseRelatives = fsService.getCloseRelatives(p.getFamilySearchId(), false);
+                    List<LittlePerson> spouseFamily = processRelatives(spouseRelatives, p);
+                    for(LittlePerson parent : spouseFamily) {
+                        if ("parent".equals(parent.getRelationship()) && !family.contains(parent)) {
+                            spouseParents.add(parent);
                         }
                     }
                 }
-                family.addAll(spouseParents);
             }
+            family.addAll(spouseParents);
         }
         return family;
     }
@@ -377,7 +383,7 @@ public class DataService implements AuthTask.Listener {
     public List<LittlePerson> getParents(LittlePerson person) throws Exception {
         List<LittlePerson> parents = getDBHelper().getParentsForPerson(person.getId());
         if (parents==null || parents.size()==0) {
-            getFamilyMembers(person);
+            getFamilyMembersFromFamilySearch(person, false);
             parents = getDBHelper().getParentsForPerson(person.getId());
             if (parents==null) {
                 parents = new ArrayList<>();
