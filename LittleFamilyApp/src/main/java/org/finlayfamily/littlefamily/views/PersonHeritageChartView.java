@@ -148,7 +148,7 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
                     p.setTextSize(30);
                     p.setColor(Color.BLACK);
                     p.setTextAlign(Paint.Align.CENTER);
-                    canvas.drawText(entry.getKey() + " "+(entry.getValue().getPercent()*100)+"%", this.getWidth()/2, top+20, p);
+                    canvas.drawText(entry.getKey() + " "+(entry.getValue().getPercent()*100)+"%", this.getWidth()/2, top+25, p);
                     top += this.getHeight()*entry.getValue().getPercent();
                 }
             }

@@ -37,6 +37,19 @@ public class LittlePerson implements Serializable {
     private String photoPath;
     private GenderType gender;
 	private Date birthDate;
+
+    @Override
+    public String toString() {
+        return "LittlePerson{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", familySearchId='" + familySearchId + '\'' +
+                ", birthDate=" + birthDate +
+                ", birthPlace='" + birthPlace + '\'' +
+                ", gender=" + gender +
+                '}';
+    }
+
     private String birthPlace;
     private Integer age;
     private boolean alive;

@@ -3,6 +3,7 @@ package org.finlayfamily.littlefamily.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.activities.tasks.HeritageCalculatorTask;
@@ -19,6 +20,7 @@ public class ChooseCultureActivity extends Activity implements HeritageCalculato
     private LittlePerson person;
     private Map<String, HeritagePath> cultures;
     private PersonHeritageChartView chartView;
+    private TextView titleView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +28,7 @@ public class ChooseCultureActivity extends Activity implements HeritageCalculato
         setContentView(R.layout.activity_choose_culture);
 
         chartView = (PersonHeritageChartView) findViewById(R.id.personChart);
+        titleView = (TextView) findViewById(R.id.titleText);
 
         Intent intent = getIntent();
         person = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
@@ -55,5 +58,7 @@ public class ChooseCultureActivity extends Activity implements HeritageCalculato
             }
         }
         chartView.setHeritageMap(cultures);
+
+        titleView.setText(R.string.choose_culture);
     }
 }

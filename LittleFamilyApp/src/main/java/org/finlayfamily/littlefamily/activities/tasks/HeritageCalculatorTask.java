@@ -18,6 +18,7 @@ import java.util.List;
  */
 public class HeritageCalculatorTask extends AsyncTask<LittlePerson, Integer, ArrayList<HeritagePath>> {
     private static final int MAX_PATHS=13;
+    private static String UNKNOWN="Unknown";
     private Listener listener;
     private Context context;
     private DataService dataService;
@@ -51,7 +52,7 @@ public class HeritageCalculatorTask extends AsyncTask<LittlePerson, Integer, Arr
         while(paths.size() > 0) {
             try {
                 HeritagePath path = paths.removeFirst();
-                if (path.getTreePath().size()>=MAX_PATHS || !path.getPlace().equals(origin)) {
+                if (path.getTreePath().size()>=MAX_PATHS || (!path.getPlace().equals(origin) && !path.getPlace().equals(UNKNOWN))) {
                     returnPaths.add(path);
                 }
                 else {
@@ -59,9 +60,9 @@ public class HeritageCalculatorTask extends AsyncTask<LittlePerson, Integer, Arr
                     if (parents != null && parents.size()>0) {
                         for (LittlePerson parent : parents) {
                             HeritagePath ppath = new HeritagePath();
-                            ppath.setPercent(path.getPercent() / 2);
+                            ppath.setPercent(path.getPercent() / parents.size());
                             String place = PlaceHelper.getTopPlace(parent.getBirthPlace());
-                            if (place == null) place = "Unknown";
+                            if (place == null) place = UNKNOWN;
                             if (!place.equals("United States") && PlaceHelper.isInUS(place))
                                 place = "United States";
                             ppath.setPlace(place);
