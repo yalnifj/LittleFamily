@@ -1,0 +1,35 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="org.finlayfamily.littlefamily.activities.ProgressFragment">
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/growingPlant"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:src="@drawable/growing_plant_animation" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_alignBottom="@+id/growingPlant"
+        android:layout_toRightOf="@+id/growingPlant"
+        android:layout_toEndOf="@+id/growingPlant" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:id="@+id/descriptiveText"
+        android:layout_above="@+id/progressBar"
+        android:layout_toRightOf="@+id/growingPlant"
+        android:layout_toEndOf="@+id/growingPlant"
+        android:text="Please Wait..." />
+
+</RelativeLayout>
