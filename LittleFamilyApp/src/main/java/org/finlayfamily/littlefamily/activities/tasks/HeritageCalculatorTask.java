@@ -61,11 +61,15 @@ public class HeritageCalculatorTask extends AsyncTask<LittlePerson, Integer, Arr
                         for (LittlePerson parent : parents) {
                             HeritagePath ppath = new HeritagePath();
                             ppath.setPercent(path.getPercent() / parents.size());
-                            String place = PlaceHelper.getTopPlace(parent.getBirthPlace());
-                            if (place == null) place = UNKNOWN;
-                            if (!place.equals("United States") && PlaceHelper.isInUS(place))
-                                place = "United States";
-                            ppath.setPlace(place);
+                            if (parent.getNationality()!=null) {
+                                ppath.setPlace(parent.getNationality());
+                            } else {
+                                String place = PlaceHelper.getTopPlace(parent.getBirthPlace());
+                                if (place == null) place = UNKNOWN;
+                                if (!place.equals("United States") && PlaceHelper.isInUS(place))
+                                    place = "United States";
+                                ppath.setPlace(place);
+                            }
                             ppath.setTreePath(new ArrayList<LittlePerson>(path.getTreePath()));
                             ppath.getTreePath().add(parent);
                             paths.add(ppath);

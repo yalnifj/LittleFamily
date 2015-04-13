@@ -30,6 +30,10 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
     private Context context;
     private AnimationThread animationThread;
 
+    private int[] colors = {
+            Color.BLUE, Color.RED, Color.CYAN, Color.YELLOW, Color.GREEN, Color.MAGENTA, Color.LTGRAY
+    };
+
     private int distance = 0;
 
     public PersonHeritageChartView(Context context) {
@@ -105,38 +109,29 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
             canvas.drawARGB(255, 255, 255, 255);
             if (cultures!=null) {
                 int top = 0;
-                int r = 255;
-                int g = 0;
-                int b = 0;
                 int count = 0;
                 for(Map.Entry<String, HeritagePath> entry : cultures.entrySet()) {
                     Paint paint = new Paint();
                     paint.setStyle(Paint.Style.FILL);
-                    int color1 = Color.argb((int)(255*entry.getValue().getPercent()), r, g, b);
-                    int color2 = Color.argb(255, r, g, b);
-                    paint.setShader(new LinearGradient(0, top, 0, top + (int)(this.getHeight()*entry.getValue().getPercent()), color1, color2, Shader.TileMode.MIRROR));
-                    canvas.drawRect(0, 0, this.getWidth(), this.getHeight(), paint);
-                    int t = b;
-                    b = g;
-                    g = r;
-                    r = t;
+                    int color2 = colors[count];
+                    int height = (int) (this.getHeight()*entry.getValue().getPercent());
+                    paint.setColor(color2);
+                    canvas.drawRect(0, top, this.getWidth(),
+                            top + height,
+                            paint);
+
                     count++;
-                    if (count % 3 == 0) {
-                        g += 100;
-                        if (g > 255) {
-                            g = 255;
-                            b += 100;
-                            if (b>255) b = 255;
-                        }
+                    if (count >= colors.length) {
+                        count = 0;
                     }
 
-                    top += this.getHeight()*entry.getValue().getPercent();
+                    top += height;
                 }
             } else {
                 Paint paint = new Paint();
                 paint.setStyle(Paint.Style.FILL);
                 paint.setColor(Color.RED);
-                paint.setShader(new LinearGradient(0, distance, 0, 50, Color.WHITE, Color.RED, Shader.TileMode.REPEAT));
+                paint.setShader(new LinearGradient(0, distance, 0, distance+200, Color.WHITE, Color.RED, Shader.TileMode.MIRROR));
                 canvas.drawRect(0, 0, this.getWidth(), this.getHeight(), paint);
             }
             canvas.drawBitmap(outlineBitmap, 0, 0, null);
@@ -145,11 +140,12 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
                 int top = 0;
                 for(Map.Entry<String, HeritagePath> entry : cultures.entrySet()) {
                     Paint p = new Paint();
-                    p.setTextSize(30);
+                    p.setTextSize((int)(this.getHeight()*0.04));
                     p.setColor(Color.BLACK);
                     p.setTextAlign(Paint.Align.CENTER);
-                    canvas.drawText(entry.getKey() + " "+(entry.getValue().getPercent()*100)+"%", this.getWidth()/2, top+25, p);
-                    top += this.getHeight()*entry.getValue().getPercent();
+                    int height = (int)(this.getHeight()*entry.getValue().getPercent());
+                    canvas.drawText(entry.getKey() + " "+(entry.getValue().getPercent()*100)+"%", this.getWidth()/2, top+(height/2), p);
+                    top += height;
                 }
             }
         }
