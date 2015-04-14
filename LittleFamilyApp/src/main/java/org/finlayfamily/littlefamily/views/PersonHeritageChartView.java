@@ -18,7 +18,7 @@ import org.finlayfamily.littlefamily.data.LittlePerson;
 import org.finlayfamily.littlefamily.util.ImageHelper;
 import org.gedcomx.types.GenderType;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * Created by jfinlay on 3/27/2015.
@@ -26,7 +26,7 @@ import java.util.Map;
 public class PersonHeritageChartView extends SurfaceView implements SurfaceHolder.Callback {
     private LittlePerson person;
     private Bitmap outlineBitmap;
-    private Map<String, HeritagePath> cultures;
+    private List<HeritagePath> cultures;
     private Context context;
     private AnimationThread animationThread;
 
@@ -74,7 +74,7 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
         }
     }
 
-    public void setHeritageMap(Map<String, HeritagePath> cultures) {
+    public void setHeritageMap(List<HeritagePath> cultures) {
         this.cultures = cultures;
     }
 
@@ -110,11 +110,11 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
             if (cultures!=null) {
                 int top = 0;
                 int count = 0;
-                for(Map.Entry<String, HeritagePath> entry : cultures.entrySet()) {
+                for(HeritagePath path : cultures) {
                     Paint paint = new Paint();
                     paint.setStyle(Paint.Style.FILL);
                     int color2 = colors[count];
-                    int height = (int) (this.getHeight()*entry.getValue().getPercent());
+                    int height = (int) (this.getHeight()*path.getPercent());
                     paint.setColor(color2);
                     canvas.drawRect(0, top, this.getWidth(),
                             top + height,
@@ -138,13 +138,13 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
 
             if (cultures !=null) {
                 int top = 0;
-                for(Map.Entry<String, HeritagePath> entry : cultures.entrySet()) {
+                for(HeritagePath path : cultures) {
                     Paint p = new Paint();
                     p.setTextSize((int)(this.getHeight()*0.04));
                     p.setColor(Color.BLACK);
                     p.setTextAlign(Paint.Align.CENTER);
-                    int height = (int)(this.getHeight()*entry.getValue().getPercent());
-                    canvas.drawText(entry.getKey() + " "+(entry.getValue().getPercent()*100)+"%", this.getWidth()/2, top+(height/2), p);
+                    int height = (int)(this.getHeight()*path.getPercent());
+                    canvas.drawText(path.getPlace() + " "+(path.getPercent()*100)+"%", this.getWidth()/2, top+(height/2), p);
                     top += height;
                 }
             }

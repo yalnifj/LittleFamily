@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by Parents on 3/24/2015.
  */
-public class HeritagePath {
+public class HeritagePath implements Comparable<HeritagePath> {
     private List<LittlePerson> treePath;
     private Double percent;
     private String place;
@@ -32,5 +32,10 @@ public class HeritagePath {
 
     public void setPlace(String place) {
         this.place = place;
+    }
+
+    @Override
+    public int compareTo(HeritagePath another) {
+        return another.getPercent().compareTo(percent);
     }
 }
