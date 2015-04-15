@@ -17,7 +17,7 @@
     <string name="calculating_heritage">Calculating your heritage.
 Please wait...</string>
     <string name="choose_culture">Choose a culture to dress up...</string>
-	<string name="you_are_percent">You are %1$d percent %2$s from your %3$s, %4$s</string>
+	<string name="you_are_percent">You are %1$.1f percent %2$s from your %3$s, %4$s</string>
 	<string name="father">Father</string>
 	<string name="mother">Mother</string>
 	<string name="grand">Grand</string>

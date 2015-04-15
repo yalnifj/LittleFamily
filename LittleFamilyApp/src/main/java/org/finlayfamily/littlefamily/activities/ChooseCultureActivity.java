@@ -49,9 +49,6 @@ public class ChooseCultureActivity extends Activity implements HeritageCalculato
         chartView.setPerson(person);
 		
 		tts = new TextToSpeech(this, this);
-
-        HeritageCalculatorTask task = new HeritageCalculatorTask(this, this);
-        task.execute(person);
     }
 
     public void setSelectedPath(HeritagePath selectedPath) {
@@ -123,12 +120,15 @@ public class ChooseCultureActivity extends Activity implements HeritageCalculato
     public void onInit(int code) {
         if (code == TextToSpeech.SUCCESS) {
             tts.setLanguage(Locale.getDefault());
-            tts.setSpeechRate(0.5f);
+            tts.setSpeechRate(0.9f);
 			speak(getResources().getString(R.string.calculating_heritage));
         } else {
             tts = null;
             //Toast.makeText(this, "Failed to initialize TTS engine.", Toast.LENGTH_SHORT).show();
         }
+
+        HeritageCalculatorTask task = new HeritageCalculatorTask(this, this);
+        task.execute(person);
     }
 
     @Override
