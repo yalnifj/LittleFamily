@@ -7,7 +7,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="org.finlayfamily.littlefamily.activities.ChooseCultureActivity">
+    tools:context="org.finlayfamily.littlefamily.activities.ChooseCultureActivity"
+    android:background="@android:color/background_light">
 
     <TextView
         android:id="@+id/titleText"
@@ -20,20 +21,23 @@
         android:id="@+id/personChart"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_weight="1" />
+        android:layout_weight="3" />
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="horizontal"
-        android:layout_weight="2">
+        android:layout_weight="3"
+        android:baselineAligned="false"
+        android:layout_marginTop="20dp">
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_gravity="center"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:padding="5dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -45,17 +49,18 @@
 
             <ImageView
                 android:id="@+id/portraitImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal" />
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_gravity="top|center_horizontal" />
         </LinearLayout>
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_gravity="center"
-            android:layout_weight="1">
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:padding="5dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -66,10 +71,10 @@
                 android:layout_gravity="center_horizontal" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
                 android:id="@+id/dollImage"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="top|center_horizontal" />
         </LinearLayout>
 
     </LinearLayout>

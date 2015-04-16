@@ -1,20 +1,37 @@
 package org.finlayfamily.littlefamily.activities;
 
-import android.app.*;
-import android.content.*;
-import android.graphics.*;
-import android.os.*;
-import android.speech.tts.*;
-import android.widget.*;
-import java.util.*;
-import org.finlayfamily.littlefamily.*;
-import org.finlayfamily.littlefamily.activities.tasks.*;
-import org.finlayfamily.littlefamily.data.*;
-import org.finlayfamily.littlefamily.util.*;
-import org.finlayfamily.littlefamily.views.*;
-import org.gedcomx.types.*;
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Build;
+import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
+import android.util.Log;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-public class ChooseCultureActivity extends Activity implements HeritageCalculatorTask.Listener, TextToSpeech.OnInitListener {
+import org.finlayfamily.littlefamily.R;
+import org.finlayfamily.littlefamily.activities.tasks.HeritageCalculatorTask;
+import org.finlayfamily.littlefamily.data.HeritagePath;
+import org.finlayfamily.littlefamily.data.LittlePerson;
+import org.finlayfamily.littlefamily.games.DollConfig;
+import org.finlayfamily.littlefamily.games.DressUpDolls;
+import org.finlayfamily.littlefamily.util.ImageHelper;
+import org.finlayfamily.littlefamily.views.PersonHeritageChartView;
+import org.gedcomx.types.GenderType;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+public class ChooseCultureActivity extends Activity implements HeritageCalculatorTask.Listener, TextToSpeech.OnInitListener, PersonHeritageChartView.SelectedPathListener {
 
     private LittlePerson person;
     private Map<String, HeritagePath> cultures;
@@ -25,6 +42,7 @@ public class ChooseCultureActivity extends Activity implements HeritageCalculato
     private ImageView portraitImage;
     private ImageView dollImage;
     private HeritagePath selectedPath;
+    private DressUpDolls dressUpDolls;
 	
 	private TextToSpeech tts;
 
@@ -47,6 +65,9 @@ public class ChooseCultureActivity extends Activity implements HeritageCalculato
         Intent intent = getIntent();
         person = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
         chartView.setPerson(person);
+        chartView.addListener(this);
+
+        dressUpDolls = new DressUpDolls();
 		
 		tts = new TextToSpeech(this, this);
     }
@@ -72,16 +93,35 @@ public class ChooseCultureActivity extends Activity implements HeritageCalculato
 			relationship = relationship + getResources().getString(R.string.grand)+", ";
 		}
 		if (relative.getGender()==GenderType.Female) {
-			getResources().getString(R.string.mother);
+			relationship += getResources().getString(R.string.mother);
 		} else {
-			getResources().getString(R.string.father);
+            relationship += getResources().getString(R.string.father);
 		}
 
         this.cultureNameView.setText(selectedPath.getPlace());
 		String text = String.format(getResources().getString(R.string.you_are_percent),
 				selectedPath.getPercent()*100, selectedPath.getPlace(),
-				relationship, relative.getName());
+				relationship);
+        if (relative.getBirthDate()!=null) {
+            DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
+            text += " " + String.format(getResources().getString(R.string.name_born_in_date),
+                    relative.getName(), relative.getBirthPlace(), df.format(relative.getBirthDate()));
+        } else {
+            text += " " + String.format(getResources().getString(R.string.name_born_in),
+                    relative.getName(), relative.getBirthPlace());
+        }
 		speak(text);
+
+        DollConfig dollConfig = dressUpDolls.getDollConfig(selectedPath.getPlace(), person);
+        String thumbnailFile = dollConfig.getThumbnail();
+        try {
+            InputStream is = getAssets().open(thumbnailFile);
+            Bitmap thumbnail = BitmapFactory.decodeStream(is);
+            dollImage.setImageBitmap(thumbnail);
+            is.close();
+        } catch (IOException e) {
+            Log.e("ChooseCultureActivity", "Error opening asset file", e);
+        }
     }
 
     @Override
@@ -125,6 +165,7 @@ public class ChooseCultureActivity extends Activity implements HeritageCalculato
         } else {
             tts = null;
             //Toast.makeText(this, "Failed to initialize TTS engine.", Toast.LENGTH_SHORT).show();
+            Log.e("ChooseCultureActivity", "Error intializing speech");
         }
 
         HeritageCalculatorTask task = new HeritageCalculatorTask(this, this);
@@ -141,6 +182,7 @@ public class ChooseCultureActivity extends Activity implements HeritageCalculato
     }
 	
 	private void speak(String message) {
+        Log.d("ChooseCultureActivity", "Speaking: "+message);
 		if (tts!=null) {
 			if (Build.VERSION.SDK_INT > 20) {
 				tts.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
@@ -150,4 +192,9 @@ public class ChooseCultureActivity extends Activity implements HeritageCalculato
 			}
 		}
 	}
+
+    @Override
+    public void onSelectedPath(HeritagePath path) {
+        setSelectedPath(path);
+    }
 }

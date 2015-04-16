@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -18,6 +19,7 @@ import org.finlayfamily.littlefamily.data.LittlePerson;
 import org.finlayfamily.littlefamily.util.ImageHelper;
 import org.gedcomx.types.GenderType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,6 +31,7 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
     private List<HeritagePath> cultures;
     private Context context;
     private AnimationThread animationThread;
+    private List<SelectedPathListener> listeners;
 
     private int[] colors = {
             Color.BLUE, Color.RED, Color.CYAN, Color.YELLOW, Color.GREEN, Color.MAGENTA, Color.LTGRAY
@@ -42,6 +45,7 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
         SurfaceHolder holder = getHolder();
         holder.addCallback(this);
         cultures = null;
+        listeners = new ArrayList<>();
     }
 
     public PersonHeritageChartView(Context context, AttributeSet attrs) {
@@ -50,6 +54,7 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
         SurfaceHolder holder = getHolder();
         holder.addCallback(this);
         cultures = null;
+        listeners = new ArrayList<>();
     }
 
     @Override
@@ -104,6 +109,49 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
         }
     }
 
+    public HeritagePath getPathByCoords(float x, float y) {
+        HeritagePath selectedPath = null;
+        if (cultures!=null) {
+            int top = 0;
+            for (HeritagePath path : cultures) {
+                int height = (int)(this.getHeight()*path.getPercent());
+                if (y>=top && y< top+height) {
+                    selectedPath = path;
+                    break;
+                }
+                top += height;
+            }
+        }
+        return selectedPath;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        float x = event.getX();
+        float y = event.getY();
+
+        HeritagePath selectedPath = getPathByCoords(x, y);
+        if (selectedPath!=null) {
+            //fire listeners
+            for(SelectedPathListener l : listeners) {
+                l.onSelectedPath(selectedPath);
+            }
+        }
+        /*
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+
+                break;
+            case MotionEvent.ACTION_MOVE:
+
+                break;
+            case MotionEvent.ACTION_UP:
+
+                break;
+        }*/
+        return true;
+    }
+
     public void doDraw(Canvas canvas) {
         if (outlineBitmap!=null) {
             canvas.drawARGB(255, 255, 255, 255);
@@ -116,7 +164,7 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
                     int color2 = colors[count];
                     int height = (int) (this.getHeight()*path.getPercent());
                     paint.setColor(color2);
-                    canvas.drawRect(0, top, this.getWidth(),
+                    canvas.drawRect(0, top, outlineBitmap.getWidth(),
                             top + height,
                             paint);
 
@@ -132,7 +180,7 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
                 paint.setStyle(Paint.Style.FILL);
                 paint.setColor(Color.RED);
                 paint.setShader(new LinearGradient(0, distance, 0, distance+200, Color.WHITE, Color.RED, Shader.TileMode.MIRROR));
-                canvas.drawRect(0, 0, this.getWidth(), this.getHeight(), paint);
+                canvas.drawRect(0, 0, outlineBitmap.getWidth(), this.getHeight(), paint);
             }
             canvas.drawBitmap(outlineBitmap, 0, 0, null);
 
@@ -140,11 +188,14 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
                 int top = 0;
                 for(HeritagePath path : cultures) {
                     Paint p = new Paint();
-                    p.setTextSize((int)(this.getHeight()*0.04));
+                    p.setTextSize((int)(this.getHeight()*0.05));
                     p.setColor(Color.BLACK);
-                    p.setTextAlign(Paint.Align.CENTER);
+                    p.setTextAlign(Paint.Align.LEFT);
                     int height = (int)(this.getHeight()*path.getPercent());
-                    canvas.drawText(path.getPlace() + " "+(path.getPercent()*100)+"%", this.getWidth()/2, top+(height/2), p);
+                    canvas.drawText((path.getPercent()*100)+"%"+" "+path.getPlace(), this.getWidth()/2 + 10, top+(height/3), p);
+                    p.setStrokeWidth(2);
+                    canvas.drawLine(this.getWidth()/2.5f, top+(height/2), this.getWidth()/2, top+(height/3)+2, p);
+                    canvas.drawLine(this.getWidth()/2, top+(height/3)+2, this.getWidth(), top+(height/3)+2, p);
                     top += height;
                 }
             }
@@ -189,5 +240,13 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
                 }
             }
         }
+    }
+
+    public void addListener(SelectedPathListener l) {
+        listeners.add(l);
+    }
+
+    public interface SelectedPathListener {
+        public void onSelectedPath(HeritagePath path);
     }
 }
