@@ -32,6 +32,8 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
     private Context context;
     private AnimationThread animationThread;
     private List<SelectedPathListener> listeners;
+	
+	private HeritagePath selectedPath;
 
     private int[] colors = {
             Color.BLUE, Color.RED, Color.CYAN, Color.YELLOW, Color.GREEN, Color.MAGENTA, Color.LTGRAY
@@ -81,6 +83,9 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
 
     public void setHeritageMap(List<HeritagePath> cultures) {
         this.cultures = cultures;
+		if (cultures!=null && cultures.size() > 0) {
+			selectedPath = cultures.get(0);
+		}
     }
 
     @Override
@@ -130,7 +135,7 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
         float x = event.getX();
         float y = event.getY();
 
-        HeritagePath selectedPath = getPathByCoords(x, y);
+        selectedPath = getPathByCoords(x, y);
         if (selectedPath!=null) {
             //fire listeners
             for(SelectedPathListener l : listeners) {
@@ -191,11 +196,15 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
                     p.setTextSize((int)(this.getHeight()*0.05));
                     p.setColor(Color.BLACK);
                     p.setTextAlign(Paint.Align.LEFT);
+					p.setStrokeWidth(2);
+					if (path==selectedPath) {
+						p.setShadowLayer(3, 3, 3, Color.GRAY);
+						p.setStrokeWidth(5);
+					}
                     int height = (int)(this.getHeight()*path.getPercent());
                     canvas.drawText((path.getPercent()*100)+"%"+" "+path.getPlace(), this.getWidth()/2 + 10, top+(height/3), p);
-                    p.setStrokeWidth(2);
-                    canvas.drawLine(this.getWidth()/2.5f, top+(height/2), this.getWidth()/2, top+(height/3)+2, p);
-                    canvas.drawLine(this.getWidth()/2, top+(height/3)+2, this.getWidth(), top+(height/3)+2, p);
+                    canvas.drawLine(this.getWidth()/2.5f, top+(height/2), this.getWidth()/2, top+(height/3)+4, p);
+                    canvas.drawLine(this.getWidth()/2, top+(height/3)+4, this.getWidth(), top+(height/3)+4, p);
                     top += height;
                 }
             }
