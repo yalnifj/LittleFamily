@@ -451,7 +451,7 @@
        inkscape:collect="always"
        x1="-2849.4"
        y1="1030"
-       gradientTransform="matrix(0.14548749,0,0,0.14548749,624.09705,-27.634251)"
+       gradientTransform="matrix(0.14548749,0,0,0.14548749,622.33953,-31.149287)"
        x2="-2861.6"
        gradientUnits="userSpaceOnUse"
        y2="923.34"
@@ -1522,17 +1522,19 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.8801111"
-     inkscape:cx="23.636127"
-     inkscape:cy="918.88064"
+     inkscape:zoom="1.7069524"
+     inkscape:cx="9.6502739"
+     inkscape:cy="952.21382"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1029"
-     inkscape:window-height="718"
-     inkscape:window-x="200"
-     inkscape:window-y="200"
-     inkscape:window-maximized="0" />
+     inkscape:window-width="932"
+     inkscape:window-height="583"
+     inkscape:window-x="627"
+     inkscape:window-y="213"
+     inkscape:window-maximized="0"
+     showguides="true"
+     inkscape:guide-bbox="true" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -1551,9 +1553,10 @@
      id="layer1">
     <g
        id="g5753"
-       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\usa\girl_thumb.png"
-       inkscape:export-xdpi="92.009537"
-       inkscape:export-ydpi="92.009537">
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\germany\girl_thumb.png"
+       inkscape:export-xdpi="91.546951"
+       inkscape:export-ydpi="91.546951"
+       transform="translate(-1.9103226,0.76885537)">
       <g
          id="g6932-8"
          transform="translate(539.73512,-6.0300176)">
@@ -1641,7 +1644,7 @@
     </g>
     <g
        id="g6633"
-       transform="translate(234.90345,5.730609)"
+       transform="translate(267.71046,5.932361)"
        inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\usa\girl_bottom.png"
        inkscape:export-xdpi="184.75"
        inkscape:export-ydpi="184.75">
@@ -1659,7 +1662,7 @@
     </g>
     <g
        id="g5703"
-       transform="translate(135.19533,3.0160773)"
+       transform="translate(168.00234,3.217829)"
        inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\usa\girl_hat.png"
        inkscape:export-xdpi="184.75"
        inkscape:export-ydpi="184.75">
@@ -1678,7 +1681,7 @@
     </g>
     <path
        style="fill:#333333"
-       d="m 720.35614,184.78182 c -8.02262,12.68491 20.89747,14.08548 18.61914,1.53515 -7.95477,-8.2718 -11.42032,-8.5856 -18.61914,-1.53515 z m 37.51758,1.41413 c -7.13485,12.60853 23.18829,13.95401 17.53319,-1.0957 -5.03578,-6.37116 -11.30882,-6.86731 -17.53319,1.0957 z"
+       d="m 753.16315,184.98357 c -8.02262,12.68491 20.89747,14.08548 18.61914,1.53515 -7.95477,-8.2718 -11.42032,-8.5856 -18.61914,-1.53515 z m 37.51758,1.41413 c -7.13485,12.60853 23.18829,13.95401 17.53319,-1.0957 -5.03578,-6.37116 -11.30882,-6.86731 -17.53319,1.0957 z"
        id="path3002-3-5"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccccc"
@@ -1687,7 +1690,7 @@
        inkscape:export-ydpi="184.75" />
     <g
        id="g6726"
-       transform="translate(123.55009,27.049641)"
+       transform="translate(156.3571,27.251393)"
        inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\usa\girl_top.png"
        inkscape:export-xdpi="184.75"
        inkscape:export-ydpi="184.75">
@@ -1738,9 +1741,10 @@
     </g>
     <g
        id="g4350"
-       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\usa\boy_thumb.png"
-       inkscape:export-xdpi="90.326653"
-       inkscape:export-ydpi="90.326653">
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\germany\boy_thumb.png"
+       inkscape:export-xdpi="85.67382"
+       inkscape:export-ydpi="85.67382"
+       transform="translate(-15.119711,-1.2611623)">
       <g
          id="g6932">
         <path
@@ -1750,9 +1754,10 @@
            inkscape:connector-curvature="0"
            sodipodi:nodetypes="cccccccsccccccccccccccccccccsc" />
         <path
-           style="fill:url(#linearGradient6391);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.1;stroke-linecap:butt;stroke-linejoin:bevel;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
-           d="M 94.763672 100.08594 L 90.416016 101.53516 C 91.092211 106.02703 90.609491 110.37435 87.228516 113.70703 C 81.529158 115.05942 75.540419 115.25165 70.130859 112.54688 C 67.667577 109.93869 67.23364 106.7515 67.523438 103.85352 L 63.464844 103.27344 L 57.669922 117.18359 L 52.863281 143.34766 L 52.785156 143.3457 L 49.179688 161.78906 L 67.007812 169.98438 L 75.789062 160.61914 L 82.683594 171.11133 L 101.12695 164.45312 L 100.01367 145.02734 L 100.84961 116.89453 L 94.763672 100.08594 z "
-           id="path4693" />
+           style="fill:url(#linearGradient6391);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.0999999;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="m 94.763672,100.08594 -4.347656,1.44922 c 0.676195,4.49187 0.193475,8.83919 -3.1875,12.17187 -5.699358,1.35239 -11.688097,1.54462 -17.097657,-1.16015 -2.463282,-2.60819 -2.897219,-5.79538 -2.607421,-8.69336 l -4.058594,-0.58008 -5.794922,13.91015 -4.806641,26.16407 -0.07813,-0.002 -3.605468,18.44336 17.828124,8.19532 8.78125,-9.36524 6.894532,10.49219 18.443361,-6.65821 -1.11328,-19.42578 0.83593,-28.13281 -6.085933,-16.80859 z"
+           id="path4693"
+           inkscape:connector-curvature="0" />
         <path
            style="fill:url(#radialGradient6423);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;filter:url(#filter6581)"
            d="m 61.480809,117.49979 -8.407038,41.21487 13.656047,6.55738 9.968844,-8.30077 c 3.006106,3.89344 0.440098,2.38967 8.253813,10.14503 l 12.793427,-4.71311 -0.358286,-43.55183 -3.434042,-11.70873 -2.860664,0.5737 -2.817554,7.86791 -6.257825,1.91861 -10.462602,-2.11155 -4.53769,-7.29319 -2.194836,-0.28889 z"
@@ -1853,7 +1858,7 @@
     </g>
     <path
        style="fill:#333333"
-       d="m 176.37436,140.10671 c -8.02262,12.68491 20.89747,14.08548 18.61914,1.53515 -7.95477,-8.2718 -11.42032,-8.5856 -18.61914,-1.53515 z m 37.51758,1.41413 c -7.13485,12.60853 23.18829,13.95401 17.53319,-1.0957 -5.03578,-6.37116 -11.30882,-6.86731 -17.53319,1.0957 z"
+       d="m 174.61684,136.59167 c -8.02262,12.68491 20.89747,14.08548 18.61914,1.53515 -7.95477,-8.2718 -11.42032,-8.5856 -18.61914,-1.53515 z m 37.51758,1.41413 c -7.13485,12.60853 23.18829,13.95401 17.53319,-1.0957 -5.03578,-6.37116 -11.30882,-6.86731 -17.53319,1.0957 z"
        id="path3002-3"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccccc"
@@ -1864,14 +1869,14 @@
        inkscape:connector-curvature="0"
        style="fill:url(#linearGradient4175)"
        sodipodi:nodetypes="csscscssssssccc"
-       d="m 180.26418,97.329318 c -1.01816,5.204812 0.77684,1.20287 -3.85571,18.236852 -0.33519,1.23247 -1.23269,5.66354 0.93788,6.77361 1.4016,0.7168 2.91688,1.07031 4.44624,1.25052 l 14.83245,0.97263 c 1.78281,0.11692 2.92081,-2.244 4.20314,-3.75154 l 3.6126,-4.16836 c 0.45545,-0.52552 1.17901,-1.22966 1.52849,-0.13894 l 2.57047,8.02422 c 0.20747,0.64765 1.75531,1.04988 2.64002,1.00737 22.40508,-1.07668 20.08891,-1.2591 22.43999,-2.08426 0.96649,-0.33911 1.21877,-1.61607 1.07859,-2.26917 -1.45349,-6.77142 -2.91499,-13.54197 -3.71866,-20.37988 l -48.63211,-7.638102 z"
+       d="m 178.50666,93.81428 c -1.01816,5.20481 0.77684,1.20287 -3.85571,18.23685 -0.33519,1.23247 -1.23269,5.66354 0.93788,6.77361 1.4016,0.7168 2.91688,1.07031 4.44624,1.25052 l 14.83245,0.97263 c 1.78281,0.11692 2.92081,-2.244 4.20314,-3.75154 l 3.6126,-4.16836 c 0.45545,-0.52552 1.17901,-1.22966 1.52849,-0.13894 l 2.57047,8.02422 c 0.20747,0.64765 1.75531,1.04988 2.64002,1.00737 22.40508,-1.07668 20.08891,-1.2591 22.43999,-2.08426 0.96649,-0.33911 1.21877,-1.61607 1.07859,-2.26917 -1.45349,-6.77142 -2.91499,-13.54197 -3.71866,-20.37988 l -48.63211,-7.6381 z"
        id="path2989"
        inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\usa\boy_bottom.png"
        inkscape:export-xdpi="181.2"
        inkscape:export-ydpi="181.2" />
     <g
        id="g3620"
-       transform="translate(14.25996,-12.392005)"
+       transform="translate(12.50244,-15.907041)"
        inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\usa\boy_top.png"
        inkscape:export-xdpi="181.2"
        inkscape:export-ydpi="181.2">
@@ -1912,10 +1917,10 @@
     </g>
     <g
        id="g6370"
-       transform="translate(-139.23992,-0.91961159)"
+       transform="translate(-136.31409,-7.3564297)"
        inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\ireland\boy_thumb.png"
-       inkscape:export-xdpi="44.274303"
-       inkscape:export-ydpi="44.274303">
+       inkscape:export-xdpi="87.913605"
+       inkscape:export-ydpi="87.913605">
       <path
          inkscape:connector-curvature="0"
          id="path6349"
@@ -1952,10 +1957,10 @@
     </g>
     <g
        id="g6277"
-       transform="matrix(0.9629085,0,0,1.0004286,-138.9547,-138.3065)"
+       transform="matrix(0.9629085,0,0,1.0004286,-136.02887,-144.74332)"
        inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\ireland\boy_thumb.png"
-       inkscape:export-xdpi="44.274303"
-       inkscape:export-ydpi="44.274303">
+       inkscape:export-xdpi="87.913605"
+       inkscape:export-ydpi="87.913605">
       <path
          id="path4312-3"
          sodipodi:nodetypes="ssssssssssssccs"
@@ -1971,9 +1976,9 @@
     <g
        id="g4517"
        inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\ireland\boy_thumb.png"
-       inkscape:export-xdpi="44.274303"
-       inkscape:export-ydpi="44.274303"
-       transform="translate(2.6594142,10.637669)">
+       inkscape:export-xdpi="87.913605"
+       inkscape:export-ydpi="87.913605"
+       transform="translate(5.585224,4.2008506)">
       <path
          sodipodi:nodetypes="cccccccccscccccc"
          inkscape:connector-curvature="0"
@@ -2017,10 +2022,10 @@
     </g>
     <g
        id="g6736"
-       transform="translate(-135.93662,-4.1481932)"
+       transform="translate(-133.01079,-10.585011)"
        inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\ireland\boy_thumb.png"
-       inkscape:export-xdpi="44.274303"
-       inkscape:export-ydpi="44.274303">
+       inkscape:export-xdpi="87.913605"
+       inkscape:export-ydpi="87.913605">
       <ellipse
          transform="matrix(0.99719301,-0.07487387,-0.00344451,0.99999407,0,0)"
          ry="20.152531"
@@ -2064,19 +2069,19 @@
        inkscape:connector-curvature="0" />
     <path
        style="fill:#333333"
-       d="m 437.67318,169.26379 c -8.02262,12.68491 20.89747,14.08548 18.61914,1.53515 -7.95477,-8.2718 -11.42032,-8.5856 -18.61914,-1.53515 z m 37.51758,1.41413 c -7.13485,12.60853 23.18829,13.95401 17.53319,-1.0957 -5.03578,-6.37116 -11.30882,-6.86731 -17.53319,1.0957 z"
+       d="m 433.57703,165.7528 c -8.02262,12.68491 20.89747,14.08548 18.61914,1.53515 -7.95477,-8.2718 -11.42032,-8.5856 -18.61914,-1.53515 z m 37.51758,1.41413 c -7.13485,12.60853 23.18829,13.95401 17.53319,-1.0957 -5.03578,-6.37116 -11.30882,-6.86731 -17.53319,1.0957 z"
        id="path3002-3-5-3"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccccc"
        inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\ireland\girl_thumb.png"
-       inkscape:export-xdpi="46.156292"
-       inkscape:export-ydpi="46.156292" />
+       inkscape:export-xdpi="92.202904"
+       inkscape:export-ydpi="92.202904" />
     <g
        id="g5661"
-       transform="translate(-148.51728,-16.557982)"
+       transform="translate(-152.61344,-20.068974)"
        inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\ireland\girl_thumb.png"
-       inkscape:export-xdpi="46.156292"
-       inkscape:export-ydpi="46.156292">
+       inkscape:export-xdpi="92.202904"
+       inkscape:export-ydpi="92.202904">
       <path
          sodipodi:nodetypes="ccccccccccccccccccc"
          transform="matrix(1.0097626,0,0,0.99966164,-5.7613515,0.05476778)"
@@ -2133,9 +2138,9 @@
     <g
        id="g4900"
        inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\ireland\girl_thumb.png"
-       inkscape:export-xdpi="46.156292"
-       inkscape:export-ydpi="46.156292"
-       transform="translate(-10.105785,37.231842)">
+       inkscape:export-xdpi="92.202904"
+       inkscape:export-ydpi="92.202904"
+       transform="translate(-14.201945,33.72085)">
       <g
          transform="translate(-138.34293,-50.911688)"
          id="g5167">
@@ -2201,10 +2206,10 @@
     </g>
     <g
        id="g5703-6"
-       transform="translate(-145.93025,-14.742494)"
+       transform="translate(-150.02641,-18.253486)"
        inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\ireland\girl_thumb.png"
-       inkscape:export-xdpi="46.156292"
-       inkscape:export-ydpi="46.156292">
+       inkscape:export-xdpi="92.202904"
+       inkscape:export-ydpi="92.202904">
       <path
          id="path4434-7"
          d="m 565.31831,24.796179 c -1.12152,1.568475 -0.65075,3.161656 -0.89543,4.69637 -0.25423,1.594715 -1.4139,3.026767 -1.4881,4.734119 -0.26167,6.021463 6.35769,5.073565 7.4615,4.456211 2.44379,-1.366894 1.5717,-3.681871 2.11631,-6.16786 0.31075,-1.418225 0.90452,-2.3844 1.14805,-3.78085 0.93875,-5.382318 -5.4081,-8.041559 -8.34233,-3.93799 z"
@@ -2220,19 +2225,19 @@
     </g>
     <path
        style="fill:#784421"
-       d="m -89.222774,381.52886 c -8.02262,12.68491 20.897472,14.08548 18.619142,1.53515 -7.95477,-8.2718 -11.42032,-8.5856 -18.619142,-1.53515 z m 37.517582,1.41413 c -7.13485,12.60853 23.18829,13.95401 17.53319,-1.0957 -5.03578,-6.37116 -11.30882,-6.86731 -17.53319,1.0957 z"
+       d="m -93.318931,380.9437 c -8.022619,12.68491 20.897472,14.08548 18.619142,1.53515 -7.95477,-8.2718 -11.42032,-8.5856 -18.619142,-1.53515 z m 37.517582,1.41413 c -7.13485,12.60853 23.188291,13.95401 17.533191,-1.0957 -5.035781,-6.37116 -11.308821,-6.86731 -17.533191,1.0957 z"
        id="path3002-3-03"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccccc"
-       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\nativeamerican\boy_thumb.png"
-       inkscape:export-xdpi="45.29995"
-       inkscape:export-ydpi="45.29995" />
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\nativeamerican\boy_shoes.png"
+       inkscape:export-xdpi="180.63"
+       inkscape:export-ydpi="180.63" />
     <g
        id="g5897"
-       transform="translate(-135.44844,191.69428)"
-       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\nativeamerican\boy_thumb.png"
-       inkscape:export-xdpi="45.29995"
-       inkscape:export-ydpi="45.29995">
+       transform="translate(-139.5446,191.10911)"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\nativeamerican\boy_bottom.png"
+       inkscape:export-xdpi="180.63"
+       inkscape:export-ydpi="180.63">
       <path
          sodipodi:nodetypes="cccssaccccc"
          inkscape:connector-curvature="0"
@@ -2254,10 +2259,10 @@
     </g>
     <g
        id="g5844"
-       transform="translate(-136.45142,192.42625)"
-       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\nativeamerican\boy_thumb.png"
-       inkscape:export-xdpi="45.29995"
-       inkscape:export-ydpi="45.29995">
+       transform="translate(-140.54758,191.84108)"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\nativeamerican\boy_top.png"
+       inkscape:export-xdpi="180.63"
+       inkscape:export-ydpi="180.63">
       <path
          inkscape:connector-curvature="0"
          d="m 31.842021,109.82393 c 0.302041,0.42136 0.753012,0.7102 1.160453,1.02095 0.383683,0.28117 0.774949,0.53495 1.063304,0.91831 0.165234,0.23244 0.220564,0.50265 0.247096,0.78049 0.01622,0.30074 0.0065,0.60224 0.0057,0.90329 2.18e-4,0.2875 0.0113,0.57389 -0.02862,0.85919 -0.06872,0.33038 -0.173574,0.65122 -0.290742,0.96712 -0.08144,0.23187 -0.166717,0.46445 -0.276068,0.68486 -0.127057,0.20748 -0.259376,0.40593 -0.363293,0.62726 -0.02354,0.0507 -0.04707,0.10139 -0.07061,0.15209 0,0 -1.662085,0.75952 -1.662085,0.75952 l 0,0 c 0.02302,-0.0519 0.04603,-0.10375 0.06905,-0.15563 0.105341,-0.21486 0.167796,-0.44898 0.345021,-0.62157 0.10913,-0.22042 0.222981,-0.44008 0.29926,-0.67517 0.116214,-0.30518 0.231524,-0.60957 0.298957,-0.9302 0.05028,-0.27795 0.05226,-0.55519 0.04852,-0.83769 0.0023,-0.29488 0.003,-0.58988 -0.0079,-0.88462 -0.01554,-0.24535 -0.04741,-0.48699 -0.189393,-0.69576 -0.267417,-0.36949 -0.631014,-0.62857 -0.994236,-0.89962 -0.430804,-0.32221 -0.884724,-0.62696 -1.248717,-1.02666 0,0 1.594329,-0.94616 1.594329,-0.94616 z"
@@ -2386,26 +2391,26 @@
     <path
        style="opacity:1;fill:#784421;fill-opacity:1;stroke:#cc0707;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="path5927"
-       d="m -108.48304,224.55967 c 1.83209,0.89355 3.77325,1.54165 5.72765,2.10815 1.18176,0.41021 2.4013,0.661 3.625653,0.8994 1.16994,0.28553 2.318994,0.64584 3.481389,0.95785 1.256816,0.29066 2.531803,0.49439 3.798994,0.73641 1.216055,0.29281 2.458188,0.42928 3.702737,0.52206 1.183927,0.0328 2.346719,0.27358 3.519583,0.41998 1.31347,0.22268 2.64489,0.26327 3.967922,0.39173 1.354299,0.10218 2.695264,0.31931 4.049008,0.42373 1.51907,0.16965 3.040735,0.27049 4.567945,0.31701 1.697434,0.0125 3.391495,0.10337 5.088331,0.14502 2.391739,0.0638 4.793346,-0.0607 7.162847,-0.39113 1.73397,-0.30867 3.470998,-0.5991 5.211968,-0.8654 2.046522,-0.29837 4.110051,-0.46647 6.170758,-0.63507 1.847052,-0.0657 3.688211,-0.26846 5.521063,-0.49955 1.756744,-0.2789 3.528945,-0.47695 5.303134,-0.60602 1.82435,-0.082 3.648926,0.0231 5.466826,-0.16882 1.21335,-0.14267 2.43871,-0.26434 3.60042,-0.65929 0.50327,-0.14515 0.9437,-0.44622 1.45115,-0.57901 0.27909,-0.073 0.56566,-0.11372 0.84811,-0.17244 1.16287,-0.2253 2.30762,-0.44166 3.42193,-0.85631 1.15274,-0.4346 2.28502,-0.90752 3.45875,-1.28285 0.54457,-0.1936 1.1373,-0.29307 1.66139,-0.54474 0.0879,-0.0422 0.16701,-0.10078 0.25052,-0.15116 0.0952,-0.0452 0.19044,-0.0905 0.28567,-0.13572 0.0727,-0.0497 0.1454,-0.0994 0.2181,-0.14906 0,0 0.32435,6.10789 0.32435,6.10789 l 0,0 c -0.0908,0.0462 -0.18165,0.0925 -0.27247,0.13873 -0.72803,0.344 -1.50635,0.52781 -2.28649,0.71756 -1.16214,0.35347 -2.28235,0.82685 -3.43223,1.21734 -0.34239,0.12316 -1.00425,0.36728 -1.35369,0.46876 -0.70447,0.20459 -1.44294,0.27306 -2.13909,0.5125 -0.77073,0.19476 -1.50356,0.47809 -2.25657,0.72928 -1.23654,0.34312 -2.45808,0.36841 -3.73211,0.47079 -1.82486,0.10802 -3.652822,0.10393 -5.478051,0.20391 -1.767477,0.0914 -3.526272,0.24984 -5.267433,0.58021 -1.845377,0.22597 -3.695347,0.35568 -5.553132,0.43051 -2.049234,0.11761 -4.088626,0.33557 -6.112473,0.68239 -0.843687,0.15905 -1.694335,0.34686 -2.545095,0.46402 -0.893399,0.12303 -1.80147,0.15377 -2.693982,0.28808 -2.405318,0.26952 -4.812748,0.41226 -7.234649,0.40388 -1.70359,0.0389 -3.408166,0.1466 -5.111356,0.0472 -1.531577,-0.0751 -3.062149,-0.17607 -4.586978,-0.3392 -1.35786,-0.0918 -2.710567,-0.21024 -4.062909,-0.36375 -1.32551,-0.12347 -2.653748,-0.22413 -3.974158,-0.39815 -1.170673,-0.10233 -2.326397,-0.33241 -3.501928,-0.37936 -1.269044,-0.0967 -2.518944,-0.32058 -3.76859,-0.55701 -1.285212,-0.23924 -2.577451,-0.44144 -3.840448,-0.78649 -1.15052,-0.29886 -2.317233,-0.52809 -3.469693,-0.8185 -1.232043,-0.34461 -2.488533,-0.6051 -3.662703,-1.13201 -0.63177,-0.21603 -1.2704,-0.41167 -1.90157,-0.62944 -1.28711,-0.44408 -2.54617,-0.97569 -3.8701,-1.30911 0,0 0.2217,-5.97474 0.2217,-5.97474 z"
+       d="m -112.5792,223.97451 c 1.83209,0.89355 3.77325,1.54165 5.72765,2.10815 1.18176,0.41021 2.4013,0.661 3.62566,0.8994 1.16994,0.28553 2.31899,0.64584 3.481385,0.95785 1.256816,0.29066 2.531803,0.49439 3.798994,0.73641 1.216055,0.29281 2.458188,0.42928 3.702737,0.52206 1.183927,0.0328 2.346719,0.27358 3.519583,0.41998 1.31347,0.22268 2.64489,0.26327 3.967922,0.39173 1.354299,0.10218 2.695264,0.31931 4.049008,0.42373 1.51907,0.16965 3.040735,0.27049 4.567945,0.31701 1.697434,0.0125 3.391495,0.10337 5.088331,0.14502 2.391739,0.0638 4.793346,-0.0607 7.162847,-0.39113 1.73397,-0.30867 3.470998,-0.5991 5.211968,-0.8654 2.046522,-0.29837 4.110051,-0.46647 6.170758,-0.63507 1.847052,-0.0657 3.688211,-0.26846 5.521063,-0.49955 1.756744,-0.2789 3.528945,-0.47695 5.303134,-0.60602 1.82435,-0.082 3.648927,0.0231 5.466827,-0.16882 1.21335,-0.14267 2.43871,-0.26434 3.60042,-0.65929 0.50327,-0.14515 0.9437,-0.44622 1.45115,-0.57901 0.27909,-0.073 0.56566,-0.11372 0.84811,-0.17244 1.16287,-0.2253 2.30762,-0.44166 3.42193,-0.85631 1.15274,-0.4346 2.28502,-0.90752 3.45875,-1.28285 0.54457,-0.1936 1.1373,-0.29307 1.66139,-0.54474 0.0879,-0.0422 0.16701,-0.10078 0.25052,-0.15116 0.0952,-0.0452 0.19044,-0.0905 0.28567,-0.13572 0.0727,-0.0497 0.1454,-0.0994 0.2181,-0.14906 0,0 0.32435,6.10789 0.32435,6.10789 l 0,0 c -0.0908,0.0462 -0.18165,0.0925 -0.27247,0.13873 -0.72803,0.344 -1.50635,0.52781 -2.28649,0.71756 -1.16214,0.35347 -2.28235,0.82685 -3.43223,1.21734 -0.34239,0.12316 -1.00425,0.36728 -1.35369,0.46876 -0.70447,0.20459 -1.44294,0.27306 -2.13909,0.5125 -0.77073,0.19476 -1.50356,0.47809 -2.25657,0.72928 -1.23654,0.34312 -2.45808,0.36841 -3.73211,0.47079 -1.82486,0.10802 -3.652823,0.10393 -5.478052,0.20391 -1.767477,0.0914 -3.526272,0.24984 -5.267433,0.58021 -1.845377,0.22597 -3.695347,0.35568 -5.553132,0.43051 -2.049234,0.11761 -4.088626,0.33557 -6.112473,0.68239 -0.843687,0.15905 -1.694335,0.34686 -2.545095,0.46402 -0.893399,0.12303 -1.80147,0.15377 -2.693982,0.28808 -2.405318,0.26952 -4.812748,0.41226 -7.234649,0.40388 -1.70359,0.0389 -3.408166,0.1466 -5.111356,0.0472 -1.531577,-0.0751 -3.062149,-0.17607 -4.586978,-0.3392 -1.35786,-0.0918 -2.710567,-0.21024 -4.062909,-0.36375 -1.32551,-0.12347 -2.653748,-0.22413 -3.974158,-0.39815 -1.170673,-0.10233 -2.326397,-0.33241 -3.501928,-0.37936 -1.269044,-0.0967 -2.518944,-0.32058 -3.76859,-0.55701 -1.285212,-0.23924 -2.577451,-0.44144 -3.840448,-0.78649 -1.150519,-0.29886 -2.317229,-0.52809 -3.469689,-0.8185 -1.23205,-0.34461 -2.48854,-0.6051 -3.66271,-1.13201 -0.63177,-0.21603 -1.2704,-0.41167 -1.90157,-0.62944 -1.28711,-0.44408 -2.54617,-0.97569 -3.8701,-1.30911 0,0 0.2217,-5.97474 0.2217,-5.97474 z"
        inkscape:connector-curvature="0"
-       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\nativeamerican\boy_thumb.png"
-       inkscape:export-xdpi="45.29995"
-       inkscape:export-ydpi="45.29995" />
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\nativeamerican\boy_hat.png"
+       inkscape:export-xdpi="180.63"
+       inkscape:export-ydpi="180.63" />
     <path
        style="fill:#784421"
-       d="m 437.76436,362.25734 c -8.02262,12.68491 20.89748,14.08548 18.61915,1.53515 -7.95477,-8.2718 -11.42033,-8.5856 -18.61915,-1.53515 z m 37.51759,1.41413 c -7.13485,12.60853 23.18829,13.95401 17.53319,-1.0957 -5.03578,-6.37116 -11.30882,-6.86731 -17.53319,1.0957 z"
+       d="m 432.49788,369.86449 c -8.02262,12.68491 20.89748,14.08548 18.61915,1.53515 -7.95477,-8.2718 -11.42033,-8.5856 -18.61915,-1.53515 z m 37.51759,1.41413 c -7.13485,12.60853 23.18829,13.95401 17.53319,-1.0957 -5.03578,-6.37116 -11.30882,-6.86731 -17.53319,1.0957 z"
        id="path3002-3-03-5"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccccc"
        inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\nativeamerican\girl_thumb.png"
-       inkscape:export-xdpi="46.171261"
-       inkscape:export-ydpi="46.171261" />
+       inkscape:export-xdpi="92.260002"
+       inkscape:export-ydpi="92.260002" />
     <g
        id="g5897-7"
-       transform="translate(391.18181,174.75855)"
+       transform="translate(385.91533,182.3657)"
        inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\nativeamerican\girl_thumb.png"
-       inkscape:export-xdpi="46.171261"
-       inkscape:export-ydpi="46.171261">
+       inkscape:export-xdpi="92.260002"
+       inkscape:export-ydpi="92.260002">
       <path
          sodipodi:nodetypes="cccssaccccc"
          inkscape:connector-curvature="0"
@@ -2427,10 +2432,10 @@
     </g>
     <g
        id="g6064"
-       transform="translate(-148.3172,178.45312)"
+       transform="translate(-153.58369,186.06027)"
        inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\nativeamerican\girl_thumb.png"
-       inkscape:export-xdpi="46.171261"
-       inkscape:export-ydpi="46.171261">
+       inkscape:export-xdpi="92.260002"
+       inkscape:export-ydpi="92.260002">
       <path
          inkscape:connector-curvature="0"
          d="m 571.21426,104.3159 c 0.30204,0.42136 0.75301,0.7102 1.16045,1.02095 0.38369,0.28117 0.77495,0.53495 1.06331,0.91831 0.16523,0.23244 0.22056,0.50265 0.24709,0.78049 0.0162,0.30074 0.006,0.60224 0.006,0.90329 2.2e-4,0.2875 0.0113,0.57389 -0.0286,0.85919 -0.0687,0.33038 -0.17357,0.65122 -0.29074,0.96712 -0.0814,0.23187 -0.16671,0.46445 -0.27607,0.68486 -0.12705,0.20748 -0.25937,0.40593 -0.36329,0.62726 -0.0235,0.0507 -0.0471,0.10139 -0.0706,0.15209 0,0 -1.66208,0.75952 -1.66208,0.75952 l 0,0 c 0.023,-0.0519 0.046,-0.10375 0.069,-0.15563 0.10534,-0.21486 0.16779,-0.44898 0.34502,-0.62157 0.10913,-0.22042 0.22298,-0.44008 0.29926,-0.67517 0.11621,-0.30518 0.23152,-0.60957 0.29895,-0.9302 0.0503,-0.27795 0.0523,-0.55519 0.0485,-0.83769 0.002,-0.29488 0.003,-0.58988 -0.008,-0.88462 -0.0155,-0.24535 -0.0474,-0.48699 -0.18939,-0.69576 -0.26742,-0.36949 -0.63101,-0.62857 -0.99423,-0.89962 -0.43081,-0.32221 -0.88473,-0.62696 -1.24872,-1.02666 0,0 1.59433,-0.94616 1.59433,-0.94616 z"
@@ -2572,14 +2577,17 @@
     <path
        style="opacity:1;fill:#784421;fill-opacity:1;stroke:#cc0707;stroke-width:1.07209408;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="path5927-1"
-       d="m 422.44306,205.67637 c 1.67595,1.10884 3.45166,1.90844 5.23949,2.60542 1.08104,0.50646 2.19664,0.81233 3.31666,1.10259 1.07022,0.34989 2.12133,0.7939 3.18467,1.17712 1.1497,0.35568 2.31601,0.602 3.4752,0.89648 1.11242,0.35869 2.24869,0.52075 3.38715,0.62789 1.08304,0.0322 2.14672,0.32596 3.21961,0.50101 1.20154,0.26984 2.41947,0.31075 3.62976,0.46212 1.23886,0.11812 2.46554,0.38078 3.70391,0.50172 1.3896,0.20164 2.78158,0.31681 4.17862,0.36368 1.55276,0.003 3.10245,0.10418 4.65465,0.14365 2.18789,0.062 4.38481,-0.11261 6.55238,-0.54575 1.58618,-0.40098 3.17516,-0.77906 4.76774,-1.12686 1.87212,-0.39041 3.75976,-0.61726 5.64484,-0.84473 1.68963,-0.0966 3.37386,-0.36527 5.05051,-0.66952 1.60701,-0.36375 3.22817,-0.62603 4.85115,-0.80165 1.66886,-0.11686 3.33792,0.001 5.00088,-0.25356 1.10993,-0.18846 2.23087,-0.35062 3.29357,-0.85567 0.46037,-0.18619 0.86326,-0.56782 1.32747,-0.73851 0.2553,-0.0938 0.51744,-0.14718 0.77582,-0.2231 1.06375,-0.2919 2.11094,-0.57243 3.13029,-1.10187 1.05448,-0.5548 2.09026,-1.1576 3.16396,-1.63809 0.49816,-0.24738 1.04036,-0.37685 1.51978,-0.69704 0.0805,-0.0537 0.15278,-0.12789 0.22918,-0.19183 0.0871,-0.0575 0.17421,-0.11516 0.26131,-0.17269 0.0666,-0.063 0.13301,-0.126 0.19951,-0.18895 0,0 0.29672,7.67195 0.29672,7.67195 l 0,0 c -0.0831,0.0587 -0.16616,0.1176 -0.24924,0.17638 -0.66599,0.43774 -1.37797,0.67459 -2.09163,0.91892 -1.06309,0.45294 -2.08783,1.05622 -3.1397,1.55558 -0.31321,0.15734 -0.91866,0.46909 -1.23832,0.59924 -0.64442,0.26241 -1.31996,0.35404 -1.95677,0.66016 -0.70505,0.25056 -1.37541,0.61211 -2.06425,0.93343 -1.13116,0.4405 -2.24858,0.48153 -3.41404,0.61983 -1.66932,0.14955 -3.34147,0.15827 -5.01114,0.29773 -1.61683,0.12824 -3.22574,0.34065 -4.81849,0.76895 -1.6881,0.29791 -3.38041,0.47491 -5.07984,0.58302 -1.87459,0.16331 -3.74017,0.45263 -5.59152,0.90374 -0.77178,0.20624 -1.54993,0.44867 -2.32818,0.60232 -0.81726,0.16136 -1.64792,0.20687 -2.46438,0.38239 -2.20031,0.35688 -4.40257,0.55448 -6.61804,0.56231 -1.5584,0.0618 -3.1177,0.21003 -4.67573,0.0981 -1.40103,-0.0828 -2.80115,-0.19802 -4.19602,-0.39143 -1.24213,-0.10505 -2.47956,-0.24361 -3.71663,-0.42624 -1.21254,-0.14509 -2.42758,-0.2615 -3.63546,-0.47014 -1.07088,-0.1197 -2.12812,-0.40003 -3.20345,-0.45011 -1.16089,-0.11188 -2.30426,-0.38371 -3.44739,-0.6713 -1.17569,-0.29086 -2.35779,-0.53512 -3.51316,-0.95909 -1.05245,-0.36679 -2.11972,-0.64597 -3.17395,-1.00212 -1.12705,-0.42366 -2.27644,-0.74143 -3.35055,-1.39458 -0.57792,-0.26665 -1.16212,-0.50762 -1.7395,-0.77646 -1.17741,-0.54822 -2.32915,-1.20663 -3.54025,-1.61553 0,0 0.2028,-7.50878 0.2028,-7.50878 z"
+       d="m 417.17658,213.28352 c 1.67595,1.10884 3.45166,1.90844 5.23949,2.60542 1.08104,0.50646 2.19664,0.81233 3.31666,1.10259 1.07022,0.34989 2.12133,0.7939 3.18467,1.17712 1.1497,0.35568 2.31601,0.602 3.4752,0.89648 1.11242,0.35869 2.24869,0.52075 3.38715,0.62789 1.08304,0.0322 2.14672,0.32596 3.21961,0.50101 1.20154,0.26984 2.41947,0.31075 3.62976,0.46212 1.23886,0.11812 2.46554,0.38078 3.70391,0.50172 1.3896,0.20164 2.78158,0.31681 4.17862,0.36368 1.55276,0.003 3.10245,0.10418 4.65465,0.14365 2.18789,0.062 4.38481,-0.11261 6.55238,-0.54575 1.58618,-0.40098 3.17516,-0.77906 4.76774,-1.12686 1.87212,-0.39041 3.75976,-0.61726 5.64484,-0.84473 1.68963,-0.0966 3.37386,-0.36527 5.05051,-0.66952 1.60701,-0.36375 3.22817,-0.62603 4.85115,-0.80165 1.66886,-0.11686 3.33792,0.001 5.00088,-0.25356 1.10993,-0.18846 2.23087,-0.35062 3.29357,-0.85567 0.46037,-0.18619 0.86326,-0.56782 1.32747,-0.73851 0.2553,-0.0938 0.51744,-0.14718 0.77582,-0.2231 1.06375,-0.2919 2.11094,-0.57243 3.13029,-1.10187 1.05448,-0.5548 2.09026,-1.1576 3.16396,-1.63809 0.49816,-0.24738 1.04036,-0.37685 1.51978,-0.69704 0.0805,-0.0537 0.15278,-0.12789 0.22918,-0.19183 0.0871,-0.0575 0.17421,-0.11516 0.26131,-0.17269 0.0666,-0.063 0.13301,-0.126 0.19951,-0.18895 0,0 0.29672,7.67195 0.29672,7.67195 l 0,0 c -0.0831,0.0587 -0.16616,0.1176 -0.24924,0.17638 -0.66599,0.43774 -1.37797,0.67459 -2.09163,0.91892 -1.06309,0.45294 -2.08783,1.05622 -3.1397,1.55558 -0.31321,0.15734 -0.91866,0.46909 -1.23832,0.59924 -0.64442,0.26241 -1.31996,0.35404 -1.95677,0.66016 -0.70505,0.25056 -1.37541,0.61211 -2.06425,0.93343 -1.13116,0.4405 -2.24858,0.48153 -3.41404,0.61983 -1.66932,0.14955 -3.34147,0.15827 -5.01114,0.29773 -1.61683,0.12824 -3.22574,0.34065 -4.81849,0.76895 -1.6881,0.29791 -3.38041,0.47491 -5.07984,0.58302 -1.87459,0.16331 -3.74017,0.45263 -5.59152,0.90374 -0.77178,0.20624 -1.54993,0.44867 -2.32818,0.60232 -0.81726,0.16136 -1.64792,0.20687 -2.46438,0.38239 -2.20031,0.35688 -4.40257,0.55448 -6.61804,0.56231 -1.5584,0.0618 -3.1177,0.21003 -4.67573,0.0981 -1.40103,-0.0828 -2.80115,-0.19802 -4.19602,-0.39143 -1.24213,-0.10505 -2.47956,-0.24361 -3.71663,-0.42624 -1.21254,-0.14509 -2.42758,-0.2615 -3.63546,-0.47014 -1.07088,-0.1197 -2.12812,-0.40003 -3.20345,-0.45011 -1.16089,-0.11188 -2.30426,-0.38371 -3.44739,-0.6713 -1.17569,-0.29086 -2.35779,-0.53512 -3.51316,-0.95909 -1.05245,-0.36679 -2.11972,-0.64597 -3.17395,-1.00212 -1.12705,-0.42366 -2.27644,-0.74143 -3.35055,-1.39458 -0.57792,-0.26665 -1.16212,-0.50762 -1.7395,-0.77646 -1.17741,-0.54822 -2.32915,-1.20663 -3.54025,-1.61553 0,0 0.2028,-7.50878 0.2028,-7.50878 z"
        inkscape:connector-curvature="0"
-       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\nativeamerican\girl_thumb.png"
-       inkscape:export-xdpi="46.171261"
-       inkscape:export-ydpi="46.171261" />
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\nativeamerican\girl_hat.png"
+       inkscape:export-xdpi="184.75"
+       inkscape:export-ydpi="184.75" />
     <g
        id="g4606"
-       transform="translate(125.865,219.9102)">
+       transform="translate(129.37599,196.50359)"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\germany\boy_thumb.png"
+       inkscape:export-xdpi="85.67382"
+       inkscape:export-ydpi="85.67382">
       <path
          sodipodi:nodetypes="cccccccccscccccc"
          inkscape:connector-curvature="0"
@@ -2608,7 +2616,10 @@
     </g>
     <g
        id="g4758"
-       transform="translate(125.865,219.9102)">
+       transform="translate(129.37599,196.50359)"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\germany\boy_thumb.png"
+       inkscape:export-xdpi="85.67382"
+       inkscape:export-ydpi="85.67382">
       <path
          sodipodi:nodetypes="ccccccccc"
          inkscape:connector-curvature="0"
@@ -2623,7 +2634,10 @@
     </g>
     <g
        id="g4727"
-       transform="translate(125.865,219.9102)">
+       transform="translate(129.37599,196.50359)"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\germany\boy_thumb.png"
+       inkscape:export-xdpi="85.67382"
+       inkscape:export-ydpi="85.67382">
       <path
          sodipodi:nodetypes="ccccc"
          inkscape:connector-curvature="0"
@@ -2645,7 +2659,10 @@
     </g>
     <g
        id="g4754"
-       transform="translate(125.865,219.9102)">
+       transform="translate(129.37599,196.50359)"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\germany\boy_thumb.png"
+       inkscape:export-xdpi="85.67382"
+       inkscape:export-ydpi="85.67382">
       <ellipse
          ry="21.735491"
          rx="51.433971"
@@ -2662,7 +2679,10 @@
     </g>
     <g
        id="g5000"
-       transform="translate(129,204.49999)">
+       transform="translate(130.7555,256.8242)"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\germany\girl_thumb.png"
+       inkscape:export-xdpi="91.546951"
+       inkscape:export-ydpi="91.546951">
       <path
          sodipodi:nodetypes="csssssscccccccccccccccc"
          inkscape:connector-curvature="0"
@@ -2748,7 +2768,10 @@
     </g>
     <g
        id="g7196"
-       transform="translate(129,204.49999)">
+       transform="translate(130.7555,256.8242)"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\germany\girl_thumb.png"
+       inkscape:export-xdpi="91.546951"
+       inkscape:export-ydpi="91.546951">
       <path
          sodipodi:nodetypes="caaaaaaaaacaac"
          inkscape:connector-curvature="0"
@@ -2764,7 +2787,10 @@
     </g>
     <g
        id="g4727-8"
-       transform="translate(669.23492,197.16879)">
+       transform="translate(670.99042,249.493)"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\germany\girl_thumb.png"
+       inkscape:export-xdpi="91.546951"
+       inkscape:export-ydpi="91.546951">
       <path
          sodipodi:nodetypes="ccccc"
          inkscape:connector-curvature="0"
@@ -2786,7 +2812,10 @@
     </g>
     <g
        id="g7190"
-       transform="translate(129,225.99999)">
+       transform="translate(130.7555,256.3242)"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\dolls\germany\girl_thumb.png"
+       inkscape:export-xdpi="91.546951"
+       inkscape:export-ydpi="91.546951">
       <path
          sodipodi:nodetypes="cssaaacccccc"
          inkscape:connector-curvature="0"

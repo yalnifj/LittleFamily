@@ -16,6 +16,7 @@ import android.view.SurfaceView;
 import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.data.HeritagePath;
 import org.finlayfamily.littlefamily.data.LittlePerson;
+import org.finlayfamily.littlefamily.util.ColorHelper;
 import org.finlayfamily.littlefamily.util.ImageHelper;
 import org.gedcomx.types.GenderType;
 
@@ -167,6 +168,9 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
                     Paint paint = new Paint();
                     paint.setStyle(Paint.Style.FILL);
                     int color2 = colors[count];
+                    if (path==selectedPath) {
+                        color2 = ColorHelper.lightenColor2(color2, 0.5f);
+                    }
                     int height = (int) (this.getHeight()*path.getPercent());
                     paint.setColor(color2);
                     canvas.drawRect(0, top, outlineBitmap.getWidth(),
@@ -235,8 +239,8 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
             while(running) {
                 Canvas canvas = holder.lockCanvas();
                 if(canvas != null) {
-                    distance++;
-                    if (distance > getHeight()) distance = 0;
+                    distance+=2;
+                    //if (distance > getHeight()+200) distance = 0;
                     view.doDraw(canvas);
                     holder.unlockCanvasAndPost(canvas);
                 }

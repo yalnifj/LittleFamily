@@ -6,17 +6,28 @@ import android.os.Bundle;
 
 import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.data.LittlePerson;
+import org.finlayfamily.littlefamily.games.DollConfig;
+import org.finlayfamily.littlefamily.views.DressUpView;
 
 public class HeritageDressUpActivity extends Activity {
 
-    private LittlePerson person;
+    private DollConfig dollConfig;
+    private DressUpView dressUpView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_heritage_dress_up);
 
+        dressUpView = (DressUpView) findViewById(R.id.dress_up_view);
+
         Intent intent = getIntent();
-        person = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
+        dollConfig = (DollConfig) intent.getSerializableExtra(ChooseCultureActivity.DOLL_CONFIG);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        dressUpView.setDollConfig(dollConfig);
     }
 }

@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,7 +33,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public class ChooseCultureActivity extends Activity implements HeritageCalculatorTask.Listener, TextToSpeech.OnInitListener, PersonHeritageChartView.SelectedPathListener {
-
+    public static final String DOLL_CONFIG = "dollConfig";
     private LittlePerson person;
     private Map<String, HeritagePath> cultures;
     private PersonHeritageChartView chartView;
@@ -70,6 +71,13 @@ public class ChooseCultureActivity extends Activity implements HeritageCalculato
         dressUpDolls = new DressUpDolls();
 		
 		tts = new TextToSpeech(this, this);
+    }
+
+    public void startDressUpActivity(View view) {
+        Intent intent = new Intent( this, HeritageDressUpActivity.class );
+        DollConfig dollConfig = dressUpDolls.getDollConfig(selectedPath.getPlace(), person);
+        intent.putExtra(DOLL_CONFIG, dollConfig);
+        startActivity(intent);
     }
 
     public void setSelectedPath(HeritagePath selectedPath) {

@@ -51,7 +51,8 @@
                 android:id="@+id/portraitImage"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_gravity="top|center_horizontal" />
+                android:layout_gravity="top|center_horizontal"
+                android:onClick="startDressUpActivity" />
         </LinearLayout>
 
         <LinearLayout
@@ -74,7 +75,9 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:id="@+id/dollImage"
-                android:layout_gravity="top|center_horizontal" />
+                android:layout_gravity="top|center_horizontal"
+                android:clickable="false"
+                android:onClick="startDressUpActivity" />
         </LinearLayout>
 
     </LinearLayout>

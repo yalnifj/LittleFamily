@@ -6,7 +6,12 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="org.finlayfamily.littlefamily.activities.HeritageDressUpActivity">
 
-    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
+    <view
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        class="org.finlayfamily.littlefamily.views.DressUpView"
+        android:id="@+id/dress_up_view"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
