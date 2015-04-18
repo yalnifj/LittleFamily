@@ -41,33 +41,8 @@ public class DressUpView extends View {
         return dollConfig;
     }
 
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        DollClothing[] clothes = dollConfig.getClothing(context);
-        if (clothes!=null) {
-            clothing = clothes;
-            float factor = (float)getWidth() / (float)doll.getWidth();
-            int x = 0;
-            int y = (int)(doll.getHeight()*factor);
-            for (int c = 0; c < clothes.length; c++) {
-                DollClothing dc = clothes[c];
-                dc.setPlaced(false);
-                InputStream cis = null;
-                try {
-                    cis = context.getAssets().open(dc.getFilename());
-                    Bitmap bm = BitmapFactory.decodeStream(cis);
-                    dc.setBitmap(bm);
-                    dc.setX(x);
-                    dc.setY(y);
-                    x = (int)(x+bm.getWidth()*factor);
-                } catch (IOException e) {
-                    Log.e("DressUpView", "Error drawing image", e);
-                }
-            }
-        }
-    }
 
+    private boolean factored = false;
     public void setDollConfig(DollConfig dollConfig) {
         this.dollConfig = dollConfig;
 
@@ -75,7 +50,27 @@ public class DressUpView extends View {
         try {
             InputStream is = context.getAssets().open(dollFilename);
             doll = BitmapFactory.decodeStream(is);
-
+            DollClothing[] clothes = dollConfig.getClothing(context);
+            if (clothes!=null) {
+                clothing = clothes;
+                int x = 0;
+                int y = doll.getHeight();
+                for (int c = 0; c < clothes.length; c++) {
+                    DollClothing dc = clothes[c];
+                    dc.setPlaced(false);
+                    InputStream cis = null;
+                    try {
+                        cis = context.getAssets().open(dc.getFilename());
+                        Bitmap bm = BitmapFactory.decodeStream(cis);
+                        dc.setBitmap(bm);
+                        dc.setX(x);
+                        dc.setY(y);
+                        x = (int)(x+bm.getWidth());
+                    } catch (IOException e) {
+                        Log.e("DressUpView", "Error drawing image", e);
+                    }
+                }
+            }
         } catch (Exception e) {
             Log.e("DressUpView", "Error drawing image", e);
         }
@@ -98,12 +93,17 @@ public class DressUpView extends View {
                 if (clothing!=null) {
                     for(int c=0; c<clothing.length; c++) {
                         DollClothing dc = clothing[c];
+                        if (!factored) {
+                            dc.setX((int)(dc.getX()*factor));
+                            dc.setY((int)(dc.getY()*factor));
+                        }
                         Rect cr1 = new Rect();
                         cr1.set(0, 0, dc.getBitmap().getWidth(), dc.getBitmap().getHeight());
                         Rect cr2 = new Rect();
                         cr2.set(dc.getX(), dc.getY(), (int)(dc.getX()+cr1.right*factor), (int)(dc.getY()+cr1.bottom*factor));
                         canvas.drawBitmap(dc.getBitmap(), cr1, cr2, null);
                     }
+                    factored = true;
                 }
             }
         }
@@ -111,6 +111,8 @@ public class DressUpView extends View {
 
     private DollClothing selected = null;
     private static final float TOUCH_TOLERANCE = 4;
+    private float mx;
+    private float my;
 
     private void touch_start(float x, float y) {
         if (doll!=null) {
@@ -121,6 +123,8 @@ public class DressUpView extends View {
                 rect.set(dc.getX(), dc.getY(), (int)(dc.getX()+dc.getBitmap().getWidth()*factor), (int)(dc.getY()+dc.getBitmap().getHeight()*factor));
                 if (rect.contains((int)x, (int)y)) {
                     selected = dc;
+                    mx = x;
+                    my = y;
                     break;
                 }
             }
@@ -128,17 +132,23 @@ public class DressUpView extends View {
     }
     private void touch_move(float x, float y) {
         if (selected!=null) {
-            float dx = Math.abs(x - selected.getX());
-            float dy = Math.abs(y - selected.getY());
+            float dx = Math.abs(x - mx);
+            float dy = Math.abs(y - my);
             if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
-                selected.setX((int)(selected.getX()+(x - selected.getX())));
-                selected.setY((int)(selected.getY()+(y - selected.getY())));
+                selected.setX((int)(selected.getX()+(x - mx)));
+                selected.setY((int)(selected.getY()+(y - my)));
+                mx=x;
+                my=y;
             }
         }
     }
 
     private void touch_up() {
         selected = null;
+        if (Math.abs(selected.getX() - selected.getSnapX())<10 && Math.abs(selected.getY() - selected.getSnapY())<10) {
+            selected.setX(selected.getSnapX());
+            selected.setY(selected.getSnapY());
+        }
     }
 
     @Override
