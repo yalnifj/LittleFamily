@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,6 +26,7 @@ import org.gedcomx.types.GenderType;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -42,6 +44,7 @@ public class ChooseCultureActivity extends Activity implements HeritageCalculato
     private TextView cultureNameView;
     private ImageView portraitImage;
     private ImageView dollImage;
+    private Button playButton;
     private HeritagePath selectedPath;
     private DressUpDolls dressUpDolls;
 	
@@ -62,6 +65,8 @@ public class ChooseCultureActivity extends Activity implements HeritageCalculato
 
         portraitImage = (ImageView) findViewById(R.id.portraitImage);
         dollImage = (ImageView) findViewById(R.id.dollImage);
+
+        playButton = (Button) findViewById(R.id.play_button);
 
         Intent intent = getIntent();
         person = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
@@ -107,16 +112,18 @@ public class ChooseCultureActivity extends Activity implements HeritageCalculato
 		}
 
         this.cultureNameView.setText(selectedPath.getPlace());
+        double percent = selectedPath.getPercent()*100;
+        DecimalFormat decf = new DecimalFormat("#.#");
+        String percString = decf.format(percent);
 		String text = String.format(getResources().getString(R.string.you_are_percent),
-				selectedPath.getPercent()*100, selectedPath.getPlace(),
+                percString, selectedPath.getPlace(),
 				relationship);
         if (relative.getBirthDate()!=null) {
             DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
             text += " " + String.format(getResources().getString(R.string.name_born_in_date),
                     relative.getName(), relative.getBirthPlace(), df.format(relative.getBirthDate()));
         } else {
-            text += " " + String.format(getResources().getString(R.string.name_born_in),
-                    relative.getName(), relative.getBirthPlace());
+            text += " " + relative.getName();
         }
 		speak(text);
 
@@ -130,6 +137,8 @@ public class ChooseCultureActivity extends Activity implements HeritageCalculato
         } catch (IOException e) {
             Log.e("ChooseCultureActivity", "Error opening asset file", e);
         }
+
+        playButton.setVisibility(View.VISIBLE);
     }
 
     @Override

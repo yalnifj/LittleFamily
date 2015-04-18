@@ -5,19 +5,20 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Path;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
 
 import org.finlayfamily.littlefamily.data.DollClothing;
 import org.finlayfamily.littlefamily.games.DollConfig;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jfinlay on 4/17/2015.
@@ -27,14 +28,17 @@ public class DressUpView extends View {
     private Bitmap doll;
     private DollClothing[] clothing;
     private Context context;
+    private List<DressedListener> listeners;
 
     public DressUpView(Context context) {
         super(context);
         this.context = context;
+        listeners = new ArrayList<>();
     }
     public DressUpView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
+        listeners = new ArrayList<>();
     }
 
     public DollConfig getDollConfig() {
@@ -83,7 +87,7 @@ public class DressUpView extends View {
         boolean portrait = getWidth()<getHeight();
         if (doll!=null) {
             if (portrait) {
-                float factor = (float)getWidth() / (float)doll.getWidth();
+                factor = (float)getWidth() / (float)doll.getWidth();
                 Rect r1 = new Rect();
                 r1.set(0, 0, doll.getWidth(), doll.getHeight());
                 Rect r2 = new Rect();
@@ -96,12 +100,22 @@ public class DressUpView extends View {
                         if (!factored) {
                             dc.setX((int)(dc.getX()*factor));
                             dc.setY((int)(dc.getY()*factor));
+                            if (dc.getX()+dc.getBitmap().getWidth() > getWidth()) {
+                                dc.setX(dc.getX() - getWidth());
+                                if(dc.getX() < 0 ) dc.setX(0);
+                                dc.setY(dc.getY() + (int)(dc.getBitmap().getHeight()*factor));
+                            }
                         }
                         Rect cr1 = new Rect();
                         cr1.set(0, 0, dc.getBitmap().getWidth(), dc.getBitmap().getHeight());
                         Rect cr2 = new Rect();
                         cr2.set(dc.getX(), dc.getY(), (int)(dc.getX()+cr1.right*factor), (int)(dc.getY()+cr1.bottom*factor));
                         canvas.drawBitmap(dc.getBitmap(), cr1, cr2, null);
+                    }
+                    if (selected!=null) {
+                        Paint paint = new Paint();
+                        paint.setColor(Color.RED);
+                        canvas.drawCircle(selected.getSnapX()*factor, selected.getSnapY()*factor, getWidth()/15, paint);
                     }
                     factored = true;
                 }
@@ -113,10 +127,10 @@ public class DressUpView extends View {
     private static final float TOUCH_TOLERANCE = 4;
     private float mx;
     private float my;
+    private float factor = 1;
 
     private void touch_start(float x, float y) {
         if (doll!=null) {
-            float factor = (float)getWidth() / (float)doll.getWidth();
             for (int c = 0; c < clothing.length; c++) {
                 DollClothing dc = clothing[c];
                 Rect rect = new Rect();
@@ -125,6 +139,7 @@ public class DressUpView extends View {
                     selected = dc;
                     mx = x;
                     my = y;
+                    selected.setPlaced(false);
                     break;
                 }
             }
@@ -137,6 +152,14 @@ public class DressUpView extends View {
             if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
                 selected.setX((int)(selected.getX()+(x - mx)));
                 selected.setY((int)(selected.getY()+(y - my)));
+                if (selected.getX()+selected.getBitmap().getWidth()*factor > getWidth()) {
+                    selected.setX((int)(getWidth() - selected.getBitmap().getWidth()*factor));
+                }
+                if (selected.getY()+selected.getBitmap().getHeight()*factor > getHeight()) {
+                    selected.setY((int) (getHeight() - selected.getBitmap().getHeight() * factor));
+                }
+                if (selected.getX() < 0 ) selected.setX(0);
+                if (selected.getY() < 0 ) selected.setY(0);
                 mx=x;
                 my=y;
             }
@@ -144,11 +167,27 @@ public class DressUpView extends View {
     }
 
     private void touch_up() {
-        selected = null;
-        if (Math.abs(selected.getX() - selected.getSnapX())<10 && Math.abs(selected.getY() - selected.getSnapY())<10) {
-            selected.setX(selected.getSnapX());
-            selected.setY(selected.getSnapY());
+        int temp = getWidth()/20;
+        if (selected!=null && Math.abs(selected.getX() - selected.getSnapX()*factor)<temp && Math.abs(selected.getY() - selected.getSnapY()*factor)<temp) {
+            selected.setX((int) (selected.getSnapX()*factor));
+            selected.setY((int) (selected.getSnapY()*factor));
+            selected.setPlaced(true);
+
+            boolean complete = true;
+            for (int c = 0; c < clothing.length; c++) {
+                DollClothing dc = clothing[c];
+                if (!dc.isPlaced()) {
+                    complete = false;
+                    break;
+                }
+            }
+            if (complete) {
+                for(DressedListener l : listeners) {
+                    l.onDressed();
+                }
+            }
         }
+        selected = null;
     }
 
     @Override
@@ -171,5 +210,13 @@ public class DressUpView extends View {
                 break;
         }
         return true;
+    }
+
+    public void addListener(DressedListener l) {
+        listeners.add(l);
+    }
+
+    public interface DressedListener {
+        public void onDressed();
     }
 }
