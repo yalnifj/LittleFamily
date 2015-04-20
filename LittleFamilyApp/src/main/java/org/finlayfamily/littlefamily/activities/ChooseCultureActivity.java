@@ -179,6 +179,8 @@ public class ChooseCultureActivity extends LittleFamilyActivity implements Herit
     public void onInit(int code) {
         super.onInit(code);
 
+        speak(getResources().getString(R.string.calculating_heritage));
+
         HeritageCalculatorTask task = new HeritageCalculatorTask(this, this);
         task.execute(person);
     }
