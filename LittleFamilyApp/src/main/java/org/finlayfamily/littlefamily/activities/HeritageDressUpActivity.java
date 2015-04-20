@@ -10,11 +10,10 @@ import org.finlayfamily.littlefamily.data.LittlePerson;
 import org.finlayfamily.littlefamily.games.DollConfig;
 import org.finlayfamily.littlefamily.views.DressUpView;
 
-public class HeritageDressUpActivity extends Activity implements DressUpView.DressedListener {
+public class HeritageDressUpActivity extends LittleFamilyActivity implements DressUpView.DressedListener {
 
     private DollConfig dollConfig;
     private DressUpView dressUpView;
-    private MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,18 +31,12 @@ public class HeritageDressUpActivity extends Activity implements DressUpView.Dre
         super.onStart();
         dressUpView.setDollConfig(dollConfig);
         dressUpView.addListener(this);
-        mediaPlayer = MediaPlayer.create(this, R.raw.powerup_success);
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mediaPlayer.release();
-        mediaPlayer = null;
-    }
+
 
     @Override
     public void onDressed() {
-        if (mediaPlayer!=null) mediaPlayer.start();
+        playCompleteSound();
     }
 }

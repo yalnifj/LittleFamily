@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class ChooseCultureActivity extends Activity implements HeritageCalculatorTask.Listener, TextToSpeech.OnInitListener, PersonHeritageChartView.SelectedPathListener {
+public class ChooseCultureActivity extends LittleFamilyActivity implements HeritageCalculatorTask.Listener, PersonHeritageChartView.SelectedPathListener {
     public static final String DOLL_CONFIG = "dollConfig";
     private LittlePerson person;
     private Map<String, HeritagePath> cultures;
@@ -47,8 +47,6 @@ public class ChooseCultureActivity extends Activity implements HeritageCalculato
     private Button playButton;
     private HeritagePath selectedPath;
     private DressUpDolls dressUpDolls;
-	
-	private TextToSpeech tts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,8 +72,6 @@ public class ChooseCultureActivity extends Activity implements HeritageCalculato
         chartView.addListener(this);
 
         dressUpDolls = new DressUpDolls();
-		
-		tts = new TextToSpeech(this, this);
     }
 
     public void startDressUpActivity(View view) {
@@ -175,40 +171,12 @@ public class ChooseCultureActivity extends Activity implements HeritageCalculato
 	
 	@Override
     public void onInit(int code) {
-        if (code == TextToSpeech.SUCCESS) {
-            tts.setLanguage(Locale.getDefault());
-            tts.setSpeechRate(0.9f);
-			speak(getResources().getString(R.string.calculating_heritage));
-        } else {
-            tts = null;
-            //Toast.makeText(this, "Failed to initialize TTS engine.", Toast.LENGTH_SHORT).show();
-            Log.e("ChooseCultureActivity", "Error intializing speech");
-        }
+        super.onInit(code);
 
         HeritageCalculatorTask task = new HeritageCalculatorTask(this, this);
         task.execute(person);
     }
 
-    @Override
-    protected void onDestroy() {
-        if (tts!=null) {
-            tts.stop();
-            tts.shutdown();
-        }
-        super.onDestroy();
-    }
-	
-	private void speak(String message) {
-        Log.d("ChooseCultureActivity", "Speaking: "+message);
-		if (tts!=null) {
-			if (Build.VERSION.SDK_INT > 20) {
-				tts.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
-			}
-			else {
-				tts.speak(message, TextToSpeech.QUEUE_FLUSH, null);
-			}
-		}
-	}
 
     @Override
     public void onSelectedPath(HeritagePath path) {
