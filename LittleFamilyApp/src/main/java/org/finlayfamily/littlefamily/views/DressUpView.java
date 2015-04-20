@@ -112,11 +112,11 @@ public class DressUpView extends View {
                         cr2.set(dc.getX(), dc.getY(), (int)(dc.getX()+cr1.right*factor), (int)(dc.getY()+cr1.bottom*factor));
                         canvas.drawBitmap(dc.getBitmap(), cr1, cr2, null);
                     }
-                    if (selected!=null) {
-                        Paint paint = new Paint();
-                        paint.setColor(Color.RED);
-                        canvas.drawCircle(selected.getSnapX()*factor, selected.getSnapY()*factor, getWidth()/15, paint);
-                    }
+//                    if (selected!=null) {
+//                        Paint paint = new Paint();
+//                        paint.setColor(Color.RED);
+//                        canvas.drawCircle(selected.getSnapX()*factor, selected.getSnapY()*factor, getWidth()/15, paint);
+//                    }
                     factored = true;
                 }
             }
@@ -167,7 +167,7 @@ public class DressUpView extends View {
     }
 
     private void touch_up() {
-        int temp = getWidth()/20;
+        int temp = getWidth()/15;
         if (selected!=null && Math.abs(selected.getX() - selected.getSnapX()*factor)<temp && Math.abs(selected.getY() - selected.getSnapY()*factor)<temp) {
             selected.setX((int) (selected.getSnapX()*factor));
             selected.setY((int) (selected.getSnapY()*factor));

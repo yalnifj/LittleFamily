@@ -62,7 +62,9 @@ public class ChooseCultureActivity extends LittleFamilyActivity implements Herit
         cultureNameView.setText("");
 
         portraitImage = (ImageView) findViewById(R.id.portraitImage);
+        portraitImage.setVisibility(View.INVISIBLE);
         dollImage = (ImageView) findViewById(R.id.dollImage);
+        dollImage.setVisibility(View.INVISIBLE);
 
         playButton = (Button) findViewById(R.id.play_button);
 
@@ -75,10 +77,12 @@ public class ChooseCultureActivity extends LittleFamilyActivity implements Herit
     }
 
     public void startDressUpActivity(View view) {
-        Intent intent = new Intent( this, HeritageDressUpActivity.class );
-        DollConfig dollConfig = dressUpDolls.getDollConfig(selectedPath.getPlace(), person);
-        intent.putExtra(DOLL_CONFIG, dollConfig);
-        startActivity(intent);
+        if (selectedPath!=null) {
+            Intent intent = new Intent(this, HeritageDressUpActivity.class);
+            DollConfig dollConfig = dressUpDolls.getDollConfig(selectedPath.getPlace(), person);
+            intent.putExtra(DOLL_CONFIG, dollConfig);
+            startActivity(intent);
+        }
     }
 
     public void setSelectedPath(HeritagePath selectedPath) {
@@ -91,7 +95,8 @@ public class ChooseCultureActivity extends LittleFamilyActivity implements Herit
         } else {
             bm = ImageHelper.loadBitmapFromResource(this, relative.getDefaultPhotoResource(), 0, this.portraitImage.getWidth(), this.portraitImage.getHeight());
         }
-        this.portraitImage.setImageBitmap(bm);
+        portraitImage.setImageBitmap(bm);
+        portraitImage.setVisibility(View.VISIBLE);
 		
 		String relationship = "";
 		int greats = selectedPath.getTreePath().size() - 2;
@@ -113,7 +118,7 @@ public class ChooseCultureActivity extends LittleFamilyActivity implements Herit
         String percString = decf.format(percent);
 		String text = String.format(getResources().getString(R.string.you_are_percent),
                 percString, selectedPath.getPlace(),
-				relationship);
+                relationship);
         if (relative.getBirthDate()!=null) {
             DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
             text += " " + String.format(getResources().getString(R.string.name_born_in_date),
@@ -129,6 +134,7 @@ public class ChooseCultureActivity extends LittleFamilyActivity implements Herit
             InputStream is = getAssets().open(thumbnailFile);
             Bitmap thumbnail = BitmapFactory.decodeStream(is);
             dollImage.setImageBitmap(thumbnail);
+            dollImage.setVisibility(View.VISIBLE);
             is.close();
         } catch (IOException e) {
             Log.e("ChooseCultureActivity", "Error opening asset file", e);
