@@ -56,6 +56,7 @@ public class DressUpView extends View {
             doll = BitmapFactory.decodeStream(is);
             DollClothing[] clothes = dollConfig.getClothing(context);
             if (clothes!=null) {
+                factored = false;
                 clothing = clothes;
                 int x = 0;
                 int y = doll.getHeight();
@@ -88,10 +89,18 @@ public class DressUpView extends View {
         if (doll!=null) {
             if (portrait) {
                 factor = (float)getWidth() / (float)doll.getWidth();
+                if (doll.getHeight()*factor > this.getHeight() * 0.66f) {
+                    factor = (this.getHeight() * 0.66f) / doll.getHeight();
+                }
                 Rect r1 = new Rect();
                 r1.set(0, 0, doll.getWidth(), doll.getHeight());
                 Rect r2 = new Rect();
-                r2.set(0, 0, (int)(doll.getWidth()*factor), (int)(doll.getHeight()*factor));
+                int w = (int)(doll.getWidth()*factor);
+                offset = 0;
+                if (w < this.getWidth()) {
+                    offset = (this.getWidth() - w)/2;
+                }
+                r2.set(offset, 0, w+offset, (int)(doll.getHeight()*factor));
                 canvas.drawBitmap(doll, r1, r2, null);
 
                 if (clothing!=null) {
@@ -100,10 +109,15 @@ public class DressUpView extends View {
                         if (!factored) {
                             dc.setX((int)(dc.getX()*factor));
                             dc.setY((int)(dc.getY()*factor));
-                            if (dc.getX()+dc.getBitmap().getWidth() > getWidth()) {
+                            if (dc.getX()+dc.getBitmap().getWidth()*factor > getWidth()) {
                                 dc.setX(dc.getX() - getWidth());
-                                if(dc.getX() < 0 ) dc.setX(0);
+                                if(dc.getX() < 0 ) {
+                                    dc.setX(0);
+                                }
                                 dc.setY(dc.getY() + (int)(dc.getBitmap().getHeight()*factor));
+                            }
+                            if (dc.getY()+dc.getBitmap().getHeight()*factor > getHeight()) {
+                                dc.setY(getHeight() - (int)(dc.getBitmap().getHeight()*factor));
                             }
                         }
                         Rect cr1 = new Rect();
@@ -115,7 +129,7 @@ public class DressUpView extends View {
 //                    if (selected!=null) {
 //                        Paint paint = new Paint();
 //                        paint.setColor(Color.RED);
-//                        canvas.drawCircle(selected.getSnapX()*factor, selected.getSnapY()*factor, getWidth()/15, paint);
+//                        canvas.drawCircle((selected.getSnapX()*factor) + offset, selected.getSnapY()*factor, getWidth()/12, paint);
 //                    }
                     factored = true;
                 }
@@ -128,6 +142,7 @@ public class DressUpView extends View {
     private float mx;
     private float my;
     private float factor = 1;
+    private int offset = 0;
 
     private void touch_start(float x, float y) {
         if (doll!=null) {
@@ -167,9 +182,10 @@ public class DressUpView extends View {
     }
 
     private void touch_up() {
-        int temp = getWidth()/15;
-        if (selected!=null && Math.abs(selected.getX() - selected.getSnapX()*factor)<temp && Math.abs(selected.getY() - selected.getSnapY()*factor)<temp) {
-            selected.setX((int) (selected.getSnapX()*factor));
+        int dist = getWidth()/12;
+        if (selected!=null && Math.abs(selected.getX() - ((selected.getSnapX()*factor)+offset)) <= dist
+                && Math.abs(selected.getY() - (selected.getSnapY()*factor)) <= dist) {
+            selected.setX((int) (selected.getSnapX()*factor)+offset);
             selected.setY((int) (selected.getSnapY()*factor));
             selected.setPlaced(true);
 

@@ -25,5 +25,7 @@ Please wait...</string>
 	<string name="grand">Grand</string>
 	<string name="great">Great</string>
     <string name="play">Play!</string>
+    <string name="player_greeting">Hi %1$s!</string>
+    <string name="what_game">What would you like to play?</string>
 
 </resources>

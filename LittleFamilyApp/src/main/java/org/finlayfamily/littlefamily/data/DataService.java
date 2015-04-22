@@ -224,6 +224,7 @@ public class DataService implements AuthTask.Listener {
             if (relative==null) {
                 Person fsPerson2 = fsService.getPerson(fsid, false);
                 relative = DataHelper.buildLittlePerson(fsPerson2, context, false);
+                relative.setHasParents(true);
                 getDBHelper().persistLittlePerson(relative);
             }
             if (relative!=null) {
@@ -340,6 +341,10 @@ public class DataService implements AuthTask.Listener {
                         if (relative.getAge()==null && person.getAge()!=null) {
                             relative.setAge(person.getAge()+25);
                         }
+                        if(person.isHasParents()==null || person.isHasParents()==false) {
+                            person.setHasParents(true);
+                            getDBHelper().persistLittlePerson(person);
+                        }
                     }
                     getDBHelper().persistLittlePerson(relative);
                     rel.setId1(relative.getId());
@@ -370,6 +375,9 @@ public class DataService implements AuthTask.Listener {
                         if (relative.getAge()==null && person.getAge()!=null) {
                             relative.setAge(person.getAge()-20);
                         }
+                        if(relative.isHasParents()==null || relative.isHasParents()==false) {
+                            relative.setHasParents(true);
+                        }
                     }
                     getDBHelper().persistLittlePerson(relative);
                     rel.setId2(relative.getId());
@@ -383,10 +391,12 @@ public class DataService implements AuthTask.Listener {
     public List<LittlePerson> getParents(LittlePerson person) throws Exception {
         List<LittlePerson> parents = getDBHelper().getParentsForPerson(person.getId());
         if (parents==null || parents.size()==0) {
-            getFamilyMembersFromFamilySearch(person, false);
-            parents = getDBHelper().getParentsForPerson(person.getId());
-            if (parents==null) {
-                parents = new ArrayList<>();
+            if (person.isHasParents()==null || person.isHasParents()) {
+                getFamilyMembersFromFamilySearch(person, false);
+                parents = getDBHelper().getParentsForPerson(person.getId());
+                if (parents == null) {
+                    parents = new ArrayList<>();
+                }
             }
         }
         return parents;

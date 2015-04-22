@@ -10,7 +10,7 @@ import org.finlayfamily.littlefamily.data.LittlePerson;
 
 import java.util.ArrayList;
 
-public class ChooseGameActivity extends Activity {
+public class ChooseGameActivity extends LittleFamilyActivity {
 
     private LittlePerson selectedPerson;
     private ArrayList<LittlePerson> people;
@@ -26,6 +26,14 @@ public class ChooseGameActivity extends Activity {
         if (selectedPerson==null && people!=null && people.size()>0) {
             selectedPerson = people.get(0);
         }
+    }
+
+    @Override
+    public void onInit(int code) {
+        super.onInit(code);
+        String message = String.format(getResources().getString(R.string.player_greeting), selectedPerson.getGivenName());
+        message += " "+getResources().getString(R.string.what_game);
+        speak(message);
     }
 
     public void startMatchGame(View view) {

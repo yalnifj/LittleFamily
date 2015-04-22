@@ -37,6 +37,7 @@ public class LittlePerson implements Serializable {
     private String photoPath;
     private GenderType gender;
 	private Date birthDate;
+    private Boolean hasParents;
 
     @Override
     public String toString() {
@@ -275,6 +276,14 @@ public class LittlePerson implements Serializable {
 
     public void setNationality(String nationality) {
         this.nationality = nationality;
+    }
+
+    public Boolean isHasParents() {
+        return hasParents;
+    }
+
+    public void setHasParents(Boolean hasParents) {
+        this.hasParents = hasParents;
     }
 
     @Override

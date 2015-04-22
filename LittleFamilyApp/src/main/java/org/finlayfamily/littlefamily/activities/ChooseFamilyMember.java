@@ -27,7 +27,7 @@ import java.util.ArrayList;
  *
  * @see SystemUiHider
  */
-public class ChooseFamilyMember extends Activity implements AdapterView.OnItemClickListener, FamilyLoaderTask.Listener, PersonLoaderTask.Listener {
+public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterView.OnItemClickListener, FamilyLoaderTask.Listener, PersonLoaderTask.Listener {
     public static final String SELECTED_PERSON = "selectedPerson";
     public static final String FAMILY = "family";
     private static final int LOGIN_REQUEST = 1;
@@ -119,6 +119,7 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
         } else {
             adapter.setFamily(familyMembers);
             updateColumns();
+            speak(getResources().getString(R.string.title_activity_choose_family_member));
         }
     }
 
