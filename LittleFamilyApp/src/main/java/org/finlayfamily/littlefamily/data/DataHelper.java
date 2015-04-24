@@ -4,8 +4,9 @@ import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
-import org.finlayfamily.littlefamily.familysearch.FamilySearchException;
-import org.finlayfamily.littlefamily.familysearch.FamilySearchService;
+import org.finlayfamily.littlefamily.remote.RemoteService;
+import org.finlayfamily.littlefamily.remote.RemoteServiceSearchException;
+import org.finlayfamily.littlefamily.remote.familysearch.FamilySearchService;
 import org.finlayfamily.littlefamily.util.ImageHelper;
 import org.gedcomx.conclusion.Person;
 import org.gedcomx.links.Link;
@@ -18,8 +19,7 @@ import java.util.Date;
  * Created by jfinlay on 1/12/2015.
  */
 public class DataHelper {
-    public static LittlePerson buildLittlePerson(Person fsPerson, Context context, boolean checkCache) throws FamilySearchException {
-        FamilySearchService service = FamilySearchService.getInstance();
+    public static LittlePerson buildLittlePerson(Person fsPerson, Context context, RemoteService service, boolean checkCache) throws RemoteServiceSearchException {
         LittlePerson person = new LittlePerson(fsPerson);
         person.setLastSync(new Date());
 
@@ -55,8 +55,7 @@ public class DataHelper {
         return imageFile;
     }
 
-    public static String downloadFile(String href, String folderName, String fileName, Context context) throws FamilySearchException {
-        FamilySearchService service = FamilySearchService.getInstance();
+    public static String downloadFile(String href, String folderName, String fileName, RemoteService service, Context context) throws RemoteServiceSearchException {
         String imagePath = null;
         try {
             File imageFile = getImageFile(folderName,fileName, context);

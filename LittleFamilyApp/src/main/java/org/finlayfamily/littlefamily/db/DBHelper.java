@@ -29,7 +29,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	private static final String TABLE_RELATIONSHIP = "relationship";
 	private static final String TABLE_MEDIA = "media";
 	private static final String TABLE_TAGS = "tags";
-    private static final String TABLE_TOKENS = "tokens";
+    private static final String TABLE_PROPERTIES = "properties";
 	
 	private static final String COL_ID = "id";
 	private static final String COL_NAME = "name";
@@ -79,8 +79,8 @@ public class DBHelper extends SQLiteOpenHelper {
             +"foreign key("+COL_MEDIA_ID+") references "+TABLE_MEDIA+" ("+COL_ID+"), "
             +"foreign key("+COL_PERSON_ID+") references "+TABLE_LITTLE_PERSON+" ("+COL_ID+"));";
 
-    private static final String CREATE_TOKENS = "create table "+ TABLE_TOKENS + " ("
-            + " systemId text primary key, token text, "+COL_LAST_SYNC+" integer"
+    private static final String CREATE_PROPERTIES = "create table "+ TABLE_PROPERTIES + " ("
+            + " property text primary key, value text, "+COL_LAST_SYNC+" integer"
             + " )";
 			
 	private Context context;
@@ -96,7 +96,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		db.execSQL(CREATE_RELATIONSHIP);
 		db.execSQL(CREATE_MEDIA);
         db.execSQL(CREATE_TAGS);
-        db.execSQL(CREATE_TOKENS);
+        db.execSQL(CREATE_PROPERTIES);
 	}
 	
 	@Override
@@ -634,47 +634,67 @@ public class DBHelper extends SQLiteOpenHelper {
         return tag;
     }
 
-    public void saveToken(String systemId, String token) {
+    public void saveProperty(String property, String value) {
         SQLiteDatabase db = getWritableDatabase();
 
-        String selection = "systemId LIKE ?";
-        String[] selectionArgs = { systemId };
-        int count = db.delete(TABLE_TOKENS, selection, selectionArgs);
-        Log.d("DBHelper", "deleted "+count+" from "+TABLE_TOKENS);
+        String selection = "property LIKE ?";
+        String[] selectionArgs = { property };
+        int count = db.delete(TABLE_PROPERTIES, selection, selectionArgs);
+        Log.d("DBHelper", "deleted "+count+" from "+TABLE_PROPERTIES);
 
         ContentValues values = new ContentValues();
-        values.put("systemId", systemId);
-        values.put("token", token);
+        values.put("property", property);
+        values.put("value", value);
         values.put(COL_LAST_SYNC, (new Date()).getTime());
 
-        long rowid = db.insert(TABLE_TOKENS, null, values);
-        Log.d("DBHelper", "saveToken rowid " + rowid);
+        long rowid = db.insert(TABLE_PROPERTIES, null, values);
+        Log.d("DBHelper", "saveProperty rowid " + rowid);
 
+    }
+
+    public String getProperty(String property) {
+        SQLiteDatabase db = getReadableDatabase();
+        String[] projection = {
+                "value", COL_LAST_SYNC
+        };
+        String selection = "property LIKE ?";
+        String[] selectionArgs = { property };
+        String tables = TABLE_PROPERTIES;
+
+        String value = null;
+        Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, COL_LAST_SYNC);
+        while (c.moveToNext()) {
+            value = c.getString(c.getColumnIndexOrThrow("value"));
+        }
+
+        c.close();
+
+        return value;
     }
 
     public String getTokenForSystemId(String systemId) {
         SQLiteDatabase db = getReadableDatabase();
         String[] projection = {
-                "token", COL_LAST_SYNC
+                "value", COL_LAST_SYNC
         };
-        String selection = "systemId LIKE ?";
+        String selection = "property LIKE ?";
         String[] selectionArgs = { systemId };
-        String tables = TABLE_TOKENS;
+        String tables = TABLE_PROPERTIES;
 
-        String token = null;
+        String value = null;
         Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, COL_LAST_SYNC);
         while (c.moveToNext()) {
-            token = c.getString(c.getColumnIndexOrThrow("token"));
+            value = c.getString(c.getColumnIndexOrThrow("value"));
             Date date = new Date(c.getLong(c.getColumnIndexOrThrow(COL_LAST_SYNC)));
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.MONTH, -1);
             if (date.before(cal.getTime())) {
-                token = null;
+                value = null;
             }
         }
 
         c.close();
 
-        return token;
+        return value;
     }
 }

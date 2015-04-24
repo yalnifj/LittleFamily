@@ -1,11 +1,11 @@
-package org.finlayfamily.littlefamily.familysearch;
+package org.finlayfamily.littlefamily.remote;
 
 import org.apache.http.HttpResponse;
 
 /**
  * Created by jfinlay on 12/30/2014.
  */
-public class FSResult {
+public class RemoteResult {
     private int statusCode;
     private String data;
     private boolean success=false;

@@ -22,8 +22,8 @@ import org.finlayfamily.littlefamily.activities.tasks.FamilyLoaderTask;
 import org.finlayfamily.littlefamily.activities.tasks.PersonLoaderTask;
 import org.finlayfamily.littlefamily.data.DataService;
 import org.finlayfamily.littlefamily.data.LittlePerson;
-import org.finlayfamily.littlefamily.familysearch.FSResult;
-import org.finlayfamily.littlefamily.familysearch.FamilySearchService;
+import org.finlayfamily.littlefamily.remote.RemoteResult;
+import org.finlayfamily.littlefamily.remote.familysearch.FamilySearchService;
 
 import java.util.ArrayList;
 
@@ -123,7 +123,7 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
         } else {
             pd = ProgressDialog.show(this, "Please wait...", "Logging into FamilySearch", true, false);
             Log.d(this.getClass().getSimpleName(), "Launching new AuthTask for user entered credentials username="+username);
-            AuthTask task = new AuthTask(this);
+            AuthTask task = new AuthTask(this, FamilySearchService.getInstance());
             task.execute(username, password);
 
             /*
@@ -150,12 +150,12 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
     }
 
     @Override
-    public void onComplete(FSResult response) {
+    public void onComplete(RemoteResult response) {
         if (response!=null && response.isSuccess()) {
             Intent intent = new Intent();
             setResult(Activity.RESULT_OK, intent);
             try {
-                dataService.getDBHelper().saveToken("FamilySearch", FamilySearchService.getInstance().getEncodedAuthToken());
+                dataService.getDBHelper().saveProperty("FamilySearchToken", FamilySearchService.getInstance().getEncodedAuthToken());
             } catch (Exception e) {
                 e.printStackTrace();
             }

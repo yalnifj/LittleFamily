@@ -7,9 +7,11 @@ import android.widget.Toast;
 
 import org.finlayfamily.littlefamily.activities.tasks.AuthTask;
 import org.finlayfamily.littlefamily.db.DBHelper;
-import org.finlayfamily.littlefamily.familysearch.FSResult;
-import org.finlayfamily.littlefamily.familysearch.FamilySearchException;
-import org.finlayfamily.littlefamily.familysearch.FamilySearchService;
+import org.finlayfamily.littlefamily.remote.RemoteResult;
+import org.finlayfamily.littlefamily.remote.RemoteService;
+import org.finlayfamily.littlefamily.remote.RemoteServiceSearchException;
+import org.finlayfamily.littlefamily.remote.familysearch.FamilySearchService;
+import org.finlayfamily.littlefamily.remote.phpgedview.PGVService;
 import org.gedcomx.atom.Entry;
 import org.gedcomx.conclusion.Person;
 import org.gedcomx.conclusion.Relationship;
@@ -28,14 +30,16 @@ import java.util.Queue;
  */
 public class DataService implements AuthTask.Listener {
 
-    private FamilySearchService fsService;
+    private RemoteService remoteService;
     private DBHelper dbHelper = null;
     private Context context = null;
 
     private Queue<LittlePerson> syncQ;
     private boolean running = true;
 
+    private SyncThread syncer;
     private boolean authenticating = false;
+    private String serviceType;
 
     private static DataService ourInstance = new DataService();
 
@@ -44,10 +48,7 @@ public class DataService implements AuthTask.Listener {
     }
 
     private DataService() {
-        fsService = FamilySearchService.getInstance();
         syncQ = new LinkedList<>();
-        SyncThread syncer = new SyncThread();
-        syncer.start();
     }
 
     public DBHelper getDBHelper() throws Exception {
@@ -60,32 +61,48 @@ public class DataService implements AuthTask.Listener {
         return dbHelper;
     }
 
+    public RemoteService getRemoteService() {
+        return remoteService;
+    }
+
     public void setContext(Context context) {
         this.context = context;
-        if (fsService.getSessionId() == null) {
-            try {
-                String token = getDBHelper().getTokenForSystemId("FamilySearch");
-                if (token != null) {
-                    synchronized (this) {
-                        if (fsService.getSessionId() == null && !authenticating) {
-                            authenticating = true;
-                            Log.d(this.getClass().getSimpleName(), "Launching new AuthTask for stored credentials");
-                            AuthTask task = new AuthTask(this);
-                            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, token);
+        try {
+            serviceType = getDBHelper().getProperty("serviceType");
+            if (serviceType.equals("PhpGedView")) {
+                String baseUrl = getDBHelper().getProperty(serviceType+"BaseUrl");
+                String defaultPersonId = getDBHelper().getProperty(serviceType+"DefaultPersonId");
+                remoteService = new PGVService(baseUrl, defaultPersonId);
+            } else {
+                remoteService = FamilySearchService.getInstance();
+            }
+            if (remoteService.getSessionId() == null) {
+                    String token = getDBHelper().getTokenForSystemId(serviceType+"Token");
+                    if (token != null) {
+                        synchronized (this) {
+                            if (remoteService.getSessionId() == null && !authenticating) {
+                                authenticating = true;
+                                Log.d(this.getClass().getSimpleName(), "Launching new AuthTask for stored credentials");
+                                AuthTask task = new AuthTask(this, remoteService);
+                                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, token);
+                            }
                         }
                     }
-                }
-            } catch (Exception e) {
-                Log.e("DataService", "Error checking authentication", e);
             }
+        } catch (Exception e) {
+            Log.e("DataService", "Error checking authentication", e);
         }
     }
 
     @Override
-    public void onComplete(FSResult result) {
+    public void onComplete(RemoteResult result) {
         synchronized (this) {
             authenticating = false;
             this.notifyAll();
+        }
+        if (syncer==null) {
+            syncer = new SyncThread();
+            syncer.start();
         }
     }
 
@@ -129,11 +146,11 @@ public class DataService implements AuthTask.Listener {
                 try {
                     if (person != null) {
                         Log.d("SyncThread", "Synchronizing person " + person.getId() + " " + person.getFamilySearchId() + " " + person.getName());
-                        Entry entry = fsService.getLastChangeForPerson(person.getFamilySearchId());
+                        Entry entry = remoteService.getLastChangeForPerson(person.getFamilySearchId());
                         Log.d("SyncThread", "Synchronizing person local date=" + person.getLastSync() + " remote date=" + entry.getUpdated());
                         if (entry == null || entry.getUpdated().after(person.getLastSync())) {
-                            Person fsPerson = fsService.getPerson(person.getFamilySearchId(), false);
-                            LittlePerson updated = DataHelper.buildLittlePerson(fsPerson, context, false);
+                            Person fsPerson = remoteService.getPerson(person.getFamilySearchId(), false);
+                            LittlePerson updated = DataHelper.buildLittlePerson(fsPerson, context, remoteService, false);
                             updated.setId(person.getId());
                             person.setLastSync(updated.getLastSync());
                             person.setPhotoPath(updated.getPhotoPath());
@@ -145,7 +162,7 @@ public class DataService implements AuthTask.Listener {
                             person.setName(updated.getName());
                             getDBHelper().persistLittlePerson(person);
 
-                            List<Relationship> closeRelatives = fsService.getCloseRelatives(person.getFamilySearchId(), false);
+                            List<Relationship> closeRelatives = remoteService.getCloseRelatives(person.getFamilySearchId(), false);
                             if (closeRelatives != null) {
                                 List<org.finlayfamily.littlefamily.data.Relationship> oldRelations = getDBHelper().getRelationshipsForPerson(person.getId());
                                 for (Relationship r : closeRelatives) {
@@ -172,7 +189,7 @@ public class DataService implements AuthTask.Listener {
                                 }
                             }
 
-                            List<SourceDescription> sds = fsService.getPersonMemories(person.getFamilySearchId(), true);
+                            List<SourceDescription> sds = remoteService.getPersonMemories(person.getFamilySearchId(), true);
                             if (sds != null) {
                                 List<Media> oldMedia = getDBHelper().getMediaForPerson(person.getId());
                                 for (SourceDescription sd : sds) {
@@ -185,7 +202,7 @@ public class DataService implements AuthTask.Listener {
                                                     med = new Media();
                                                     med.setType("photo");
                                                     med.setFamilySearchId(sd.getId());
-                                                    String localPath = DataHelper.downloadFile(link.getHref().toString(), person.getFamilySearchId(), DataHelper.lastPath(link.getHref().toString()), context);
+                                                    String localPath = DataHelper.downloadFile(link.getHref().toString(), person.getFamilySearchId(), DataHelper.lastPath(link.getHref().toString()), remoteService, context);
                                                     if (localPath != null) {
                                                         med.setLocalPath(localPath);
                                                         getDBHelper().persistMedia(med);
@@ -211,7 +228,7 @@ public class DataService implements AuthTask.Listener {
                             getDBHelper().persistLittlePerson(person);
                         }
                     }
-                }catch(FamilySearchException e){
+                }catch(RemoteServiceSearchException e){
                     Log.e("SyncThread", "Error reading from FamilySearch", e);
                 }catch(Exception e){
                     Log.e("SyncThread", "Error syncing person", e);
@@ -222,8 +239,8 @@ public class DataService implements AuthTask.Listener {
         private org.finlayfamily.littlefamily.data.Relationship syncRelationship(LittlePerson person, String fsid, org.finlayfamily.littlefamily.data.RelationshipType type) throws Exception {
             LittlePerson relative = getDBHelper().getPersonByFamilySearchId(fsid);
             if (relative==null) {
-                Person fsPerson2 = fsService.getPerson(fsid, false);
-                relative = DataHelper.buildLittlePerson(fsPerson2, context, false);
+                Person fsPerson2 = remoteService.getPerson(fsid, false);
+                relative = DataHelper.buildLittlePerson(fsPerson2, context, remoteService, false);
                 relative.setHasParents(true);
                 getDBHelper().persistLittlePerson(relative);
             }
@@ -260,8 +277,8 @@ public class DataService implements AuthTask.Listener {
 
         if (person==null) {
             waitForAuth();
-            Person fsPerson = fsService.getCurrentPerson();
-            person = DataHelper.buildLittlePerson(fsPerson, context, true);
+            Person fsPerson = remoteService.getCurrentPerson();
+            person = DataHelper.buildLittlePerson(fsPerson, context, remoteService, true);
             getDBHelper().persistLittlePerson(person);
         } else {
             addToSyncQ(person);
@@ -292,7 +309,7 @@ public class DataService implements AuthTask.Listener {
         List<LittlePerson> family = new ArrayList<>();
         waitForAuth();
         LittlePerson spouse = null;
-        List<Relationship> closeRelatives = fsService.getCloseRelatives(person.getFamilySearchId(), true);
+        List<Relationship> closeRelatives = remoteService.getCloseRelatives(person.getFamilySearchId(), true);
         if (closeRelatives!=null) {
             family = processRelatives(closeRelatives, person);
         }
@@ -300,7 +317,7 @@ public class DataService implements AuthTask.Listener {
             List<LittlePerson> spouseParents = new ArrayList<>();
             for(LittlePerson p : family) {
                 if ("spouse".equals(p.getRelationship())) {
-                    List<Relationship> spouseRelatives = fsService.getCloseRelatives(p.getFamilySearchId(), false);
+                    List<Relationship> spouseRelatives = remoteService.getCloseRelatives(p.getFamilySearchId(), false);
                     List<LittlePerson> spouseFamily = processRelatives(spouseRelatives, p);
                     for(LittlePerson parent : spouseFamily) {
                         if ("parent".equals(parent.getRelationship()) && !family.contains(parent)) {
@@ -318,10 +335,10 @@ public class DataService implements AuthTask.Listener {
         List<LittlePerson> family = new ArrayList<>();
         for(Relationship r : closeRelatives) {
             if (!r.getPerson1().getResourceId().equals(person.getFamilySearchId())) {
-                Person fsPerson = fsService.getPerson(r.getPerson1().getResourceId(), true);
+                Person fsPerson = remoteService.getPerson(r.getPerson1().getResourceId(), true);
                 LittlePerson relative = getDBHelper().getPersonByFamilySearchId(fsPerson.getId());
                 if (relative==null) {
-                    relative = DataHelper.buildLittlePerson(fsPerson, context, true);
+                    relative = DataHelper.buildLittlePerson(fsPerson, context, remoteService, true);
                 }
                 if (relative!=null) {
                     family.add(relative);
@@ -352,10 +369,10 @@ public class DataService implements AuthTask.Listener {
                 }
             }
             if (!r.getPerson2().getResourceId().equals(person.getFamilySearchId())) {
-                Person fsPerson = fsService.getPerson(r.getPerson2().getResourceId(), true);
+                Person fsPerson = remoteService.getPerson(r.getPerson2().getResourceId(), true);
                 LittlePerson relative = getDBHelper().getPersonByFamilySearchId(fsPerson.getId());
                 if (relative==null) {
-                    relative = DataHelper.buildLittlePerson(fsPerson, context, true);
+                    relative = DataHelper.buildLittlePerson(fsPerson, context, remoteService, true);
                 }
                 if (relative!=null) {
                     family.add(relative);
@@ -408,7 +425,7 @@ public class DataService implements AuthTask.Listener {
             media = new ArrayList<>();
             try {
                 waitForAuth();
-                List<SourceDescription> sds = fsService.getPersonMemories(person.getFamilySearchId(), true);
+                List<SourceDescription> sds = remoteService.getPersonMemories(person.getFamilySearchId(), true);
                 if (sds!=null) {
                     for (SourceDescription sd : sds) {
                         Media med = getDBHelper().getMediaByFamilySearchId(sd.getId());
@@ -420,7 +437,7 @@ public class DataService implements AuthTask.Listener {
                                         med = new Media();
                                         med.setType("photo");
                                         med.setFamilySearchId(sd.getId());
-                                        String localPath = DataHelper.downloadFile(link.getHref().toString(), person.getFamilySearchId(), DataHelper.lastPath(link.getHref().toString()), context);
+                                        String localPath = DataHelper.downloadFile(link.getHref().toString(), person.getFamilySearchId(), DataHelper.lastPath(link.getHref().toString()), remoteService, context);
                                         if (localPath!=null) {
                                             med.setLocalPath(localPath);
                                             getDBHelper().persistMedia(med);
@@ -436,7 +453,7 @@ public class DataService implements AuthTask.Listener {
                         }
                     }
                 }
-            } catch(FamilySearchException e) {
+            } catch(RemoteServiceSearchException e) {
                 Log.e(this.getClass().getSimpleName(), "error", e);
                 Toast.makeText(context, "Error communicating with FamilySearch. " + e, Toast.LENGTH_LONG).show();
             }
