@@ -7,9 +7,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <android:uses-permission
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="18" />
+    <android:uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="18" />
     <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <android:uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
@@ -70,10 +68,14 @@
         <activity
             android:name=".activities.ChooseCultureActivity"
             android:label="@string/title_activity_choose_culture"
-            android:parentActivityName=".activities.ChooseGameActivity">
+            android:parentActivityName=".activities.ChooseGameActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.finlayfamily.littlefamily.activities.ChooseGameActivity" />
+        </activity>
+        <activity
+            android:name=".activities.ChooseRemoteService"
+            android:label="@string/title_activity_choose_remote_service" >
         </activity>
     </application>
 

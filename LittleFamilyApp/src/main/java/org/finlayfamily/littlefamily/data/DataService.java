@@ -147,7 +147,7 @@ public class DataService implements AuthTask.Listener {
                     if (person != null) {
                         Log.d("SyncThread", "Synchronizing person " + person.getId() + " " + person.getFamilySearchId() + " " + person.getName());
                         Entry entry = remoteService.getLastChangeForPerson(person.getFamilySearchId());
-                        Log.d("SyncThread", "Synchronizing person local date=" + person.getLastSync() + " remote date=" + entry.getUpdated());
+                        Log.d("SyncThread", "Synchronizing person local date=" + person.getLastSync() + " remote date=" + entry);
                         if (entry == null || entry.getUpdated().after(person.getLastSync())) {
                             Person fsPerson = remoteService.getPerson(person.getFamilySearchId(), false);
                             LittlePerson updated = DataHelper.buildLittlePerson(fsPerson, context, remoteService, false);

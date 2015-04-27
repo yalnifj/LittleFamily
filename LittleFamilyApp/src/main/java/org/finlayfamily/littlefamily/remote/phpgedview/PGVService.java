@@ -5,20 +5,41 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.finlayfamily.littlefamily.remote.RemoteResult;
 import org.finlayfamily.littlefamily.remote.RemoteService;
 import org.finlayfamily.littlefamily.remote.RemoteServiceBase;
 import org.finlayfamily.littlefamily.remote.RemoteServiceSearchException;
+import org.finlayfamily.littlefamily.util.ImageHelper;
 import org.gedcomx.atom.Entry;
+import org.gedcomx.common.ResourceReference;
 import org.gedcomx.conclusion.Person;
 import org.gedcomx.conclusion.Relationship;
 import org.gedcomx.links.Link;
 import org.gedcomx.source.SourceDescription;
+import org.gedcomx.source.SourceReference;
+import org.gedcomx.types.RelationshipType;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.xml.transform.Source;
 
 /**
  * Created by jfinlay on 4/23/2015.
@@ -122,32 +143,19 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
 
     @Override
     public Person getPerson(String personId, boolean checkCache) throws RemoteServiceSearchException {
+        if (sessionId==null) {
+            throw new RemoteServiceSearchException("Not Authenticated with PhpGedView.", 0);
+        }
+
         if (!checkCache || personCache.get(personId)==null) {
-            Uri uri = Uri.parse(baseUrl + "client.php");
-            Bundle headers = new Bundle();
-            Bundle params = new Bundle();
-            params.putString("action","connect");
-            params.putString(sessionName, sessionId);
-            params.putString("xref", personId);
+            String gedcom = getGedcomRecord(personId);
 
-            RemoteResult result = getRestData(METHOD_POST, uri, params, headers);
-            if (result!=null) {
-                if (result.isSuccess()) {
-                    if (result.isSuccess()) {
-                        String results = result.getData();
-                        if (results.startsWith(SUCCESS)) {
-                            try {
-                                String gedcom = results.substring(results.indexOf('1'));
-                                Person person = gedcomParser.parsePerson(gedcom);
-                                personCache.put(personId, person);
-                            } catch (Exception e) {
-                                Log.e(TAG, "Error parsing gedcom for person "+personId, e);
-                            }
-
-                        } else {
-                            Log.e(TAG, results);
-                        }
-                    }
+            if (!gedcom.isEmpty()) {
+                try {
+                    Person person = gedcomParser.parsePerson(gedcom);
+                    personCache.put(personId, person);
+                } catch (Exception e) {
+                    Log.e(TAG, "Error parsing gedcom for person "+personId, e);
                 }
             }
         }
@@ -156,31 +164,274 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
 
     @Override
     public Entry getLastChangeForPerson(String personId) throws RemoteServiceSearchException {
+        if (sessionId==null) {
+            throw new RemoteServiceSearchException("Not Authenticated with PhpGedView.", 0);
+        }
+        Person person = getPerson(personId, false);
+        if (person!=null) {
+            Date date = (Date) person.getTransientProperty("CHAN");
+            if (date!=null) {
+                Entry entry = new Entry();
+                entry.setUpdated(date);
+                return entry;
+            }
+        }
         return null;
     }
 
     @Override
     public Link getPersonPortrait(String personId, boolean checkCache) throws RemoteServiceSearchException {
-        return null;
+        if (sessionId==null) {
+            throw new RemoteServiceSearchException("Not Authenticated with PhpGedView.", 0);
+        }
+        if (checkCache && linkCache.containsKey(personId)) {
+            return linkCache.get(personId);
+        }
+        Person person = getPerson(personId, checkCache);
+        Link portrait = null;
+        if (person!=null) {
+            List<SourceReference> media = person.getMedia();
+            if (media!=null) {
+                for(SourceReference sr : media) {
+                    for(Link link : sr.getLinks()) {
+                        if(link.getHref()!=null && link.getHref().toString().startsWith("@")) {
+                            String objeid =link.getHref().toString().replaceAll("@","");
+                            String gedcom = getGedcomRecord(objeid);
+                            if (!gedcom.isEmpty()) {
+                                try {
+                                    SourceDescription sd = gedcomParser.parseObje(gedcom);
+                                    if (sd != null) {
+                                        List<Link> links = sd.getLinks();
+                                        for (Link link2 : links) {
+                                            if (link2.getRel() != null && link2.getRel().equals("image")) {
+                                                if (portrait == null || sd.getSortKey().equals("1")) {
+                                                    portrait = link;
+                                                }
+                                            }
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    Log.e(TAG, "Error parsing gedcom for OBJE " + objeid, e);
+                                }
+                            }
+                        } else if (portrait==null){
+                            portrait = link;
+                        }
+                    }
+                }
+            }
+        }
+        linkCache.put(personId, portrait);
+        return portrait;
     }
 
     @Override
     public List<Relationship> getCloseRelatives(boolean checkCache) throws RemoteServiceSearchException {
-        return null;
+        return getCloseRelatives(defaultPersonId, checkCache);
     }
 
     @Override
     public List<Relationship> getCloseRelatives(String personId, boolean checkCache) throws RemoteServiceSearchException {
-        return null;
+        if (sessionId==null) {
+            throw new RemoteServiceSearchException("Not Authenticated with PhpGedView.", 0);
+        }
+        Person person = getPerson(personId, checkCache);
+        if (person==null) {
+            throw new RemoteServiceSearchException("Unable to get person "+personId+" from PGV", 0);
+        }
+
+        if (!checkCache || closeRelatives.get(personId)==null) {
+            List<Relationship> family = new ArrayList<>();
+            List<Link> fams = person.getLinks();
+            if (fams != null) {
+                for(Link fam : fams) {
+                    String famid = fam.getHref().toString().replaceAll("@","");
+                    String gedcom = getGedcomRecord(famid);
+                    if (!gedcom.isEmpty()) {
+                        try {
+                            FamilyHolder fh = gedcomParser.parseFamily(gedcom);
+                            if (fam.getRel().equals("FAMC")) {
+                                for (Link p : fh.getParents()) {
+                                    String relId = p.getHref().toString().replaceAll("@", "");
+                                    if (!relId.equals(personId)) {
+                                        getPerson(relId, checkCache);
+                                        Relationship rel = new Relationship();
+                                        rel.setKnownType(RelationshipType.ParentChild);
+                                        ResourceReference rr = new ResourceReference();
+                                        rr.setResourceId(relId);
+                                        rel.setPerson1(rr);
+                                        ResourceReference rr2 = new ResourceReference();
+                                        rr.setResourceId(personId);
+                                        rel.setPerson2(rr2);
+                                        family.add(rel);
+                                    }
+                                }
+                            }
+                            if (fam.getRel().equals("FAMS")) {
+                                for (Link p : fh.getParents()) {
+                                    String relId = p.getHref().toString().replaceAll("@", "");
+                                    if (!relId.equals(personId)) {
+                                        getPerson(relId, checkCache);
+                                        Relationship rel = new Relationship();
+                                        rel.setKnownType(RelationshipType.Couple);
+                                        ResourceReference rr = new ResourceReference();
+                                        rr.setResourceId(relId);
+                                        rel.setPerson1(rr);
+                                        ResourceReference rr2 = new ResourceReference();
+                                        rr.setResourceId(personId);
+                                        rel.setPerson2(rr2);
+                                        family.add(rel);
+                                    }
+                                }
+                                for (Link p : fh.getChildren()) {
+                                    String relId = p.getHref().toString().replaceAll("@", "");
+                                    if (!relId.equals(personId)) {
+                                        getPerson(relId, checkCache);
+                                        Relationship rel = new Relationship();
+                                        rel.setKnownType(RelationshipType.ParentChild);
+                                        ResourceReference rr = new ResourceReference();
+                                        rr.setResourceId(personId);
+                                        rel.setPerson1(rr);
+                                        ResourceReference rr2 = new ResourceReference();
+                                        rr.setResourceId(relId);
+                                        rel.setPerson2(rr2);
+                                        family.add(rel);
+                                    }
+                                }
+                            }
+                            closeRelatives.put(personId, family);
+                        } catch (GedcomParseException e) {
+                            Log.e(TAG, "Error parsing gedcom for family " + famid, e);
+                        }
+                    }
+                }
+            }
+        }
+
+        return closeRelatives.get(personId);
     }
 
     @Override
     public List<SourceDescription> getPersonMemories(String personId, boolean checkCache) throws RemoteServiceSearchException {
-        return null;
+        if (sessionId==null) {
+            throw new RemoteServiceSearchException("Not Authenticated with PhpGedView.", 0);
+        }
+        Person person = this.getPerson(personId, checkCache);
+        if (person==null) {
+            throw new RemoteServiceSearchException("Unable to get person "+personId+" from FamilySearch", 0);
+        }
+
+        if (!checkCache || memories.get(personId)==null){
+            List<SourceReference> media = person.getMedia();
+            if (media!=null) {
+                List<SourceDescription> sdlist = new ArrayList<>(media.size());
+                for(SourceReference sr : media) {
+                    for(Link link : sr.getLinks()) {
+                        if(link.getHref()!=null && link.getHref().toString().startsWith("@")) {
+                            String objeid =link.getHref().toString().replaceAll("@","");
+                            String gedcom = getGedcomRecord(objeid);
+                            if (!gedcom.isEmpty()) {
+                                try {
+                                    SourceDescription sd = gedcomParser.parseObje(gedcom);
+                                    if (sd != null) {
+                                       sdlist.add(sd);
+                                    }
+                                } catch (Exception e) {
+                                    Log.e(TAG, "Error parsing gedcom for OBJE " + objeid, e);
+                                }
+                            }
+                        }
+                    }
+                }
+                memories.put(personId, sdlist);
+            }
+        }
+
+        return memories.get(personId);
     }
 
     @Override
     public String downloadImage(Uri uri, String folderName, String fileName, Context context) throws MalformedURLException, RemoteServiceSearchException {
+        if (sessionId==null) {
+            throw new RemoteServiceSearchException("Not Authenticated with PhpGedView.", 0);
+        }
+        try {
+            // Here we define our base request object which we will
+            // send to our REST service via HttpClient.
+            HttpRequestBase request =  new HttpGet();
+            Bundle params = new Bundle();
+            params.putString(sessionName,sessionId);
+            attachUriWithQuery(request, uri, params);
+
+            HttpClient client = new DefaultHttpClient();
+
+            // Let's send some useful debug information so we can monitor things
+            // in LogCat.
+            Log.d(TAG, "Downloading image: "+ uri.toString());
+
+            // Finally, we send our request using HTTP. This is the synchronous
+            // long operation that we need to run on this Loader's thread.
+            HttpResponse response = client.execute(request);
+
+            HttpEntity responseEntity = response.getEntity();
+            StatusLine responseStatus = response.getStatusLine();
+            int        statusCode     = responseStatus != null ? responseStatus.getStatusCode() : 0;
+            if (statusCode == 200) {
+                if (responseEntity!=null) {
+                    InputStream in = responseEntity.getContent();
+                    File dataFolder = ImageHelper.getDataFolder(context);
+                    File folder = new File(dataFolder, folderName);
+                    if (!folder.exists()) {
+                        folder.mkdir();
+                    }
+                    else if (!folder.isDirectory()) {
+                        folder.delete();
+                        folder.mkdir();
+                    }
+                    File imageFile = new File(folder, fileName);
+                    OutputStream out = new FileOutputStream(imageFile);
+
+                    byte[] buffer = new byte[1024];
+                    int loadedSize;
+                    while((loadedSize = in.read(buffer)) != -1) {
+                        out.write(buffer, 0, loadedSize);
+                    }
+
+                    in.close();
+                    out.close();
+                    return imageFile.getAbsolutePath();
+                }
+            }
+        }
+        catch (IOException e) {
+            Log.e(TAG, "There was a problem when sending the request. "+e , e);
+            throw new RemoteServiceSearchException("There was a problem when sending the request. "+e, 0, e);
+        }
         return null;
+    }
+
+    private String getGedcomRecord(String recordId) throws RemoteServiceSearchException {
+        Uri uri = Uri.parse(baseUrl + "client.php");
+        Bundle headers = new Bundle();
+        Bundle params = new Bundle();
+        params.putString("action","connect");
+        params.putString(sessionName, sessionId);
+        params.putString("xref", recordId);
+
+        RemoteResult result = getRestData(METHOD_POST, uri, params, headers);
+        if (result!=null) {
+            if (result.isSuccess()) {
+                if (result.isSuccess()) {
+                    String results = result.getData();
+                    if (results.startsWith(SUCCESS)) {
+                        String gedcom = results.substring(results.indexOf('0'));
+                        return gedcom;
+                    } else {
+                        Log.e(TAG, results);
+                    }
+                }
+            }
+        }
+        return "";
     }
 }

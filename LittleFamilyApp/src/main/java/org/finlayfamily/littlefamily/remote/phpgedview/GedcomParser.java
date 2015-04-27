@@ -1,5 +1,8 @@
 package org.finlayfamily.littlefamily.remote.phpgedview;
 
+import android.util.Log;
+
+import org.gedcomx.atom.Entry;
 import org.gedcomx.common.URI;
 import org.gedcomx.conclusion.Date;
 import org.gedcomx.conclusion.Fact;
@@ -10,12 +13,17 @@ import org.gedcomx.conclusion.NamePart;
 import org.gedcomx.conclusion.Person;
 import org.gedcomx.conclusion.PlaceReference;
 import org.gedcomx.links.Link;
+import org.gedcomx.source.SourceDescription;
 import org.gedcomx.source.SourceReference;
 import org.gedcomx.types.FactType;
 import org.gedcomx.types.GenderType;
 import org.gedcomx.types.NamePartType;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -132,6 +140,10 @@ public class GedcomParser {
             else if (parts[1].equals("FAMC")) {
                 person.addLink("FAMC", new URI(parts[2]));
             }
+            else if (parts[1].equals("CHAN")) {
+                Entry entry = parseEntry(a);
+                person.setTransientProperty("CHAN", entry.getUpdated());
+            }
             else if (factMap.get(parts[1])!=null) {
                 Fact fact = parseFact(a);
                 person.addFact(fact);
@@ -194,6 +206,29 @@ public class GedcomParser {
         }
 
         return family;
+    }
+
+    public SourceDescription parseObje(String gedcom) throws GedcomParseException{
+        String[] lines = gedcom.split("(\r?\n)+");
+        if (lines[0].startsWith("0 OBJE @")) {
+            throw new GedcomParseException("Not a valid OBJE gedcom record");
+        }
+        SourceDescription sd = new SourceDescription();
+        for(int s=1; s<lines.length; s++) {
+            String line = lines[s];
+            String[] ps = line.split(" ", 3);
+            if ("FILE".equals(ps[1])) {
+                Link link = new Link();
+                link.setRel("image");
+                URI uri = new URI(ps[2]);
+                link.setHref(uri);
+                sd.addLink(link);
+            }
+            if ("_PRIM".equals(ps[1])) {
+                sd.setSortKey("1");
+            }
+        }
+        return sd;
     }
 
     public Name parseName(List<String> lines) {
@@ -279,7 +314,7 @@ public class GedcomParser {
             if ("FILE".equals(ps[1])) {
                 Link link = new Link();
                 link.setRel("image");
-                URI uri = new URI(parts[2]);
+                URI uri = new URI(ps[2]);
                 link.setHref(uri);
                 sd.addLink(link);
             }
@@ -318,5 +353,45 @@ public class GedcomParser {
             }
         }
         return fact;
+    }
+
+    public Entry parseEntry(List<String> lines) {
+        Entry entry = null;
+        Calendar cal = Calendar.getInstance();
+        boolean hasDate = false;
+        for (int s=1; s<lines.size(); s++) {
+            String line = lines.get(s);
+            String[] ps = line.split(" ", 3);
+            if (ps[0].equals("2")) {
+                if (ps[1].equals("DATE")) {
+                    DateFormat df = new SimpleDateFormat("dd MMM yyyy");
+                    try {
+                        java.util.Date date = df.parse(ps[2]);
+                        cal.setTime(date);
+                        hasDate = true;
+                    } catch (ParseException e) {
+                        Log.e("GedcomParser", "Error parsing date "+ps[2], e);
+                    }
+                }
+                if (ps[1].equals("TIME")) {
+                    DateFormat df = new SimpleDateFormat("HH:mm:ss");
+                    try {
+                        java.util.Date time = df.parse(ps[2]);
+                        Calendar cal2 = Calendar.getInstance();
+                        cal2.setTime(time);
+                        cal.set(Calendar.HOUR, cal2.get(Calendar.HOUR));
+                        cal.set(Calendar.MINUTE, cal2.get(Calendar.MINUTE));
+                        cal.set(Calendar.SECOND, cal2.get(Calendar.SECOND));
+                    } catch (ParseException e) {
+                        Log.e("GedcomParser", "Error parsing date "+ps[2], e);
+                    }
+                }
+            }
+        }
+        if (hasDate) {
+            entry = new Entry();
+            entry.setUpdated(cal.getTime());
+        }
+        return entry;
     }
 }
