@@ -61,8 +61,17 @@ public class DataService implements AuthTask.Listener {
         return dbHelper;
     }
 
+    public void setRemoteService(String type, RemoteService service) {
+        this.serviceType = type;
+        this.remoteService = service;
+    }
+
     public RemoteService getRemoteService() {
         return remoteService;
+    }
+
+    public String getServiceType() {
+        return serviceType;
     }
 
     public void setContext(Context context) {

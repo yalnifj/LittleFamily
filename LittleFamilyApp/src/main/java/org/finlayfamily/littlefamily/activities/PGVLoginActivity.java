@@ -23,20 +23,23 @@ import org.finlayfamily.littlefamily.activities.tasks.PersonLoaderTask;
 import org.finlayfamily.littlefamily.data.DataService;
 import org.finlayfamily.littlefamily.data.LittlePerson;
 import org.finlayfamily.littlefamily.remote.RemoteResult;
-import org.finlayfamily.littlefamily.remote.familysearch.FamilySearchService;
+import org.finlayfamily.littlefamily.remote.phpgedview.PGVService;
 
 import java.util.ArrayList;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class FSLoginActivity extends Activity implements AuthTask.Listener, PersonLoaderTask.Listener, FamilyLoaderTask.Listener {
-    private static final String FS_DEFAULT_USER = "tum000205905";
-    private static final String FS_DEFAULT_PASS = "1234pass";
+public class PGVLoginActivity extends Activity implements AuthTask.Listener, PersonLoaderTask.Listener, FamilyLoaderTask.Listener {
+    private static final String PGV_DEFAULT_URL = "http://www.finlayfamily.org/genealogy/";
+    private static final String PGV_DEFAULT_USER = "john";
+    private static final String PGV_DEFAULT_PASS = "";
 
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
+    private EditText mPgvUrlView;
+    private EditText mDefaultId;
     private ProgressDialog pd;
     private DataService dataService;
 
@@ -46,11 +49,16 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
         setContentView(R.layout.activity_fslogin);
 
         // Set up the login form.
+        mPgvUrlView = (EditText) findViewById(R.id.pgv_url);
+        mPgvUrlView.setText(PGV_DEFAULT_URL);
+
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        mEmailView.setText(FS_DEFAULT_USER);
+        mEmailView.setText(PGV_DEFAULT_USER);
+
+        mDefaultId = (EditText) findViewById(R.id.default_id);
 
         mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setText(FS_DEFAULT_PASS);
+        mPasswordView.setText(PGV_DEFAULT_PASS);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -116,11 +124,23 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
             // form field with an error.
             focusView.requestFocus();
         } else {
-            pd = ProgressDialog.show(this, "Please wait...", "Logging into FamilySearch", true, false);
+            pd = ProgressDialog.show(this, "Please wait...", "Logging into PhpGedView", true, false);
             Log.d(this.getClass().getSimpleName(), "Launching new AuthTask for user entered credentials username="+username);
-            dataService.setRemoteService("FamilySearch", FamilySearchService.getInstance());
-            AuthTask task = new AuthTask(this, dataService.getRemoteService());
-            task.execute(username, password);
+
+            try {
+                String baseUrl = mPgvUrlView.getText().toString();
+                dataService.getDBHelper().saveProperty("PhpGedViewBaseUrl", baseUrl);
+                String defaultPersonId = mDefaultId.getText().toString();
+                if (defaultPersonId.isEmpty()) defaultPersonId = "I1";
+                dataService.getDBHelper().saveProperty("PhpGedViewDefaultPersonId", defaultPersonId);
+                PGVService remoteService = new PGVService(baseUrl, defaultPersonId);
+                dataService.setRemoteService("PhpGedView", remoteService);
+
+                AuthTask task = new AuthTask(this, remoteService);
+                task.execute(username, password);
+            } catch (Exception e) {
+                Log.e("PGVLoginActivity", "Error saving property", e);
+            }
         }
     }
 
@@ -138,25 +158,25 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
             Intent intent = new Intent();
             setResult(Activity.RESULT_OK, intent);
             try {
-                dataService.getDBHelper().saveProperty("FamilySearchToken", dataService.getRemoteService().getEncodedAuthToken());
+                dataService.getDBHelper().saveProperty("PhpGedViewToken", dataService.getRemoteService().getEncodedAuthToken());
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            pd.setMessage("Loading person data from FamilySearch...");
+            pd.setMessage("Loading person data from PhpGedView...");
             PersonLoaderTask task = new PersonLoaderTask(this, this);
             task.execute();
         }
         else {
             String message = "Username and password combination failed. ";
             if (response!=null) message = response.getData();
-            Toast.makeText(FSLoginActivity.this, message, Toast.LENGTH_LONG).show();
+            Toast.makeText(PGVLoginActivity.this, message, Toast.LENGTH_LONG).show();
             setResult( Activity.RESULT_CANCELED, null );
         }
     }
 
     @Override
     public void onComplete(LittlePerson person) {
-        pd.setMessage("Loading close family members from FamilySearch...");
+        pd.setMessage("Loading close family members from PhpGedView...");
         FamilyLoaderTask task = new FamilyLoaderTask(this, this);
         task.execute(person);
     }

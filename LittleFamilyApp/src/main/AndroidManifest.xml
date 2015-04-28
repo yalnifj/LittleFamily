@@ -7,7 +7,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <android:uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="18" />
+    <android:uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
     <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <android:uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
@@ -15,22 +17,32 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
         <activity
-            android:name=".activities.ChooseFamilyMember"
-            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:name=".activities.SplashActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
+            android:name=".activities.ChooseFamilyMember"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
             android:name=".activities.FSLoginActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_fslogin"
+            android:windowSoftInputMode="adjustResize" >
+        </activity>
+        <activity
+            android:name=".activities.PGVLoginActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_pgvlogin"
             android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
@@ -77,6 +89,7 @@
             android:name=".activities.ChooseRemoteService"
             android:label="@string/title_activity_choose_remote_service" >
         </activity>
+
     </application>
 
 </manifest>

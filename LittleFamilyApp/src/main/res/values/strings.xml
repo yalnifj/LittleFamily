@@ -3,6 +3,7 @@
 
     <string name="app_name">Little Family</string>
     <string name="prompt_fsusername">FamilySearch Username</string>
+    <string name="prompt_pgvusername">PhpGedView Username</string>
     <string name="title_activity_choose_family_member">Who is playing today?</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
@@ -31,5 +32,6 @@ Please wait...</string>
     <string name="choose_remote_service">Choose the online FamilyTree:</string>
     <string name="remote_service_explanation">LittleFamily connects to an online FamilyTree service to get its data.  You will be asked to login to your online FamilyTree through one of the provided services.  LittleFamily will then allow you to play and interact with your FamilyTree in a new and unique way.</string>
     <string name="choose_service_below">Choose from one of the support online FamilyTree services below:</string>
+    <string name="title_activity_splash">SplashActivity</string>
 
 </resources>

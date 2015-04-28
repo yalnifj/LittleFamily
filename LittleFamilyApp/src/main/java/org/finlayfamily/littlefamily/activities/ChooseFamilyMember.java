@@ -1,6 +1,5 @@
 package org.finlayfamily.littlefamily.activities;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -67,7 +66,7 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
 
         try {
             if (!dataService.hasData()) {
-                Intent intent = new Intent( this, FSLoginActivity.class );
+                Intent intent = new Intent( this, ChooseRemoteService.class );
                 startActivityForResult( intent, LOGIN_REQUEST );
             } else {
                 PersonLoaderTask task = new PersonLoaderTask(this, this);
@@ -99,7 +98,7 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        pd = ProgressDialog.show(this, "Please wait...", "Loading data from FamilySearch", true, false);
+        pd = ProgressDialog.show(this, "Please wait...", "Loading data from "+dataService.getServiceType(), true, false);
         launchGame = true;
         selectedPerson = (LittlePerson) gridView.getItemAtPosition(position);
         FamilyLoaderTask task = new FamilyLoaderTask(this, this);

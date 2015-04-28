@@ -1,10 +1,8 @@
 package org.finlayfamily.littlefamily.activities;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 
 import org.finlayfamily.littlefamily.R;
@@ -23,7 +21,7 @@ public class ChooseRemoteService extends ActionBarActivity {
     }
 
     public void choosePGV(View view) {
-        Intent intent = new Intent( this, FSLoginActivity.class );
+        Intent intent = new Intent( this, PGVLoginActivity.class );
         startActivity(intent);
     }
 }
