@@ -29,7 +29,7 @@ import java.util.ArrayList;
 public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterView.OnItemClickListener, FamilyLoaderTask.Listener, PersonLoaderTask.Listener {
     public static final String SELECTED_PERSON = "selectedPerson";
     public static final String FAMILY = "family";
-    private static final int LOGIN_REQUEST = 1;
+    public static final int LOGIN_REQUEST = 1;
 
     private GridView gridView;
     private FamilyMemberListAdapter adapter;

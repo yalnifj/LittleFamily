@@ -2,12 +2,11 @@ package org.finlayfamily.littlefamily.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 
 import org.finlayfamily.littlefamily.R;
 
-public class ChooseRemoteService extends ActionBarActivity {
+public class ChooseRemoteService extends LittleFamilyActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

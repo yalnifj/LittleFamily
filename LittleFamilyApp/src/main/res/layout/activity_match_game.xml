@@ -14,5 +14,17 @@
         android:horizontalSpacing="5dp"
         android:numColumns="auto_fit"
         android:verticalSpacing="5dp"
-        android:background="@android:color/background_light" />
+        android:background="@android:color/background_light"
+        android:layout_gravity="center" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/homeButton"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/home"
+        android:onClick="gotoHomeScreen"
+        android:layout_gravity="right|top" />
 </FrameLayout>
