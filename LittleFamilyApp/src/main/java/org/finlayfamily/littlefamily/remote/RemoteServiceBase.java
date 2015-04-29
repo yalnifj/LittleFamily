@@ -17,6 +17,7 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
@@ -30,6 +31,8 @@ import java.util.List;
  * Created by jfinlay on 4/23/2015.
  */
 public abstract class RemoteServiceBase implements RemoteService {
+
+    protected String userAgent;
 
     protected RemoteResult getRestData(String method, Uri action, Bundle params, Bundle headers) throws RemoteServiceSearchException {
         RemoteResult data = new RemoteResult();
@@ -94,6 +97,9 @@ public abstract class RemoteServiceBase implements RemoteService {
 
             if (request != null) {
                 HttpClient client = new DefaultHttpClient();
+                if (userAgent!=null) {
+                    client.getParams().setParameter(CoreProtocolPNames.USER_AGENT, userAgent);
+                }
 
                 for (BasicNameValuePair header : paramsToList(headers)) {
                     request.addHeader( header.getName(), header.getValue() );

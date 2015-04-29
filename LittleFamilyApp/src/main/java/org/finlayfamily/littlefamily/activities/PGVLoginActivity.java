@@ -20,6 +20,7 @@ import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.activities.tasks.AuthTask;
 import org.finlayfamily.littlefamily.activities.tasks.FamilyLoaderTask;
 import org.finlayfamily.littlefamily.activities.tasks.PersonLoaderTask;
+import org.finlayfamily.littlefamily.activities.tasks.PgvVersionTask;
 import org.finlayfamily.littlefamily.data.DataService;
 import org.finlayfamily.littlefamily.data.LittlePerson;
 import org.finlayfamily.littlefamily.remote.RemoteResult;
@@ -30,7 +31,7 @@ import java.util.ArrayList;
 /**
  * A login screen that offers login via email/password.
  */
-public class PGVLoginActivity extends Activity implements AuthTask.Listener, PersonLoaderTask.Listener, FamilyLoaderTask.Listener {
+public class PGVLoginActivity extends Activity implements AuthTask.Listener, PersonLoaderTask.Listener, FamilyLoaderTask.Listener, PgvVersionTask.Listener {
     private static final String PGV_DEFAULT_URL = "http://www.finlayfamily.org/genealogy/";
     private static final String PGV_DEFAULT_USER = "john";
     private static final String PGV_DEFAULT_PASS = "";
@@ -46,7 +47,7 @@ public class PGVLoginActivity extends Activity implements AuthTask.Listener, Per
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fslogin);
+        setContentView(R.layout.activity_pgvlogin);
 
         // Set up the login form.
         mPgvUrlView = (EditText) findViewById(R.id.pgv_url);
@@ -74,7 +75,20 @@ public class PGVLoginActivity extends Activity implements AuthTask.Listener, Per
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin();
+                try {
+                    String baseUrl = mPgvUrlView.getText().toString();
+                    dataService.getDBHelper().saveProperty("PhpGedViewBaseUrl", baseUrl);
+                    String defaultPersonId = mDefaultId.getText().toString();
+                    if (defaultPersonId.isEmpty()) defaultPersonId = "I1";
+                    dataService.getDBHelper().saveProperty("PhpGedViewDefaultPersonId", defaultPersonId);
+                    PGVService remoteService = new PGVService(baseUrl, defaultPersonId);
+                    dataService.setRemoteService("PhpGedView", remoteService);
+
+                    PgvVersionTask task = new PgvVersionTask(PGVLoginActivity.this, remoteService);
+                    task.execute();
+                } catch (Exception e) {
+                    Log.e("PGVLoginActivity", "Error saving property", e);
+                }
             }
         });
 
@@ -128,14 +142,7 @@ public class PGVLoginActivity extends Activity implements AuthTask.Listener, Per
             Log.d(this.getClass().getSimpleName(), "Launching new AuthTask for user entered credentials username="+username);
 
             try {
-                String baseUrl = mPgvUrlView.getText().toString();
-                dataService.getDBHelper().saveProperty("PhpGedViewBaseUrl", baseUrl);
-                String defaultPersonId = mDefaultId.getText().toString();
-                if (defaultPersonId.isEmpty()) defaultPersonId = "I1";
-                dataService.getDBHelper().saveProperty("PhpGedViewDefaultPersonId", defaultPersonId);
-                PGVService remoteService = new PGVService(baseUrl, defaultPersonId);
-                dataService.setRemoteService("PhpGedView", remoteService);
-
+                PGVService remoteService = (PGVService) dataService.getRemoteService();
                 AuthTask task = new AuthTask(this, remoteService);
                 task.execute(username, password);
             } catch (Exception e) {
@@ -185,6 +192,17 @@ public class PGVLoginActivity extends Activity implements AuthTask.Listener, Per
     public void onComplete(ArrayList<LittlePerson> familyMembers) {
         if (pd!=null) pd.dismiss();
         finish();
+    }
+
+    @Override
+    public void onComplete(String version) {
+        if (version==null) {
+            Toast.makeText(this, "This URL is not a valid instance of PhpGedView.", Toast.LENGTH_LONG);
+            mPgvUrlView.setError("This URL is not a valid instance of PhpGedView.");
+        }
+        else {
+            attemptLogin();
+        }
     }
 }
 

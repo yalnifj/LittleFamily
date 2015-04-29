@@ -58,17 +58,19 @@ public class SplashActivity extends LittleFamilyActivity {
         private int count = 0;
         @Override
         public void onAnimationAdvanced(int currentFrame, int totalFrames) {
+            Log.d("SplashActivity", "currentFrame="+currentFrame);
+            if (currentFrame % (totalFrames-1)==0) {
+                count++;
+                if (count>3) {
+                    plantAnimation.stop();
+                    gotoChooseFamilyMember(null);
+                }
+            }
         }
 
         @Override
         public void onAnimationCompleted() {
-            count++;
-            if (count < 2) {
-                plantAnimation.start();
-            }
-            else {
-                gotoChooseFamilyMember(null);
-            }
+
         }
     }
 }

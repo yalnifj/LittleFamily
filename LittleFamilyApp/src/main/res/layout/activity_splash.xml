@@ -10,11 +10,12 @@
 
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="122dp"
+            android:layout_height="182dp"
             android:id="@+id/animatedImage"
             android:src="@drawable/growing_plant_animation"
-            android:layout_gravity="top|center_horizontal" />
+            android:layout_gravity="top|center_horizontal"
+            android:layout_rowWeight="1" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -22,7 +23,8 @@
             android:id="@+id/splash_logo"
             android:src="@drawable/little_family_logo"
             android:layout_gravity="top|center_horizontal"
-            android:onClick="gotoHomeScreen" />
+            android:onClick="gotoHomeScreen"
+            android:layout_rowWeight="2" />
 
 
 

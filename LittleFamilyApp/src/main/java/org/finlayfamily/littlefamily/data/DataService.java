@@ -78,15 +78,16 @@ public class DataService implements AuthTask.Listener {
         this.context = context;
         try {
             serviceType = getDBHelper().getProperty("serviceType");
-            if (serviceType.equals("PhpGedView")) {
-                String baseUrl = getDBHelper().getProperty(serviceType+"BaseUrl");
-                String defaultPersonId = getDBHelper().getProperty(serviceType+"DefaultPersonId");
-                remoteService = new PGVService(baseUrl, defaultPersonId);
-            } else {
-                remoteService = FamilySearchService.getInstance();
-            }
-            if (remoteService.getSessionId() == null) {
-                    String token = getDBHelper().getTokenForSystemId(serviceType+"Token");
+            if (serviceType!=null) {
+                if (serviceType.equals("PhpGedView")) {
+                    String baseUrl = getDBHelper().getProperty(serviceType + "BaseUrl");
+                    String defaultPersonId = getDBHelper().getProperty(serviceType + "DefaultPersonId");
+                    remoteService = new PGVService(baseUrl, defaultPersonId);
+                } else {
+                    remoteService = FamilySearchService.getInstance();
+                }
+                if (remoteService.getSessionId() == null) {
+                    String token = getDBHelper().getTokenForSystemId(serviceType + "Token");
                     if (token != null) {
                         synchronized (this) {
                             if (remoteService.getSessionId() == null && !authenticating) {
@@ -97,6 +98,7 @@ public class DataService implements AuthTask.Listener {
                             }
                         }
                     }
+                }
             }
         } catch (Exception e) {
             Log.e("DataService", "Error checking authentication", e);

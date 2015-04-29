@@ -63,6 +63,8 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
     private String defaultPersonId;
     private GedcomParser gedcomParser;
 
+    protected String userAgent = "PGVAgent";
+
     public PGVService(String baseUrl, String defaultPersonId) {
         personCache = new HashMap<>();
         linkCache = new HashMap<>();
@@ -82,6 +84,30 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
         this.baseUrl = baseUrl;
     }
 
+    public String getVersion() throws RemoteServiceSearchException {
+        Uri action = Uri.parse(baseUrl+"/client.php");
+        Bundle params = new Bundle();
+        params.putString("action","version");
+        Bundle headers = new Bundle();
+        headers.putString("HTTP_USER_AGENT", "PGVAgent");
+        String version = null;
+
+        RemoteResult data = getRestData(METHOD_POST, action, params, headers);
+        if (data!=null) {
+            if (data.isSuccess()) {
+                String responseBody = data.getData();
+                String[] parts = responseBody.split("\\s+");
+                if (parts.length > 1 ){
+                    if (SUCCESS.equals(parts[0])) {
+                        version = parts[1];
+                    }
+                }
+            }
+        }
+
+        return version;
+    }
+
     @Override
     public RemoteResult authenticate(String username, String password) throws RemoteServiceSearchException {
         Uri action = Uri.parse(baseUrl+"/client.php");
@@ -90,7 +116,7 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
         params.putString("username",username);
         params.putString("password",password);
         Bundle headers = new Bundle();
-
+        headers.putString("HTTP_USER_AGENT", "PGVAgent");
         encodedAuthToken = username+":"+password;
 
         RemoteResult data = getRestData(METHOD_POST, action, params, headers);
@@ -413,6 +439,7 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
     private String getGedcomRecord(String recordId) throws RemoteServiceSearchException {
         Uri uri = Uri.parse(baseUrl + "client.php");
         Bundle headers = new Bundle();
+        headers.putString("HTTP_USER_AGENT", "PGVAgent");
         Bundle params = new Bundle();
         params.putString("action","connect");
         params.putString(sessionName, sessionId);
