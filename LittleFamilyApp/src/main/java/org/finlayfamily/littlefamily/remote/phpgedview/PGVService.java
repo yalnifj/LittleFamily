@@ -89,7 +89,7 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
         Bundle params = new Bundle();
         params.putString("action","version");
         Bundle headers = new Bundle();
-        headers.putString("HTTP_USER_AGENT", "PGVAgent");
+        headers.putString("User-Agent", "PGVAgent");
         String version = null;
 
         RemoteResult data = getRestData(METHOD_POST, action, params, headers);
@@ -116,7 +116,7 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
         params.putString("username",username);
         params.putString("password",password);
         Bundle headers = new Bundle();
-        headers.putString("HTTP_USER_AGENT", "PGVAgent");
+        headers.putString("User-Agent", "PGVAgent");
         encodedAuthToken = username+":"+password;
 
         RemoteResult data = getRestData(METHOD_POST, action, params, headers);
@@ -439,9 +439,9 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
     private String getGedcomRecord(String recordId) throws RemoteServiceSearchException {
         Uri uri = Uri.parse(baseUrl + "client.php");
         Bundle headers = new Bundle();
-        headers.putString("HTTP_USER_AGENT", "PGVAgent");
+        headers.putString("User-Agent", "PGVAgent");
         Bundle params = new Bundle();
-        params.putString("action","connect");
+        params.putString("action","get");
         params.putString(sessionName, sessionId);
         params.putString("xref", recordId);
 
