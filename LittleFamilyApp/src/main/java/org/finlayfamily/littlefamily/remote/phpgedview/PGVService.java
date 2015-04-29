@@ -452,6 +452,7 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
                     String results = result.getData();
                     if (results.startsWith(SUCCESS)) {
                         String gedcom = results.substring(results.indexOf('0'));
+                        Log.d(TAG, "getGedcomRecord:"+recordId+":"+gedcom);
                         return gedcom;
                     } else {
                         Log.e(TAG, results);

@@ -84,11 +84,11 @@ public class GedcomParser {
     public Person parsePerson(String gedcom) throws GedcomParseException {
         Person person = null;
         String[] lines = gedcom.split("(\r?\n)+");
-        if (lines[0].startsWith("0 INDI @")) {
+        if (!lines[0].matches("0 @\\w+@ INDI")) {
             throw new GedcomParseException("Not a valid INDI gedcom record");
         }
         person = new Person();
-        String xref = lines[0].substring(8, lines[0].lastIndexOf('@'));
+        String xref = lines[0].substring(3, lines[0].lastIndexOf('@'));
         person.setId(xref);
 
         //-- create a list of facts
