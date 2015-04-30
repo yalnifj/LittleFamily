@@ -155,11 +155,11 @@ public class GedcomParser {
     public FamilyHolder parseFamily(String gedcom) throws GedcomParseException{
         FamilyHolder family = null;
         String[] lines = gedcom.split("(\r?\n)+");
-        if (lines[0].startsWith("0 FAM @")) {
+        if (lines[0].matches("0 @\\w+@ FAM")) {
             throw new GedcomParseException("Not a valid FAM gedcom record");
         }
         family = new FamilyHolder();
-        String xref = lines[0].substring(7, lines[0].lastIndexOf('@'));
+        String xref = lines[0].substring(3, lines[0].lastIndexOf('@'));
         family.setId(xref);
 
         //-- create a list of facts
@@ -210,10 +210,12 @@ public class GedcomParser {
 
     public SourceDescription parseObje(String gedcom) throws GedcomParseException{
         String[] lines = gedcom.split("(\r?\n)+");
-        if (lines[0].startsWith("0 OBJE @")) {
+        if (lines[0].matches("0 @\\w+@ OBJE")) {
             throw new GedcomParseException("Not a valid OBJE gedcom record");
         }
         SourceDescription sd = new SourceDescription();
+        String xref = lines[0].substring(3, lines[0].lastIndexOf('@'));
+        sd.setId(xref);
         for(int s=1; s<lines.length; s++) {
             String line = lines[s];
             String[] ps = line.split(" ", 3);
@@ -331,7 +333,7 @@ public class GedcomParser {
             type = FactType.OTHER;
         }
         fact.setKnownType(type);
-        if (parts[2]!=null && !parts[2].isEmpty()) {
+        if (parts.length>2 && parts[2]!=null && !parts[2].isEmpty()) {
             fact.setValue(parts[2]);
         }
         for (int s=1; s<lines.size(); s++) {

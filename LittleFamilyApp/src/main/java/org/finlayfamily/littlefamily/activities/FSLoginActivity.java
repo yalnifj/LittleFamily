@@ -39,6 +39,7 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
     private EditText mPasswordView;
     private ProgressDialog pd;
     private DataService dataService;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +119,7 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
         } else {
             pd = ProgressDialog.show(this, "Please wait...", "Logging into FamilySearch", true, false);
             Log.d(this.getClass().getSimpleName(), "Launching new AuthTask for user entered credentials username="+username);
-            dataService.setRemoteService("FamilySearch", FamilySearchService.getInstance());
+            dataService.setRemoteService(DataService.SERVICE_TYPE_FAMILYSEARCH, FamilySearchService.getInstance());
             AuthTask task = new AuthTask(this, dataService.getRemoteService());
             task.execute(username, password);
         }
@@ -135,14 +136,14 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
     @Override
     public void onComplete(RemoteResult response) {
         if (response!=null && response.isSuccess()) {
-            Intent intent = new Intent();
-            setResult(Activity.RESULT_OK, intent);
             try {
-                dataService.getDBHelper().saveProperty("FamilySearchToken", dataService.getRemoteService().getEncodedAuthToken());
+                dataService.getDBHelper().saveProperty(DataService.SERVICE_TYPE, dataService.getRemoteService().getEncodedAuthToken());
+                dataService.getDBHelper().saveProperty(DataService.SERVICE_TYPE_FAMILYSEARCH+DataService.SERVICE_TOKEN, dataService.getRemoteService().getEncodedAuthToken());
             } catch (Exception e) {
                 e.printStackTrace();
             }
             pd.setMessage("Loading person data from FamilySearch...");
+            intent = new Intent();
             PersonLoaderTask task = new PersonLoaderTask(this, this);
             task.execute();
         }
@@ -157,6 +158,7 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
     @Override
     public void onComplete(LittlePerson person) {
         pd.setMessage("Loading close family members from FamilySearch...");
+        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
         FamilyLoaderTask task = new FamilyLoaderTask(this, this);
         task.execute(person);
     }
@@ -164,6 +166,8 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
     @Override
     public void onComplete(ArrayList<LittlePerson> familyMembers) {
         if (pd!=null) pd.dismiss();
+        intent.putExtra(ChooseFamilyMember.FAMILY, familyMembers);
+        setResult(Activity.RESULT_OK, intent);
         finish();
     }
 }

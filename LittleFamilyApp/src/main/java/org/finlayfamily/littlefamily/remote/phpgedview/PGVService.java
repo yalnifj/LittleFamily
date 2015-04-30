@@ -440,9 +440,9 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
         Uri uri = Uri.parse(baseUrl + "client.php");
         Bundle headers = new Bundle();
         headers.putString("User-Agent", "PGVAgent");
+        headers.putString("Cookie", sessionName+"="+sessionId+"; ");
         Bundle params = new Bundle();
         params.putString("action","get");
-        params.putString(sessionName, sessionId);
         params.putString("xref", recordId);
 
         RemoteResult result = getRestData(METHOD_POST, uri, params, headers);
@@ -456,6 +456,7 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
                         return gedcom;
                     } else {
                         Log.e(TAG, results);
+                        throw new RemoteServiceSearchException("Error getting gedcom record "+ results, 500);
                     }
                 }
             }

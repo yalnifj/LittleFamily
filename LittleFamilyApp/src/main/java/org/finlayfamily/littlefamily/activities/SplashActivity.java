@@ -37,7 +37,7 @@ public class SplashActivity extends LittleFamilyActivity {
 
     public void gotoChooseFamilyMember(View view) {
         try {
-            if (!dataService.hasData()) {
+            if (dataService.getServiceType()==null || !dataService.hasData()) {
                 Intent intent = new Intent(this, ChooseRemoteService.class);
                 startActivityForResult(intent, ChooseFamilyMember.LOGIN_REQUEST);
             } else {

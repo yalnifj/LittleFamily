@@ -43,6 +43,7 @@ public class PGVLoginActivity extends Activity implements AuthTask.Listener, Per
     private EditText mDefaultId;
     private ProgressDialog pd;
     private DataService dataService;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,12 +78,12 @@ public class PGVLoginActivity extends Activity implements AuthTask.Listener, Per
             public void onClick(View view) {
                 try {
                     String baseUrl = mPgvUrlView.getText().toString();
-                    dataService.getDBHelper().saveProperty("PhpGedViewBaseUrl", baseUrl);
+                    dataService.getDBHelper().saveProperty(DataService.SERVICE_TYPE_PHPGEDVIEW+DataService.SERVICE_BASEURL, baseUrl);
                     String defaultPersonId = mDefaultId.getText().toString();
                     if (defaultPersonId.isEmpty()) defaultPersonId = "I1";
-                    dataService.getDBHelper().saveProperty("PhpGedViewDefaultPersonId", defaultPersonId);
+                    dataService.getDBHelper().saveProperty(DataService.SERVICE_TYPE_PHPGEDVIEW+DataService.SERVICE_DEFAULTPERSONID, defaultPersonId);
                     PGVService remoteService = new PGVService(baseUrl, defaultPersonId);
-                    dataService.setRemoteService("PhpGedView", remoteService);
+                    dataService.setRemoteService(DataService.SERVICE_TYPE_PHPGEDVIEW, remoteService);
 
                     PgvVersionTask task = new PgvVersionTask(PGVLoginActivity.this, remoteService);
                     task.execute();
@@ -94,6 +95,16 @@ public class PGVLoginActivity extends Activity implements AuthTask.Listener, Per
 
         dataService = DataService.getInstance();
         dataService.setContext(this);
+
+        try {
+            String defaultId = dataService.getDBHelper().getProperty(DataService.SERVICE_TYPE_PHPGEDVIEW+DataService.SERVICE_DEFAULTPERSONID);
+            if (defaultId!=null) {
+                mDefaultId.setText(defaultId);
+            }
+        } catch (Exception e) {
+            Log.e("PGVLoginActivity", "Error getting property", e);
+        }
+
     }
 
 
@@ -162,14 +173,14 @@ public class PGVLoginActivity extends Activity implements AuthTask.Listener, Per
     @Override
     public void onComplete(RemoteResult response) {
         if (response!=null && response.isSuccess()) {
-            Intent intent = new Intent();
-            setResult(Activity.RESULT_OK, intent);
             try {
-                dataService.getDBHelper().saveProperty("PhpGedViewToken", dataService.getRemoteService().getEncodedAuthToken());
+                dataService.getDBHelper().saveProperty(DataService.SERVICE_TYPE, dataService.getRemoteService().getEncodedAuthToken());
+                dataService.getDBHelper().saveProperty(DataService.SERVICE_TYPE_PHPGEDVIEW+DataService.SERVICE_TOKEN, dataService.getRemoteService().getEncodedAuthToken());
             } catch (Exception e) {
                 e.printStackTrace();
             }
             pd.setMessage("Loading person data from PhpGedView...");
+            intent = new Intent();
             PersonLoaderTask task = new PersonLoaderTask(this, this);
             task.execute();
         }
@@ -184,6 +195,7 @@ public class PGVLoginActivity extends Activity implements AuthTask.Listener, Per
     @Override
     public void onComplete(LittlePerson person) {
         pd.setMessage("Loading close family members from PhpGedView...");
+        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
         FamilyLoaderTask task = new FamilyLoaderTask(this, this);
         task.execute(person);
     }
@@ -191,6 +203,8 @@ public class PGVLoginActivity extends Activity implements AuthTask.Listener, Per
     @Override
     public void onComplete(ArrayList<LittlePerson> familyMembers) {
         if (pd!=null) pd.dismiss();
+        intent.putExtra(ChooseFamilyMember.FAMILY, familyMembers);
+        setResult(Activity.RESULT_OK, intent);
         finish();
     }
 

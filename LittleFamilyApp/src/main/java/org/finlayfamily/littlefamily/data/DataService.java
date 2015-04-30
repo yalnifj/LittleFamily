@@ -29,6 +29,12 @@ import java.util.Queue;
  * Created by jfinlay on 2/18/2015.
  */
 public class DataService implements AuthTask.Listener {
+    public static final String SERVICE_TYPE = "serviceType";
+    public static final String SERVICE_TYPE_PHPGEDVIEW = "PhpGedView";
+    public static final String SERVICE_TYPE_FAMILYSEARCH = "FamilySearch";
+    public static final String SERVICE_TOKEN = "Token";
+    public static final String SERVICE_BASEURL = "BaseUrl";
+    public static final String SERVICE_DEFAULTPERSONID = "DefaultPersonId";
 
     private RemoteService remoteService;
     private DBHelper dbHelper = null;
@@ -39,7 +45,7 @@ public class DataService implements AuthTask.Listener {
 
     private SyncThread syncer;
     private boolean authenticating = false;
-    private String serviceType;
+    private String serviceType = null;
 
     private static DataService ourInstance = new DataService();
 
@@ -76,32 +82,34 @@ public class DataService implements AuthTask.Listener {
 
     public void setContext(Context context) {
         this.context = context;
-        try {
-            serviceType = getDBHelper().getProperty("serviceType");
-            if (serviceType!=null) {
-                if (serviceType.equals("PhpGedView")) {
-                    String baseUrl = getDBHelper().getProperty(serviceType + "BaseUrl");
-                    String defaultPersonId = getDBHelper().getProperty(serviceType + "DefaultPersonId");
-                    remoteService = new PGVService(baseUrl, defaultPersonId);
-                } else {
-                    remoteService = FamilySearchService.getInstance();
-                }
-                if (remoteService.getSessionId() == null) {
-                    String token = getDBHelper().getTokenForSystemId(serviceType + "Token");
-                    if (token != null) {
-                        synchronized (this) {
-                            if (remoteService.getSessionId() == null && !authenticating) {
-                                authenticating = true;
-                                Log.d(this.getClass().getSimpleName(), "Launching new AuthTask for stored credentials");
-                                AuthTask task = new AuthTask(this, remoteService);
-                                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, token);
+        if (remoteService==null) {
+            try {
+                serviceType = getDBHelper().getProperty(SERVICE_TYPE);
+                if (serviceType != null) {
+                    if (serviceType.equals(SERVICE_TYPE_PHPGEDVIEW)) {
+                        String baseUrl = getDBHelper().getProperty(serviceType + SERVICE_BASEURL);
+                        String defaultPersonId = getDBHelper().getProperty(serviceType + SERVICE_DEFAULTPERSONID);
+                        remoteService = new PGVService(baseUrl, defaultPersonId);
+                    } else {
+                        remoteService = FamilySearchService.getInstance();
+                    }
+                    if (remoteService.getSessionId() == null) {
+                        String token = getDBHelper().getTokenForSystemId(serviceType + SERVICE_TOKEN);
+                        if (token != null) {
+                            synchronized (this) {
+                                if (remoteService.getSessionId() == null && !authenticating) {
+                                    authenticating = true;
+                                    Log.d(this.getClass().getSimpleName(), "Launching new AuthTask for stored credentials");
+                                    AuthTask task = new AuthTask(this, remoteService);
+                                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, token);
+                                }
                             }
                         }
                     }
                 }
+            } catch (Exception e) {
+                Log.e("DataService", "Error checking authentication", e);
             }
-        } catch (Exception e) {
-            Log.e("DataService", "Error checking authentication", e);
         }
     }
 
