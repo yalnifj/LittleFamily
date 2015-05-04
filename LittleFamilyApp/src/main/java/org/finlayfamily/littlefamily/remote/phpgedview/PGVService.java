@@ -12,7 +12,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.finlayfamily.littlefamily.remote.RemoteResult;
 import org.finlayfamily.littlefamily.remote.RemoteService;
 import org.finlayfamily.littlefamily.remote.RemoteServiceBase;
@@ -38,8 +37,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.xml.transform.Source;
 
 /**
  * Created by jfinlay on 4/23/2015.
@@ -225,13 +222,13 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
                             String gedcom = getGedcomRecord(objeid);
                             if (!gedcom.isEmpty()) {
                                 try {
-                                    SourceDescription sd = gedcomParser.parseObje(gedcom);
+                                    SourceDescription sd = gedcomParser.parseObje(gedcom, baseUrl);
                                     if (sd != null) {
                                         List<Link> links = sd.getLinks();
                                         for (Link link2 : links) {
                                             if (link2.getRel() != null && link2.getRel().equals("image")) {
                                                 if (portrait == null || sd.getSortKey().equals("1")) {
-                                                    portrait = link;
+                                                    portrait = link2;
                                                 }
                                             }
                                         }
@@ -287,7 +284,7 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
                                         rr.setResourceId(relId);
                                         rel.setPerson1(rr);
                                         ResourceReference rr2 = new ResourceReference();
-                                        rr.setResourceId(personId);
+                                        rr2.setResourceId(personId);
                                         rel.setPerson2(rr2);
                                         family.add(rel);
                                     }
@@ -304,7 +301,7 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
                                         rr.setResourceId(relId);
                                         rel.setPerson1(rr);
                                         ResourceReference rr2 = new ResourceReference();
-                                        rr.setResourceId(personId);
+                                        rr2.setResourceId(personId);
                                         rel.setPerson2(rr2);
                                         family.add(rel);
                                     }
@@ -319,7 +316,7 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
                                         rr.setResourceId(personId);
                                         rel.setPerson1(rr);
                                         ResourceReference rr2 = new ResourceReference();
-                                        rr.setResourceId(relId);
+                                        rr2.setResourceId(relId);
                                         rel.setPerson2(rr2);
                                         family.add(rel);
                                     }
@@ -358,9 +355,11 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
                             String gedcom = getGedcomRecord(objeid);
                             if (!gedcom.isEmpty()) {
                                 try {
-                                    SourceDescription sd = gedcomParser.parseObje(gedcom);
+                                    SourceDescription sd = gedcomParser.parseObje(gedcom, baseUrl);
                                     if (sd != null) {
-                                       sdlist.add(sd);
+                                        if (sd.getLinks()!=null) {
+                                            sdlist.add(sd);
+                                        }
                                     }
                                 } catch (Exception e) {
                                     Log.e(TAG, "Error parsing gedcom for OBJE " + objeid, e);
@@ -451,11 +450,16 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
                 if (result.isSuccess()) {
                     String results = result.getData();
                     if (results.startsWith(SUCCESS)) {
-                        String gedcom = results.substring(results.indexOf('0'));
+                        int pos = results.indexOf('0');
+                        if (pos < 0) {
+                            Log.e(TAG, "Error getting gedcom record "+ results);
+                            throw new RemoteServiceSearchException("Error getting gedcom record "+ results, 500);
+                        }
+                        String gedcom = results.substring(pos);
                         Log.d(TAG, "getGedcomRecord:"+recordId+":"+gedcom);
                         return gedcom;
                     } else {
-                        Log.e(TAG, results);
+                        Log.e(TAG, "Error getting gedcom record "+ results);
                         throw new RemoteServiceSearchException("Error getting gedcom record "+ results, 500);
                     }
                 }

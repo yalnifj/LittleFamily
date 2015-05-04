@@ -155,7 +155,7 @@ public class GedcomParser {
     public FamilyHolder parseFamily(String gedcom) throws GedcomParseException{
         FamilyHolder family = null;
         String[] lines = gedcom.split("(\r?\n)+");
-        if (lines[0].matches("0 @\\w+@ FAM")) {
+        if (!lines[0].matches("0 @\\w+@ FAM")) {
             throw new GedcomParseException("Not a valid FAM gedcom record");
         }
         family = new FamilyHolder();
@@ -208,9 +208,9 @@ public class GedcomParser {
         return family;
     }
 
-    public SourceDescription parseObje(String gedcom) throws GedcomParseException{
+    public SourceDescription parseObje(String gedcom, String baseUrl) throws GedcomParseException{
         String[] lines = gedcom.split("(\r?\n)+");
-        if (lines[0].matches("0 @\\w+@ OBJE")) {
+        if (!lines[0].matches("0 @\\w+@ OBJE")) {
             throw new GedcomParseException("Not a valid OBJE gedcom record");
         }
         SourceDescription sd = new SourceDescription();
@@ -222,7 +222,9 @@ public class GedcomParser {
             if ("FILE".equals(ps[1])) {
                 Link link = new Link();
                 link.setRel("image");
-                URI uri = new URI(ps[2]);
+                String mediaPath = ps[2];
+                mediaPath = mediaPath.replaceAll(" ", "%20");
+                URI uri = new URI(baseUrl + mediaPath);
                 link.setHref(uri);
                 sd.addLink(link);
             }

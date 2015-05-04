@@ -107,7 +107,7 @@ public abstract class RemoteServiceBase implements RemoteService {
 
                 // Let's send some useful debug information so we can monitor things
                 // in LogCat.
-                Log.d(this.getClass().getSimpleName(), "Executing request: "+ method +": "+ action.toString());
+                Log.d(this.getClass().getSimpleName(), "Executing request: "+ method +": "+ action.toString() + " "+params.toString());
 
                 // Finally, we send our request using HTTP. This is the synchronous
                 // long operation that we need to run on this Loader's thread.
@@ -168,7 +168,7 @@ public abstract class RemoteServiceBase implements RemoteService {
             }
         }
         catch (URISyntaxException e) {
-            Log.e("RemoteServiceBase", "URI syntax was incorrect: "+ uri.toString());
+            Log.e("RemoteServiceBase", "URI syntax was incorrect: "+ uri.toString(), e);
         }
     }
 

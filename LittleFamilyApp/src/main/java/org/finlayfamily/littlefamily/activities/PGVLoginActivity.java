@@ -211,7 +211,7 @@ public class PGVLoginActivity extends Activity implements AuthTask.Listener, Per
     @Override
     public void onComplete(String version) {
         if (version==null) {
-            Toast.makeText(this, "This URL is not a valid instance of PhpGedView.", Toast.LENGTH_LONG);
+            Toast.makeText(this, "This URL is not a valid instance of PhpGedView.", Toast.LENGTH_LONG).show();
             mPgvUrlView.setError("This URL is not a valid instance of PhpGedView.");
         }
         else {
