@@ -105,6 +105,7 @@ public class GedcomParser {
                 assertion.add(line);
             }
         }
+        boolean hasdeath = false;
         //-- parse each fact
         for(List<String> a : level2s) {
             String line2 = a.get(0);
@@ -147,8 +148,14 @@ public class GedcomParser {
             else if (factMap.get(parts[1])!=null) {
                 Fact fact = parseFact(a);
                 person.addFact(fact);
+                if (fact.getKnownType()==FactType.Death || fact.getKnownType()==FactType.Burial || fact.getKnownType()==FactType.Cremation) {
+                    hasdeath = true;
+                }
             }
         }
+
+        if (hasdeath) person.setLiving(false);
+
         return person;
     }
 
@@ -350,6 +357,7 @@ public class GedcomParser {
                 if (ps[1].equals("PLAC") && fact.getPlace() == null) {
                     PlaceReference place = new PlaceReference();
                     place.setOriginal(ps[2]);
+                    fact.setPlace(place);
                 }
                 if (ps[1].equals("TYPE") && fact.getType()==null) {
                     fact.setType(new URI(ps[2]));

@@ -219,9 +219,9 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
                     for(Link link : sr.getLinks()) {
                         if(link.getHref()!=null && link.getHref().toString().startsWith("@")) {
                             String objeid =link.getHref().toString().replaceAll("@","");
-                            String gedcom = getGedcomRecord(objeid);
-                            if (!gedcom.isEmpty()) {
-                                try {
+                            try {
+                                String gedcom = getGedcomRecord(objeid);
+                                if (!gedcom.isEmpty()) {
                                     SourceDescription sd = gedcomParser.parseObje(gedcom, baseUrl);
                                     if (sd != null) {
                                         List<Link> links = sd.getLinks();
@@ -233,9 +233,9 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
                                             }
                                         }
                                     }
-                                } catch (Exception e) {
-                                    Log.e(TAG, "Error parsing gedcom for OBJE " + objeid, e);
                                 }
+                            } catch (Exception e) {
+                                Log.e(TAG, "Error parsing gedcom for OBJE " + objeid, e);
                             }
                         } else if (portrait==null){
                             portrait = link;

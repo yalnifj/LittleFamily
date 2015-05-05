@@ -115,8 +115,13 @@ public class LittlePerson implements Serializable {
                         DateFormat df = new SimpleDateFormat("dd MMM yyyy");
                         try {
                             this.birthDate = df.parse(birthDateStr);
-                            Date today = new Date();
-                            age = (int) (today.getTime() - birthDate.getTime()) / (1000 * 60 * 60 * 24 * 365);
+                            Calendar today = Calendar.getInstance();
+                            Calendar birthCal = Calendar.getInstance();
+                            birthCal.setTime(birthDate);
+                            age = today.get(Calendar.YEAR) - birthCal.get(Calendar.YEAR);
+                            if (today.get(Calendar.MONTH) < birthCal.get(Calendar.MONTH)) age--;
+                            else if (today.get(Calendar.MONTH) == birthCal.get(Calendar.MONTH)
+                                    && today.get(Calendar.DATE) < birthCal.get(Calendar.DATE)) age--;
                         } catch (ParseException e) {
                             Pattern p = Pattern.compile("\\d\\d\\d\\d");
                             Matcher m = p.matcher(birthDateStr);
@@ -133,6 +138,10 @@ public class LittlePerson implements Serializable {
         }
 
         Boolean living = fsPerson.getLiving();
+        if (living==null && age!=null && age > 105) {
+            living = false;
+            fsPerson.setLiving(false);
+        }
         if (living==null || living==true) {
             setAlive(true);
         }

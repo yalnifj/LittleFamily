@@ -27,16 +27,20 @@ public class DataHelper {
         if (checkCache && imageFile!=null && imageFile.exists()) {
             person.setPhotoPath(imageFile.getAbsolutePath());
         } else {
-            Link portrait = service.getPersonPortrait(fsPerson.getId(), checkCache);
-            if (portrait != null) {
-                String imagePath = null;
-                try {
-                    Uri uri = Uri.parse(portrait.getHref().toString());
-                    imagePath = service.downloadImage(uri, fsPerson.getId(), "portrait.jpg", context);
-                    person.setPhotoPath(imagePath);
-                } catch (MalformedURLException e) {
-                    Log.e("buildLittlePerson", "error", e);
+            try {
+                Link portrait = service.getPersonPortrait(fsPerson.getId(), checkCache);
+                if (portrait != null) {
+                    String imagePath = null;
+                    try {
+                        Uri uri = Uri.parse(portrait.getHref().toString());
+                        imagePath = service.downloadImage(uri, fsPerson.getId(), "portrait.jpg", context);
+                        person.setPhotoPath(imagePath);
+                    } catch (MalformedURLException e) {
+                        Log.e("buildLittlePerson", "error", e);
+                    }
                 }
+            } catch (Exception e) {
+                Log.e("buildLittlePerson", "error", e);
             }
         }
         return person;
