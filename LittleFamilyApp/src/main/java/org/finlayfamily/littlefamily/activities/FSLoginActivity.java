@@ -137,7 +137,7 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
     public void onComplete(RemoteResult response) {
         if (response!=null && response.isSuccess()) {
             try {
-                dataService.getDBHelper().saveProperty(DataService.SERVICE_TYPE, dataService.getRemoteService().getEncodedAuthToken());
+                dataService.getDBHelper().saveProperty(DataService.SERVICE_TYPE, dataService.getRemoteService().getClass().getSimpleName());
                 dataService.getDBHelper().saveProperty(DataService.SERVICE_TYPE_FAMILYSEARCH+DataService.SERVICE_TOKEN, dataService.getRemoteService().getEncodedAuthToken());
             } catch (Exception e) {
                 e.printStackTrace();

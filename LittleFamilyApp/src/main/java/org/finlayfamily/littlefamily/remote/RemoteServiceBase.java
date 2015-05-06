@@ -35,6 +35,22 @@ public abstract class RemoteServiceBase implements RemoteService {
     protected String userAgent;
 
     protected RemoteResult getRestData(String method, Uri action, Bundle params, Bundle headers) throws RemoteServiceSearchException {
+        int retries = 0;
+        while(retries < 3) {
+            try {
+                return getRestDataNoRetry(method, action, params, headers);
+            } catch (Exception e) {
+            }
+            try {
+                Thread.sleep(1000); //-- wait for a second and try again
+            } catch (InterruptedException e) {
+            }
+            retries++;
+        }
+        throw new RemoteServiceSearchException("Maximum number of retries exceeded", 500);
+    }
+
+    protected RemoteResult getRestDataNoRetry(String method, Uri action, Bundle params, Bundle headers) throws RemoteServiceSearchException {
         RemoteResult data = new RemoteResult();
         try {
             // At the very least we always need an action.

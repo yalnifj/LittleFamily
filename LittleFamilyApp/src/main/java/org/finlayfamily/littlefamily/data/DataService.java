@@ -30,8 +30,8 @@ import java.util.Queue;
  */
 public class DataService implements AuthTask.Listener {
     public static final String SERVICE_TYPE = "serviceType";
-    public static final String SERVICE_TYPE_PHPGEDVIEW = "PhpGedView";
-    public static final String SERVICE_TYPE_FAMILYSEARCH = "FamilySearch";
+    public static final String SERVICE_TYPE_PHPGEDVIEW = PGVService.class.getSimpleName();
+    public static final String SERVICE_TYPE_FAMILYSEARCH = FamilySearchService.class.getSimpleName();
     public static final String SERVICE_TOKEN = "Token";
     public static final String SERVICE_BASEURL = "BaseUrl";
     public static final String SERVICE_DEFAULTPERSONID = "DefaultPersonId";
@@ -86,7 +86,7 @@ public class DataService implements AuthTask.Listener {
             try {
                 serviceType = getDBHelper().getProperty(SERVICE_TYPE);
                 if (serviceType != null) {
-                    if (serviceType.equals(SERVICE_TYPE_PHPGEDVIEW)) {
+                    if (serviceType.equals(PGVService.class.getSimpleName())) {
                         String baseUrl = getDBHelper().getProperty(serviceType + SERVICE_BASEURL);
                         String defaultPersonId = getDBHelper().getProperty(serviceType + SERVICE_DEFAULTPERSONID);
                         remoteService = new PGVService(baseUrl, defaultPersonId);
@@ -319,12 +319,12 @@ public class DataService implements AuthTask.Listener {
     public List<LittlePerson> getFamilyMembers(LittlePerson person, boolean loadSpouse) throws Exception {
         List<LittlePerson> family = getDBHelper().getRelativesForPerson(person.getId(), loadSpouse);
         if (family==null || family.size()==0) {
-            family = getFamilyMembersFromFamilySearch(person, loadSpouse);
+            family = getFamilyMembersFromRemoteService(person, loadSpouse);
         }
         return family;
     }
 
-    public List<LittlePerson> getFamilyMembersFromFamilySearch(LittlePerson person, boolean loadSpouse) throws Exception {
+    public List<LittlePerson> getFamilyMembersFromRemoteService(LittlePerson person, boolean loadSpouse) throws Exception {
         List<LittlePerson> family = new ArrayList<>();
         waitForAuth();
         LittlePerson spouse = null;
@@ -428,7 +428,7 @@ public class DataService implements AuthTask.Listener {
         List<LittlePerson> parents = getDBHelper().getParentsForPerson(person.getId());
         if (parents==null || parents.size()==0) {
             if (person.isHasParents()==null || person.isHasParents()) {
-                getFamilyMembersFromFamilySearch(person, false);
+                getFamilyMembersFromRemoteService(person, false);
                 parents = getDBHelper().getParentsForPerson(person.getId());
                 if (parents == null) {
                     parents = new ArrayList<>();

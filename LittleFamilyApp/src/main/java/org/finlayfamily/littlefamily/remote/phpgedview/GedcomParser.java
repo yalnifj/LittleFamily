@@ -105,6 +105,9 @@ public class GedcomParser {
                 assertion.add(line);
             }
         }
+        if (assertion.size()>0) {
+            level2s.add(assertion);
+        }
         boolean hasdeath = false;
         //-- parse each fact
         for(List<String> a : level2s) {
