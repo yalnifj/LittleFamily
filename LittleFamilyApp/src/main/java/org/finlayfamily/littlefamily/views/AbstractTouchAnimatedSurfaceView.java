@@ -14,7 +14,7 @@ import android.view.SurfaceView;
 public abstract class AbstractTouchAnimatedSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
     protected Context context;
     protected AnimationThread animationThread;
-    protected long animationDelay = 10L;
+    protected long animationDelay = 33L;
     protected float touchTolerance = 4;
 
     public AbstractTouchAnimatedSurfaceView(Context context) {
@@ -112,6 +112,8 @@ public abstract class AbstractTouchAnimatedSurfaceView extends SurfaceView imple
         this.animationDelay = animationDelay;
     }
 
+    public abstract void doStep();
+
     public abstract void doDraw(Canvas canvas);
 
     public abstract void doMove(float oldX, float oldY, float newX, float newY);
@@ -138,14 +140,23 @@ public abstract class AbstractTouchAnimatedSurfaceView extends SurfaceView imple
             super.run();
 
             while(running) {
+                long starttime = System.currentTimeMillis();
+                view.doStep();
                 Canvas canvas = holder.lockCanvas();
                 if(canvas != null) {
                     view.doDraw(canvas);
                     holder.unlockCanvasAndPost(canvas);
                 }
+                long calctime = System.currentTimeMillis() - starttime;
+                long sleeptime = animationDelay - calctime;
+                int skippedFrames = (int) (calctime / animationDelay);
+                if (skippedFrames >0 ) {
+                    Log.d(this.getClass().getSimpleName(), "Slow calculations missed "+skippedFrames+" frames.");
+                    sleeptime = calctime % animationDelay;
+                }
 
                 try {
-                    sleep(animationDelay);
+                    sleep(sleeptime);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
