@@ -12,10 +12,6 @@ public abstract class Sprite {
     protected int height;
     protected int state;
 
-    public int getHeight() {
-        return height;
-    }
-
     public void setHeight(int height) {
         this.height = height;
     }
@@ -50,6 +46,10 @@ public abstract class Sprite {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public int getHeight() {
+        return height;
     }
 
     public abstract void doStep();

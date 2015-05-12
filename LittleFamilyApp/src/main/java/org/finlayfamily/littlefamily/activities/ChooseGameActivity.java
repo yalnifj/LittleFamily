@@ -39,18 +39,21 @@ public class ChooseGameActivity extends LittleFamilyActivity {
     public void startMatchGame(View view) {
         Intent intent = new Intent( this, MatchGameActivity.class );
         intent.putExtra(ChooseFamilyMember.FAMILY, people);
+        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, selectedPerson);
         startActivity(intent);
     }
 
     public void startScratchGame(View view) {
         Intent intent = new Intent( this, ScratchGameActivity.class );
         intent.putExtra(ChooseFamilyMember.FAMILY, people);
+        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, selectedPerson);
         startActivity(intent);
     }
 
     public void startColoringGame(View view) {
         Intent intent = new Intent( this, ColoringGameActivity.class );
         intent.putExtra(ChooseFamilyMember.FAMILY, people);
+        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, selectedPerson);
         startActivity(intent);
     }
 

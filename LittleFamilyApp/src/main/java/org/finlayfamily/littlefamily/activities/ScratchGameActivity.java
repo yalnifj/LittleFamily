@@ -21,8 +21,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
-public class ScratchGameActivity extends Activity implements TextToSpeech.OnInitListener,
-            MemoriesLoaderTask.Listener, ScratchView.ScratchCompleteListener {
+public class ScratchGameActivity extends LittleFamilyActivity implements MemoriesLoaderTask.Listener, ScratchView.ScratchCompleteListener {
 
     private List<LittlePerson> people;
     private LittlePerson selectedPerson;
@@ -36,12 +35,11 @@ public class ScratchGameActivity extends Activity implements TextToSpeech.OnInit
 
     private int backgroundLoadIndex = 1;
 
-    private TextToSpeech tts;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scratch_game);
+        setupTopBar();
 
         layeredImage = (ScratchView) findViewById(R.id.layeredImage);
         layeredImage.registerListener(this);
@@ -51,29 +49,7 @@ public class ScratchGameActivity extends Activity implements TextToSpeech.OnInit
 
         usedPhotos = new ArrayList<>(3);
 
-        tts = new TextToSpeech(this, this);
-
         loadRandomImage();
-    }
-
-    @Override
-    public void onInit(int code) {
-        if (code == TextToSpeech.SUCCESS) {
-            tts.setLanguage(Locale.getDefault());
-            tts.setSpeechRate(0.5f);
-        } else {
-            tts = null;
-            //Toast.makeText(this, "Failed to initialize TTS engine.", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (tts!=null) {
-            tts.stop();
-            tts.shutdown();
-        }
-        super.onDestroy();
     }
 
     public void setupCanvas() {

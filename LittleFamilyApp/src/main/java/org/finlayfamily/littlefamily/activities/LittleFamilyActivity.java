@@ -1,26 +1,30 @@
 package org.finlayfamily.littlefamily.activities;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import org.finlayfamily.littlefamily.R;
+import org.finlayfamily.littlefamily.data.LittlePerson;
 
 import java.util.Locale;
 
 /**
  * Created by kids on 4/18/15.
  */
-public class LittleFamilyActivity extends Activity implements TextToSpeech.OnInitListener {
+public class LittleFamilyActivity extends FragmentActivity implements TextToSpeech.OnInitListener, TopBarFragment.OnFragmentInteractionListener {
     protected TextToSpeech tts;
     protected MediaPlayer mediaPlayer;
-    protected ImageView homeButton;
+    protected TopBarFragment topBar;
+    protected LittlePerson selectedPerson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,17 +32,28 @@ public class LittleFamilyActivity extends Activity implements TextToSpeech.OnIni
 
         tts = new TextToSpeech(this, this);
 
-        homeButton = (ImageView) findViewById(R.id.homeButton);
+        Intent intent = getIntent();
+        selectedPerson = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
+    }
+
+    public void setupTopBar() {
+        topBar = (TopBarFragment) getSupportFragmentManager().findFragmentById(R.id.topBarFragment);
+        if (topBar==null) {
+            topBar = TopBarFragment.newInstance(selectedPerson);
+            getSupportFragmentManager().beginTransaction().replace(R.id.topBarFragment, topBar).commit();
+        }else {
+            Bundle args = new Bundle();
+            if (selectedPerson != null) {
+                args.putSerializable(TopBarFragment.ARG_PERSON, selectedPerson);
+                topBar.setArguments(args);
+            }
+        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         mediaPlayer = MediaPlayer.create(this, R.raw.powerup_success);
-        if (homeButton!=null) {
-            homeButton.setMaxWidth(this.getWindow().getAttributes().width / 10);
-            homeButton.setMaxHeight(this.getWindow().getAttributes().height / 10);
-        }
     }
 
     @Override
@@ -70,7 +85,7 @@ public class LittleFamilyActivity extends Activity implements TextToSpeech.OnIni
     }
 
     protected void speak(String message) {
-        Log.d("LittleFamilyActivity", "Speaking: "+message);
+        Log.d("LittleFamilyActivity", "Speaking: " + message);
         if (tts!=null) {
             if (Build.VERSION.SDK_INT > 20) {
                 tts.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
@@ -85,7 +100,19 @@ public class LittleFamilyActivity extends Activity implements TextToSpeech.OnIni
         if (mediaPlayer!=null) mediaPlayer.start();
     }
 
-    public void gotoHomeScreen(View view) {
+    public void onHomeButtonPressed(View view) {
         finish();
+    }
+
+    public void onProfileButtonPressed(View view) {
+
+    }
+
+    public void onActivityButtonPressed(View view) {
+
+    }
+
+    public void onSettingsButtonPressed(View view) {
+
     }
 }

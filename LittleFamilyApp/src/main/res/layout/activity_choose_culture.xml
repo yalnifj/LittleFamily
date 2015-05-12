@@ -9,6 +9,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="org.finlayfamily.littlefamily.activities.ChooseCultureActivity"
     android:background="@android:color/background_light">
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:id="@+id/topBarFragment"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        tools:layout="@layout/fragment_top_bar" />
 
     <LinearLayout
         android:orientation="horizontal"

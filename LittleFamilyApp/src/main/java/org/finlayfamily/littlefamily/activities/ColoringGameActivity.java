@@ -41,6 +41,7 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Memori
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_coloring_game);
+        setupTopBar();
 
         layeredImage = (ColoringView) findViewById(R.id.layeredImage);
         layeredImage.registerListener(this);

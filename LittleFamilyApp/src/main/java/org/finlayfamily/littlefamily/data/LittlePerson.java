@@ -80,6 +80,8 @@ public class LittlePerson implements Serializable {
                     for (NamePart p : parts) {
                         if (p.getKnownType()== NamePartType.Given) {
                             givenName = p.getValue();
+                            String[] gparts = givenName.split(" ");
+                            if (gparts.length > 1) givenName = gparts[0];
                             break;
                         }
                     }
@@ -96,7 +98,7 @@ public class LittlePerson implements Serializable {
         if (births!=null) {
             Fact birth = null;
             for(Fact b : births) {
-                if (b.getDate()!=null && (birth==null || b.getPrimary())) birth = b;
+                if (b!=null && b.getDate()!=null && (birth==null || (b.getPrimary()!=null && b.getPrimary()))) birth = b;
             }
             if (birth!=null) {
                 birthPlace = null;

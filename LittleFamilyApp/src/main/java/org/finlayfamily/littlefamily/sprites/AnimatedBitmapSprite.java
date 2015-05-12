@@ -18,7 +18,7 @@ public class AnimatedBitmapSprite extends Sprite {
     protected int steps;
     protected boolean bounce;
     protected boolean backward;
-    private Paint basePaint;
+    protected Paint basePaint;
 
     public AnimatedBitmapSprite(Map<Integer, List<Bitmap>> bitmaps) {
         this.bitmaps = bitmaps;

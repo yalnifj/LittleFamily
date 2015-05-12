@@ -268,6 +268,11 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
             List<Link> fams = person.getLinks();
             if (fams != null) {
                 for(Link fam : fams) {
+                    try {
+                        Thread.sleep(500); //-- don't bombard the server
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     String famid = fam.getHref().toString().replaceAll("@","");
                     String gedcom = getGedcomRecord(famid);
                     if (!gedcom.isEmpty()) {

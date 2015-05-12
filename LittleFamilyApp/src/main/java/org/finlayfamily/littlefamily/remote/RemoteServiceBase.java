@@ -42,7 +42,7 @@ public abstract class RemoteServiceBase implements RemoteService {
             } catch (Exception e) {
             }
             try {
-                Thread.sleep(1000); //-- wait for a second and try again
+                Thread.sleep(10000 * (retries+1)); //-- wait for a few seconds and try again
             } catch (InterruptedException e) {
             }
             retries++;
