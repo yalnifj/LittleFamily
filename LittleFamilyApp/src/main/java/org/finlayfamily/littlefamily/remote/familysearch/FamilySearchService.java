@@ -1,4 +1,4 @@
-package org.finlayfamily.littlefamily.familysearch;
+package org.finlayfamily.littlefamily.remote.familysearch;
 
 import android.content.Context;
 import android.net.Uri;
@@ -10,18 +10,16 @@ import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
 import org.familysearch.identity.Identity;
+import org.finlayfamily.littlefamily.remote.RemoteResult;
+import org.finlayfamily.littlefamily.remote.RemoteService;
+import org.finlayfamily.littlefamily.remote.RemoteServiceSearchException;
+import org.finlayfamily.littlefamily.remote.RemoteServiceBase;
 import org.finlayfamily.littlefamily.util.ImageHelper;
 import org.gedcomx.Gedcomx;
 import org.gedcomx.atom.Entry;
@@ -34,35 +32,21 @@ import org.gedcomx.source.SourceDescription;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
-
 /**
  * Created by Parents on 12/29/2014.
  */
-public class FamilySearchService {
-    private static final String METHOD_GET = "GET";
-    private static final String METHOD_PUT = "PUT";
-    private static final String METHOD_DELETE = "DELETE";
-    private static final String METHOD_POST = "POST";
+public class FamilySearchService extends RemoteServiceBase implements RemoteService {
     protected static final String SESSION_ID = "sessionid";
     private static final String FS_IDENTITY_PATH = "https://sandbox.familysearch.org/identity/v2/login";
     private static final String FS_PLATFORM_PATH = "https://sandbox.familysearch.org/platform/";
@@ -91,16 +75,18 @@ public class FamilySearchService {
         memories = new HashMap<>();
     }
 
-    public FSResult authenticate(String username, String password) throws FamilySearchException {
+    @Override
+    public RemoteResult authenticate(String username, String password) throws RemoteServiceSearchException {
         encodedAuthToken = Base64.encodeToString((username + ":" + password).getBytes(), Base64.NO_WRAP);
 
         return authWithToken(encodedAuthToken);
     }
 
-    public FSResult authWithToken(String token) throws FamilySearchException {
+    @Override
+    public RemoteResult authWithToken(String token) throws RemoteServiceSearchException {
         encodedAuthToken = token;
         if (encodedAuthToken==null) {
-            throw new FamilySearchException("Unable to authenticate with FamilySearch", 401);
+            throw new RemoteServiceSearchException("Unable to authenticate with FamilySearch", 401);
         }
         Uri action = Uri.parse(FS_IDENTITY_PATH);
         Bundle params = new Bundle();
@@ -108,7 +94,7 @@ public class FamilySearchService {
         Bundle headers = new Bundle();
         headers.putString("Authorization", "Basic " + encodedAuthToken);
 
-        FSResult data = getRestData(METHOD_GET, action, params, headers);
+        RemoteResult data = getRestData(METHOD_GET, action, params, headers);
         if (data!=null) {
             if (data.isSuccess()) {
                 Serializer serializer = new Persister();
@@ -127,16 +113,19 @@ public class FamilySearchService {
         return data;
     }
 
+    @Override
     public String getSessionId() {
         return sessionId;
     }
+    @Override
     public String getEncodedAuthToken() {
         return encodedAuthToken;
     }
 
-    public Person getCurrentPerson() throws FamilySearchException {
+    @Override
+    public Person getCurrentPerson() throws RemoteServiceSearchException {
         if (sessionId==null) {
-            throw new FamilySearchException("Not Authenticated with FamilySearch.", 0);
+            throw new RemoteServiceSearchException("Not Authenticated with FamilySearch.", 0);
         }
         if (currentPerson==null) {
             Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/current-person");
@@ -145,7 +134,7 @@ public class FamilySearchService {
             headers.putString("Accept", "application/x-gedcomx-v1+xml");
             Bundle params = new Bundle();
 
-            FSResult result = getRestData(METHOD_GET, uri, params, headers);
+            RemoteResult result = getRestData(METHOD_GET, uri, params, headers);
             if (result!=null) {
                 if (result.isSuccess()) {
                     Serializer serializer = GedcomxSerializer.create();
@@ -170,9 +159,10 @@ public class FamilySearchService {
         return currentPerson;
     }
 
-    public Person getPerson(String personId, boolean checkCache) throws FamilySearchException {
+    @Override
+    public Person getPerson(String personId, boolean checkCache) throws RemoteServiceSearchException {
         if (sessionId==null) {
-            throw new FamilySearchException("Not Authenticated with FamilySearch.", 0);
+            throw new RemoteServiceSearchException("Not Authenticated with FamilySearch.", 0);
         }
         if (!checkCache || personCache.get(personId)==null) {
             Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+personId);
@@ -181,7 +171,7 @@ public class FamilySearchService {
             headers.putString("Accept", "application/x-gedcomx-v1+xml");
             Bundle params = new Bundle();
 
-            FSResult result = getRestData(METHOD_GET, uri, params, headers);
+            RemoteResult result = getRestData(METHOD_GET, uri, params, headers);
             if (result!=null) {
                 if (result.isSuccess()) {
                     Serializer serializer = GedcomxSerializer.create();
@@ -218,9 +208,10 @@ public class FamilySearchService {
         return personCache.get(personId);
     }
 
-    public Entry getLastChangeForPerson(String personId) throws FamilySearchException {
+    @Override
+    public Entry getLastChangeForPerson(String personId) throws RemoteServiceSearchException {
         if (sessionId==null) {
-            throw new FamilySearchException("Not Authenticated with FamilySearch.", 0);
+            throw new RemoteServiceSearchException("Not Authenticated with FamilySearch.", 0);
         }
 
         Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+personId+"/changes");
@@ -231,7 +222,7 @@ public class FamilySearchService {
         params.putInt("count", 1);
 
         Entry entry = null;
-        FSResult result = getRestData(METHOD_GET, uri, params, headers);
+        RemoteResult result = getRestData(METHOD_GET, uri, params, headers);
         if (result!=null) {
             if (result.isSuccess()) {
                 Serializer serializer = GedcomxSerializer.create();
@@ -269,12 +260,13 @@ public class FamilySearchService {
         return entry;
     }
 
-    public Link getPersonPortrait(String personId, boolean checkCache) throws FamilySearchException {
+    @Override
+    public Link getPersonPortrait(String personId, boolean checkCache) throws RemoteServiceSearchException {
         if (checkCache && linkCache.containsKey(personId)) {
             return linkCache.get(personId);
         }
         if (sessionId==null) {
-            throw new FamilySearchException("Not Authenticated with FamilySearch.", 0);
+            throw new RemoteServiceSearchException("Not Authenticated with FamilySearch.", 0);
         }
 
         Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+personId+"/portraits");
@@ -283,7 +275,7 @@ public class FamilySearchService {
         headers.putString("Accept", "application/x-gedcomx-v1+xml");
         Bundle params = new Bundle();
 
-        FSResult result = getRestData(METHOD_GET, uri, params, headers);
+        RemoteResult result = getRestData(METHOD_GET, uri, params, headers);
         if (result!=null) {
             if (result.isSuccess()) {
                 Serializer serializer = GedcomxSerializer.create();
@@ -316,26 +308,28 @@ public class FamilySearchService {
         return null;
     }
 
-    public List<Relationship> getCloseRelatives(boolean checkCache) throws FamilySearchException {
+    @Override
+    public List<Relationship> getCloseRelatives(boolean checkCache) throws RemoteServiceSearchException {
         if (sessionId==null) {
-            throw new FamilySearchException("Not Authenticated with FamilySearch.", 0);
+            throw new RemoteServiceSearchException("Not Authenticated with FamilySearch.", 0);
         }
 
         if (getCurrentPerson()==null) {
-            throw new FamilySearchException("Unable to get current person from FamilySearch", 0);
+            throw new RemoteServiceSearchException("Unable to get current person from FamilySearch", 0);
         }
 
         return getCloseRelatives(currentPerson.getId(), checkCache);
     }
 
-	public List<Relationship> getCloseRelatives(String personId, boolean checkCache) throws FamilySearchException {
+	@Override
+    public List<Relationship> getCloseRelatives(String personId, boolean checkCache) throws RemoteServiceSearchException {
         if (sessionId==null) {
-            throw new FamilySearchException("Not Authenticated with FamilySearch.", 0);
+            throw new RemoteServiceSearchException("Not Authenticated with FamilySearch.", 0);
         }
 
 		Person person = this.getPerson(personId, checkCache);
         if (person==null) {
-            throw new FamilySearchException("Unable to get person "+personId+" from FamilySearch", 0);
+            throw new RemoteServiceSearchException("Unable to get person "+personId+" from FamilySearch", 0);
         }
 
         if (!checkCache || closeRelatives.get(person.getId())==null) {
@@ -346,7 +340,7 @@ public class FamilySearchService {
             Bundle params = new Bundle();
             params.putString("person", person.getId());
 
-            FSResult result = getRestData(METHOD_GET, uri, params, headers);
+            RemoteResult result = getRestData(METHOD_GET, uri, params, headers);
             if (result!=null) {
                 if (result.isSuccess()) {
                     Serializer serializer = GedcomxSerializer.create();
@@ -376,14 +370,15 @@ public class FamilySearchService {
         return closeRelatives.get(person.getId());
     }
 
-    public List<SourceDescription> getPersonMemories(String personId, boolean checkCache) throws FamilySearchException {
+    @Override
+    public List<SourceDescription> getPersonMemories(String personId, boolean checkCache) throws RemoteServiceSearchException {
         if (sessionId==null) {
-            throw new FamilySearchException("Not Authenticated with FamilySearch.", 0);
+            throw new RemoteServiceSearchException("Not Authenticated with FamilySearch.", 0);
         }
 
         Person person = this.getPerson(personId, checkCache);
         if (person==null) {
-            throw new FamilySearchException("Unable to get person "+personId+" from FamilySearch", 0);
+            throw new RemoteServiceSearchException("Unable to get person "+personId+" from FamilySearch", 0);
         }
 
         if (!checkCache || memories.get(personId)==null){
@@ -395,7 +390,7 @@ public class FamilySearchService {
             Bundle params = new Bundle();
             params.putString("type", "photo"); //-- limit to photos for now
 
-            FSResult result = getRestData(METHOD_GET, uri, params, headers);
+            RemoteResult result = getRestData(METHOD_GET, uri, params, headers);
             if (result!=null) {
                 if (result.isSuccess()) {
                     Serializer serializer = GedcomxSerializer.create();
@@ -420,10 +415,10 @@ public class FamilySearchService {
         return memories.get(personId);
     }
 
-    private boolean handleStatusCodes(FSResult data) throws FamilySearchException {
+    private boolean handleStatusCodes(RemoteResult data) throws RemoteServiceSearchException {
         //-- not authenticated
         if (data.getStatusCode()==401 && sessionId!=null) {
-            FSResult res = authWithToken(encodedAuthToken);
+            RemoteResult res = authWithToken(encodedAuthToken);
             if (res.isSuccess()) {
                 return true;
             }
@@ -462,158 +457,9 @@ public class FamilySearchService {
         }
         return false;
     }
-	
-    private FSResult getRestData(String method, Uri action, Bundle params, Bundle headers) throws FamilySearchException{
-        FSResult data = new FSResult();
-        try {
-            // At the very least we always need an action.
-            if (action == null) {
-                Log.e(TAG, "You did not define an action. REST call canceled.");
-                throw new IllegalArgumentException("Action URI must not be null");
-            }
 
-            // Here we define our base request object which we will
-            // send to our REST service via HttpClient.
-            HttpRequestBase request = null;
-
-            // Let's build our request based on the HTTP verb we were
-            // given.
-            switch (method) {
-                case METHOD_GET: {
-                    request = new HttpGet();
-                    attachUriWithQuery(request, action, params);
-                }
-                break;
-
-                case METHOD_DELETE: {
-                    request = new HttpDelete();
-                    attachUriWithQuery(request, action, params);
-                }
-                break;
-
-                case METHOD_POST: {
-                    request = new HttpPost();
-                    request.setURI(new URI(action.toString()));
-
-                    // Attach form entity if necessary. Note: some REST APIs
-                    // require you to POST JSON. This is easy to do, simply use
-                    // postRequest.setHeader('Content-Type', 'application/json')
-                    // and StringEntity instead. Same thing for the PUT case
-                    // below.
-                    HttpPost postRequest = (HttpPost) request;
-
-                    if (params != null) {
-                        UrlEncodedFormEntity formEntity = new UrlEncodedFormEntity(paramsToList(params));
-                        postRequest.setEntity(formEntity);
-                    }
-                }
-                break;
-
-                case METHOD_PUT: {
-                    request = new HttpPut();
-                    request.setURI(new URI(action.toString()));
-
-                    // Attach form entity if necessary.
-                    HttpPut putRequest = (HttpPut) request;
-
-                    if (params != null) {
-                        UrlEncodedFormEntity formEntity = new UrlEncodedFormEntity(paramsToList(params));
-                        putRequest.setEntity(formEntity);
-                    }
-                }
-                break;
-            }
-
-            if (request != null) {
-                HttpClient client = new DefaultHttpClient();
-
-                for (BasicNameValuePair header : paramsToList(headers)) {
-                    request.addHeader( header.getName(), header.getValue() );
-                }
-
-                // Let's send some useful debug information so we can monitor things
-                // in LogCat.
-                Log.d(TAG, "Executing request: "+ method +": "+ action.toString());
-
-                // Finally, we send our request using HTTP. This is the synchronous
-                // long operation that we need to run on this Loader's thread.
-                HttpResponse response = client.execute(request);
-                data.setResponse(response);
-
-                HttpEntity responseEntity = response.getEntity();
-                StatusLine responseStatus = response.getStatusLine();
-                int        statusCode     = responseStatus != null ? responseStatus.getStatusCode() : 0;
-                data.setStatusCode(statusCode);
-                if (statusCode == 200) {
-                    data.setSuccess(true);
-                }
-
-                if (responseEntity!=null) {
-                    String results = EntityUtils.toString(responseEntity);
-                    data.setData(results);
-                }
-            }
-        }
-        catch (URISyntaxException e) {
-            Log.e(TAG, "URI syntax was incorrect. "+ method +": "+ action.toString()+ " "+e, e);
-            throw new FamilySearchException("URI syntax was incorrect. "+e, 0, e);
-        }
-        catch (UnsupportedEncodingException e) {
-            Log.e(TAG, "A UrlEncodedFormEntity was created with an unsupported encoding. "+e, e);
-            throw new FamilySearchException("A UrlEncodedFormEntity was created with an unsupported encoding. "+e, 0, e);
-        }
-        catch (ClientProtocolException e) {
-            Log.e(TAG, "There was a problem when sending the request. "+e, e);
-            throw new FamilySearchException("There was a problem when sending the request. "+e, 0, e);
-        }
-        catch (IOException e) {
-            Log.e(TAG, "There was a problem when sending the request. "+e , e);
-            throw new FamilySearchException("There was a problem when sending the request. "+e, 0, e);
-        }
-
-        return data;
-    }
-
-    private static void attachUriWithQuery(HttpRequestBase request, Uri uri, Bundle params) {
-        try {
-            if (params == null) {
-                // No params were given or they have already been
-                // attached to the Uri.
-                request.setURI(new URI(uri.toString()));
-            }
-            else {
-                Uri.Builder uriBuilder = uri.buildUpon();
-
-                // Loop through our params and append them to the Uri.
-                for (BasicNameValuePair param : paramsToList(params)) {
-                    uriBuilder.appendQueryParameter(param.getName(), param.getValue());
-                }
-
-                uri = uriBuilder.build();
-                request.setURI(new URI(uri.toString()));
-            }
-        }
-        catch (URISyntaxException e) {
-            Log.e(TAG, "URI syntax was incorrect: "+ uri.toString());
-        }
-    }
-
-    private static List<BasicNameValuePair> paramsToList(Bundle params) {
-        ArrayList<BasicNameValuePair> formList = new ArrayList<BasicNameValuePair>(params.size());
-
-        for (String key : params.keySet()) {
-            Object value = params.get(key);
-
-            // We can only put Strings in a form entity, so we call the toString()
-            // method to enforce. We also probably don't need to check for null here
-            // but we do anyway because Bundle.get() can return null.
-            if (value != null) formList.add(new BasicNameValuePair(key, value.toString()));
-        }
-
-        return formList;
-    }
-
-    public String downloadImage(Uri uri, String folderName, String fileName, Context context) throws MalformedURLException, FamilySearchException {
+    @Override
+    public String downloadImage(Uri uri, String folderName, String fileName, Context context) throws MalformedURLException, RemoteServiceSearchException {
         try {
             // Here we define our base request object which we will
             // send to our REST service via HttpClient.
@@ -670,7 +516,7 @@ public class FamilySearchService {
         }
         catch (IOException e) {
             Log.e(TAG, "There was a problem when sending the request. "+e , e);
-            throw new FamilySearchException("There was a problem when sending the request. "+e, 0, e);
+            throw new RemoteServiceSearchException("There was a problem when sending the request. "+e, 0, e);
         }
 
         return null;

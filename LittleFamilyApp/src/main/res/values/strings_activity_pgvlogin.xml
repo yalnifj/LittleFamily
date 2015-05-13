@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_activity_pgvlogin">Sign in to PhpGedView</string>
+    <!-- Strings related to login -->
+    <string name="pgv_url_hint">PhpGedView website URL</string>
+    <string name="pgv_agreements_text">By clicking the \"SIGN IN\" button, I agree to LittleFamily knowing my basic profile information and accessing data about my ancestors from the specified PhpGedView website.</string>
+    <string name="pgv_agreements_text2">LittleFamily will use this information in accordance with their respective terms of service and privacy policies.</string>
+    <string name="pgv_privacy_text">LittleFamily will not distribute or share any information outside of your device except with the specified PhpGedView website.</string>
+    <string name="default_id_hint">Default person ID (e.g. I1)</string>
+</resources>

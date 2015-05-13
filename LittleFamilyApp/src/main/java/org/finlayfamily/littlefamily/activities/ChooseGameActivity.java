@@ -10,7 +10,7 @@ import org.finlayfamily.littlefamily.data.LittlePerson;
 
 import java.util.ArrayList;
 
-public class ChooseGameActivity extends Activity {
+public class ChooseGameActivity extends LittleFamilyActivity {
 
     private LittlePerson selectedPerson;
     private ArrayList<LittlePerson> people;
@@ -28,21 +28,32 @@ public class ChooseGameActivity extends Activity {
         }
     }
 
+    @Override
+    public void onInit(int code) {
+        super.onInit(code);
+        String message = String.format(getResources().getString(R.string.player_greeting), selectedPerson.getGivenName());
+        message += " "+getResources().getString(R.string.what_game);
+        speak(message);
+    }
+
     public void startMatchGame(View view) {
         Intent intent = new Intent( this, MatchGameActivity.class );
         intent.putExtra(ChooseFamilyMember.FAMILY, people);
+        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, selectedPerson);
         startActivity(intent);
     }
 
     public void startScratchGame(View view) {
         Intent intent = new Intent( this, ScratchGameActivity.class );
         intent.putExtra(ChooseFamilyMember.FAMILY, people);
+        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, selectedPerson);
         startActivity(intent);
     }
 
     public void startColoringGame(View view) {
         Intent intent = new Intent( this, ColoringGameActivity.class );
         intent.putExtra(ChooseFamilyMember.FAMILY, people);
+        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, selectedPerson);
         startActivity(intent);
     }
 

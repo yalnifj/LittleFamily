@@ -1,18 +1,30 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="org.finlayfamily.littlefamily.activities.MatchGameActivity"
     android:focusable="true"
-    android:background="@android:color/background_light">
+    android:background="@android:color/background_light"
+    android:padding="16dp">
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:id="@+id/topBarFragment"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        tools:layout="@layout/fragment_top_bar" />
 
     <GridView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/gridViewMatch"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
         android:horizontalSpacing="5dp"
         android:numColumns="auto_fit"
         android:verticalSpacing="5dp"
-        android:background="@android:color/background_light" />
-</FrameLayout>
+        android:background="@android:color/background_light"
+        android:layout_gravity="center"
+        android:layout_below="@+id/topBarFragment"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+</RelativeLayout>

@@ -29,7 +29,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	private static final String TABLE_RELATIONSHIP = "relationship";
 	private static final String TABLE_MEDIA = "media";
 	private static final String TABLE_TAGS = "tags";
-    private static final String TABLE_TOKENS = "tokens";
+    private static final String TABLE_PROPERTIES = "properties";
 	
 	private static final String COL_ID = "id";
 	private static final String COL_NAME = "name";
@@ -54,12 +54,14 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String COL_ACTIVE = "active";
     private static final String COL_BIRTH_PLACE = "birthPlace";
     private static final String COL_NATIONALITY = "nationality";
+    private static final String COL_HAS_PARENTS = "hasParents";
 
 	
 	private static final String CREATE_LITTLE_PERSON = "create table "+TABLE_LITTLE_PERSON+" ( " +
 			" "+COL_ID+" integer primary key, "+COL_GIVEN_NAME+" text, "+COL_NAME+" text, " +
 			" "+COL_FAMILY_SEARCH_ID+" text, "+COL_PHOTO_PATH+" text, "+COL_BIRTH_DATE+" integer, " + COL_BIRTH_PLACE+" text, "+
-			" "+COL_NATIONALITY+" text, "+COL_AGE+" integer, "+COL_GENDER+" char, "+COL_ALIVE+" char, "+COL_ACTIVE+" char, "+COL_LAST_SYNC+" INTEGER );";
+			" "+COL_NATIONALITY+" text, "+COL_AGE+" integer, "+COL_GENDER+" char, "+COL_ALIVE+" char, "+
+            " "+COL_HAS_PARENTS+" char, "+COL_ACTIVE+" char, "+COL_LAST_SYNC+" INTEGER );";
 
 	private static final String CREATE_RELATIONSHIP = "create table " + TABLE_RELATIONSHIP + " ( "
             +COL_ID +" integer primary key, "
@@ -77,8 +79,8 @@ public class DBHelper extends SQLiteOpenHelper {
             +"foreign key("+COL_MEDIA_ID+") references "+TABLE_MEDIA+" ("+COL_ID+"), "
             +"foreign key("+COL_PERSON_ID+") references "+TABLE_LITTLE_PERSON+" ("+COL_ID+"));";
 
-    private static final String CREATE_TOKENS = "create table "+ TABLE_TOKENS + " ("
-            + " systemId text primary key, token text, "+COL_LAST_SYNC+" integer"
+    private static final String CREATE_PROPERTIES = "create table "+ TABLE_PROPERTIES + " ("
+            + " property text primary key, value text, "+COL_LAST_SYNC+" integer"
             + " )";
 			
 	private Context context;
@@ -94,7 +96,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		db.execSQL(CREATE_RELATIONSHIP);
 		db.execSQL(CREATE_MEDIA);
         db.execSQL(CREATE_TAGS);
-        db.execSQL(CREATE_TOKENS);
+        db.execSQL(CREATE_PROPERTIES);
 	}
 	
 	@Override
@@ -109,6 +111,12 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     private String getYorNForBoolean(boolean b) {
+        if (b) return "Y";
+        return "N";
+    }
+
+    private String getYorNorNullForBoolean(Boolean b) {
+        if (b==null) return "";
         if (b) return "Y";
         return "N";
     }
@@ -139,6 +147,7 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put(COL_ACTIVE, getYorNForBoolean(person.isActive()));
         values.put(COL_BIRTH_PLACE, person.getBirthPlace());
         values.put(COL_NATIONALITY, person.getNationality());
+        values.put(COL_HAS_PARENTS, getYorNorNullForBoolean(person.isHasParents()));
 		
 		// -- add
 		if (person.getId() == 0) {
@@ -166,7 +175,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		String[] projection = {
 			COL_GIVEN_NAME, COL_GENDER, COL_PHOTO_PATH, COL_NAME,
 			COL_AGE, COL_BIRTH_DATE, COL_BIRTH_PLACE, COL_NATIONALITY, COL_FAMILY_SEARCH_ID,
-			COL_ID, COL_LAST_SYNC, COL_ALIVE, COL_ACTIVE
+			COL_ID, COL_LAST_SYNC, COL_ALIVE, COL_ACTIVE, COL_HAS_PARENTS
 		};
 		String selection = COL_ID + " LIKE ?";
 		String[] selectionArgs = { String.valueOf(id) };
@@ -221,7 +230,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		String[] projection = {
 			COL_GIVEN_NAME, COL_GENDER, COL_PHOTO_PATH, COL_NAME,
 			COL_AGE, COL_BIRTH_DATE, COL_BIRTH_PLACE, COL_NATIONALITY, COL_FAMILY_SEARCH_ID, COL_LAST_SYNC,
-			COL_ID, COL_ALIVE, COL_ACTIVE
+			COL_ID, COL_ALIVE, COL_ACTIVE, COL_HAS_PARENTS
 		};
 		String selection = COL_FAMILY_SEARCH_ID + " LIKE ?";
 		String[] selectionArgs = { fsid };
@@ -248,7 +257,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		String[] projection = {
 			COL_GIVEN_NAME, COL_GENDER, COL_PHOTO_PATH, COL_NAME,
 			COL_AGE, COL_BIRTH_DATE, COL_BIRTH_PLACE, COL_NATIONALITY, COL_FAMILY_SEARCH_ID, COL_LAST_SYNC,
-			"p."+COL_ID, COL_ALIVE, COL_ACTIVE, "r."+COL_TYPE
+			"p."+COL_ID, COL_ALIVE, COL_ACTIVE, "r."+COL_TYPE, COL_HAS_PARENTS
 		};
 		String selection = "(r."+COL_ID1 + " LIKE ? or r."+COL_ID2+" LIKE ?) and p.active='Y'";
 
@@ -286,7 +295,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String[] projection = {
                 COL_GIVEN_NAME, COL_GENDER, COL_PHOTO_PATH, COL_NAME,
                 COL_AGE, COL_BIRTH_DATE, COL_BIRTH_PLACE, COL_NATIONALITY, COL_FAMILY_SEARCH_ID, COL_LAST_SYNC,
-                "p."+COL_ID, COL_ALIVE, COL_ACTIVE
+                "p."+COL_ID, COL_ALIVE, COL_ACTIVE, COL_HAS_PARENTS
         };
         String selection = "r."+COL_ID2+" LIKE ? and r."+COL_TYPE+"=? and p.active='Y'";
 
@@ -340,6 +349,11 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         person.setAlive(c.getString(c.getColumnIndexOrThrow(COL_ALIVE)).equals("Y") ? true : false);
         person.setActive(c.getString(c.getColumnIndexOrThrow(COL_ACTIVE)).equals("Y") ? true : false);
+        String hasParentsStr = c.getString(c.getColumnIndexOrThrow(COL_HAS_PARENTS));
+        if (hasParentsStr.equals("Y")) person.setHasParents(true);
+        else if (hasParentsStr.equals("Y")) person.setHasParents(false);
+        else person.setHasParents(null);
+
 		return person;
 	}
 	
@@ -620,47 +634,67 @@ public class DBHelper extends SQLiteOpenHelper {
         return tag;
     }
 
-    public void saveToken(String systemId, String token) {
+    public void saveProperty(String property, String value) {
         SQLiteDatabase db = getWritableDatabase();
 
-        String selection = "systemId LIKE ?";
-        String[] selectionArgs = { systemId };
-        int count = db.delete(TABLE_TOKENS, selection, selectionArgs);
-        Log.d("DBHelper", "deleted "+count+" from "+TABLE_TOKENS);
+        String selection = "property LIKE ?";
+        String[] selectionArgs = { property };
+        int count = db.delete(TABLE_PROPERTIES, selection, selectionArgs);
+        Log.d("DBHelper", "deleted "+count+" from "+TABLE_PROPERTIES);
 
         ContentValues values = new ContentValues();
-        values.put("systemId", systemId);
-        values.put("token", token);
+        values.put("property", property);
+        values.put("value", value);
         values.put(COL_LAST_SYNC, (new Date()).getTime());
 
-        long rowid = db.insert(TABLE_TOKENS, null, values);
-        Log.d("DBHelper", "saveToken rowid " + rowid);
+        long rowid = db.insert(TABLE_PROPERTIES, null, values);
+        Log.d("DBHelper", "saveProperty rowid " + rowid);
 
+    }
+
+    public String getProperty(String property) {
+        SQLiteDatabase db = getReadableDatabase();
+        String[] projection = {
+                "value", COL_LAST_SYNC
+        };
+        String selection = "property LIKE ?";
+        String[] selectionArgs = { property };
+        String tables = TABLE_PROPERTIES;
+
+        String value = null;
+        Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, COL_LAST_SYNC);
+        while (c.moveToNext()) {
+            value = c.getString(c.getColumnIndexOrThrow("value"));
+        }
+
+        c.close();
+
+        return value;
     }
 
     public String getTokenForSystemId(String systemId) {
         SQLiteDatabase db = getReadableDatabase();
         String[] projection = {
-                "token", COL_LAST_SYNC
+                "value", COL_LAST_SYNC
         };
-        String selection = "systemId LIKE ?";
+        String selection = "property LIKE ?";
         String[] selectionArgs = { systemId };
-        String tables = TABLE_TOKENS;
+        String tables = TABLE_PROPERTIES;
 
-        String token = null;
+        String value = null;
         Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, COL_LAST_SYNC);
         while (c.moveToNext()) {
-            token = c.getString(c.getColumnIndexOrThrow("token"));
+            value = c.getString(c.getColumnIndexOrThrow("value"));
             Date date = new Date(c.getLong(c.getColumnIndexOrThrow(COL_LAST_SYNC)));
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.MONTH, -1);
             if (date.before(cal.getTime())) {
-                token = null;
+                value = null;
             }
         }
 
         c.close();
 
-        return token;
+        return value;
     }
 }

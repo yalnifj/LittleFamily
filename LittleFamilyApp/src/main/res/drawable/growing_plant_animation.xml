@@ -6,5 +6,5 @@
     <item android:drawable="@drawable/growing_plant4" android:duration="200" />
     <item android:drawable="@drawable/growing_plant5" android:duration="200" />
     <item android:drawable="@drawable/growing_plant6" android:duration="200" />
-    <item android:drawable="@drawable/growing_plant7" android:duration="200" />
+    <item android:drawable="@drawable/growing_plant7" android:duration="400" />
 </animation-list>

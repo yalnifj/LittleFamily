@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -21,8 +22,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
-public class ColoringGameActivity extends Activity implements TextToSpeech.OnInitListener,
-            MemoriesLoaderTask.Listener, ColoringView.ColoringCompleteListener {
+public class ColoringGameActivity extends LittleFamilyActivity implements MemoriesLoaderTask.Listener, ColoringView.ColoringCompleteListener {
 
     private List<LittlePerson> people;
     private LittlePerson selectedPerson;
@@ -37,12 +37,11 @@ public class ColoringGameActivity extends Activity implements TextToSpeech.OnIni
 
     private int backgroundLoadIndex = 1;
 
-    private TextToSpeech tts;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_coloring_game);
+        setupTopBar();
 
         layeredImage = (ColoringView) findViewById(R.id.layeredImage);
         layeredImage.registerListener(this);
@@ -51,30 +50,12 @@ public class ColoringGameActivity extends Activity implements TextToSpeech.OnIni
         people = (List<LittlePerson>) intent.getSerializableExtra(ChooseFamilyMember.FAMILY);
 
         usedPhotos = new ArrayList<>(3);
+    }
 
-        tts = new TextToSpeech(this, this);
-
+    @Override
+    protected void onStart() {
+        super.onStart();
         loadRandomImage();
-    }
-
-    @Override
-    public void onInit(int code) {
-        if (code == TextToSpeech.SUCCESS) {
-            tts.setLanguage(Locale.getDefault());
-            tts.setSpeechRate(0.5f);
-        } else {
-            tts = null;
-            //Toast.makeText(this, "Failed to initialize TTS engine.", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (tts!=null) {
-            tts.stop();
-            tts.shutdown();
-        }
-        super.onDestroy();
     }
 
     public void setupCanvas() {
@@ -149,14 +130,15 @@ public class ColoringGameActivity extends Activity implements TextToSpeech.OnIni
     @Override
     public void onColoringComplete() {
         if (tts != null) {
-            String name = selectedPerson.getGivenName();
+            final String name = selectedPerson.getGivenName();
             if (name != null) {
-                if (Build.VERSION.SDK_INT > 20) {
-                    tts.speak(name, TextToSpeech.QUEUE_FLUSH, null, null);
-                }
-                else {
-                    tts.speak(name, TextToSpeech.QUEUE_FLUSH, null);
-                }
+                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        speak(name);
+                    }
+                });
+                mediaPlayer.start();
             }
         }
         loadMoreFamilyMembers();

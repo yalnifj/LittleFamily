@@ -3,18 +3,9 @@ package org.finlayfamily.littlefamily.activities.tasks;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
-import org.finlayfamily.littlefamily.data.DataHelper;
 import org.finlayfamily.littlefamily.data.DataService;
 import org.finlayfamily.littlefamily.data.LittlePerson;
-import org.finlayfamily.littlefamily.familysearch.FamilySearchException;
-import org.finlayfamily.littlefamily.familysearch.FamilySearchService;
-import org.gedcomx.conclusion.Person;
-import org.gedcomx.conclusion.Relationship;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by jfinlay on 1/12/2015.

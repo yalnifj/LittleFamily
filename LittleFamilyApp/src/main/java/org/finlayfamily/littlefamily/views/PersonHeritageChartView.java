@@ -241,12 +241,13 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
                 if(canvas != null) {
                     distance+=2;
                     //if (distance > getHeight()+200) distance = 0;
+                    //if (distance > getHeight()+200) distance = 0;
                     view.doDraw(canvas);
                     holder.unlockCanvasAndPost(canvas);
                 }
 
                 try {
-                    sleep(10);
+                    sleep(33);
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();

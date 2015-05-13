@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,6 +26,7 @@ import org.gedcomx.types.GenderType;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,7 +34,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class ChooseCultureActivity extends Activity implements HeritageCalculatorTask.Listener, TextToSpeech.OnInitListener, PersonHeritageChartView.SelectedPathListener {
+public class ChooseCultureActivity extends LittleFamilyActivity implements HeritageCalculatorTask.Listener, PersonHeritageChartView.SelectedPathListener {
     public static final String DOLL_CONFIG = "dollConfig";
     private LittlePerson person;
     private Map<String, HeritagePath> cultures;
@@ -42,15 +44,15 @@ public class ChooseCultureActivity extends Activity implements HeritageCalculato
     private TextView cultureNameView;
     private ImageView portraitImage;
     private ImageView dollImage;
+    private Button playButton;
     private HeritagePath selectedPath;
     private DressUpDolls dressUpDolls;
-	
-	private TextToSpeech tts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_culture);
+        setupTopBar();
 
         chartView = (PersonHeritageChartView) findViewById(R.id.personChart);
         titleView = (TextView) findViewById(R.id.titleText);
@@ -61,7 +63,11 @@ public class ChooseCultureActivity extends Activity implements HeritageCalculato
         cultureNameView.setText("");
 
         portraitImage = (ImageView) findViewById(R.id.portraitImage);
+        portraitImage.setVisibility(View.INVISIBLE);
         dollImage = (ImageView) findViewById(R.id.dollImage);
+        dollImage.setVisibility(View.INVISIBLE);
+
+        playButton = (Button) findViewById(R.id.play_button);
 
         Intent intent = getIntent();
         person = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
@@ -69,15 +75,15 @@ public class ChooseCultureActivity extends Activity implements HeritageCalculato
         chartView.addListener(this);
 
         dressUpDolls = new DressUpDolls();
-		
-		tts = new TextToSpeech(this, this);
     }
 
     public void startDressUpActivity(View view) {
-        Intent intent = new Intent( this, HeritageDressUpActivity.class );
-        DollConfig dollConfig = dressUpDolls.getDollConfig(selectedPath.getPlace(), person);
-        intent.putExtra(DOLL_CONFIG, dollConfig);
-        startActivity(intent);
+        if (selectedPath!=null) {
+            Intent intent = new Intent(this, HeritageDressUpActivity.class);
+            DollConfig dollConfig = dressUpDolls.getDollConfig(selectedPath.getPlace(), person);
+            intent.putExtra(DOLL_CONFIG, dollConfig);
+            startActivity(intent);
+        }
     }
 
     public void setSelectedPath(HeritagePath selectedPath) {
@@ -90,7 +96,8 @@ public class ChooseCultureActivity extends Activity implements HeritageCalculato
         } else {
             bm = ImageHelper.loadBitmapFromResource(this, relative.getDefaultPhotoResource(), 0, this.portraitImage.getWidth(), this.portraitImage.getHeight());
         }
-        this.portraitImage.setImageBitmap(bm);
+        portraitImage.setImageBitmap(bm);
+        portraitImage.setVisibility(View.VISIBLE);
 		
 		String relationship = "";
 		int greats = selectedPath.getTreePath().size() - 2;
@@ -107,16 +114,18 @@ public class ChooseCultureActivity extends Activity implements HeritageCalculato
 		}
 
         this.cultureNameView.setText(selectedPath.getPlace());
+        double percent = selectedPath.getPercent()*100;
+        DecimalFormat decf = new DecimalFormat("#.#");
+        String percString = decf.format(percent);
 		String text = String.format(getResources().getString(R.string.you_are_percent),
-				selectedPath.getPercent()*100, selectedPath.getPlace(),
-				relationship);
+                percString, selectedPath.getPlace(),
+                relationship);
         if (relative.getBirthDate()!=null) {
             DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
             text += " " + String.format(getResources().getString(R.string.name_born_in_date),
                     relative.getName(), relative.getBirthPlace(), df.format(relative.getBirthDate()));
         } else {
-            text += " " + String.format(getResources().getString(R.string.name_born_in),
-                    relative.getName(), relative.getBirthPlace());
+            text += " " + relative.getName();
         }
 		speak(text);
 
@@ -126,10 +135,13 @@ public class ChooseCultureActivity extends Activity implements HeritageCalculato
             InputStream is = getAssets().open(thumbnailFile);
             Bitmap thumbnail = BitmapFactory.decodeStream(is);
             dollImage.setImageBitmap(thumbnail);
+            dollImage.setVisibility(View.VISIBLE);
             is.close();
         } catch (IOException e) {
             Log.e("ChooseCultureActivity", "Error opening asset file", e);
         }
+
+        playButton.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -166,40 +178,14 @@ public class ChooseCultureActivity extends Activity implements HeritageCalculato
 	
 	@Override
     public void onInit(int code) {
-        if (code == TextToSpeech.SUCCESS) {
-            tts.setLanguage(Locale.getDefault());
-            tts.setSpeechRate(0.9f);
-			speak(getResources().getString(R.string.calculating_heritage));
-        } else {
-            tts = null;
-            //Toast.makeText(this, "Failed to initialize TTS engine.", Toast.LENGTH_SHORT).show();
-            Log.e("ChooseCultureActivity", "Error intializing speech");
-        }
+        super.onInit(code);
+
+        speak(getResources().getString(R.string.calculating_heritage));
 
         HeritageCalculatorTask task = new HeritageCalculatorTask(this, this);
         task.execute(person);
     }
 
-    @Override
-    protected void onDestroy() {
-        if (tts!=null) {
-            tts.stop();
-            tts.shutdown();
-        }
-        super.onDestroy();
-    }
-	
-	private void speak(String message) {
-        Log.d("ChooseCultureActivity", "Speaking: "+message);
-		if (tts!=null) {
-			if (Build.VERSION.SDK_INT > 20) {
-				tts.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
-			}
-			else {
-				tts.speak(message, TextToSpeech.QUEUE_FLUSH, null);
-			}
-		}
-	}
 
     @Override
     public void onSelectedPath(HeritagePath path) {

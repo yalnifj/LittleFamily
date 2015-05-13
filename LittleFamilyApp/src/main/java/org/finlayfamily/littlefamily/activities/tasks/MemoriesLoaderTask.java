@@ -3,23 +3,12 @@ package org.finlayfamily.littlefamily.activities.tasks;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
-import org.finlayfamily.littlefamily.data.DataHelper;
 import org.finlayfamily.littlefamily.data.DataService;
 import org.finlayfamily.littlefamily.data.LittlePerson;
 import org.finlayfamily.littlefamily.data.Media;
-import org.finlayfamily.littlefamily.familysearch.FamilySearchException;
-import org.finlayfamily.littlefamily.familysearch.FamilySearchService;
-import org.gedcomx.conclusion.Person;
-import org.gedcomx.conclusion.Relationship;
-import org.gedcomx.links.Link;
-import org.gedcomx.source.SourceDescription;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.transform.Source;
 
 /**
  * Created by jfinlay on 1/12/2015.

@@ -1,6 +1,5 @@
 package org.finlayfamily.littlefamily.activities;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -27,10 +26,10 @@ import java.util.ArrayList;
  *
  * @see SystemUiHider
  */
-public class ChooseFamilyMember extends Activity implements AdapterView.OnItemClickListener, FamilyLoaderTask.Listener, PersonLoaderTask.Listener {
+public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterView.OnItemClickListener, FamilyLoaderTask.Listener, PersonLoaderTask.Listener {
     public static final String SELECTED_PERSON = "selectedPerson";
     public static final String FAMILY = "family";
-    private static final int LOGIN_REQUEST = 1;
+    public static final int LOGIN_REQUEST = 1;
 
     private GridView gridView;
     private FamilyMemberListAdapter adapter;
@@ -67,7 +66,7 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
 
         try {
             if (!dataService.hasData()) {
-                Intent intent = new Intent( this, FSLoginActivity.class );
+                Intent intent = new Intent( this, ChooseRemoteService.class );
                 startActivityForResult( intent, LOGIN_REQUEST );
             } else {
                 PersonLoaderTask task = new PersonLoaderTask(this, this);
@@ -99,7 +98,7 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        pd = ProgressDialog.show(this, "Please wait...", "Loading data from FamilySearch", true, false);
+        pd = ProgressDialog.show(this, "Please wait...", "Loading data from "+dataService.getServiceType(), true, false);
         launchGame = true;
         selectedPerson = (LittlePerson) gridView.getItemAtPosition(position);
         FamilyLoaderTask task = new FamilyLoaderTask(this, this);
@@ -119,6 +118,7 @@ public class ChooseFamilyMember extends Activity implements AdapterView.OnItemCl
         } else {
             adapter.setFamily(familyMembers);
             updateColumns();
+            speak(getResources().getString(R.string.title_activity_choose_family_member));
         }
     }
 

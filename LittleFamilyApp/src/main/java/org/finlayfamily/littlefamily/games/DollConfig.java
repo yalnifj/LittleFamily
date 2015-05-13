@@ -58,7 +58,7 @@ public class DollConfig implements Serializable{
                     String clothingName = in.next();
                     int left = in.nextInt();
                     int top = in.nextInt();
-                    DollClothing dc = new DollClothing(left, top, clothingName);
+                    DollClothing dc = new DollClothing(left, top, "dolls/"+folderName+"/"+clothingName+".png");
                     boyclothing[b] = dc;
                 }
                 int girlcount = in.nextInt();
