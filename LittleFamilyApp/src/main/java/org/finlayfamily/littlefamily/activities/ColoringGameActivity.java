@@ -50,7 +50,11 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Memori
         people = (List<LittlePerson>) intent.getSerializableExtra(ChooseFamilyMember.FAMILY);
 
         usedPhotos = new ArrayList<>(3);
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
         loadRandomImage();
     }
 

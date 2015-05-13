@@ -402,7 +402,7 @@ public class DataService implements AuthTask.Listener {
                 }
                 if (relative!=null) {
                     family.add(relative);
-                    addToSyncQ(relative, QDepth+1);
+                    //addToSyncQ(relative, QDepth+1);
                     org.finlayfamily.littlefamily.data.Relationship rel = new org.finlayfamily.littlefamily.data.Relationship();
                     rel.setId2(person.getId());
                     if (r.getKnownType()== RelationshipType.Couple) {
@@ -436,7 +436,7 @@ public class DataService implements AuthTask.Listener {
                 }
                 if (relative!=null) {
                     family.add(relative);
-                    addToSyncQ(relative, QDepth+1);
+                    //addToSyncQ(relative, QDepth+1);
                     org.finlayfamily.littlefamily.data.Relationship rel = new org.finlayfamily.littlefamily.data.Relationship();
                     rel.setId1(person.getId());
                     if (r.getKnownType()== RelationshipType.Couple) {

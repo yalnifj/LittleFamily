@@ -48,6 +48,11 @@ public class ScratchGameActivity extends LittleFamilyActivity implements Memorie
         people = (List<LittlePerson>) intent.getSerializableExtra(ChooseFamilyMember.FAMILY);
 
         usedPhotos = new ArrayList<>(3);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
 
         loadRandomImage();
     }

@@ -3,7 +3,8 @@
     android:layout_height="match_parent"
     tools:context="org.finlayfamily.littlefamily.activities.MatchGameActivity"
     android:focusable="true"
-    android:background="@android:color/background_light">
+    android:background="@android:color/background_light"
+    android:padding="16dp">
 
     <FrameLayout
         android:layout_width="fill_parent"
