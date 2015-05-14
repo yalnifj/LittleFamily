@@ -94,6 +94,14 @@
             android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
+        <activity
+            android:name=".activities.PuzzleGameActivity"
+            android:label="@string/title_activity_puzzle_game"
+            android:parentActivityName=".activities.ChooseGameActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.finlayfamily.littlefamily.activities.ChooseGameActivity" />
+        </activity>
     </application>
 
 </manifest>

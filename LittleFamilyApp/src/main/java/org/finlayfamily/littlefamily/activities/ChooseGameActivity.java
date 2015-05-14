@@ -62,4 +62,11 @@ public class ChooseGameActivity extends LittleFamilyActivity {
         intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, selectedPerson);
         startActivity(intent);
     }
+
+    public void startPuzzleGame(View view) {
+        Intent intent = new Intent( this, PuzzleGameActivity.class );
+        intent.putExtra(ChooseFamilyMember.FAMILY, people);
+        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, selectedPerson);
+        startActivity(intent);
+    }
 }
