@@ -162,9 +162,11 @@ public class DataService implements AuthTask.Listener {
 
     private class SyncThread extends Thread {
         public void run() {
+            Log.d("SyncThread", "SyncThread started.");
             while(running) {
                 while (syncQ.size() == 0) {
                     try {
+                        Log.d("SyncThread", "Waiting for Q data");
                         synchronized (syncQ) {
                             syncQ.wait();
                         }
@@ -270,7 +272,7 @@ public class DataService implements AuthTask.Listener {
                         }
                     }
                     try {
-                        Thread.sleep(5000);  //-- don't bombard the server
+                        Thread.sleep(10000);  //-- don't bombard the server
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -402,7 +404,6 @@ public class DataService implements AuthTask.Listener {
                 }
                 if (relative!=null) {
                     family.add(relative);
-                    //addToSyncQ(relative, QDepth+1);
                     org.finlayfamily.littlefamily.data.Relationship rel = new org.finlayfamily.littlefamily.data.Relationship();
                     rel.setId2(person.getId());
                     if (r.getKnownType()== RelationshipType.Couple) {
@@ -422,6 +423,7 @@ public class DataService implements AuthTask.Listener {
                             person.setHasParents(true);
                             getDBHelper().persistLittlePerson(person);
                         }
+                        addToSyncQ(relative, QDepth+1);
                     }
                     getDBHelper().persistLittlePerson(relative);
                     rel.setId1(relative.getId());
@@ -436,7 +438,6 @@ public class DataService implements AuthTask.Listener {
                 }
                 if (relative!=null) {
                     family.add(relative);
-                    //addToSyncQ(relative, QDepth+1);
                     org.finlayfamily.littlefamily.data.Relationship rel = new org.finlayfamily.littlefamily.data.Relationship();
                     rel.setId1(person.getId());
                     if (r.getKnownType()== RelationshipType.Couple) {

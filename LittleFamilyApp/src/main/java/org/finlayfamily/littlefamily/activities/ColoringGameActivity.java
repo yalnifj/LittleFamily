@@ -119,7 +119,11 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Memori
                     usedPhotos.remove(0);
                 }
                 usedPhotos.add(photo);
-                imageBitmap = ImageHelper.loadBitmapFromFile(imagePath, 0, layeredImage.getWidth(), layeredImage.getHeight(), true);
+                int width = layeredImage.getWidth();
+                int height = layeredImage.getHeight();
+                if (width<5) width = 300;
+                if (height<5) height = 300;
+                imageBitmap = ImageHelper.loadBitmapFromFile(imagePath, 0, width, height, true);
                 setupCanvas();
             } else {
                 loadRandomImage();

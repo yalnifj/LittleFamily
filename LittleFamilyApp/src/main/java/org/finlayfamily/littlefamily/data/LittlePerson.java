@@ -67,7 +67,7 @@ public class LittlePerson implements Serializable {
         setGender(fsPerson.getGender().getKnownType());
         Name name = null;
         for(Name n : fsPerson.getNames()) {
-            if (n.getPreferred()) {
+            if (n==null || n.getPreferred()) {
                 name = n;
             }
         }

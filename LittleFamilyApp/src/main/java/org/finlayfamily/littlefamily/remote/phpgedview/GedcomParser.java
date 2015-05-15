@@ -231,8 +231,16 @@ public class GedcomParser {
             String[] ps = line.split(" ", 3);
             if ("FILE".equals(ps[1])) {
                 Link link = new Link();
-                link.setRel("image");
-                String mediaPath = ps[2];
+                String mediaPath = ps[2].trim();
+                String[] paths = mediaPath.split("\\.");
+                String ext = paths[paths.length-1].toLowerCase();
+                if (ext.equals("jpg") || ext.equals("jpeg") || ext.equals("gif") || ext.equals("png")) {
+                    link.setRel("image");
+                } else if (ext.equals("pdf")) {
+                    link.setRel("pdf");
+                } else {
+                    link.setRel("other");
+                }
                 mediaPath = mediaPath.replaceAll(" ", "%20");
                 URI uri = new URI(baseUrl + mediaPath);
                 link.setHref(uri);

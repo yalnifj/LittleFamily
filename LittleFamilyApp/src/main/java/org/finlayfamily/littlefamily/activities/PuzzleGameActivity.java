@@ -34,7 +34,7 @@ public class PuzzleGameActivity extends LittleFamilyActivity implements Memories
         setupTopBar();
 
         puzzleSurfaceView =(PuzzleSurfaceView) findViewById(R.id.puzzleSurfaceView);
-        puzzleGame = new PuzzleGame(2, 1);
+        puzzleGame = new PuzzleGame(2, 2);
         puzzleSurfaceView.setGame(puzzleGame);
         puzzleSurfaceView.registerListener(this);
         puzzleSurfaceView.setAnimationDelay(66);
@@ -74,13 +74,15 @@ public class PuzzleGameActivity extends LittleFamilyActivity implements Memories
     public void setupGame() {
         int rows = puzzleGame.getRows();
         int cols = puzzleGame.getCols();
-        if (rows < cols) rows++;
-        else if (cols < rows) cols++;
-        else {
-            if (puzzleSurfaceView.getWidth() > puzzleSurfaceView.getHeight()) cols++;
-            else rows++;
+        if (puzzleGame.isCompleted()) {
+            if (rows < cols) rows++;
+            else if (cols < rows) cols++;
+            else {
+                if (puzzleSurfaceView.getWidth() > puzzleSurfaceView.getHeight()) cols++;
+                else rows++;
+            }
+            puzzleGame.setupLevel(rows, cols);
         }
-        puzzleGame.setupLevel(rows, cols);
         puzzleSurfaceView.setBitmap(imageBitmap);
     }
 
@@ -102,7 +104,11 @@ public class PuzzleGameActivity extends LittleFamilyActivity implements Memories
             if (backgroundLoadIndex < 20) loadMoreFamilyMembers();
             else {
                 //-- could not find any images, fallback to a default image
-                imageBitmap = ImageHelper.loadBitmapFromResource(this, selectedPerson.getDefaultPhotoResource(), 0, puzzleSurfaceView.getWidth(), puzzleSurfaceView.getHeight());
+                int width = puzzleSurfaceView.getWidth();
+                int height = puzzleSurfaceView.getHeight();
+                if (width<5) width = 300;
+                if (height<5) height = 300;
+                imageBitmap = ImageHelper.loadBitmapFromResource(this, selectedPerson.getDefaultPhotoResource(), 0, width, height);
                 setupGame();
             }
         } else {
@@ -122,11 +128,15 @@ public class PuzzleGameActivity extends LittleFamilyActivity implements Memories
             }
             imagePath = photo.getLocalPath();
             if (imagePath!=null) {
-                if (usedPhotos.size()>=3) {
+                if (usedPhotos.size()>=5) {
                     usedPhotos.remove(0);
                 }
                 usedPhotos.add(photo);
-                imageBitmap = ImageHelper.loadBitmapFromFile(imagePath, 0, puzzleSurfaceView.getWidth(), puzzleSurfaceView.getHeight(), true);
+                int width = puzzleSurfaceView.getWidth();
+                int height = puzzleSurfaceView.getHeight();
+                if (width<5) width = 300;
+                if (height<5) height = 300;
+                imageBitmap = ImageHelper.loadBitmapFromFile(imagePath, 0, width, height, true);
                 setupGame();
             } else {
                 loadRandomImage();

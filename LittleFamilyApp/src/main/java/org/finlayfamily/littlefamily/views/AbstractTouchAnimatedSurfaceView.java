@@ -159,8 +159,8 @@ public abstract class AbstractTouchAnimatedSurfaceView extends SurfaceView imple
 
                 try {
                     sleep(sleeptime);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                } catch (Exception e) {
+                    Log.d("Exception Occured", e.getMessage(), e);
                 }
             }
         }

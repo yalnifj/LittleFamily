@@ -7,7 +7,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Log;
 
+import org.finlayfamily.littlefamily.data.PuzzlePiece;
 import org.finlayfamily.littlefamily.games.PuzzleGame;
 
 import java.util.ArrayList;
@@ -26,12 +28,13 @@ public class PuzzleSurfaceView extends AbstractTouchAnimatedSurfaceView {
 
     private int sRow;
     private int sCol;
-    private int sLoc;
-    private boolean selected = false;
+    private PuzzlePiece selected = null;
     private int sx;
     private int sy;
     private int pieceWidth;
     private int pieceHeight;
+    private boolean animating = false;
+    private boolean checkGame = false;
 
     public PuzzleSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -46,7 +49,7 @@ public class PuzzleSurfaceView extends AbstractTouchAnimatedSurfaceView {
 
         shadowPaint = new Paint();
         shadowPaint.setColor(Color.GRAY);
-        //shadowPaint.setAlpha(100);
+        shadowPaint.setAlpha(200);
         shadowPaint.setStyle(Paint.Style.FILL);
 
         setTouchTolerance(10);
@@ -54,7 +57,47 @@ public class PuzzleSurfaceView extends AbstractTouchAnimatedSurfaceView {
 
     @Override
     public void doStep() {
+        animating = false;
+        for(int r=0; r<game.getRows(); r++) {
+            for (int c = 0; c < game.getCols(); c++) {
+                PuzzlePiece pp = game.getPiece(r, c);
+                if (pp.isAnimating()) {
+                    if (pp.getX()==pp.getToX() && pp.getY()==pp.getToY()) {
+                        pp.setAnimating(false);
+                    } else {
+                        int dx = 0;
+                        int dy = 0;
+                        if (pp.getX() != pp.getToX()) {
+                            dx = (int) ((pp.getToX() - pp.getX()) / 4);
+                            if (dx==0) {
+                                if (pp.getToX() < pp.getX()) dx = -1;
+                                else dx = 1;
+                            }
+                        }
+                        if (pp.getY() != pp.getToY()) {
+                            dy = (int) ((pp.getToY() - pp.getY()) / 4);
+                            if (dy==0) {
+                                if (pp.getToY() < pp.getY()) dy = -1;
+                                else dy = 1;
+                            }
+                        }
+                        pp.setX(pp.getX() + dx);
+                        pp.setY(pp.getY() + dy);
+                        //Log.d("PuzzleSurfaceView", "Animating r=" + r + " c=" + c + " x="+pp.getX()+" y="+pp.getY());
+                        animating = true;
+                    }
+                }
+            }
+        }
 
+        if (!animating && checkGame) {
+            if (game.isCompleted()) {
+                for(PuzzleCompleteListener l : listeners) {
+                    l.onPuzzleComplete();
+                }
+            }
+            checkGame = false;
+        }
     }
 
     @Override
@@ -77,35 +120,42 @@ public class PuzzleSurfaceView extends AbstractTouchAnimatedSurfaceView {
             }
 
             for(int r=0; r<game.getRows(); r++) {
-                int y = r * pieceHeight;
                 for(int c=0; c<game.getCols(); c++) {
-                    int loc = game.getSection(r, c);
-                    int by = (loc / game.getCols()) * bHeight;
-                    int bx = (loc % game.getCols()) * bWidth;
+                    int y = r * pieceHeight;
+                    int x = c * pieceWidth;
+
+                    PuzzlePiece pp = game.getPiece(r, c);
+                    int by = pp.getRow() * bHeight;
+                    int bx = pp.getCol() * bWidth;
                     Rect src = new Rect();
                     src.set(bx, by, bx + bWidth, by + bHeight);
-                    int x = c * pieceWidth;
+
+                    if (!pp.isAnimating() && !pp.isSelected()) {
+                        pp.setX(x);
+                        pp.setY(y);
+                    } else {
+                        canvas.drawRect(x, y, x+pieceWidth, y+pieceHeight, backPaint);
+                        x = pp.getX();
+                        y = pp.getY();
+                    }
                     Rect dst = new Rect();
                     dst.set(x, y, x + pieceWidth, y + pieceHeight);
-                    if (!selected || loc!=sLoc) {
+                    if (!pp.isSelected()) {
                         canvas.drawBitmap(bitmap, src, dst, outlinePaint);
-                        if (!game.inPlace(r, c))
+                        if (!pp.isInPlace())
                             canvas.drawRect(dst, outlinePaint);
-                    } else {
-                        canvas.drawRect(dst, backPaint);
                     }
                 }
             }
 
-            if (selected) {
-                //int loc = game.getSection(sRow, sCol);
-                int by = (sLoc / game.getCols()) * bHeight;
-                int bx = (sLoc % game.getCols()) * bWidth;
+            if (selected!=null) {
+                int by = selected.getRow() * bHeight;
+                int bx = selected.getCol() * bWidth;
                 Rect src = new Rect();
                 src.set(bx, by, bx + bWidth, by + bHeight);
                 Rect dst = new Rect();
-                canvas.drawRect((float)(dst.left-5), (float)(dst.top-5), (float)(dst.right+5), (float)(dst.bottom+5), shadowPaint);
-                dst.set(sx, sy, sx + pieceWidth, sy + pieceHeight);
+                dst.set(selected.getX(), selected.getY(), selected.getX() + pieceWidth, selected.getY() + pieceHeight);
+                canvas.drawRect((float) (dst.left +10), (float) (dst.top +10), (float) (dst.right + 10), (float) (dst.bottom + 10), shadowPaint);
                 canvas.drawBitmap(bitmap, src, dst, outlinePaint);
                 canvas.drawRect(dst, outlinePaint);
             }
@@ -115,54 +165,74 @@ public class PuzzleSurfaceView extends AbstractTouchAnimatedSurfaceView {
     @Override
     protected void touch_start(float x, float y) {
         super.touch_start(x, y);
-        int col = (int) (x / pieceWidth);
-        int row = (int) (y / pieceHeight);
-        if (col >= game.getCols()) col = game.getCols()-1;
-        if (row >= game.getRows()) row = game.getRows()-1;
-        sLoc = game.getLoc(row, col);
-        int val = game.getSection(row, col);
-        if (val!=sLoc) {
-            sRow = row;
-            sCol = col;
-            selected = true;
-            sx = col * pieceWidth;
-            sy = row * pieceHeight;
+        selected = null;
+        for(int r=0; r<game.getRows(); r++) {
+            for (int c = 0; c < game.getCols(); c++) {
+                PuzzlePiece pp = game.getPiece(r, c);
+                if (!pp.isInPlace() && !pp.isAnimating()) {
+                    if (x>=pp.getX() && x <= pp.getX()+pieceWidth && y>=pp.getY() && y<=pp.getY()+pieceHeight) {
+                        selected = pp;
+                        pp.setSelected(true);
+                        sRow = r;
+                        sCol = c;
+                        Log.d("PuzzleSurfaceView", "Selecting r=" + r + " c=" + c);
+                        return;
+                    }
+                }
+            }
         }
     }
 
     @Override
     protected void touch_up(float x, float y) {
         super.touch_up(x, y);
-        if (selected) {
+        if (selected!=null) {
             int col = (int) (x / pieceWidth);
             int row = (int) (y / pieceHeight);
             if (col >= game.getCols()) col = game.getCols()-1;
             if (row >= game.getRows()) row = game.getRows()-1;
-            int loc = game.getLoc(row, col);
-            if (!game.inPlace(row, col) && loc!=sLoc) {
+            PuzzlePiece pp = game.getPiece(row, col);
+            if (!pp.isInPlace()) {
                 game.swap(row, col, sRow, sCol);
-            }
-
-            if (game.isCompleted()) {
-                for(PuzzleCompleteListener l : listeners) {
-                    l.onPuzzleComplete();
+                pp.setToX(sCol * pieceWidth);
+                pp.setToY(sRow * pieceHeight);
+                if (sRow==pp.getRow() && sCol==pp.getCol()) {
+                    pp.setInPlace(true);
+                    checkGame = true;
                 }
+                pp.setAnimating(true);
+                selected.setToX(col * pieceWidth);
+                selected.setToY(row * pieceHeight);
+                if (row==selected.getRow() && col==selected.getCol()) {
+                    selected.setInPlace(true);
+                    checkGame = true;
+                }
+            } else {
+                selected.setToX(sCol * pieceWidth);
+                selected.setToY(sRow * pieceHeight);
             }
+            selected.setSelected(false);
+            selected.setAnimating(true);
         }
-        selected = false;
+        selected = null;
 
     }
 
     @Override
     public void doMove(float oldX, float oldY, float newX, float newY) {
-        int dx = (int) (newX - oldX);
-        int dy = (int) (newY - oldY);
-        sx = sx + dx;
-        sy = sy + dy;
-        if (sx < 0) sx = 0;
-        if (sy < 0) sy = 0;
-        if (sx + pieceWidth > getWidth()) sx = getWidth() - pieceWidth;
-        if (sy + pieceHeight > getHeight()) sy = getHeight() - pieceHeight;
+        if (selected!=null) {
+            int dx = (int) (newX - oldX);
+            int dy = (int) (newY - oldY);
+            sx = selected.getX() + dx;
+            sy = selected.getY() + dy;
+            if (sx < 0) sx = 0;
+            if (sy < 0) sy = 0;
+            if (sx + pieceWidth > getWidth()) sx = getWidth() - pieceWidth;
+            if (sy + pieceHeight > getHeight()) sy = getHeight() - pieceHeight;
+            selected.setX(sx);
+            selected.setY(sy);
+            //Log.d("PuzzleSurfaceView", "Moving selected to sx="+sx+" sy="+sy);
+        }
     }
 
     public PuzzleGame getGame() {
