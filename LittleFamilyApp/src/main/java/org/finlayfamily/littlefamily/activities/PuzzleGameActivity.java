@@ -136,6 +136,7 @@ public class PuzzleGameActivity extends LittleFamilyActivity implements Memories
 
     @Override
     public void onPuzzleComplete() {
+        playCompleteSound();
         String name = selectedPerson.getGivenName();
         speak(name);
 

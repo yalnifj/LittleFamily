@@ -1,7 +1,5 @@
 package org.finlayfamily.littlefamily.games;
 
-import org.finlayfamily.littlefamily.data.MatchPerson;
-
 import java.util.Random;
 
 /**
@@ -53,6 +51,18 @@ public class PuzzleGame {
     public int getSection(int row, int col) {
         if (row >= rows || col >= cols || row<0 || col<0) throw new IllegalArgumentException("Row or column out of bounds ("+row+","+col+")");
         return board[row*cols + col];
+    }
+
+    public int getLoc(int row, int col) {
+        if (row >= rows || col >= cols || row<0 || col<0) throw new IllegalArgumentException("Row or column out of bounds ("+row+","+col+")");
+        return row*cols + col;
+    }
+
+    public boolean inPlace(int row, int col) {
+        if (row >= rows || col >= cols || row<0 || col<0) throw new IllegalArgumentException("Row or column out of bounds ("+row+","+col+")");
+        int loc = row*cols + col;
+        int val = board[loc];
+        return loc==val;
     }
 
     public int[] getHint() {

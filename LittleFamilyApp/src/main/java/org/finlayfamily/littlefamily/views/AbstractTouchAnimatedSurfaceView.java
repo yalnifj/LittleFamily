@@ -67,6 +67,8 @@ public abstract class AbstractTouchAnimatedSurfaceView extends SurfaceView imple
         float dy = Math.abs(y - mY);
         if (dx >= touchTolerance || dy >= touchTolerance) {
             doMove(mX, mY, x, y);
+            mX = x;
+            mY = y;
         }
     }
 
