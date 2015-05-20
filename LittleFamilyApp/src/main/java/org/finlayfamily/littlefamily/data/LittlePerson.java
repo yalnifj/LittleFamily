@@ -1,21 +1,17 @@
 package org.finlayfamily.littlefamily.data;
 
+import org.finlayfamily.littlefamily.R;
+import org.gedcomx.conclusion.Fact;
 import org.gedcomx.conclusion.Name;
 import org.gedcomx.conclusion.NameForm;
 import org.gedcomx.conclusion.NamePart;
-import org.finlayfamily.littlefamily.R;
-import org.gedcomx.conclusion.Fact;
 import org.gedcomx.conclusion.Person;
 import org.gedcomx.conclusion.PlaceReference;
-import org.gedcomx.records.Field;
 import org.gedcomx.types.FactType;
 import org.gedcomx.types.GenderType;
 import org.gedcomx.types.NamePartType;
-import org.gedcomx.types.NamePartType;
 
 import java.io.Serializable;
-import java.util.List;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -67,7 +63,7 @@ public class LittlePerson implements Serializable {
         setGender(fsPerson.getGender().getKnownType());
         Name name = null;
         for(Name n : fsPerson.getNames()) {
-            if (n==null || n.getPreferred()) {
+            if (n==null || (n.getPreferred()!=null && n.getPreferred())) {
                 name = n;
             }
         }

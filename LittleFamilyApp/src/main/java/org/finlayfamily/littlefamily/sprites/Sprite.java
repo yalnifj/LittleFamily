@@ -11,6 +11,18 @@ public abstract class Sprite {
     protected int width;
     protected int height;
     protected int state;
+    protected boolean selectable;
+    protected boolean removeMe;
+
+    public Sprite() {
+        x = 0;
+        y = 0;
+        width = 0;
+        height = 0;
+        state = 0;
+        selectable = false;
+        removeMe = false;
+    }
 
     public void setHeight(int height) {
         this.height = height;
@@ -52,6 +64,22 @@ public abstract class Sprite {
         return height;
     }
 
+    public boolean isSelectable() {
+        return selectable;
+    }
+
+    public void setSelectable(boolean selectable) {
+        this.selectable = selectable;
+    }
+
+    public boolean isRemoveMe() {
+        return removeMe;
+    }
+
+    public void setRemoveMe(boolean removeMe) {
+        this.removeMe = removeMe;
+    }
+
     public abstract void doStep();
     public abstract void doDraw(Canvas canvas);
     public abstract void onSelect(float x, float y);
@@ -59,6 +87,7 @@ public abstract class Sprite {
     public abstract void onRelease(float x, float y);
 
     public boolean inSprite(float tx, float ty) {
+        if (!selectable) return false;
         if (tx>=x && tx<=x+width && ty>=y && ty<=ty+height) {
             return true;
         }

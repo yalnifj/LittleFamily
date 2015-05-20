@@ -33,16 +33,25 @@ import java.util.List;
 public abstract class RemoteServiceBase implements RemoteService {
 
     protected String userAgent;
+    protected Long lastRequestTime;
+    protected Long minRequestTime = 300L;
 
     protected RemoteResult getRestData(String method, Uri action, Bundle params, Bundle headers) throws RemoteServiceSearchException {
         int retries = 0;
         while(retries < 3) {
             try {
+                if (lastRequestTime!=null && System.currentTimeMillis() - lastRequestTime < minRequestTime) {
+                    Thread.sleep(System.currentTimeMillis() - lastRequestTime); //-- limit to N requests per second
+                }
+            } catch (InterruptedException e) {
+            }
+            try {
+                lastRequestTime = System.currentTimeMillis();
                 return getRestDataNoRetry(method, action, params, headers);
             } catch (Exception e) {
             }
             try {
-                Thread.sleep(10000 * (retries+1)); //-- wait for a few seconds and try again
+                Thread.sleep(30000 * (retries+1)); //-- wait for a few seconds and try again
             } catch (InterruptedException e) {
             }
             retries++;

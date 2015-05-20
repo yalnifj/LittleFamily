@@ -30,6 +30,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	private static final String TABLE_MEDIA = "media";
 	private static final String TABLE_TAGS = "tags";
     private static final String TABLE_PROPERTIES = "properties";
+	private static final String TABLE_SYNCQ = "syncq";
 	
 	private static final String COL_ID = "id";
 	private static final String COL_NAME = "name";
@@ -55,7 +56,6 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String COL_BIRTH_PLACE = "birthPlace";
     private static final String COL_NATIONALITY = "nationality";
     private static final String COL_HAS_PARENTS = "hasParents";
-
 	
 	private static final String CREATE_LITTLE_PERSON = "create table "+TABLE_LITTLE_PERSON+" ( " +
 			" "+COL_ID+" integer primary key, "+COL_GIVEN_NAME+" text, "+COL_NAME+" text, " +
@@ -82,6 +82,9 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String CREATE_PROPERTIES = "create table "+ TABLE_PROPERTIES + " ("
             + " property text primary key, value text, "+COL_LAST_SYNC+" integer"
             + " )";
+
+	private static final String CREATE_SYNCQ = "create table "+TABLE_SYNCQ + " ( "
+			+ COL_ID + " integer )";
 			
 	private Context context;
 
@@ -97,12 +100,12 @@ public class DBHelper extends SQLiteOpenHelper {
 		db.execSQL(CREATE_MEDIA);
         db.execSQL(CREATE_TAGS);
         db.execSQL(CREATE_PROPERTIES);
+		db.execSQL(CREATE_SYNCQ);
 	}
 	
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		// TODO Auto-generated method stub
-
+		//-- still on version 1.0, no need to upgrade
 	}
 
     public Long dateToLong(Date date) {
@@ -196,7 +199,7 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         LittlePerson person = null;
 
-        Cursor c = db.rawQuery("select * from "+TABLE_LITTLE_PERSON+" where active='Y' order by "+COL_ID+" LIMIT 1", null);
+        Cursor c = db.rawQuery("select * from " + TABLE_LITTLE_PERSON + " where active='Y' order by " + COL_ID + " LIMIT 1", null);
         while (c.moveToNext()) {
             person = personFromCursor(c);
         }
@@ -640,7 +643,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String selection = "property LIKE ?";
         String[] selectionArgs = { property };
         int count = db.delete(TABLE_PROPERTIES, selection, selectionArgs);
-        Log.d("DBHelper", "deleted "+count+" from "+TABLE_PROPERTIES);
+        Log.d("DBHelper", "deleted " + count + " from " + TABLE_PROPERTIES);
 
         ContentValues values = new ContentValues();
         values.put("property", property);
@@ -697,4 +700,46 @@ public class DBHelper extends SQLiteOpenHelper {
 
         return value;
     }
+
+	public void addToSyncQ(int id) {
+		SQLiteDatabase db = getWritableDatabase();
+
+		String selection = COL_ID+" LIKE ?";
+		String[] selectionArgs = { String.valueOf(id) };
+		int count = db.delete(TABLE_SYNCQ, selection, selectionArgs);
+		Log.d("DBHelper", "deleted " + count + " from " + TABLE_SYNCQ);
+
+		ContentValues values = new ContentValues();
+		values.put(COL_ID, id);
+
+		long rowid = db.insert(TABLE_SYNCQ, null, values);
+		Log.d("DBHelper", "addToSyncQ " + id);
+	}
+
+	public void removeFromSyncQ(int id) {
+		SQLiteDatabase db = getWritableDatabase();
+
+		String selection = COL_ID+" LIKE ?";
+		String[] selectionArgs = { String.valueOf(id) };
+		int count = db.delete(TABLE_SYNCQ, selection, selectionArgs);
+		Log.d("DBHelper", "deleted " + count + " from " + TABLE_SYNCQ);
+	}
+
+	public List<Integer> getSyncQ() {
+		SQLiteDatabase db = getReadableDatabase();
+		String[] projection = {
+				COL_ID
+		};
+
+		List<Integer> list = new ArrayList<>();
+		Cursor c = db.query(TABLE_SYNCQ, projection, null, null, null, null, COL_ID);
+		while (c.moveToNext()) {
+			Integer id = c.getInt(c.getColumnIndexOrThrow(COL_ID));
+			list.add(id);
+		}
+
+		c.close();
+
+		return list;
+	}
 }

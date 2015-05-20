@@ -18,8 +18,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.familysearch.identity.Identity;
 import org.finlayfamily.littlefamily.remote.RemoteResult;
 import org.finlayfamily.littlefamily.remote.RemoteService;
-import org.finlayfamily.littlefamily.remote.RemoteServiceSearchException;
 import org.finlayfamily.littlefamily.remote.RemoteServiceBase;
+import org.finlayfamily.littlefamily.remote.RemoteServiceSearchException;
 import org.finlayfamily.littlefamily.util.ImageHelper;
 import org.gedcomx.Gedcomx;
 import org.gedcomx.atom.Entry;
@@ -443,7 +443,7 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
                     return false;
                 }
                 delayCount++;
-                Thread.sleep(2000);
+                Thread.sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 Log.e(TAG, e.getMessage(), e);

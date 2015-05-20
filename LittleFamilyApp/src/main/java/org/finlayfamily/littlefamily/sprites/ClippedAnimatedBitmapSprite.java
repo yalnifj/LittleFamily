@@ -15,11 +15,20 @@ public class ClippedAnimatedBitmapSprite extends AnimatedBitmapSprite {
     protected int clipY;
     protected int maxWidth;
     protected int maxHeight;
+    protected float scale;
 
     public ClippedAnimatedBitmapSprite(Map<Integer, List<Bitmap>> bitmaps, int maxWidth, int maxHeight) {
         super(bitmaps);
         this.maxWidth = maxWidth;
         this.maxHeight = maxHeight;
+        this.scale = 1.0f;
+    }
+
+    public ClippedAnimatedBitmapSprite(Bitmap bitmap, int maxWidth, int maxHeight) {
+        super(bitmap);
+        this.maxWidth = maxWidth;
+        this.maxHeight = maxHeight;
+        this.scale = 1.0f;
     }
 
     public int getClipX() {
@@ -54,6 +63,14 @@ public class ClippedAnimatedBitmapSprite extends AnimatedBitmapSprite {
         this.maxWidth = maxWidth;
     }
 
+    public float getScale() {
+        return scale;
+    }
+
+    public void setScale(float scale) {
+        this.scale = scale;
+    }
+
     @Override
     public void doDraw(Canvas canvas) {
         if (bitmaps!=null) {
@@ -64,7 +81,7 @@ public class ClippedAnimatedBitmapSprite extends AnimatedBitmapSprite {
                     Rect clipRect = new Rect();
                     clipRect.set(clipX, clipY, clipX+width, clipY+height);
                     Rect rect = new Rect();
-                    rect.set(x, y, x + width, y + height);
+                    rect.set(x, y, (int)((x + width)*scale), (int)((y + height)*scale));
                     canvas.drawBitmap(bitmap, clipRect, rect, basePaint);
                 }
             }

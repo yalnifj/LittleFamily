@@ -11,6 +11,7 @@ import android.util.AttributeSet;
 import org.finlayfamily.littlefamily.sprites.Sprite;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -62,8 +63,11 @@ public class SpritedSurfaceView extends AbstractTouchAnimatedSurfaceView {
 
     @Override
     public void doStep() {
-        for(Sprite s : sprites) {
+        Iterator<Sprite> i = sprites.iterator();
+        while(i.hasNext()){
+            Sprite s = i.next();
             s.doStep();
+            if (s.isRemoveMe()) i.remove();
         }
     }
 

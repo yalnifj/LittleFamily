@@ -151,11 +151,13 @@ public abstract class AbstractTouchAnimatedSurfaceView extends SurfaceView imple
                 }
                 long calctime = System.currentTimeMillis() - starttime;
                 long sleeptime = animationDelay - calctime;
+
                 int skippedFrames = (int) (calctime / animationDelay);
                 if (skippedFrames > 1 ) {
                     Log.d(this.getClass().getSimpleName(), "Slow calculations missed "+skippedFrames+" frames.");
                     sleeptime = calctime % animationDelay;
                 }
+                if (sleeptime <=0 ) sleeptime = animationDelay;
 
                 try {
                     sleep(sleeptime);

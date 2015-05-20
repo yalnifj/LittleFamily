@@ -5,6 +5,8 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +22,27 @@ public class AnimatedBitmapSprite extends Sprite {
     protected boolean backward;
     protected Paint basePaint;
 
+    public AnimatedBitmapSprite() {
+        super();
+        this.bitmaps = new HashMap<>();
+        frame = 0;
+        stepsPerFrame = 3;
+        basePaint = new Paint();
+        bounce = false;
+    }
+
+    public AnimatedBitmapSprite(Bitmap bitmap) {
+        this();
+        List<Bitmap> list = new ArrayList<>(1);
+        list.add(bitmap);
+        bitmaps.put(0, list);
+        this.setWidth(bitmap.getWidth());
+        this.setHeight(bitmap.getHeight());
+    }
+
     public AnimatedBitmapSprite(Map<Integer, List<Bitmap>> bitmaps) {
+        super();
+        bounce = false;
         this.bitmaps = bitmaps;
         frame = 0;
         stepsPerFrame = 3;

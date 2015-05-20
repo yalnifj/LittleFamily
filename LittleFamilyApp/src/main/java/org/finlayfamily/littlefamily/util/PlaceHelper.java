@@ -34,7 +34,7 @@ public class PlaceHelper {
 
     public static boolean isInUS(String place) {
         String tempPlace = place.toLowerCase();
-        tempPlace.replaceAll("\\s?territory\\s?", "");
+        tempPlace = tempPlace.replaceAll("territory", "").trim();
         if (tempPlace.equals("united states")) return true;
         if (tempPlace.equals("united states of america")) return true;
         if (tempPlace.equals("us")) return true;

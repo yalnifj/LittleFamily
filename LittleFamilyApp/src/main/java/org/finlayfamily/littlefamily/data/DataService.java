@@ -163,6 +163,26 @@ public class DataService implements AuthTask.Listener {
     private class SyncThread extends Thread {
         public void run() {
             Log.d("SyncThread", "SyncThread started.");
+            try {
+                //-- read old q from DB
+                List<Integer> ids = getDBHelper().getSyncQ();
+                if (ids!=null) {
+                    for(Integer id : ids) {
+                        if (id!=null) {
+                            LittlePerson person = getDBHelper().getPersonById(id);
+                            if (person!=null) {
+                                ThreadPerson tp = new ThreadPerson();
+                                tp.depth = 0;
+                                tp.person = person;
+                                syncQ.add(tp);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                Log.e("SyncThread", "Error reading Q from DB", e);
+            }
+
             while(running) {
                 while (syncQ.size() == 0) {
                     try {
@@ -183,6 +203,7 @@ public class DataService implements AuthTask.Listener {
                 }
                 try {
                     if (tp != null) {
+                        getDBHelper().removeFromSyncQ(tp.person.getId());
                         Calendar cal = Calendar.getInstance();
                         cal.add(Calendar.HOUR, -1);
                         LittlePerson person = tp.person;
@@ -279,7 +300,7 @@ public class DataService implements AuthTask.Listener {
 
                     //-- force load of family members if we haven't previously loaded them
                     //--- allows building the tree in the background
-                    if (tp.depth < 5) {
+                    if (tp.depth < 8) {
                         QDepth = tp.depth;
                         List<LittlePerson> family = getDBHelper().getRelativesForPerson(tp.person.getId(), false);
                         if (tp.person.isHasParents() == null || family == null || family.size() == 0) {
@@ -288,7 +309,8 @@ public class DataService implements AuthTask.Listener {
                     }
                     QDepth = 0;
                 }catch(RemoteServiceSearchException e){
-                    Log.e("SyncThread", "Error reading from FamilySearch", e);
+                    Log.e("SyncThread", "Error reading from "+serviceType, e);
+
                 }catch(Exception e){
                     Log.e("SyncThread", "Error syncing person", e);
                 }
@@ -318,7 +340,7 @@ public class DataService implements AuthTask.Listener {
         }
     }
 
-    public void addToSyncQ(LittlePerson person, int depth) {
+    public void addToSyncQ(LittlePerson person, int depth) throws Exception {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.HOUR, -1);
         if (person.isHasParents()==null || person.getLastSync().before(cal.getTime())) {
@@ -328,6 +350,7 @@ public class DataService implements AuthTask.Listener {
                 tp.depth = depth;
                 if (!syncQ.contains(tp)) {
                     syncQ.add(tp);
+                    getDBHelper().addToSyncQ(person.getId());
                     syncQ.notifyAll();
                 }
             }
@@ -423,9 +446,11 @@ public class DataService implements AuthTask.Listener {
                             person.setHasParents(true);
                             getDBHelper().persistLittlePerson(person);
                         }
-                        addToSyncQ(relative, QDepth+1);
                     }
                     getDBHelper().persistLittlePerson(relative);
+                    if (relative.getRelationship().equals("parent")) {
+                        addToSyncQ(relative, QDepth+1);
+                    }
                     rel.setId1(relative.getId());
                     getDBHelper().persistRelationship(rel);
                 }
