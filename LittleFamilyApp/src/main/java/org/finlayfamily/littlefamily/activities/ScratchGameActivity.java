@@ -1,16 +1,14 @@
 package org.finlayfamily.littlefamily.activities;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
 
 import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.activities.tasks.FamilyLoaderTask;
 import org.finlayfamily.littlefamily.activities.tasks.MemoriesLoaderTask;
+import org.finlayfamily.littlefamily.activities.tasks.WaitTask;
 import org.finlayfamily.littlefamily.data.LittlePerson;
 import org.finlayfamily.littlefamily.data.Media;
 import org.finlayfamily.littlefamily.util.ImageHelper;
@@ -18,7 +16,6 @@ import org.finlayfamily.littlefamily.views.ScratchView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Random;
 
 public class ScratchGameActivity extends LittleFamilyActivity implements MemoriesLoaderTask.Listener, ScratchView.ScratchCompleteListener {
@@ -132,18 +129,23 @@ public class ScratchGameActivity extends LittleFamilyActivity implements Memorie
 
     @Override
     public void onScratchComplete() {
-        loadMoreFamilyMembers();
-        if (tts != null) {
-            String name = selectedPerson.getGivenName();
-            if (name != null) {
-                if (Build.VERSION.SDK_INT > 20) {
-                    tts.speak(name, TextToSpeech.QUEUE_FLUSH, null, null);
-                }
-                else {
-                    tts.speak(name, TextToSpeech.QUEUE_FLUSH, null);
+        playCompleteSound();
+
+        WaitTask waiter = new WaitTask(new WaitTask.WaitTaskListener() {
+            @Override
+            public void onProgressUpdate(Integer progress) {
+                if (progress==50) {
+                    String name = selectedPerson.getGivenName();
+                    speak(name);
                 }
             }
-        }
+
+            @Override
+            public void onComplete(Integer progress) {
+                loadMoreFamilyMembers();
+            }
+        });
+        waiter.execute(3000L);
     }
 
     public class FamilyLoaderListener implements FamilyLoaderTask.Listener {

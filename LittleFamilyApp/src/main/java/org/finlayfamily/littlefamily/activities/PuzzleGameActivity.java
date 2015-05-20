@@ -7,6 +7,7 @@ import android.os.Bundle;
 import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.activities.tasks.FamilyLoaderTask;
 import org.finlayfamily.littlefamily.activities.tasks.MemoriesLoaderTask;
+import org.finlayfamily.littlefamily.activities.tasks.WaitTask;
 import org.finlayfamily.littlefamily.data.LittlePerson;
 import org.finlayfamily.littlefamily.data.Media;
 import org.finlayfamily.littlefamily.games.PuzzleGame;
@@ -147,9 +148,21 @@ public class PuzzleGameActivity extends LittleFamilyActivity implements Memories
     @Override
     public void onPuzzleComplete() {
         playCompleteSound();
-        String name = selectedPerson.getGivenName();
-        speak(name);
 
-        loadMoreFamilyMembers();
+        WaitTask waiter = new WaitTask(new WaitTask.WaitTaskListener() {
+            @Override
+            public void onProgressUpdate(Integer progress) {
+                if (progress==40) {
+                    String name = selectedPerson.getGivenName();
+                    speak(name);
+                }
+            }
+
+            @Override
+            public void onComplete(Integer progress) {
+                loadMoreFamilyMembers();
+            }
+        });
+        waiter.execute(3000L);
     }
 }

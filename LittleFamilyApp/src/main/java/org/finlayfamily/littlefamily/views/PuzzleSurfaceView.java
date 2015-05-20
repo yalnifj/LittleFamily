@@ -241,6 +241,7 @@ public class PuzzleSurfaceView extends AbstractTouchAnimatedSurfaceView {
 
     public void setGame(PuzzleGame game) {
         this.game = game;
+        this.invalidate();
     }
 
     public Bitmap getBitmap() {
@@ -249,6 +250,7 @@ public class PuzzleSurfaceView extends AbstractTouchAnimatedSurfaceView {
 
     public void setBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;
+        this.invalidate();
     }
     private List<PuzzleCompleteListener> listeners = new ArrayList<>();
     public void registerListener(PuzzleCompleteListener l) {

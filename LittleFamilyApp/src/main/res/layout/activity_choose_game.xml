@@ -64,4 +64,14 @@
         android:layout_marginTop="24dp"
         android:layout_alignRight="@+id/coloringGameBtn"
         android:layout_alignEnd="@+id/coloringGameBtn" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/homeButton"
+        android:src="@drawable/home"
+        android:onClick="startHomeActivity"
+        android:layout_alignTop="@+id/puzzleGameButton"
+        android:layout_alignLeft="@+id/dressUpGameBtn"
+        android:layout_alignStart="@+id/dressUpGameBtn" />
 </RelativeLayout>

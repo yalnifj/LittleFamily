@@ -34,5 +34,6 @@ Please wait...</string>
     <string name="choose_service_below">Choose from one of the support online FamilyTree services below:</string>
     <string name="title_activity_splash">SplashActivity</string>
     <string name="title_activity_puzzle_game">PuzzleGameActivity</string>
+    <string name="title_activity_home">HomeActivity</string>
 
 </resources>

@@ -42,6 +42,7 @@ public class PuzzleGame {
                 swap(r, c, rr, rc);
             }
         }
+        if (isCompleted()) randomizeBoard();
     }
 
     public boolean isCompleted() {
