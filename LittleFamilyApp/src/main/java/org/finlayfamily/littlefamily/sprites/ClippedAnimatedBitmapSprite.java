@@ -81,7 +81,7 @@ public class ClippedAnimatedBitmapSprite extends AnimatedBitmapSprite {
                     Rect clipRect = new Rect();
                     clipRect.set(clipX, clipY, clipX+width, clipY+height);
                     Rect rect = new Rect();
-                    rect.set(x, y, (int)((x + width)*scale), (int)((y + height)*scale));
+                    rect.set((int)x, (int)y, (int)((x + width)*scale), (int)((y + height)*scale));
                     canvas.drawBitmap(bitmap, clipRect, rect, basePaint);
                 }
             }
@@ -90,8 +90,8 @@ public class ClippedAnimatedBitmapSprite extends AnimatedBitmapSprite {
 
     @Override
     public void onMove(float oldX, float oldY, float newX, float newY) {
-        clipX += (newX-oldX);
-        clipY += (newY-oldY);
+        clipX -= (newX-oldX);
+        clipY -= (newY-oldY);
 
         if (clipX < 0) clipX = 0;
         if (clipX + width > maxWidth) clipX = maxWidth - width;

@@ -70,12 +70,12 @@ public class MovingAnimatedBitmapSprite extends AnimatedBitmapSprite {
     @Override
     public void doStep() {
         super.doStep();
-        this.x = (int) (this.x + this.speed);
-        this.y = (int) (this.y + this.slope * this.speed);
+        this.x = this.x + this.speed;
+        this.y = this.y + this.slope * this.speed;
         if (this.speed > 0) {
             if (this.x > this.maxWidth) {
                 if (wrap) {
-                    this.x = (int) (0 - (this.width - this.speed));
+                    this.x = 0 - (this.width - this.speed);
                 } else {
                     setRemoveMe(true);
                 }
@@ -83,7 +83,7 @@ public class MovingAnimatedBitmapSprite extends AnimatedBitmapSprite {
         } else if (this.speed < 0) {
             if (this.x + this.width < 0) {
                 if (wrap) {
-                    this.x = (int) (this.maxWidth + this.speed);
+                    this.x = this.maxWidth + this.speed;
                 } else {
                     setRemoveMe(true);
                 }
@@ -93,7 +93,7 @@ public class MovingAnimatedBitmapSprite extends AnimatedBitmapSprite {
         if (this.slope > 0) {
             if (this.y > this.maxHeight) {
                 if (wrap) {
-                    this.y = (int) (0 - (this.height - this.slope * this.speed));
+                    this.y = 0.0f - (this.height - this.slope * this.speed);
                 } else {
                     setRemoveMe(true);
                 }
@@ -101,7 +101,7 @@ public class MovingAnimatedBitmapSprite extends AnimatedBitmapSprite {
         } else if (this.slope < 0) {
             if (this.y + this.height < 0) {
                 if (wrap) {
-                    this.y = (int) (this.maxHeight + this.slope * this.speed);
+                    this.y = this.maxHeight + this.slope * this.speed;
                 } else {
                     setRemoveMe(true);
                 }

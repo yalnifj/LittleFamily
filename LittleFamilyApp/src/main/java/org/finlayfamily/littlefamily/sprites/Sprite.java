@@ -6,8 +6,8 @@ import android.graphics.Canvas;
  * Created by jfinlay on 5/8/2015.
  */
 public abstract class Sprite {
-    protected int x;
-    protected int y;
+    protected float x;
+    protected float y;
     protected int width;
     protected int height;
     protected int state;
@@ -44,19 +44,19 @@ public abstract class Sprite {
         this.width = width;
     }
 
-    public int getX() {
+    public float getX() {
         return x;
     }
 
-    public void setX(int x) {
+    public void setX(float x) {
         this.x = x;
     }
 
-    public int getY() {
+    public float getY() {
         return y;
     }
 
-    public void setY(int y) {
+    public void setY(float y) {
         this.y = y;
     }
 

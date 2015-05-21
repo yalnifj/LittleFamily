@@ -110,7 +110,7 @@ public class AnimatedBitmapSprite extends Sprite {
                 if (frame >= 0 && frame < frames.size()) {
                     Bitmap bitmap = frames.get(frame);
                     Rect rect = new Rect();
-                    rect.set(x, y, x + width, y + height);
+                    rect.set((int)x, (int)y, (int)x + width, (int)y + height);
                     canvas.drawBitmap(bitmap, null, rect, basePaint);
                 }
             }

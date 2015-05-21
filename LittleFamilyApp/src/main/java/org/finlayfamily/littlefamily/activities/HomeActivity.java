@@ -61,7 +61,8 @@ public class HomeActivity extends LittleFamilyActivity {
         cloud1.setWidth((int) (cloudBm1.getWidth()*scale));
         cloud1.setHeight((int) (cloudBm1.getHeight() * scale));
         cloud1.setSlope(0);
-        cloud1.setSpeed(1.0f);
+        cloud1.setSpeed(0.5f);
+        cloud1.setY(30);
         homeView.addSprite(cloud1);
 
         Bitmap cloudBm2 = BitmapFactory.decodeResource(getResources(), R.drawable.house_cloud2);
@@ -70,6 +71,8 @@ public class HomeActivity extends LittleFamilyActivity {
         cloud2.setHeight((int) (cloudBm2.getHeight() * scale));
         cloud2.setSlope(0);
         cloud2.setSpeed(0.5f);
+        cloud2.setX((int) (backBitmap.getWidth()*0.75));
+        cloud2.setY(50);
         homeView.addSprite(cloud2);
     }
 

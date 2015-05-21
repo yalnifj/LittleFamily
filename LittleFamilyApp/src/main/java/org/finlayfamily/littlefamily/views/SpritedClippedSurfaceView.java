@@ -27,6 +27,8 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
         sprites = new ArrayList<>();
         selectedSprites = new ArrayList<>();
         basePaint = new Paint();
+        basePaint.setStyle(Paint.Style.FILL);
+        basePaint.setColor(Color.WHITE);
     }
 
     public SpritedClippedSurfaceView(Context context, AttributeSet attrs) {
@@ -72,11 +74,9 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
 
     @Override
     public void doDraw(Canvas canvas) {
+        canvas.drawRect(0,0,getWidth(),getHeight(), basePaint);
         if (backgroundSprite!=null) {
             backgroundSprite.doDraw(canvas);
-        } else {
-            basePaint.setColor(Color.WHITE);
-            canvas.drawRect(0,0,getWidth(),getHeight(),basePaint);
         }
 
         for(Sprite s : sprites) {
