@@ -21,6 +21,10 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
     protected Paint basePaint;
     protected List<Sprite> selectedSprites;
 
+    protected int clipX;
+    protected int clipY;
+    protected int maxWidth;
+    protected int maxHeight;
 
     public SpritedClippedSurfaceView(Context context) {
         super(context);
@@ -62,6 +66,22 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
         sprites.remove(s);
     }
 
+    public int getMaxHeight() {
+        return maxHeight;
+    }
+
+    public void setMaxHeight(int maxHeight) {
+        this.maxHeight = maxHeight;
+    }
+
+    public int getMaxWidth() {
+        return maxWidth;
+    }
+
+    public void setMaxWidth(int maxWidth) {
+        this.maxWidth = maxWidth;
+    }
+
     @Override
     public void doStep() {
         Iterator<Sprite> i = sprites.iterator();
@@ -76,11 +96,14 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
     public void doDraw(Canvas canvas) {
         canvas.drawRect(0,0,getWidth(),getHeight(), basePaint);
         if (backgroundSprite!=null) {
+            backgroundSprite.setWidth(this.getWidth());
+            backgroundSprite.setHeight(this.getHeight());
             backgroundSprite.doDraw(canvas);
         }
 
+        canvas.translate(-clipX, -clipY);
         for(Sprite s : sprites) {
-            if (s.getX()+s.getWidth()>=0 && s.getX()<=getWidth() && s.getY()+s.getHeight()>=0 && s.getY()<=getHeight()) {
+            if (s.getX()+s.getWidth()>=clipX && s.getX()<=getWidth()+clipX && s.getY()+s.getHeight()>=clipY && s.getY()<=getHeight()+clipY) {
                 s.doDraw(canvas);
             }
         }
@@ -94,6 +117,14 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
             }
         } else {
             backgroundSprite.onMove(oldX, oldY, newX, newY);
+            clipX -= (newX-oldX);
+            clipY -= (newY-oldY);
+
+            if (clipX < 0) clipX = 0;
+            if (clipX + getWidth() > maxWidth) clipX = maxWidth - getWidth();
+
+            if (clipY < 0) clipY = 0;
+            if (clipY + getHeight() > maxHeight) clipY = maxHeight - getHeight();
         }
     }
 

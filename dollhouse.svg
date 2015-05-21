@@ -21,6 +21,23 @@
   <defs
      id="defs4">
     <linearGradient
+       id="linearGradient7348"
+       y2="-996.73999"
+       gradientUnits="userSpaceOnUse"
+       x2="237.38"
+       y1="-573.14001"
+       x1="237.38"
+       inkscape:collect="always">
+      <stop
+         id="stop7350"
+         style="stop-color:#37abc8"
+         offset="0" />
+      <stop
+         id="stop7352"
+         style="stop-color:#aaeeff;stop-opacity:1"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
        id="linearGradient8419"
        y2="521.43"
        gradientUnits="userSpaceOnUse"
@@ -33,7 +50,7 @@
          offset="0" />
       <stop
          id="stop8423"
-         style="stop-color:#45dfcf;stop-opacity:0"
+         style="stop-color:#ffffff;stop-opacity:1"
          offset="1" />
     </linearGradient>
     <linearGradient
@@ -44,7 +61,7 @@
          offset="0"
          id="stop7046" />
       <stop
-         style="stop-color:#9c67ed;stop-opacity:0.30635837"
+         style="stop-color:#ab9bc4;stop-opacity:1"
          offset="1"
          id="stop7048" />
     </linearGradient>
@@ -5459,7 +5476,7 @@
     </filter>
     <linearGradient
        inkscape:collect="always"
-       xlink:href="#linearGradient13871-5"
+       xlink:href="#linearGradient7348"
        id="linearGradient7740"
        x1="601.24133"
        y1="459.82019"
@@ -6092,17 +6109,17 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.99"
-     inkscape:cx="581.4442"
-     inkscape:cy="315.05958"
+     inkscape:zoom="0.4751219"
+     inkscape:cx="639.69058"
+     inkscape:cy="434.13355"
      inkscape:document-units="px"
-     inkscape:current-layer="layer9"
+     inkscape:current-layer="layer7"
      showgrid="false"
-     inkscape:window-width="1600"
-     inkscape:window-height="1140"
-     inkscape:window-x="-4"
-     inkscape:window-y="-4"
-     inkscape:window-maximized="1"
+     inkscape:window-width="1283"
+     inkscape:window-height="844"
+     inkscape:window-x="2070"
+     inkscape:window-y="150"
+     inkscape:window-maximized="0"
      showguides="false" />
   <metadata
      id="metadata7">
@@ -6121,12 +6138,11 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(0,-308.26772)"
-     style="display:inline"
-     sodipodi:insensitive="true">
+     style="display:inline">
     <g
        id="g8492"
        transform="matrix(0.86949926,0,0,0.85931371,51.110208,130.72512)"
-       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_background.png"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_background.png"
        inkscape:export-xdpi="65.620003"
        inkscape:export-ydpi="65.620003">
       <rect
@@ -6192,8 +6208,8 @@
      inkscape:groupmode="layer"
      id="layer6"
      inkscape:label="clouds and trees"
-     sodipodi:insensitive="true"
-     style="display:inline">
+     style="display:inline"
+     sodipodi:insensitive="true">
     <g
        style="display:inline"
        transform="matrix(1,0,0,1.0340352,613.10622,-666.44479)"
@@ -6967,15 +6983,14 @@
      inkscape:groupmode="layer"
      id="layer7"
      inkscape:label="House"
-     style="display:inline"
-     sodipodi:insensitive="true">
+     style="display:inline">
     <path
        id="path5020-0-9"
        d="m 613.78232,755.86338 0,15.74792 440.29248,0 0,-15.74792 -440.29248,0 z"
        style="display:inline;fill:#6269d4;fill-opacity:1;filter:url(#filter12185)"
        inkscape:connector-curvature="0"
        transform="matrix(1.0292134,0,0,0.97728807,-25.433282,17.345951)"
-       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_rooms.png"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_rooms.png"
        inkscape:export-xdpi="65.620003"
        inkscape:export-ydpi="65.620003" />
     <path
@@ -6985,11 +7000,14 @@
        d="m 600,608.70274 0.21077,236.13295 m 9.50352,1.69514 -1.4616,241.06427 m -506.82412,-241.06427 954.28573,0 M 88.435727,606.39116 609.53689,282.64228 1069.9332,609.71281 Z m 14.421413,-3.59719 0,481.86033 955.71426,0 0,-474.76981 -954.28569,-2.95438 z"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccccccccccccccc"
-       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_rooms.png"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_rooms.png"
        inkscape:export-xdpi="65.620003"
        inkscape:export-ydpi="65.620003" />
     <g
-       id="g12432">
+       id="g12432"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_rooms.png"
+       inkscape:export-xdpi="65.620003"
+       inkscape:export-ydpi="65.620003">
       <path
          inkscape:export-ydpi="65.620003"
          inkscape:export-xdpi="65.620003"
@@ -7085,7 +7103,10 @@
       </g>
     </g>
     <g
-       id="g12375">
+       id="g12375"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_rooms.png"
+       inkscape:export-xdpi="65.620003"
+       inkscape:export-ydpi="65.620003">
       <rect
          inkscape:export-ydpi="65.620003"
          inkscape:export-xdpi="65.620003"
@@ -7476,7 +7497,7 @@
          style="display:inline">
         <polygon
            class="fil15"
-           points="1579,237 1579,1503 2472,1503 2472,237 "
+           points="2472,1503 2472,237 1579,237 1579,1503 "
            id="rect5229-5"
            style="clip-rule:evenodd;fill:#c6c3e0;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
            transform="matrix(0.06504895,0,0,0.06504895,498.41491,-32.688212)" />
@@ -7513,7 +7534,10 @@
       </g>
     </g>
     <g
-       id="g12464">
+       id="g12464"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_rooms.png"
+       inkscape:export-xdpi="65.620003"
+       inkscape:export-ydpi="65.620003">
       <path
          inkscape:export-ydpi="65.620003"
          inkscape:export-xdpi="65.620003"
@@ -7560,7 +7584,10 @@
       </g>
     </g>
     <g
-       id="g12419">
+       id="g12419"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_rooms.png"
+       inkscape:export-xdpi="65.620003"
+       inkscape:export-ydpi="65.620003">
       <g
          inkscape:export-ydpi="65.620003"
          inkscape:export-xdpi="65.620003"
@@ -7628,7 +7655,10 @@
       </g>
     </g>
     <g
-       id="g12448">
+       id="g12448"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_rooms.png"
+       inkscape:export-xdpi="65.620003"
+       inkscape:export-ydpi="65.620003">
       <polygon
          inkscape:export-ydpi="65.620003"
          inkscape:export-xdpi="65.620003"
@@ -7636,7 +7666,7 @@
          transform="matrix(0.05649579,0,0,0.07083856,610.8174,539.11477)"
          style="clip-rule:evenodd;display:inline;fill:#3c5e91;fill-opacity:1;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
          id="rect4847"
-         points="7880,3305 7880,0 0,0 0,3305 "
+         points="0,0 0,3305 7880,3305 7880,0 "
          class="fil0" />
       <g
          inkscape:export-ydpi="65.620003"
@@ -7683,7 +7713,7 @@
          style="display:inline">
         <polygon
            class="fil15"
-           points="2472,1503 2472,237 1579,237 1579,1503 "
+           points="1579,237 1579,1503 2472,1503 2472,237 "
            id="rect5229"
            style="clip-rule:evenodd;fill:#c6c3e0;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
            transform="matrix(0.06504895,0,0,0.06504895,498.41491,-32.688212)" />
@@ -7724,7 +7754,7 @@
      inkscape:groupmode="layer"
      id="layer8"
      inkscape:label="Toys"
-     style="display:inline"
+     style="display:none"
      sodipodi:insensitive="true">
     <g
        style="display:inline"
@@ -8972,7 +9002,7 @@
              style="stop-color:#A8A056" />
         </linearGradient>
         <polygon
-           points="670.41,682.35 455.18,681.95 528.47,624.19 743.7,624.59 "
+           points="528.47,624.19 743.7,624.59 670.41,682.35 455.18,681.95 "
            style="fill:url(#rect1293_1_)"
            id="rect1293" />
         <linearGradient
@@ -9053,7 +9083,7 @@
              style="stop-color:#A8A056" />
         </linearGradient>
         <polygon
-           points="743.74,839.63 743.75,624.5 669.75,682.56 669.75,897.69 "
+           points="669.75,682.56 669.75,897.69 743.74,839.63 743.75,624.5 "
            style="fill:url(#rect1295_1_)"
            id="rect1295" />
         <path
@@ -9139,7 +9169,7 @@
              style="stop-color:#A8A056" />
         </linearGradient>
         <polygon
-           points="670.41,682.35 455.18,681.95 528.47,624.19 743.7,624.59 "
+           points="528.47,624.19 743.7,624.59 670.41,682.35 455.18,681.95 "
            style="fill:url(#rect4707_1_)"
            id="rect4707" />
         <path
@@ -9180,11 +9210,11 @@
              inkscape:connector-curvature="0" />
         </g>
         <polygon
-           points="743.2,839.87 743.2,624.74 669.21,682.8 669.21,897.93 "
+           points="669.21,682.8 669.21,897.93 743.2,839.87 743.2,624.74 "
            style="opacity:0.38980001;enable-background:new"
            id="rect3939" />
         <polygon
-           points="671.56,680.86 456.33,680.47 529.62,622.71 744.85,623.11 "
+           points="529.62,622.71 744.85,623.11 671.56,680.86 456.33,680.47 "
            style="opacity:0.15249999;enable-background:new"
            id="rect2194" />
         <linearGradient
@@ -9349,7 +9379,7 @@
              style="stop-color:#A8A056" />
         </linearGradient>
         <polygon
-           points="958.45,623.77 743.22,623.37 816.51,565.61 1031.7,566.01 "
+           points="816.51,565.61 1031.7,566.01 958.45,623.77 743.22,623.37 "
            style="fill:url(#rect2964_1_)"
            id="rect2964" />
         <linearGradient
@@ -9430,7 +9460,7 @@
              style="stop-color:#A8A056" />
         </linearGradient>
         <polygon
-           points="1031.8,781.05 1031.8,565.92 957.8,623.98 957.79,839.11 "
+           points="957.8,623.98 957.79,839.11 1031.8,781.05 1031.8,565.92 "
            style="fill:url(#rect2966_1_)"
            id="rect2966" />
         <path
@@ -9516,7 +9546,7 @@
              style="stop-color:#A8A056" />
         </linearGradient>
         <polygon
-           points="958.45,623.77 743.22,623.37 816.51,565.61 1031.7,566.01 "
+           points="816.51,565.61 1031.7,566.01 958.45,623.77 743.22,623.37 "
            style="fill:url(#rect2970_1_)"
            id="rect2970" />
         <path
@@ -9557,11 +9587,11 @@
              inkscape:connector-curvature="0" />
         </g>
         <polygon
-           points="1031.3,780.69 1031.3,565.56 957.31,623.61 957.3,838.74 "
+           points="957.31,623.61 957.3,838.74 1031.3,780.69 1031.3,565.56 "
            style="opacity:0.38980001;enable-background:new"
            id="rect2988" />
         <polygon
-           points="957.38,623.43 742.15,623.03 815.44,565.28 1030.7,565.67 "
+           points="815.44,565.28 1030.7,565.67 957.38,623.43 742.15,623.03 "
            style="opacity:0.15249999;enable-background:new"
            id="rect2990" />
         <linearGradient
@@ -9726,7 +9756,7 @@
              style="stop-color:#A8A056" />
         </linearGradient>
         <polygon
-           points="742.62,408.88 527.39,408.48 600.67,350.72 815.9,351.12 "
+           points="600.67,350.72 815.9,351.12 742.62,408.88 527.39,408.48 "
            style="fill:url(#rect3019_1_)"
            id="rect3019" />
         <linearGradient
@@ -9807,7 +9837,7 @@
              style="stop-color:#A8A056" />
         </linearGradient>
         <polygon
-           points="815.95,566.16 815.96,351.03 741.96,409.09 741.96,624.22 "
+           points="741.96,409.09 741.96,624.22 815.95,566.16 815.96,351.03 "
            style="fill:url(#rect3021_1_)"
            id="rect3021" />
         <path
@@ -9893,7 +9923,7 @@
              style="stop-color:#A8A056" />
         </linearGradient>
         <polygon
-           points="742.62,408.88 527.39,408.48 600.67,350.72 815.9,351.12 "
+           points="600.67,350.72 815.9,351.12 742.62,408.88 527.39,408.48 "
            style="fill:url(#rect3025_1_)"
            id="rect3025" />
         <path
@@ -9934,11 +9964,11 @@
              inkscape:connector-curvature="0" />
         </g>
         <polygon
-           points="815.13,566.16 815.14,351.02 741.14,409.08 741.14,624.21 "
+           points="741.14,409.08 741.14,624.21 815.13,566.16 815.14,351.02 "
            style="opacity:0.38980001;enable-background:new"
            id="rect3043" />
         <polygon
-           points="743.93,407.79 528.7,407.39 601.98,349.64 817.21,350.03 "
+           points="601.98,349.64 817.21,350.03 743.93,407.79 528.7,407.39 "
            style="opacity:0.15249999;enable-background:new"
            id="rect3045" />
       </g>
@@ -12731,7 +12761,7 @@
      inkscape:groupmode="layer"
      id="layer9"
      inkscape:label="Childs Bedroom"
-     style="display:inline"
+     style="display:none"
      sodipodi:insensitive="true">
     <g
        style="display:inline"
@@ -14971,7 +15001,7 @@
      inkscape:groupmode="layer"
      id="layer10"
      inkscape:label="Adult Bedroom"
-     style="display:inline"
+     style="display:none"
      sodipodi:insensitive="true">
     <g
        style="display:inline"
@@ -16878,7 +16908,7 @@
      inkscape:groupmode="layer"
      id="layer11"
      inkscape:label="Family Room"
-     style="display:inline"
+     style="display:none"
      sodipodi:insensitive="true">
     <g
        style="display:inline"
@@ -17947,7 +17977,7 @@
      inkscape:groupmode="layer"
      id="layer12"
      inkscape:label="Kitchen"
-     style="display:inline"
+     style="display:none"
      sodipodi:insensitive="true">
     <rect
        id="rect4167"
@@ -18484,7 +18514,7 @@
     <polygon
        style="clip-rule:evenodd;display:inline;fill:#e6e6e6;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
        id="path4299_5"
-       points="264,261 808,261 808,1099 264,1099 "
+       points="808,1099 264,1099 264,261 808,261 "
        class="fil10"
        transform="matrix(0.06504895,0,0,0.07083856,611.53169,539.73706)"
        inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_kitchen.png"
@@ -18493,7 +18523,7 @@
     <polygon
        style="clip-rule:evenodd;display:inline;fill:#e6e6e6;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
        id="path4307"
-       points="1446,261 902,261 902,1099 1446,1099 "
+       points="902,1099 1446,1099 1446,261 902,261 "
        class="fil10"
        transform="matrix(0.06504895,0,0,0.07083856,611.53169,539.73706)"
        inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_kitchen.png"
@@ -18502,7 +18532,7 @@
     <polygon
        style="clip-rule:evenodd;display:inline;fill:#e6e6e6;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
        id="path4409"
-       points="264,2960 808,2960 808,2012 264,2012 "
+       points="808,2012 264,2012 264,2960 808,2960 "
        class="fil10"
        transform="matrix(0.06504895,0,0,0.07083856,611.53169,539.73706)"
        inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_kitchen.png"
@@ -18511,7 +18541,7 @@
     <polygon
        style="clip-rule:evenodd;display:inline;fill:#e6e6e6;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
        id="path4417"
-       points="1446,2960 902,2960 902,2012 1446,2012 "
+       points="902,2012 1446,2012 1446,2960 902,2960 "
        class="fil10"
        transform="matrix(0.06504895,0,0,0.07083856,611.53169,539.73706)"
        inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_kitchen.png"
@@ -18520,7 +18550,7 @@
     <polygon
        style="clip-rule:evenodd;display:inline;fill:#e6e6e6;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
        id="path5504"
-       points="7073,1099 7617,1099 7617,261 7073,261 "
+       points="7617,261 7073,261 7073,1099 7617,1099 "
        class="fil10"
        transform="matrix(0.06504895,0,0,0.07083856,541.53169,539.11477)"
        inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_kitchen.png"
@@ -18529,7 +18559,7 @@
     <polygon
        style="clip-rule:evenodd;display:inline;fill:#e6e6e6;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
        id="path5512"
-       points="6978,1099 6434,1099 6434,261 6978,261 "
+       points="6434,261 6978,261 6978,1099 6434,1099 "
        class="fil10"
        transform="matrix(0.06504895,0,0,0.07083856,541.53169,539.11477)"
        inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_kitchen.png"
@@ -18538,7 +18568,7 @@
     <polygon
        style="clip-rule:evenodd;display:inline;fill:#e6e6e6;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
        id="path5522"
-       points="7073,2012 7617,2012 7617,2960 7073,2960 "
+       points="7617,2960 7073,2960 7073,2012 7617,2012 "
        class="fil10"
        transform="matrix(0.06504895,0,0,0.07083856,541.53169,539.11477)"
        inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_kitchen.png"
@@ -18547,7 +18577,7 @@
     <polygon
        style="clip-rule:evenodd;display:inline;fill:#e6e6e6;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
        id="path5530"
-       points="6978,2012 6434,2012 6434,2960 6978,2960 "
+       points="6434,2960 6978,2960 6978,2012 6434,2012 "
        class="fil10"
        transform="matrix(0.06504895,0,0,0.07083856,541.53169,539.11477)"
        inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_kitchen.png"
@@ -18556,7 +18586,7 @@
     <polygon
        style="clip-rule:evenodd;display:inline;fill:#e6e6e6;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
        id="path4385"
-       points="4866,2012 4322,2012 4322,2960 4866,2960 "
+       points="4322,2960 4866,2960 4866,2012 4322,2012 "
        class="fil10"
        transform="matrix(0.06504895,0,0,0.07083856,541.53169,539.11477)"
        inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_kitchen.png"
@@ -18565,7 +18595,7 @@
     <polygon
        style="clip-rule:evenodd;display:inline;fill:#e6e6e6;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
        id="path4393"
-       points="4961,2012 5505,2012 5505,2960 4961,2960 "
+       points="5505,2960 4961,2960 4961,2012 5505,2012 "
        class="fil10"
        transform="matrix(0.06504895,0,0,0.07083856,541.53169,539.11477)"
        inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_kitchen.png"
@@ -18583,7 +18613,7 @@
     <polygon
        style="clip-rule:evenodd;display:inline;fill:#e6e6e6;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
        id="rect4123"
-       points="4866,1099 4322,1099 4322,261 4866,261 "
+       points="4322,261 4866,261 4866,1099 4322,1099 "
        class="fil10"
        transform="matrix(0.06504895,0,0,0.07083856,541.53169,539.11477)"
        inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_kitchen.png"
@@ -18592,7 +18622,7 @@
     <polygon
        style="clip-rule:evenodd;display:inline;fill:#e6e6e6;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
        id="rect4131"
-       points="4961,1099 5505,1099 5505,261 4961,261 "
+       points="5505,261 4961,261 4961,1099 5505,1099 "
        class="fil10"
        transform="matrix(0.06504895,0,0,0.07083856,541.53169,539.11477)"
        inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_kitchen.png"
@@ -18601,7 +18631,7 @@
     <polygon
        style="clip-rule:evenodd;display:inline;fill:#e6e6e6;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
        id="path4660"
-       points="6310,592 6310,261 5628,261 5628,592 "
+       points="5628,261 5628,592 6310,592 6310,261 "
        class="fil10"
        transform="matrix(0.06504895,0,0,0.07083856,541.53169,539.11477)"
        inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_kitchen.png"
@@ -18699,7 +18729,7 @@
        inkscape:export-ydpi="65.620003" />
     <polygon
        class="fil4"
-       points="1761,1764 1761,1710 1573,1710 1573,1764 "
+       points="1573,1710 1573,1764 1761,1764 1761,1710 "
        id="rect4601"
        style="clip-rule:evenodd;display:inline;fill:#808080;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
        transform="matrix(0.06504895,0,0,0.07083856,611.53169,539.73706)"

@@ -2,6 +2,7 @@ package org.finlayfamily.littlefamily.sprites;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
@@ -28,6 +29,8 @@ public class AnimatedBitmapSprite extends Sprite {
         frame = 0;
         stepsPerFrame = 3;
         basePaint = new Paint();
+        basePaint.setColor(Color.WHITE);
+        basePaint.setStyle(Paint.Style.FILL);
         bounce = false;
     }
 
