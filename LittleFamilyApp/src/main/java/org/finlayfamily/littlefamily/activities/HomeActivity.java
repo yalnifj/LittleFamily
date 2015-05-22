@@ -8,8 +8,11 @@ import android.view.View;
 
 import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.data.LittlePerson;
+import org.finlayfamily.littlefamily.events.EventListener;
+import org.finlayfamily.littlefamily.events.EventQueue;
 import org.finlayfamily.littlefamily.sprites.AnimatedBitmapSprite;
 import org.finlayfamily.littlefamily.sprites.ClippedAnimatedBitmapSprite;
+import org.finlayfamily.littlefamily.sprites.MatchGameSprite;
 import org.finlayfamily.littlefamily.sprites.MovingAnimatedBitmapSprite;
 import org.finlayfamily.littlefamily.sprites.TouchStateAnimatedBitmapSprite;
 import org.finlayfamily.littlefamily.views.SpritedClippedSurfaceView;
@@ -17,7 +20,12 @@ import org.finlayfamily.littlefamily.views.SpritedClippedSurfaceView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeActivity extends LittleFamilyActivity {
+public class HomeActivity extends LittleFamilyActivity implements EventListener {
+    public static final String TOPIC_START_MATCH    = "startMatch";
+    public static final String TOPIC_START_SCRATCH  = "startScratch";
+    public static final String TOPIC_START_COLORING = "startColoring";
+    public static final String TOPIC_START_DRESSUP  = "startDressUp";
+    public static final String TOPIC_START_PUZZLE   = "startPuzzle";
 
     private LittlePerson selectedPerson;
     private ArrayList<LittlePerson> people;
@@ -44,6 +52,21 @@ public class HomeActivity extends LittleFamilyActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        EventQueue.getInstance().subscribe(TOPIC_START_MATCH, this);
+        EventQueue.getInstance().subscribe(TOPIC_START_COLORING, this);
+        EventQueue.getInstance().subscribe(TOPIC_START_DRESSUP, this);
+        EventQueue.getInstance().subscribe(TOPIC_START_PUZZLE, this);
+        EventQueue.getInstance().subscribe(TOPIC_START_SCRATCH, this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventQueue.getInstance().unSubscribe(TOPIC_START_MATCH, this);
+        EventQueue.getInstance().unSubscribe(TOPIC_START_COLORING, this);
+        EventQueue.getInstance().unSubscribe(TOPIC_START_DRESSUP, this);
+        EventQueue.getInstance().unSubscribe(TOPIC_START_PUZZLE, this);
+        EventQueue.getInstance().unSubscribe(TOPIC_START_SCRATCH, this);
     }
 
     private ClippedAnimatedBitmapSprite homeBackground;
@@ -125,9 +148,10 @@ public class HomeActivity extends LittleFamilyActivity {
             homeView.addSprite(familyRoom);
 
             Bitmap frameBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_familyroom_frame);
-            AnimatedBitmapSprite frameBtn = new AnimatedBitmapSprite(frameBm);
+            MatchGameSprite frameBtn = new MatchGameSprite(frameBm);
             frameBtn.setX(1225);
             frameBtn.setY(1035);
+            frameBtn.setSelectable(true);
             homeView.addSprite(frameBtn);
 
             Bitmap childBedBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_bed);
@@ -159,6 +183,27 @@ public class HomeActivity extends LittleFamilyActivity {
             kitchen.setX(1700);
             kitchen.setY(1000);
             homeView.addSprite(kitchen);
+        }
+    }
+
+    @Override
+    public void onEvent(String topic, Object o) {
+        switch(topic) {
+            case TOPIC_START_COLORING:
+                startColoringGame(homeView);
+                break;
+            case TOPIC_START_DRESSUP:
+                startHeritageDressUpGame(homeView);
+                break;
+            case TOPIC_START_MATCH:
+                startMatchGame(homeView);
+                break;
+            case TOPIC_START_PUZZLE:
+                startPuzzleGame(homeView);
+                break;
+            case TOPIC_START_SCRATCH:
+                startScratchGame((homeView));
+                break;
         }
     }
 
