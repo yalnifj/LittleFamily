@@ -11,9 +11,11 @@ import org.finlayfamily.littlefamily.data.LittlePerson;
 import org.finlayfamily.littlefamily.sprites.AnimatedBitmapSprite;
 import org.finlayfamily.littlefamily.sprites.ClippedAnimatedBitmapSprite;
 import org.finlayfamily.littlefamily.sprites.MovingAnimatedBitmapSprite;
+import org.finlayfamily.littlefamily.sprites.TouchStateAnimatedBitmapSprite;
 import org.finlayfamily.littlefamily.views.SpritedClippedSurfaceView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class HomeActivity extends LittleFamilyActivity {
 
@@ -96,9 +98,18 @@ public class HomeActivity extends LittleFamilyActivity {
             homeView.addSprite(flower1);
 
             Bitmap flowerBm2 = BitmapFactory.decodeResource(getResources(), R.drawable.house_flowers_a1);
-            AnimatedBitmapSprite flower2 = new AnimatedBitmapSprite(flowerBm2);
+            TouchStateAnimatedBitmapSprite flower2 = new TouchStateAnimatedBitmapSprite(flowerBm2, this);
             flower2.setX(530);
             flower2.setY(1200);
+            List<Bitmap> spinning = new ArrayList<>(5);
+            spinning.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_flowers_a2));
+            spinning.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_flowers_a3));
+            spinning.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_flowers_a4));
+            spinning.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_flowers_a5));
+            spinning.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_flowers_a1));
+            flower2.getBitmaps().put(1, spinning);
+            flower2.getAudio().put(1, R.raw.spinning);
+            flower2.setStateTransition(1, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP3);
             homeView.addSprite(flower2);
 
             Bitmap roomsBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_rooms);
