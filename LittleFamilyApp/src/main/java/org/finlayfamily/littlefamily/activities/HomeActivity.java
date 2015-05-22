@@ -129,6 +129,36 @@ public class HomeActivity extends LittleFamilyActivity {
             frameBtn.setX(1225);
             frameBtn.setY(1035);
             homeView.addSprite(frameBtn);
+
+            Bitmap childBedBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_bed);
+            AnimatedBitmapSprite childBed = new AnimatedBitmapSprite(childBedBm);
+            childBed.setX(1600);
+            childBed.setY(700);
+            homeView.addSprite(childBed);
+
+            Bitmap childDeskBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_desk);
+            AnimatedBitmapSprite childDesk = new AnimatedBitmapSprite(childDeskBm);
+            childDesk.setX(2100);
+            childDesk.setY(800);
+            homeView.addSprite(childDesk);
+
+            Bitmap childPaintBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_paint);
+            AnimatedBitmapSprite childPaint = new AnimatedBitmapSprite(childPaintBm);
+            childPaint.setX(1900);
+            childPaint.setY(700);
+            homeView.addSprite(childPaint);
+
+            Bitmap childTeddyBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy);
+            AnimatedBitmapSprite childTeddy = new AnimatedBitmapSprite(childTeddyBm);
+            childTeddy.setX(1800);
+            childTeddy.setY(900);
+            homeView.addSprite(childTeddy);
+
+            Bitmap kitchenBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_kitchen);
+            AnimatedBitmapSprite kitchen = new AnimatedBitmapSprite(kitchenBm);
+            kitchen.setX(1700);
+            kitchen.setY(1000);
+            homeView.addSprite(kitchen);
         }
     }
 

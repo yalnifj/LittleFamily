@@ -133,7 +133,7 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
         super.touch_start(x, y);
 
         for(Sprite s : sprites) {
-            if (s.inSprite(x, y)) {
+            if (s.inSprite(x+clipX, y+clipY)) {
                 selectedSprites.add(s);
                 s.onSelect(x, y);
             }
@@ -145,7 +145,7 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
         super.touch_up(x, y);
 
         for(Sprite s : selectedSprites) {
-            s.onRelease(x, y);
+            s.onRelease(x+clipX, y+clipY);
         }
         selectedSprites.clear();
     }

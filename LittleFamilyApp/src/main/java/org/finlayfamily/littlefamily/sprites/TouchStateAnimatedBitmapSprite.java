@@ -66,6 +66,12 @@ public class TouchStateAnimatedBitmapSprite extends AnimatedBitmapSprite {
                 try {
                     MediaPlayer mediaPlayer = MediaPlayer.create(context, audio.get(state));
                     mediaPlayer.start();
+                    mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        @Override
+                        public void onCompletion(MediaPlayer mp) {
+                            mp.release();
+                        }
+                    });
                 } catch (Exception e) {
                     // just let things go on
                 }
@@ -79,7 +85,7 @@ public class TouchStateAnimatedBitmapSprite extends AnimatedBitmapSprite {
         if (stateTransitions.containsKey(state) && stateTransitions.get(state)==loops) {
             state++;
             stateChanged = true;
-            if (state>bitmaps.size()) {
+            if (state>=bitmaps.size()) {
                 state=0;
             }
         }
@@ -89,7 +95,7 @@ public class TouchStateAnimatedBitmapSprite extends AnimatedBitmapSprite {
         if (tx>=x && tx<=x+width && ty>=y && ty<=ty+height) {
             if (!stateTransitions.containsKey(state) || stateTransitions.get(state)==TRANSITION_CLICK) {
                 state++;
-                if (state > bitmaps.size()) state = 0;
+                if (state >= bitmaps.size()) state = 0;
                 stateChanged = true;
             }
         }
