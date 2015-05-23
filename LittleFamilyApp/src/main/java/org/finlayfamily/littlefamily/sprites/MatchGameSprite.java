@@ -13,10 +13,21 @@ public class MatchGameSprite extends AnimatedBitmapSprite {
         super(bitmap);
     }
 
+    protected boolean moved;
+    @Override
+    public boolean onMove(float oldX, float oldY, float newX, float newY) {
+        super.onMove(oldX, oldY, newX, newY);
+        moved = true;
+        return false;
+    }
+
     @Override
     public void onRelease(float x, float y) {
         super.onRelease(x, y);
 
-        EventQueue.getInstance().publish(HomeActivity.TOPIC_START_MATCH, null);
+        if (!moved) {
+            EventQueue.getInstance().publish(HomeActivity.TOPIC_START_MATCH, null);
+        }
+        moved = false;
     }
 }

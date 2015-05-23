@@ -3,6 +3,7 @@ package org.finlayfamily.littlefamily.activities;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.Bundle;
 import android.view.View;
 
@@ -114,23 +115,39 @@ public class HomeActivity extends LittleFamilyActivity implements EventListener 
             tree.setY(500);
             homeView.addSprite(tree);
 
+            /*
             Bitmap flowerBm1 = BitmapFactory.decodeResource(getResources(), R.drawable.house_flowers_b1);
             AnimatedBitmapSprite flower1 = new AnimatedBitmapSprite(flowerBm1);
             flower1.setX(180);
             flower1.setY(1200);
             homeView.addSprite(flower1);
+            */
 
             Bitmap flowerBm2 = BitmapFactory.decodeResource(getResources(), R.drawable.house_flowers_a1);
-            TouchStateAnimatedBitmapSprite flower2 = new TouchStateAnimatedBitmapSprite(flowerBm2, this);
-            flower2.setX(530);
-            flower2.setY(1200);
+            TouchStateAnimatedBitmapSprite flower1 = new TouchStateAnimatedBitmapSprite(flowerBm2, this);
+            flower1.setX(180);
+            flower1.setY(1200);
             List<Bitmap> spinning = new ArrayList<>(5);
             spinning.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_flowers_a2));
             spinning.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_flowers_a3));
             spinning.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_flowers_a4));
             spinning.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_flowers_a5));
             spinning.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_flowers_a1));
-            flower2.getBitmaps().put(1, spinning);
+            flower1.getBitmaps().put(1, spinning);
+            flower1.getAudio().put(1, R.raw.spinning);
+            flower1.setStateTransition(1, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP3);
+            Matrix flipped = new Matrix();
+            flipped.postScale(-1, 1);
+            flipped.postTranslate(flowerBm2.getWidth()+360, 0);
+            flower1.setMatrix(flipped);
+            homeView.addSprite(flower1);
+
+            TouchStateAnimatedBitmapSprite flower2 = new TouchStateAnimatedBitmapSprite(flowerBm2, this);
+            flower2.setX(530);
+            flower2.setY(1200);
+            List<Bitmap> spinning2 = new ArrayList<>(5);
+            spinning2.addAll(spinning); //-- reuse the bitmaps
+            flower2.getBitmaps().put(1, spinning2);
             flower2.getAudio().put(1, R.raw.spinning);
             flower2.setStateTransition(1, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP3);
             homeView.addSprite(flower2);
@@ -154,34 +171,53 @@ public class HomeActivity extends LittleFamilyActivity implements EventListener 
             frameBtn.setSelectable(true);
             homeView.addSprite(frameBtn);
 
+            Bitmap lampBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_familyroom_lamp1);
+            TouchStateAnimatedBitmapSprite lamp = new TouchStateAnimatedBitmapSprite(lampBm, this);
+            lamp.setX(950);
+            lamp.setY(1120);
+            List<Bitmap> onOff = new ArrayList<>(1);
+            onOff.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_familyroom_lamp2));
+            lamp.getBitmaps().put(1, onOff);
+            lamp.getAudio().put(0, R.raw.pullchainslowon);
+            lamp.getAudio().put(1, R.raw.pullchainslowon);
+            homeView.addSprite(lamp);
+
+            TouchStateAnimatedBitmapSprite lamp2 = new TouchStateAnimatedBitmapSprite(lampBm, this);
+            lamp2.setX(1450);
+            lamp2.setY(1120);
+            lamp2.getBitmaps().put(1, onOff);
+            lamp2.getAudio().put(0, R.raw.pullchainslowon);
+            lamp2.getAudio().put(1, R.raw.pullchainslowon);
+            homeView.addSprite(lamp2);
+
             Bitmap childBedBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_bed);
             AnimatedBitmapSprite childBed = new AnimatedBitmapSprite(childBedBm);
-            childBed.setX(1600);
-            childBed.setY(700);
+            childBed.setX(1650);
+            childBed.setY(650);
             homeView.addSprite(childBed);
 
             Bitmap childDeskBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_desk);
             AnimatedBitmapSprite childDesk = new AnimatedBitmapSprite(childDeskBm);
             childDesk.setX(2100);
-            childDesk.setY(800);
+            childDesk.setY(760);
             homeView.addSprite(childDesk);
 
             Bitmap childPaintBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_paint);
             AnimatedBitmapSprite childPaint = new AnimatedBitmapSprite(childPaintBm);
-            childPaint.setX(1900);
-            childPaint.setY(700);
+            childPaint.setX(1950);
+            childPaint.setY(750);
             homeView.addSprite(childPaint);
 
             Bitmap childTeddyBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy);
             AnimatedBitmapSprite childTeddy = new AnimatedBitmapSprite(childTeddyBm);
-            childTeddy.setX(1800);
-            childTeddy.setY(900);
+            childTeddy.setX(1850);
+            childTeddy.setY(890);
             homeView.addSprite(childTeddy);
 
             Bitmap kitchenBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_kitchen);
             AnimatedBitmapSprite kitchen = new AnimatedBitmapSprite(kitchenBm);
-            kitchen.setX(1700);
-            kitchen.setY(1000);
+            kitchen.setX(1680);
+            kitchen.setY(1030);
             homeView.addSprite(kitchen);
         }
     }

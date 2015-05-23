@@ -1,6 +1,7 @@
 package org.finlayfamily.littlefamily.sprites;
 
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 
 /**
  * Created by jfinlay on 5/8/2015.
@@ -13,6 +14,7 @@ public abstract class Sprite {
     protected int state;
     protected boolean selectable;
     protected boolean removeMe;
+    protected Matrix matrix;
 
     public Sprite() {
         x = 0;
@@ -80,10 +82,18 @@ public abstract class Sprite {
         this.removeMe = removeMe;
     }
 
+    public Matrix getMatrix() {
+        return matrix;
+    }
+
+    public void setMatrix(Matrix matrix) {
+        this.matrix = matrix;
+    }
+
     public abstract void doStep();
     public abstract void doDraw(Canvas canvas);
     public abstract void onSelect(float x, float y);
-    public abstract void onMove(float oldX, float oldY, float newX, float newY);
+    public abstract boolean onMove(float oldX, float oldY, float newX, float newY);
     public abstract void onRelease(float x, float y);
 
     public boolean inSprite(float tx, float ty) {

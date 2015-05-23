@@ -114,7 +114,14 @@ public class AnimatedBitmapSprite extends Sprite {
                     Bitmap bitmap = frames.get(frame);
                     Rect rect = new Rect();
                     rect.set((int)x, (int)y, (int)x + width, (int)y + height);
+                    if (matrix!=null) {
+                        canvas.save();
+                        canvas.setMatrix(matrix);
+                    }
                     canvas.drawBitmap(bitmap, null, rect, basePaint);
+                    if (matrix!=null) {
+                        canvas.restore();
+                    }
                 }
             }
         }
@@ -126,8 +133,8 @@ public class AnimatedBitmapSprite extends Sprite {
     }
 
     @Override
-    public void onMove(float oldX, float oldY, float newX, float newY) {
-
+    public boolean onMove(float oldX, float oldY, float newX, float newY) {
+        return false;
     }
 
     @Override

@@ -3,6 +3,7 @@ package org.finlayfamily.littlefamily.views;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 
@@ -104,18 +105,30 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
         canvas.translate(-clipX, -clipY);
         for(Sprite s : sprites) {
             if (s.getX()+s.getWidth()>=clipX && s.getX()<=getWidth()+clipX && s.getY()+s.getHeight()>=clipY && s.getY()<=getHeight()+clipY) {
+                Matrix m = s.getMatrix();
+                Matrix old = null;
+                if (m!=null) {
+                    old = new Matrix();
+                    old.set(m);
+                    m.postTranslate(-clipX, -clipY);
+                }
                 s.doDraw(canvas);
+                if (m!=null) {
+                    m.set(old);
+                }
             }
         }
     }
 
     @Override
     public void doMove(float oldX, float oldY, float newX, float newY) {
+        boolean selectedMoved = false;
         if (selectedSprites.size() > 0) {
             for (Sprite s : selectedSprites) {
-                s.onMove(oldX, oldY, newX, newY);
+                selectedMoved |= s.onMove(oldX, oldY, newX, newY);
             }
-        } else {
+        }
+        if (!selectedMoved) {
             backgroundSprite.onMove(oldX, oldY, newX, newY);
             clipX -= (newX-oldX);
             clipY -= (newY-oldY);
