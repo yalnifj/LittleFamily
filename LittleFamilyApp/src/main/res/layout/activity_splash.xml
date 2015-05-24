@@ -23,7 +23,6 @@
             android:id="@+id/splash_logo"
             android:src="@drawable/little_family_logo"
             android:layout_gravity="top|center_horizontal"
-            android:onClick="gotoHomeScreen"
             android:layout_rowWeight="2" />
 
 

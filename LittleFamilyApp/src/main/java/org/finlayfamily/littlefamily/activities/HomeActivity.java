@@ -173,7 +173,7 @@ public class HomeActivity extends LittleFamilyActivity implements EventListener 
 
             Bitmap lampBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_familyroom_lamp1);
             TouchStateAnimatedBitmapSprite lamp = new TouchStateAnimatedBitmapSprite(lampBm, this);
-            lamp.setX(950);
+            lamp.setX(965);
             lamp.setY(1120);
             List<Bitmap> onOff = new ArrayList<>(1);
             onOff.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_familyroom_lamp2));
@@ -192,26 +192,45 @@ public class HomeActivity extends LittleFamilyActivity implements EventListener 
 
             Bitmap childBedBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_bed);
             AnimatedBitmapSprite childBed = new AnimatedBitmapSprite(childBedBm);
-            childBed.setX(1650);
-            childBed.setY(650);
+            childBed.setX(1655);
+            childBed.setY(725);
             homeView.addSprite(childBed);
 
             Bitmap childDeskBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_desk);
             AnimatedBitmapSprite childDesk = new AnimatedBitmapSprite(childDeskBm);
-            childDesk.setX(2100);
-            childDesk.setY(760);
+            childDesk.setX(2130);
+            childDesk.setY(795);
             homeView.addSprite(childDesk);
 
             Bitmap childPaintBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_paint);
             AnimatedBitmapSprite childPaint = new AnimatedBitmapSprite(childPaintBm);
-            childPaint.setX(1950);
-            childPaint.setY(750);
+            childPaint.setX(2000);
+            childPaint.setY(805);
             homeView.addSprite(childPaint);
 
             Bitmap childTeddyBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy);
-            AnimatedBitmapSprite childTeddy = new AnimatedBitmapSprite(childTeddyBm);
+            TouchStateAnimatedBitmapSprite childTeddy = new TouchStateAnimatedBitmapSprite(childTeddyBm, this);
             childTeddy.setX(1850);
             childTeddy.setY(890);
+            List<Bitmap> falling = new ArrayList<>(5);
+            falling.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy2));
+            falling.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy3));
+            falling.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy4));
+            falling.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy5));
+            falling.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy6));
+            childTeddy.getBitmaps().put(1, falling);
+            childTeddy.setStateTransition(1, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
+            List<Bitmap> fallen = new ArrayList<>(1);
+            fallen.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy6));
+            childTeddy.getBitmaps().put(2, fallen);
+            List<Bitmap> rising = new ArrayList<>(5);
+            rising.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy6));
+            rising.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy5));
+            rising.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy4));
+            rising.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy3));
+            rising.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy2));
+            childTeddy.getBitmaps().put(3, rising);
+            childTeddy.setStateTransition(3, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
             homeView.addSprite(childTeddy);
 
             Bitmap kitchenBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_kitchen);

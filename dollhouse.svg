@@ -22,6 +22,18 @@
      id="defs4">
     <linearGradient
        inkscape:collect="always"
+       id="linearGradient9071">
+      <stop
+         style="stop-color:#f4e3d7;stop-opacity:1;"
+         offset="0"
+         id="stop9073" />
+      <stop
+         style="stop-color:#f4e3d7;stop-opacity:0;"
+         offset="1"
+         id="stop9075" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
        id="linearGradient8885">
       <stop
          style="stop-color:#a42d45;stop-opacity:1;"
@@ -6186,6 +6198,49 @@
        x2="472.67352"
        y2="-259.98355"
        gradientUnits="userSpaceOnUse" />
+    <filter
+       style="color-interpolation-filters:sRGB"
+       inkscape:label="Drop Shadow"
+       id="filter7612-2">
+      <feFlood
+         flood-opacity="0.356863"
+         flood-color="rgb(0,0,0)"
+         result="flood"
+         id="feFlood7614-5" />
+      <feComposite
+         in="flood"
+         in2="SourceGraphic"
+         operator="in"
+         result="composite1"
+         id="feComposite7616-8" />
+      <feGaussianBlur
+         in="composite1"
+         stdDeviation="3"
+         result="blur"
+         id="feGaussianBlur7618-2" />
+      <feOffset
+         dx="7.6"
+         dy="-2"
+         result="offset"
+         id="feOffset7620-6" />
+      <feComposite
+         in="SourceGraphic"
+         in2="offset"
+         operator="over"
+         result="composite2"
+         id="feComposite7622-4" />
+    </filter>
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient9071"
+       id="radialGradient9077"
+       cx="1294.5555"
+       cy="534.29156"
+       fx="1294.5555"
+       fy="534.29156"
+       r="6.56995"
+       gradientTransform="matrix(-1.2205398,0.06371698,-0.07548023,-1.4458735,2928.4786,1258.7959)"
+       gradientUnits="userSpaceOnUse" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -6194,18 +6249,19 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.93991"
-     inkscape:cx="604.45709"
+     inkscape:zoom="3.38"
+     inkscape:cx="1359.6644"
      inkscape:cy="191.65594"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1-88"
+     inkscape:current-layer="layer12"
      showgrid="false"
      inkscape:window-width="1600"
      inkscape:window-height="1140"
      inkscape:window-x="-4"
      inkscape:window-y="-4"
      inkscape:window-maximized="1"
-     showguides="false" />
+     showguides="false"
+     inkscape:snap-page="true" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -19372,7 +19428,8 @@
     <path
        style="clip-rule:evenodd;display:inline;fill:#6e6868;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
        d="m 1431.1734,653.87655 c -0.5854,0 -1.0408,-0.42504 -1.0408,-0.99174 l 0,-34.78175 c 0,-0.56665 0.4554,-0.99174 1.0408,-0.99174 0.5855,0 1.0408,0.99174 1.0408,0.99174 l 0,34.78175 c 0,0.5667 -0.4553,0.99174 -1.0408,0.99174 z"
-       id="path4411-9-6" />
+       id="path4411-9-6"
+       inkscape:connector-curvature="0" />
     <path
        style="clip-rule:evenodd;display:inline;fill:#ffffff;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
        d="m 1430.0738,720.94993 c -0.5855,0 -1.0408,-0.42502 -1.0408,-0.99174 l 0,-51.64131 c 0,-0.56671 0.4553,-1.06257 1.0408,-1.06257 0.5854,0 1.0408,0.35419 1.0408,1.06257 l 0,51.64131 c 0,0.56672 -0.4554,0.99174 -1.0408,0.99174 z"
@@ -19381,7 +19438,8 @@
     <path
        style="clip-rule:evenodd;display:inline;fill:#ffffff;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
        d="m 1430.1977,654.79744 c -0.5855,0 -1.0408,-0.42503 -1.0408,-0.99173 l 0,-34.78174 c 0,-0.56675 0.4553,-1.06257 1.0408,-1.06257 0.5854,0 1.0408,1.06257 1.0408,1.06257 l 0,34.78174 c 0,0.5667 -0.4554,0.99173 -1.0408,0.99173 z"
-       id="path4411-9_16-1" />
+       id="path4411-9_16-1"
+       inkscape:connector-curvature="0" />
     <rect
        id="rect4310-1"
        width="50.212585"
@@ -22221,7 +22279,7 @@
         </g>
       </g>
       <path
-         style="fill:url(#linearGradient8895);fill-rule:evenodd;stroke:#000000;stroke-width:6.24555302px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1"
+         style="fill:url(#linearGradient8895);fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:6.24555302px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
          d="m 304.90725,-350.4383 12.8777,183.51189 151.31726,-32.19508 -25.75604,-154.53627 z"
          id="path8877"
          inkscape:connector-curvature="0" />
@@ -22233,5 +22291,58 @@
          x="-13.824097"
          y="-694.92535" />
     </g>
+    <path
+       class="fil9"
+       d="m 1312.4645,576.37932 c 2.6625,-1.06074 3.4384,-2.56417 3.3519,-6.18844 -0.043,-1.81207 -0.2556,-3.26825 -0.5403,-5.16887 -0.2845,-1.9006 -0.6386,-4.256 -0.7877,-4.2909 -2.346,-0.54759 -11.1915,-0.61438 -13.1172,0.83285 -1.6029,1.20477 -0.2491,7.96046 -0.5229,3.73064 -0.1345,-2.07655 0.03,6.2428 0.03,6.2428 0.014,2.86853 1.7598,4.9883 3.646,4.96026 z"
+       id="rect5869-7"
+       inkscape:connector-curvature="0"
+       style="clip-rule:evenodd;display:inline;fill:#8d6334;fill-opacity:1;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_kitchen21.png"
+       inkscape:export-xdpi="65.620003"
+       inkscape:export-ydpi="65.620003"
+       sodipodi:nodetypes="csssssssc" />
+    <path
+       class="fil10"
+       d="m 1311.8703,574.97913 c 1.6892,-0.088 3.0407,-1.64838 2.9447,-3.48765 l -0.4017,-7.69421 -2.1952,-1.73718 -4.497,-0.4318 -3.2381,0.98362 -1.2007,0.28501 c -3.0746,0.72935 -1.5892,9.27955 -1.5892,9.27955 0.096,1.8391 1.5376,3.25359 3.2914,3.16197 z"
+       id="path5874-4"
+       inkscape:connector-curvature="0"
+       style="clip-rule:evenodd;display:inline;fill:url(#radialGradient9077);fill-opacity:1;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_kitchen21.png"
+       inkscape:export-xdpi="65.620003"
+       inkscape:export-ydpi="65.620003"
+       sodipodi:nodetypes="ssccccssss" />
+    <path
+       style="fill:#ffccaa;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 1296.9674,630.68716 27.3209,15.46464 15.4646,-29.8983"
+       id="path9065"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:#ffccaa;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 1306.2462,722.95949 19.5885,-11.34074 0,29.38281 z"
+       id="path9067"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:#ffccaa;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 1354.702,763.68303 -47.9403,27.32085"
+       id="path9069"
+       inkscape:connector-curvature="0" />
+    <path
+       class="fil5"
+       d="m 1271.9183,554.9955 c -2.667,0 -4.8136,2.12516 -4.8136,4.81702 l 0,13.31765 26.8652,0 0,-13.31765 c 0,-2.69186 -2.2117,-4.81702 -4.8787,-4.81702 l -17.1729,0 z"
+       id="rect5850-0"
+       inkscape:connector-curvature="0"
+       style="clip-rule:evenodd;display:inline;fill:#d12d2d;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_kitchen21.png"
+       inkscape:export-xdpi="65.620003"
+       inkscape:export-ydpi="65.620003" />
+    <path
+       class="fil4"
+       d="m 1294.4903,560.45006 0,8.35896 1.8213,0 0,-6.2338 3.5127,0 -1.9515,-2.12516 -3.3825,0 z m -27.4507,13.53017 0,2.40851 5.0088,0 0,-2.40851 -5.0088,0 z m 21.8565,0 0,2.40851 5.0087,0 0,-2.40851 -5.0087,0 z"
+       id="rect5855-2"
+       inkscape:connector-curvature="0"
+       style="clip-rule:evenodd;display:inline;fill:#808080;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_kitchen21.png"
+       inkscape:export-xdpi="65.620003"
+       inkscape:export-ydpi="65.620003" />
   </g>
 </svg>
