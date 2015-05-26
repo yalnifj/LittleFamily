@@ -4,7 +4,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="org.finlayfamily.littlefamily.activities.ColoringGameActivity">
+    tools:context="org.finlayfamily.littlefamily.activities.ColoringGameActivity"
+    android:background="@drawable/scratch_background">
 
     <FrameLayout
         android:layout_width="fill_parent"

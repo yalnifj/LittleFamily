@@ -13,8 +13,8 @@ import org.finlayfamily.littlefamily.events.EventListener;
 import org.finlayfamily.littlefamily.events.EventQueue;
 import org.finlayfamily.littlefamily.sprites.AnimatedBitmapSprite;
 import org.finlayfamily.littlefamily.sprites.ClippedAnimatedBitmapSprite;
-import org.finlayfamily.littlefamily.sprites.MatchGameSprite;
 import org.finlayfamily.littlefamily.sprites.MovingAnimatedBitmapSprite;
+import org.finlayfamily.littlefamily.sprites.TouchEventGameSprite;
 import org.finlayfamily.littlefamily.sprites.TouchStateAnimatedBitmapSprite;
 import org.finlayfamily.littlefamily.views.SpritedClippedSurfaceView;
 
@@ -165,7 +165,7 @@ public class HomeActivity extends LittleFamilyActivity implements EventListener 
             homeView.addSprite(familyRoom);
 
             Bitmap frameBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_familyroom_frame);
-            MatchGameSprite frameBtn = new MatchGameSprite(frameBm);
+            TouchEventGameSprite frameBtn = new TouchEventGameSprite(frameBm, TOPIC_START_MATCH);
             frameBtn.setX(1225);
             frameBtn.setY(1035);
             frameBtn.setSelectable(true);
@@ -197,13 +197,13 @@ public class HomeActivity extends LittleFamilyActivity implements EventListener 
             homeView.addSprite(childBed);
 
             Bitmap childDeskBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_desk);
-            AnimatedBitmapSprite childDesk = new AnimatedBitmapSprite(childDeskBm);
+            TouchEventGameSprite childDesk = new TouchEventGameSprite(childDeskBm, TOPIC_START_SCRATCH);
             childDesk.setX(2130);
             childDesk.setY(795);
             homeView.addSprite(childDesk);
 
             Bitmap childPaintBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_paint);
-            AnimatedBitmapSprite childPaint = new AnimatedBitmapSprite(childPaintBm);
+            TouchEventGameSprite childPaint = new TouchEventGameSprite(childPaintBm, TOPIC_START_COLORING);
             childPaint.setX(2000);
             childPaint.setY(805);
             homeView.addSprite(childPaint);

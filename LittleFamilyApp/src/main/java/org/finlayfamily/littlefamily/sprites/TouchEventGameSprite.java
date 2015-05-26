@@ -2,18 +2,27 @@ package org.finlayfamily.littlefamily.sprites;
 
 import android.graphics.Bitmap;
 
-import org.finlayfamily.littlefamily.activities.HomeActivity;
 import org.finlayfamily.littlefamily.events.EventQueue;
 
 /**
  * Created by jfinlay on 5/22/2015.
  */
-public class MatchGameSprite extends AnimatedBitmapSprite {
-    public MatchGameSprite(Bitmap bitmap) {
+public class TouchEventGameSprite extends AnimatedBitmapSprite {
+    protected boolean moved;
+    protected String eventTopic;
+
+    public TouchEventGameSprite(Bitmap bitmap, String eventTopic) {
         super(bitmap);
     }
 
-    protected boolean moved;
+    public String getEventTopic() {
+        return eventTopic;
+    }
+
+    public void setEventTopic(String eventTopic) {
+        this.eventTopic = eventTopic;
+    }
+
     @Override
     public boolean onMove(float oldX, float oldY, float newX, float newY) {
         super.onMove(oldX, oldY, newX, newY);
@@ -26,7 +35,7 @@ public class MatchGameSprite extends AnimatedBitmapSprite {
         super.onRelease(x, y);
 
         if (!moved) {
-            EventQueue.getInstance().publish(HomeActivity.TOPIC_START_MATCH, null);
+            EventQueue.getInstance().publish(eventTopic, this);
         }
         moved = false;
     }
