@@ -83,6 +83,22 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
         this.maxWidth = maxWidth;
     }
 
+    public int getClipX() {
+        return clipX;
+    }
+
+    public void setClipX(int clipX) {
+        this.clipX = clipX;
+    }
+
+    public int getClipY() {
+        return clipY;
+    }
+
+    public void setClipY(int clipY) {
+        this.clipY = clipY;
+    }
+
     @Override
     public void doStep() {
         Iterator<Sprite> i = sprites.iterator();

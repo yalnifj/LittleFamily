@@ -42,6 +42,13 @@ public class PuzzleGame {
                 swap(r, c, rr, rc);
             }
         }
+        for(int r=0; r<rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                if (r==board[r][c].getRow() && c==board[r][c].getCol()) {
+                    board[r][c].setInPlace(true);
+                }
+            }
+        }
         if (isCompleted()) randomizeBoard();
     }
 

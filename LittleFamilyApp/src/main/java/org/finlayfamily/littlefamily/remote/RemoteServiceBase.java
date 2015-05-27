@@ -34,7 +34,7 @@ public abstract class RemoteServiceBase implements RemoteService {
 
     protected String userAgent;
     protected Long lastRequestTime;
-    protected Long minRequestTime = 300L;
+    protected Long minRequestTime = 250L;
 
     protected RemoteResult getRestData(String method, Uri action, Bundle params, Bundle headers) throws RemoteServiceSearchException {
         int retries = 0;

@@ -13,6 +13,7 @@ public class TouchEventGameSprite extends AnimatedBitmapSprite {
 
     public TouchEventGameSprite(Bitmap bitmap, String eventTopic) {
         super(bitmap);
+        this.eventTopic = eventTopic;
     }
 
     public String getEventTopic() {

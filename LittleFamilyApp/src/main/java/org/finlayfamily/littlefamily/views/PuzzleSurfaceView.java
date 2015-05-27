@@ -45,6 +45,7 @@ public class PuzzleSurfaceView extends AbstractTouchAnimatedSurfaceView {
 
         backPaint = new Paint();
         backPaint.setColor(Color.WHITE);
+        //backPaint.setAlpha(0);
         backPaint.setStyle(Paint.Style.FILL);
 
         shadowPaint = new Paint();
@@ -102,6 +103,7 @@ public class PuzzleSurfaceView extends AbstractTouchAnimatedSurfaceView {
 
     @Override
     public void doDraw(Canvas canvas) {
+        canvas.drawRect(0, 0, getWidth(), getHeight(), backPaint);
         if (bitmap!=null) {
             int width = getWidth();
             int height = getHeight();
@@ -112,11 +114,11 @@ public class PuzzleSurfaceView extends AbstractTouchAnimatedSurfaceView {
 
             //-- maintain image aspect ratio
             if (width > height) {
-                float ratio = pieceHeight / bHeight;
-                pieceWidth = (int)(pieceWidth * ratio);
+                float ratio = ((float) bWidth) / (float)bHeight;
+                pieceWidth = (int)(pieceHeight * ratio);
             } else {
-                float ratio = ((float) pieceWidth) / (float)(bWidth);
-                pieceHeight = (int)(pieceHeight * ratio);
+                float ratio = ((float) bHeight) / (float)(bWidth);
+                pieceHeight = (int)(pieceWidth * ratio);
             }
 
             for(int r=0; r<game.getRows(); r++) {
@@ -134,7 +136,6 @@ public class PuzzleSurfaceView extends AbstractTouchAnimatedSurfaceView {
                         pp.setX(x);
                         pp.setY(y);
                     } else {
-                        canvas.drawRect(x, y, x+pieceWidth, y+pieceHeight, backPaint);
                         x = pp.getX();
                         y = pp.getY();
                     }
@@ -155,7 +156,7 @@ public class PuzzleSurfaceView extends AbstractTouchAnimatedSurfaceView {
                 src.set(bx, by, bx + bWidth, by + bHeight);
                 Rect dst = new Rect();
                 dst.set(selected.getX(), selected.getY(), selected.getX() + pieceWidth, selected.getY() + pieceHeight);
-                canvas.drawRect((float) (dst.left +10), (float) (dst.top +10), (float) (dst.right + 10), (float) (dst.bottom + 10), shadowPaint);
+                canvas.drawRect((float) (dst.left + 10), (float) (dst.top + 10), (float) (dst.right + 10), (float) (dst.bottom + 10), shadowPaint);
                 canvas.drawBitmap(bitmap, src, dst, outlinePaint);
                 canvas.drawRect(dst, outlinePaint);
             }

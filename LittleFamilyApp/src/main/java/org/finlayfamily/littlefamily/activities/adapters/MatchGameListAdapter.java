@@ -5,17 +5,12 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.data.MatchPerson;
 import org.finlayfamily.littlefamily.util.ImageHelper;
 
@@ -94,10 +89,14 @@ public class MatchGameListAdapter extends BaseAdapter {
             rotate = 0;
         }
 
-        //holder.framedPortrait.setRotation(rotate);
+        Paint paint = new Paint();
+        paint.setColor(Color.WHITE);
+        paint.setStyle(Paint.Style.FILL);
+
         MatchPerson person = (MatchPerson) getItem(index);
 		Resources r = context.getResources();
         if (person!=null) {
+            Bitmap frame = BitmapFactory.decodeResource(r, person.getFrame());
             Bitmap toDraw = null;
             if (person.isFlipped()) {
                 Bitmap bm = null;
@@ -105,20 +104,15 @@ public class MatchGameListAdapter extends BaseAdapter {
                     bm = ImageHelper.loadBitmapFromFile(person.getPerson().getPhotoPath(), ImageHelper.getOrientation(person.getPerson().getPhotoPath()), width, height, false);
                 } else {
                     bm = ImageHelper.loadBitmapFromResource(context, person.getPerson().getDefaultPhotoResource(), 0, width, height);
-              		//bm = BitmapFactory.decodeResource(r, person.getPerson().getDefaultPhotoResource());
 				}
-				
-                Bitmap frame = BitmapFactory.decodeResource(r, person.getFrame());
-                Paint paint = new Paint();
-                paint.setColor(Color.WHITE);
-                paint.setStyle(Paint.Style.FILL);
                 toDraw = ImageHelper.overlay(bm, frame, width, height, paint);
             } else {
-                 toDraw = ImageHelper.loadBitmapFromResource(context, person.getFrame(), 0, width, height);
+                toDraw = ImageHelper.addSquare(frame, width, height, paint);
             }
            // if (rotate!=0) {
            //    toDraw = ImageHelper.rotateBitmap(toDraw, rotate);
            // }
+
             holder.framedPortrait.setImageBitmap(toDraw);
         }
 
