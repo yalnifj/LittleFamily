@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     tools:context="org.finlayfamily.littlefamily.activities.MatchGameActivity"
     android:focusable="true"
-    android:background="@android:color/background_light"
+    android:background="@drawable/match_back"
     android:padding="16dp">
 
     <FrameLayout
@@ -21,7 +21,6 @@
         android:horizontalSpacing="5dp"
         android:numColumns="auto_fit"
         android:verticalSpacing="5dp"
-        android:background="@android:color/background_light"
         android:layout_gravity="center"
         android:layout_below="@+id/topBarFragment"
         android:layout_alignParentLeft="true"

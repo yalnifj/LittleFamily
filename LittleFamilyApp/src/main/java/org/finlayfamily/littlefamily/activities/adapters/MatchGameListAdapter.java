@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
@@ -69,6 +71,7 @@ public class MatchGameListAdapter extends BaseAdapter {
 
         if (convertView == null) {
             convertView = new ImageView(context);
+            //convertView.setBackgroundColor(Color.WHITE);
             holder = new ViewHolder();
             holder.framedPortrait = (ImageView) convertView;
             convertView.setTag(holder);
@@ -106,7 +109,10 @@ public class MatchGameListAdapter extends BaseAdapter {
 				}
 				
                 Bitmap frame = BitmapFactory.decodeResource(r, person.getFrame());
-                toDraw = ImageHelper.overlay(bm, frame, width, height);
+                Paint paint = new Paint();
+                paint.setColor(Color.WHITE);
+                paint.setStyle(Paint.Style.FILL);
+                toDraw = ImageHelper.overlay(bm, frame, width, height, paint);
             } else {
                  toDraw = ImageHelper.loadBitmapFromResource(context, person.getFrame(), 0, width, height);
             }

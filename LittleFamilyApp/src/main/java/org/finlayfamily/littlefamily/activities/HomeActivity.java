@@ -115,14 +115,6 @@ public class HomeActivity extends LittleFamilyActivity implements EventListener 
             tree.setY(500);
             homeView.addSprite(tree);
 
-            /*
-            Bitmap flowerBm1 = BitmapFactory.decodeResource(getResources(), R.drawable.house_flowers_b1);
-            AnimatedBitmapSprite flower1 = new AnimatedBitmapSprite(flowerBm1);
-            flower1.setX(180);
-            flower1.setY(1200);
-            homeView.addSprite(flower1);
-            */
-
             Bitmap flowerBm2 = BitmapFactory.decodeResource(getResources(), R.drawable.house_flowers_a1);
             TouchStateAnimatedBitmapSprite flower1 = new TouchStateAnimatedBitmapSprite(flowerBm2, this);
             flower1.setX(180);
@@ -214,11 +206,14 @@ public class HomeActivity extends LittleFamilyActivity implements EventListener 
             childTeddy.setY(890);
             List<Bitmap> falling = new ArrayList<>(5);
             falling.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy2));
+            falling.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy2));
+            falling.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy3));
             falling.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy3));
             falling.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy4));
             falling.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy5));
             falling.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy6));
             childTeddy.getBitmaps().put(1, falling);
+            childTeddy.getAudio().put(1, R.raw.slide_whistle_down01);
             childTeddy.setStateTransition(1, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
             List<Bitmap> fallen = new ArrayList<>(1);
             fallen.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy6));
@@ -226,18 +221,61 @@ public class HomeActivity extends LittleFamilyActivity implements EventListener 
             List<Bitmap> rising = new ArrayList<>(5);
             rising.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy6));
             rising.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy5));
+            rising.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy5));
+            rising.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy4));
             rising.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy4));
             rising.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy3));
+            rising.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy3));
+            rising.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy2));
             rising.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy2));
             childTeddy.getBitmaps().put(3, rising);
+            childTeddy.getAudio().put(3, R.raw.slide_whistle_up04);
             childTeddy.setStateTransition(3, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
             homeView.addSprite(childTeddy);
 
             Bitmap kitchenBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_kitchen);
             AnimatedBitmapSprite kitchen = new AnimatedBitmapSprite(kitchenBm);
             kitchen.setX(1680);
-            kitchen.setY(1030);
+            kitchen.setY(1025);
             homeView.addSprite(kitchen);
+
+            Bitmap toasterBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_toaster1);
+            TouchStateAnimatedBitmapSprite toaster = new TouchStateAnimatedBitmapSprite(toasterBm, this);
+            toaster.setX(2170);
+            toaster.setY(1130);
+            List<Bitmap> toastDown = new ArrayList<>(2);
+            toastDown.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_toaster2));
+            toastDown.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_toaster3));
+            toaster.getBitmaps().put(1, toastDown);
+            toaster.setStateTransition(1, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
+            List<Bitmap> toastIn = new ArrayList<>(1);
+            toastIn.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_toaster4));
+            toastIn.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_toaster4));
+            toaster.getBitmaps().put(2, toastIn);
+            toaster.setStateTransition(2, 20);
+            List<Bitmap> toastUp = new ArrayList<>(17);
+            toastUp.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_toaster5));
+            toastUp.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_toaster6));
+            toastUp.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_toaster7));
+            toastUp.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_toaster8));
+            toastUp.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_toaster9));
+            toastUp.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_toaster10));
+            toastUp.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_toaster11));
+            toastUp.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_toaster12));
+            toastUp.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_toaster13));
+            toastUp.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_toaster14));
+            toastUp.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_toaster15));
+            toastUp.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_toaster16));
+            toastUp.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_toaster17));
+            toastUp.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_toaster18));
+            toastUp.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_toaster19));
+            toastUp.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_toaster20));
+            toastUp.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_toaster21));
+            toaster.getBitmaps().put(3, toastUp);
+            toaster.setStateTransition(3, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
+            toaster.getAudio().put(1, R.raw.toaster);
+
+            homeView.addSprite(toaster);
         }
     }
 

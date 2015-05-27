@@ -6,7 +6,9 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -246,7 +248,7 @@ public class ImageHelper {
         return dataDir;
     }
 
-    public static Bitmap overlay(Bitmap bmp1, Bitmap bmp2, int maxWidth, int maxHeight)
+    public static Bitmap overlay(Bitmap bmp1, Bitmap bmp2, int maxWidth, int maxHeight, Paint paint)
     {
         try
         {
@@ -273,9 +275,10 @@ public class ImageHelper {
                 right = right - diff;
 				left = left + diff;
             }
-			Log.i( "ImageHelper", "ratio " + ratio +" w="+innerWidth+" h="+innerHeight);
+			Log.i("ImageHelper", "ratio " + ratio + " w=" + innerWidth + " h=" + innerHeight);
             rect.set(left, top, right, bottom);
-            canvas.drawBitmap(bmp1, null, rect, null);
+            canvas.drawRect(rect, paint);
+            canvas.drawBitmap(bmp1, null, rect, paint);
 
             Rect rect2 = new Rect();
             int w = maxWidth;
@@ -292,7 +295,7 @@ public class ImageHelper {
                 w = (int) (w * ratio2);
                 l = (maxWidth - w) / 2;
             }
-			Log.i( "ImageHelper", "ratio2 " + ratio2 + " w="+w+" h="+h);
+			Log.i("ImageHelper", "ratio2 " + ratio2 + " w=" + w + " h=" + h);
             rect2.set(l,t,l+w,t+h);
             canvas.drawBitmap(bmp2, null, rect2, null);
 
