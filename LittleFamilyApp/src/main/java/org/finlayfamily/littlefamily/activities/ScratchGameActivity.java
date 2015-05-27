@@ -44,17 +44,18 @@ public class ScratchGameActivity extends LittleFamilyActivity implements Memorie
         Intent intent = getIntent();
         people = (List<LittlePerson>) intent.getSerializableExtra(ChooseFamilyMember.FAMILY);
 
-        usedPhotos = new ArrayList<>(3);
+        usedPhotos = new ArrayList<>(5);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
+        showLoadingDialog();
         loadRandomImage();
     }
 
     public void setupCanvas() {
+        hideLoadingDialog();
         layeredImage.setImageBitmap(imageBitmap);
     }
 
@@ -68,15 +69,12 @@ public class ScratchGameActivity extends LittleFamilyActivity implements Memorie
     }
 
     private void loadMoreFamilyMembers() {
+        showLoadingDialog();
         if (backgroundLoadIndex < people.size() && backgroundLoadIndex < 20) {
             FamilyLoaderTask task = new FamilyLoaderTask(new FamilyLoaderListener(), this);
             task.execute(people.get(backgroundLoadIndex));
         }
         else {
-            if (pd!=null) {
-                pd.dismiss();
-                pd = null;
-            }
             loadRandomImage();
         }
     }

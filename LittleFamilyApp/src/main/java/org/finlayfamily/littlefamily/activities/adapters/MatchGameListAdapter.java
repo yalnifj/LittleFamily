@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -89,31 +91,39 @@ public class MatchGameListAdapter extends BaseAdapter {
             rotate = 0;
         }
 
-        Paint paint = new Paint();
-        paint.setColor(Color.WHITE);
-        paint.setStyle(Paint.Style.FILL);
+        if (width>0) {
+            Paint paint = new Paint();
+            paint.setColor(Color.parseColor("#e9afaf"));
+            paint.setStyle(Paint.Style.FILL);
 
-        MatchPerson person = (MatchPerson) getItem(index);
-		Resources r = context.getResources();
-        if (person!=null) {
-            Bitmap frame = BitmapFactory.decodeResource(r, person.getFrame());
-            Bitmap toDraw = null;
-            if (person.isFlipped()) {
-                Bitmap bm = null;
-                if (person.getPerson().getPhotoPath() != null) {
-                    bm = ImageHelper.loadBitmapFromFile(person.getPerson().getPhotoPath(), ImageHelper.getOrientation(person.getPerson().getPhotoPath()), width, height, false);
+            MatchPerson person = (MatchPerson) getItem(index);
+            Resources r = context.getResources();
+            if (person != null) {
+                Bitmap frame = BitmapFactory.decodeResource(r, person.getFrame());
+                Bitmap toDraw = null;
+                if (person.isFlipped()) {
+                    Bitmap bm = null;
+                    if (person.getPerson().getPhotoPath() != null) {
+                        bm = ImageHelper.loadBitmapFromFile(person.getPerson().getPhotoPath(), ImageHelper.getOrientation(person.getPerson().getPhotoPath()), width, height, false);
+                    } else {
+                        bm = ImageHelper.loadBitmapFromResource(context, person.getPerson().getDefaultPhotoResource(), 0, width, height);
+                    }
+                    toDraw = ImageHelper.overlay(bm, frame, width, height, paint);
                 } else {
-                    bm = ImageHelper.loadBitmapFromResource(context, person.getPerson().getDefaultPhotoResource(), 0, width, height);
-				}
-                toDraw = ImageHelper.overlay(bm, frame, width, height, paint);
-            } else {
-                toDraw = ImageHelper.addSquare(frame, width, height, paint);
-            }
-           // if (rotate!=0) {
-           //    toDraw = ImageHelper.rotateBitmap(toDraw, rotate);
-           // }
+                    Bitmap bm = ImageHelper.fill(frame, paint);
+                    toDraw = Bitmap.createBitmap(width, height, frame.getConfig());
+                    Canvas canvas = new Canvas(toDraw);
+                    Rect rect = new Rect();
+                    rect.set(0,0,width, height);
+                    canvas.drawBitmap(bm, null, rect, null);
+                    canvas.drawBitmap(frame, null, rect, null);
+                }
+                // if (rotate!=0) {
+                //    toDraw = ImageHelper.rotateBitmap(toDraw, rotate);
+                // }
 
-            holder.framedPortrait.setImageBitmap(toDraw);
+                holder.framedPortrait.setImageBitmap(toDraw);
+            }
         }
 
         return convertView;

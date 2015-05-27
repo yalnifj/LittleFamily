@@ -1,7 +1,6 @@
 package org.finlayfamily.littlefamily.activities;
 
-import android.app.Activity;
-import android.app.Fragment;
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Build;
@@ -10,7 +9,6 @@ import android.speech.tts.TextToSpeech;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 
 import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.data.LittlePerson;
@@ -25,6 +23,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     protected MediaPlayer mediaPlayer;
     protected TopBarFragment topBar;
     protected LittlePerson selectedPerson;
+    protected LoadingDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +60,18 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         super.onStop();
         mediaPlayer.release();
         mediaPlayer = null;
+    }
+
+    public void showLoadingDialog() {
+        if (loadingDialog==null) {
+            loadingDialog = new LoadingDialog();
+            loadingDialog.setStyle(DialogFragment.STYLE_NO_FRAME, R.style.Theme_AppCompat_Light_NoActionBar);
+        }
+        loadingDialog.show(getFragmentManager(), "Loading");
+    }
+
+    public void hideLoadingDialog() {
+        loadingDialog.dismiss();
     }
 
     @Override

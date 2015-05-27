@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -295,9 +296,8 @@ public class ImageHelper {
             rect2.set(l,t,l+w,t+h);
 
             if (paint!=null) {
-                Rect rect3 = new Rect();
-                rect3.set(left-2, top-2, w, h);
-                canvas.drawRect(rect3, paint);
+                Bitmap background = fill(bmp2, paint);
+                canvas.drawBitmap(background, null, rect2, paint);
             }
             canvas.drawBitmap(bmp1, null, rect, paint);
             canvas.drawBitmap(bmp2, null, rect2, null);
@@ -310,56 +310,43 @@ public class ImageHelper {
         }
     }
 
-    public static Bitmap addSquare(Bitmap bmp1, int maxWidth, int maxHeight, Paint paint)
+    public static Bitmap fill(Bitmap bmp1, Paint paint)
     {
         try
         {
-            Bitmap bmOverlay = Bitmap.createBitmap(maxWidth, maxHeight,  bmp1.getConfig());
+            Bitmap bmOverlay = Bitmap.createBitmap(bmp1.getWidth(), bmp1.getHeight(),  bmp1.getConfig());
             Canvas canvas = new Canvas(bmOverlay);
 
-            Rect rect = new Rect();
-            int innerWidth = (int) (maxWidth*0.70);
-            int innerHeight = (int) (maxHeight*0.70);
+            int midX = bmp1.getWidth() / 2;
+            int midY = bmp1.getHeight() / 2;
 
-            int left = (maxWidth - innerWidth)/2;
-            int top = (maxHeight - innerHeight)/2;
-            int right = left + innerWidth;
-            int bottom = top + innerHeight;
+            int x = midX;
+            int y = midY;
 
-            double ratio = ((double)bmp1.getWidth())/((double)bmp1.getHeight());
-            if (ratio > 1) {
-                int diff = (int)(innerHeight - innerHeight/ratio)/2;
-                bottom = bottom - diff;
-                top = top + diff;
+            boolean xCont = true;
+            while(x > 0 && xCont) {
+                int pix = bmp1.getPixel(x, midY);
+                int alpha = Color.alpha(pix);
+                int pix2 = bmp1.getPixel(bmp1.getWidth() - x, midY);
+                int alpha2 = Color.alpha(pix2);
+                if (alpha > 200 && alpha2 > 200) {
+                    xCont = false;
+                }
+                x--;
             }
-            if (ratio < 1) {
-                int diff = (int)(innerHeight - innerHeight*ratio)/2;
-                right = right - diff;
-                left = left + diff;
+            boolean yCont = true;
+            while(y > 0 && yCont) {
+                int pix = bmp1.getPixel(midX, y);
+                int alpha = Color.alpha(pix);
+                int pix2 = bmp1.getPixel(midX, bmp1.getWidth() - y);
+                int alpha2 = Color.alpha(pix2);
+                if (alpha > 200 && alpha2 > 200) {
+                    yCont = false;
+                }
+                y--;
             }
-            Log.i("ImageHelper", "ratio " + ratio + " w=" + innerWidth + " h=" + innerHeight);
-            rect.set(left, top, right, bottom);
-            Rect rect2 = new Rect();
-            int w = maxWidth;
-            int h = maxHeight;
 
-            int t = 0;
-            int l = 0;
-            if (ratio > 1) {
-                h = (int) (h / ratio);
-                t = (maxHeight - h) / 2;
-            }
-            if (ratio < 1) {
-                w = (int) (w * ratio);
-                l = (maxWidth - w) / 2;
-            }
-            Log.i("ImageHelper", "ratio2 " + ratio + " w=" + w + " h=" + h);
-            rect2.set(l, t, l + w, t + h);
-
-            if (paint!=null) {
-                canvas.drawRect(rect, paint);
-            }
-            canvas.drawBitmap(bmp1, null, rect2, null);
+            canvas.drawRect(x, y, bmp1.getWidth() - x, bmp1.getHeight() - y, paint);
 
             return bmOverlay;
         } catch (Exception e)

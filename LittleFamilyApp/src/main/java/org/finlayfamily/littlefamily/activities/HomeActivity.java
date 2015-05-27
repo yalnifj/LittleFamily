@@ -85,6 +85,8 @@ public class HomeActivity extends LittleFamilyActivity implements EventListener 
             homeBackground.setWidth(homeView.getWidth());
             homeBackground.setHeight(homeView.getHeight());
             homeBackground.setScale(scale);
+            homeBackground.setClipX(500);
+            homeBackground.setClipY(200);
             homeView.setBackgroundSprite(homeBackground);
 
 
@@ -192,12 +194,14 @@ public class HomeActivity extends LittleFamilyActivity implements EventListener 
             TouchEventGameSprite childDesk = new TouchEventGameSprite(childDeskBm, TOPIC_START_SCRATCH);
             childDesk.setX(2130);
             childDesk.setY(795);
+            childDesk.setSelectable(true);
             homeView.addSprite(childDesk);
 
             Bitmap childPaintBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_paint);
             TouchEventGameSprite childPaint = new TouchEventGameSprite(childPaintBm, TOPIC_START_COLORING);
             childPaint.setX(2000);
             childPaint.setY(805);
+            childPaint.setSelectable(true);
             homeView.addSprite(childPaint);
 
             Bitmap childTeddyBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy);
@@ -246,7 +250,7 @@ public class HomeActivity extends LittleFamilyActivity implements EventListener 
             toastIn.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_toaster4));
             toastIn.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_toaster4));
             toaster.getBitmaps().put(2, toastIn);
-            toaster.setStateTransition(2, 5);
+            toaster.setStateTransition(2, 10);
             List<Bitmap> toastUp = new ArrayList<>(17);
             toastUp.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_toaster5));
             toastUp.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_toaster6));
@@ -272,8 +276,8 @@ public class HomeActivity extends LittleFamilyActivity implements EventListener 
 
             homeView.addSprite(toaster);
 
-            homeView.setClipX(300);
-            homeView.setClipY(100);
+            homeView.setClipX(500);
+            homeView.setClipY(200);
         }
     }
 

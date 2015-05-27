@@ -10,16 +10,8 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.ImageView;
-
-import com.jabistudio.androidjhlabs.filter.EdgeFilter;
-import com.jabistudio.androidjhlabs.filter.GrayscaleFilter;
-import com.jabistudio.androidjhlabs.filter.InvertFilter;
-import com.jabistudio.androidjhlabs.filter.LaplaceFilter;
-import com.jabistudio.androidjhlabs.filter.SmartBlurFilter;
-import com.jabistudio.androidjhlabs.filter.util.AndroidUtils;
 
 import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.activities.tasks.ColoringImageFilterTask;
@@ -87,11 +79,13 @@ public class ColoringView extends ImageView implements ColoringImageFilterTask.L
         background.setColor(Color.WHITE);
         mCanvas.drawRect(0,0,w,h,background);
 
-        if (originalBitmap!=null)
-            originalBitmap = Bitmap.createBitmap(originalBitmap, 0, 0, w, h);
+        if (w>0) {
+            if (originalBitmap != null)
+                originalBitmap = Bitmap.createBitmap(originalBitmap, 0, 0, Math.min(w, originalBitmap.getWidth()), Math.min(h, originalBitmap.getHeight()));
 
-        if (outlineBitmap!=null)
-            outlineBitmap = Bitmap.createBitmap(outlineBitmap, 0, 0, w, h);
+            if (outlineBitmap != null)
+                outlineBitmap = Bitmap.createBitmap(outlineBitmap, 0, 0, Math.min(w, originalBitmap.getWidth()), Math.min(h, originalBitmap.getHeight()));
+        }
     }
 
     @Override
@@ -124,6 +118,8 @@ public class ColoringView extends ImageView implements ColoringImageFilterTask.L
         if (bm!=null) {
             int w = this.getWidth();
             int h = this.getHeight();
+            if (w==0) w = 700;
+            if (h==0) h = 700;
             mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
             mCanvas = new Canvas(mBitmap);
             mPaint.setStrokeWidth(w < h ? w * 0.15f : h * 0.15f);
@@ -219,6 +215,9 @@ public class ColoringView extends ImageView implements ColoringImageFilterTask.L
     public void onComplete(Bitmap result) {
         this.outlineBitmap = result;
         loaded = true;
+        for(ColoringCompleteListener l : listeners) {
+            l.onColoringReady();
+        }
         this.invalidate();
     }
 
@@ -229,5 +228,6 @@ public class ColoringView extends ImageView implements ColoringImageFilterTask.L
 
     public interface ColoringCompleteListener {
         public void onColoringComplete();
+        public void onColoringReady();
     }
 }

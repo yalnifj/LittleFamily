@@ -1,6 +1,5 @@
 package org.finlayfamily.littlefamily.activities;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -23,11 +22,11 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Memori
     private List<LittlePerson> people;
     private LittlePerson selectedPerson;
 
-    private ProgressDialog pd;
     private ColoringView layeredImage;
     private String imagePath;
     private Bitmap imageBitmap;
     private Media photo;
+    private boolean loading = false;
 
     private List<Media> usedPhotos;
 
@@ -51,6 +50,8 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Memori
     @Override
     protected void onStart() {
         super.onStart();
+        loading = true;
+        showLoadingDialog();
         loadRandomImage();
     }
 
@@ -68,15 +69,13 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Memori
     }
 
     private void loadMoreFamilyMembers() {
+        loading = true;
+        showLoadingDialog();
         if (backgroundLoadIndex < people.size() && backgroundLoadIndex < 20) {
             FamilyLoaderTask task = new FamilyLoaderTask(new FamilyLoaderListener(), this);
             task.execute(people.get(backgroundLoadIndex));
         }
         else {
-            if (pd!=null) {
-                pd.dismiss();
-                pd = null;
-            }
             loadRandomImage();
         }
     }
@@ -107,10 +106,6 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Memori
             }
             imagePath = photo.getLocalPath();
             if (imagePath!=null) {
-                if (pd!=null) {
-                    pd.dismiss();
-                    pd = null;
-                }
                 if (usedPhotos.size()>=3) {
                     usedPhotos.remove(0);
                 }
@@ -119,6 +114,10 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Memori
                 int height = layeredImage.getHeight();
                 if (width<5) width = 300;
                 if (height<5) height = 300;
+                if (width > 600) {
+                    height = (int)(height * (float)(600)/width);
+                    width = 600;
+                }
                 imageBitmap = ImageHelper.loadBitmapFromFile(imagePath, 0, width, height, true);
                 setupCanvas();
             } else {
@@ -146,6 +145,11 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Memori
             }
         });
         waiter.execute(3000L);
+    }
+
+    @Override
+    public void onColoringReady() {
+        hideLoadingDialog();
     }
 
     public class FamilyLoaderListener implements FamilyLoaderTask.Listener {
