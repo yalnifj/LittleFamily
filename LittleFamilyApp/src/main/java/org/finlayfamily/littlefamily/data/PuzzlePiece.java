@@ -16,7 +16,7 @@ public class PuzzlePiece {
     private boolean inPlace = false;
     private boolean animating = false;
 
-    public PuzzlePiece(int col, int row) {
+    public PuzzlePiece(int row, int col) {
         this.col = col;
         this.row = row;
     }
