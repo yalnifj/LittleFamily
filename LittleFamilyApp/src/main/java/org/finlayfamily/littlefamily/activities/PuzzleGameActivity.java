@@ -49,7 +49,7 @@ public class PuzzleGameActivity extends LittleFamilyActivity implements Memories
     @Override
     protected void onStart() {
         super.onStart();
-
+        showLoadingDialog();
         loadRandomImage();
     }
 
@@ -63,6 +63,7 @@ public class PuzzleGameActivity extends LittleFamilyActivity implements Memories
     }
 
     private void loadMoreFamilyMembers() {
+        showLoadingDialog();
         if (backgroundLoadIndex < people.size() && backgroundLoadIndex < 20) {
             FamilyLoaderTask task = new FamilyLoaderTask(new FamilyLoaderListener(), this);
             task.execute(people.get(backgroundLoadIndex));
@@ -84,6 +85,7 @@ public class PuzzleGameActivity extends LittleFamilyActivity implements Memories
             }
             puzzleGame.setupLevel(rows, cols);
         }
+        hideLoadingDialog();
         puzzleSurfaceView.setBitmap(imageBitmap);
     }
 

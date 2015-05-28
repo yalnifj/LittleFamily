@@ -7,7 +7,7 @@ import android.util.Log;
 import com.jabistudio.androidjhlabs.filter.EdgeFilter;
 import com.jabistudio.androidjhlabs.filter.util.AndroidUtils;
 
-import org.finlayfamily.littlefamily.views.AlphaFilter;
+import org.finlayfamily.littlefamily.filters.AlphaFilter;
 
 /**
  * Created by jfinlay on 3/23/2015.

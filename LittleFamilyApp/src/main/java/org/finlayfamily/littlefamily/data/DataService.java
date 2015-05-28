@@ -322,7 +322,6 @@ public class DataService implements AuthTask.Listener {
             if (relative==null) {
                 Person fsPerson2 = remoteService.getPerson(fsid, false);
                 relative = DataHelper.buildLittlePerson(fsPerson2, context, remoteService, false);
-                relative.setHasParents(true);
                 getDBHelper().persistLittlePerson(relative);
             }
             if (relative!=null) {
@@ -404,9 +403,10 @@ public class DataService implements AuthTask.Listener {
                 if ("spouse".equals(p.getRelationship())) {
                     List<Relationship> spouseRelatives = remoteService.getCloseRelatives(p.getFamilySearchId(), false);
                     List<LittlePerson> spouseFamily = processRelatives(spouseRelatives, p);
-                    for(LittlePerson parent : spouseFamily) {
+                    for (LittlePerson parent : spouseFamily) {
                         if ("parent".equals(parent.getRelationship()) && !family.contains(parent)) {
                             spouseParents.add(parent);
+                            p.setHasParents(true);
                         }
                     }
                 }
@@ -488,6 +488,9 @@ public class DataService implements AuthTask.Listener {
                 }
             }
         }
+        if (person.isHasParents()==null) {
+            person.setHasParents(false);
+        }
         return family;
     }
 
@@ -499,6 +502,10 @@ public class DataService implements AuthTask.Listener {
                 parents = getDBHelper().getParentsForPerson(person.getId());
                 if (parents == null) {
                     parents = new ArrayList<>();
+                }
+                if (parents.size()==0) {
+                    person.setHasParents(false);
+                    getDBHelper().persistLittlePerson(person);
                 }
             }
         }

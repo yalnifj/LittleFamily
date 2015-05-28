@@ -1,4 +1,4 @@
-package org.finlayfamily.littlefamily.views;
+package org.finlayfamily.littlefamily.filters;
 
 import com.jabistudio.androidjhlabs.filter.PointFilter;
 
@@ -25,6 +25,6 @@ public class AlphaFilter extends PointFilter {
     }
 
     public String toString() {
-        return "Colors/AlphaMask";
+        return "Filters/AlphaFilter";
     }
 }

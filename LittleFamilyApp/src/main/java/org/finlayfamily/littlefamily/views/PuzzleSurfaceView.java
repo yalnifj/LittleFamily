@@ -69,14 +69,14 @@ public class PuzzleSurfaceView extends AbstractTouchAnimatedSurfaceView {
                         int dx = 0;
                         int dy = 0;
                         if (pp.getX() != pp.getToX()) {
-                            dx = (int) ((pp.getToX() - pp.getX()) / 4);
+                            dx = (int) ((pp.getToX() - pp.getX()) / 3);
                             if (dx==0) {
                                 if (pp.getToX() < pp.getX()) dx = -1;
                                 else dx = 1;
                             }
                         }
                         if (pp.getY() != pp.getToY()) {
-                            dy = (int) ((pp.getToY() - pp.getY()) / 4);
+                            dy = (int) ((pp.getToY() - pp.getY()) / 3);
                             if (dy==0) {
                                 if (pp.getToY() < pp.getY()) dy = -1;
                                 else dy = 1;
@@ -251,6 +251,9 @@ public class PuzzleSurfaceView extends AbstractTouchAnimatedSurfaceView {
 
     public void setBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;
+        int w = bitmap.getWidth();
+        int h = bitmap.getHeight();
+
         this.invalidate();
     }
     private List<PuzzleCompleteListener> listeners = new ArrayList<>();

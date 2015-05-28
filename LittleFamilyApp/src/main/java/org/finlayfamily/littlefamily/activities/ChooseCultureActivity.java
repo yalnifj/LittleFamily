@@ -1,12 +1,9 @@
 package org.finlayfamily.littlefamily.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -31,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 public class ChooseCultureActivity extends LittleFamilyActivity implements HeritageCalculatorTask.Listener, PersonHeritageChartView.SelectedPathListener {
@@ -80,6 +76,7 @@ public class ChooseCultureActivity extends LittleFamilyActivity implements Herit
     public void startDressUpActivity(View view) {
         if (selectedPath!=null) {
             Intent intent = new Intent(this, HeritageDressUpActivity.class);
+            intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, selectedPerson);
             DollConfig dollConfig = dressUpDolls.getDollConfig(selectedPath.getPlace(), person);
             intent.putExtra(DOLL_CONFIG, dollConfig);
             startActivity(intent);

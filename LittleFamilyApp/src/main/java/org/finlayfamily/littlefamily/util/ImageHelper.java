@@ -126,6 +126,7 @@ public class ImageHelper {
 	            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
 	        }
 
+            /*
             if (bitmap!=null) {
                 // Re-scale the bitmap if necessary
                 sourceWidth = bitmap.getWidth();
@@ -139,6 +140,7 @@ public class ImageHelper {
                     bitmap = Bitmap.createScaledBitmap(bitmap, sourceWidth, sourceHeight, true);
                 }
             }
+            */
 	    } catch (Exception e) {
 	    }
 	    return bitmap;

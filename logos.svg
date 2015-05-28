@@ -2032,6 +2032,58 @@
        y1="136.34"
        x2="-692.20001"
        y2="-31.402" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient7605"
+       id="linearGradient7603-1"
+       x1="291.40851"
+       y1="347.43015"
+       x2="291.29169"
+       y2="379.47369"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-40.813059,165.61101)" />
+    <filter
+       style="color-interpolation-filters:sRGB"
+       inkscape:label="Drop Shadow"
+       id="filter7723-2">
+      <feFlood
+         flood-opacity="0.498039"
+         flood-color="rgb(0,0,0)"
+         result="flood"
+         id="feFlood7725-6" />
+      <feComposite
+         in="flood"
+         in2="SourceGraphic"
+         operator="in"
+         result="composite1"
+         id="feComposite7727-0" />
+      <feGaussianBlur
+         in="composite1"
+         stdDeviation="3"
+         result="blur"
+         id="feGaussianBlur7729-8" />
+      <feOffset
+         dx="3"
+         dy="-2"
+         result="offset"
+         id="feOffset7731-2" />
+      <feComposite
+         in="SourceGraphic"
+         in2="offset"
+         operator="over"
+         result="composite2"
+         id="feComposite7733-6" />
+    </filter>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient7605"
+       id="linearGradient4674-7"
+       x1="291.40851"
+       y1="347.43015"
+       x2="291.29169"
+       y2="379.47369"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-49.61632,0.0435385)" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -2040,9 +2092,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.95169365"
-     inkscape:cx="370.28369"
-     inkscape:cy="180.39608"
+     inkscape:zoom="0.48792887"
+     inkscape:cx="305.01158"
+     inkscape:cy="704.25853"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -3539,5 +3591,20 @@
          inkscape:connector-curvature="0"
          d="m 26.651682,63.845969 c 0.547382,0.194255 0.58838,0.604457 0.20067,0.805506 -0.394358,0.409562 -0.387185,1.031594 -0.314878,1.559044 0.08946,0.722564 0.413955,1.397291 0.866,1.962481 0.369756,0.501539 0.850345,0.927497 1.140549,1.483827 0.198532,0.480632 0.295878,0.999586 0.351003,1.514525 0.08118,0.367239 -0.275364,0.572202 -0.663176,0.455288 -0.396264,-0.119464 -0.931891,-0.354233 -1.002452,-0.610058 -0.07977,-0.49956 -0.232882,-1.016579 -0.607905,-1.377403 -0.727525,-0.796558 -2.001762,-1.74134 -2.210537,-2.826385 -0.14636,-0.760827 -0.09914,-1.554534 0.213968,-2.293756 0.138417,-0.326765 1.482227,-0.866407 2.026787,-0.673171 z" />
     </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:70px;line-height:50%;font-family:'Cooper Black';-inkscape-font-specification:'Cooper Black, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient7603-1);fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;filter:url(#filter7723-2)"
+       x="70.168762"
+       y="547.45013"
+       id="text6113-7"
+       sodipodi:linespacing="50%"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\loading.png"
+       inkscape:export-xdpi="47.998459"
+       inkscape:export-ydpi="47.998459"><tspan
+         sodipodi:role="line"
+         id="tspan6115-4"
+         x="70.168762"
+         y="547.45013"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:70px;line-height:50%;font-family:'Cooper Black';-inkscape-font-specification:'Cooper Black, Normal';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient7603-1);fill-opacity:1;stroke:#000000;stroke-opacity:1">Loading...</tspan></text>
   </g>
 </svg>

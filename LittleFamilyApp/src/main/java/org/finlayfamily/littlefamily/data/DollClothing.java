@@ -13,6 +13,7 @@ public class DollClothing {
     private String filename;
     private boolean placed;
     private Bitmap bitmap;
+    private Bitmap outline;
 
     public DollClothing(int snapX, int snapY, String filename) {
         this.snapX = snapX;
@@ -74,5 +75,13 @@ public class DollClothing {
 
     public void setBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;
+    }
+
+    public Bitmap getOutline() {
+        return outline;
+    }
+
+    public void setOutline(Bitmap outline) {
+        this.outline = outline;
     }
 }

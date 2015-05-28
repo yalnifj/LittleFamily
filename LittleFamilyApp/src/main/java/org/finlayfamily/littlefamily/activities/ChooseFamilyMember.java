@@ -1,6 +1,5 @@
 package org.finlayfamily.littlefamily.activities;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Point;
@@ -33,7 +32,6 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
 
     private GridView gridView;
     private FamilyMemberListAdapter adapter;
-    private ProgressDialog pd;
     private boolean launchGame = false;
 
     private DataService dataService;
@@ -69,6 +67,7 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
                 Intent intent = new Intent( this, ChooseRemoteService.class );
                 startActivityForResult( intent, LOGIN_REQUEST );
             } else {
+                showLoadingDialog();
                 PersonLoaderTask task = new PersonLoaderTask(this, this);
                 task.execute();
             }
@@ -98,8 +97,8 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        pd = ProgressDialog.show(this, "Please wait...", "Loading data from "+dataService.getServiceType(), true, false);
         launchGame = true;
+        showLoadingDialog();
         selectedPerson = (LittlePerson) gridView.getItemAtPosition(position);
         FamilyLoaderTask task = new FamilyLoaderTask(this, this);
 		task.execute(selectedPerson);
@@ -108,10 +107,9 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
 
     @Override
     public void onComplete(ArrayList<LittlePerson> familyMembers) {
-        if (pd!=null) pd.dismiss();
         if (launchGame) {
             launchGame = false;
-            Intent intent = new Intent( this, ChooseGameActivity.class );
+            Intent intent = new Intent( this, HomeActivity.class );
             intent.putExtra(SELECTED_PERSON, selectedPerson);
             intent.putExtra(FAMILY, familyMembers);
             startActivity(intent);
@@ -120,6 +118,7 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
             updateColumns();
             speak(getResources().getString(R.string.title_activity_choose_family_member));
         }
+        hideLoadingDialog();
     }
 
     private void updateColumns() {

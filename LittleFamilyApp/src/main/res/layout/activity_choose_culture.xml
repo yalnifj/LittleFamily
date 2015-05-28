@@ -8,7 +8,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="org.finlayfamily.littlefamily.activities.ChooseCultureActivity"
-    android:background="@android:color/background_light">
+    android:background="@drawable/dressup_background">
     <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="50dp"
@@ -28,16 +28,6 @@
             android:layout_height="wrap_content"
             android:text="@string/calculating_heritage"
             android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/homeButton"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:src="@drawable/home"
-            android:onClick="gotoHomeScreen" />
     </LinearLayout>
 
     <org.finlayfamily.littlefamily.views.PersonHeritageChartView

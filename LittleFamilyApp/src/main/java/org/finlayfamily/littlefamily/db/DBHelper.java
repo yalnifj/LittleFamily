@@ -354,7 +354,7 @@ public class DBHelper extends SQLiteOpenHelper {
         person.setActive(c.getString(c.getColumnIndexOrThrow(COL_ACTIVE)).equals("Y") ? true : false);
         String hasParentsStr = c.getString(c.getColumnIndexOrThrow(COL_HAS_PARENTS));
         if (hasParentsStr.equals("Y")) person.setHasParents(true);
-        else if (hasParentsStr.equals("Y")) person.setHasParents(false);
+        else if (hasParentsStr.equals("N")) person.setHasParents(false);
         else person.setHasParents(null);
 
 		return person;

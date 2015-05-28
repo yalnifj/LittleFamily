@@ -98,7 +98,7 @@ public abstract class Sprite {
 
     public boolean inSprite(float tx, float ty) {
         if (!selectable) return false;
-        if (tx>=x && tx<=x+width && ty>=y && ty<=ty+height) {
+        if (tx>=x && tx<=x+width && ty>=y && ty<=y+height) {
             return true;
         }
         return false;

@@ -46,7 +46,6 @@ public class HomeActivity extends LittleFamilyActivity implements EventListener 
         if (selectedPerson==null && people!=null && people.size()>0) {
             selectedPerson = people.get(0);
         }
-
         setupHomeViewSprites();
     }
 
@@ -85,7 +84,7 @@ public class HomeActivity extends LittleFamilyActivity implements EventListener 
             homeBackground.setWidth(homeView.getWidth());
             homeBackground.setHeight(homeView.getHeight());
             homeBackground.setScale(scale);
-            homeBackground.setClipX(500);
+            homeBackground.setClipX(800);
             homeBackground.setClipY(200);
             homeView.setBackgroundSprite(homeBackground);
 
@@ -187,27 +186,27 @@ public class HomeActivity extends LittleFamilyActivity implements EventListener 
             Bitmap childBedBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_bed);
             AnimatedBitmapSprite childBed = new AnimatedBitmapSprite(childBedBm);
             childBed.setX(1655);
-            childBed.setY(725);
+            childBed.setY(735);
             homeView.addSprite(childBed);
 
             Bitmap childDeskBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_desk);
             TouchEventGameSprite childDesk = new TouchEventGameSprite(childDeskBm, TOPIC_START_SCRATCH);
             childDesk.setX(2130);
-            childDesk.setY(795);
+            childDesk.setY(800);
             childDesk.setSelectable(true);
             homeView.addSprite(childDesk);
 
             Bitmap childPaintBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_paint);
             TouchEventGameSprite childPaint = new TouchEventGameSprite(childPaintBm, TOPIC_START_COLORING);
             childPaint.setX(2000);
-            childPaint.setY(805);
+            childPaint.setY(810);
             childPaint.setSelectable(true);
             homeView.addSprite(childPaint);
 
             Bitmap childTeddyBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy);
             TouchStateAnimatedBitmapSprite childTeddy = new TouchStateAnimatedBitmapSprite(childTeddyBm, this);
             childTeddy.setX(1850);
-            childTeddy.setY(890);
+            childTeddy.setY(895);
             List<Bitmap> falling = new ArrayList<>(5);
             falling.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy2));
             falling.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy3));
@@ -276,7 +275,59 @@ public class HomeActivity extends LittleFamilyActivity implements EventListener 
 
             homeView.addSprite(toaster);
 
-            homeView.setClipX(500);
+            Bitmap wardrobeBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_adult_wardrobe);
+            TouchEventGameSprite wardrobe = new TouchEventGameSprite(wardrobeBm, TOPIC_START_DRESSUP);
+            wardrobe.setX(1500);
+            wardrobe.setY(700);
+            wardrobe.setSelectable(true);
+            homeView.addSprite(wardrobe);
+
+
+
+            Bitmap blocksBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_toys_blocks);
+            TouchEventGameSprite blocks = new TouchEventGameSprite(blocksBm, TOPIC_START_PUZZLE);
+            blocks.setX(2040);
+            blocks.setY(550);
+            blocks.setSelectable(true);
+            homeView.addSprite(blocks);
+
+            Bitmap horseBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_toys_horse);
+            AnimatedBitmapSprite horse = new AnimatedBitmapSprite(horseBm);
+            horse.setX(1865);
+            horse.setY(490);
+            homeView.addSprite(horse);
+
+            Bitmap batBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_toys_bat);
+            AnimatedBitmapSprite bat = new AnimatedBitmapSprite(batBm);
+            bat.setX(1640);
+            bat.setY(560);
+            homeView.addSprite(bat);
+
+            Bitmap pianoBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_music_piano);
+            AnimatedBitmapSprite piano = new AnimatedBitmapSprite(pianoBm);
+            piano.setX(1250);
+            piano.setY(450);
+            homeView.addSprite(piano);
+
+            Bitmap guitarBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_music_guitar);
+            AnimatedBitmapSprite guitar = new AnimatedBitmapSprite(guitarBm);
+            guitar.setX(1380);
+            guitar.setY(465);
+            homeView.addSprite(guitar);
+
+            Bitmap trumpetBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_music_trumpet);
+            AnimatedBitmapSprite trumpet = new AnimatedBitmapSprite(trumpetBm);
+            trumpet.setX(1300);
+            trumpet.setY(410);
+            homeView.addSprite(trumpet);
+
+            Bitmap drumsBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_music_drums);
+            AnimatedBitmapSprite drums = new AnimatedBitmapSprite(drumsBm);
+            drums.setX(1175);
+            drums.setY(570);
+            homeView.addSprite(drums);
+
+            homeView.setClipX(800);
             homeView.setClipY(200);
         }
     }

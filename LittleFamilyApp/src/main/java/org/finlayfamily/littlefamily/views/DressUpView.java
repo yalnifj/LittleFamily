@@ -5,14 +5,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.jabistudio.androidjhlabs.filter.util.AndroidUtils;
+
 import org.finlayfamily.littlefamily.data.DollClothing;
+import org.finlayfamily.littlefamily.filters.AlphaOutlineFilter;
 import org.finlayfamily.littlefamily.games.DollConfig;
 
 import java.io.IOException;
@@ -49,6 +51,7 @@ public class DressUpView extends View {
     private boolean factored = false;
     public void setDollConfig(DollConfig dollConfig) {
         this.dollConfig = dollConfig;
+        AlphaOutlineFilter filter = new AlphaOutlineFilter(Color.RED);
 
         String dollFilename = dollConfig.getDoll();
         try {
@@ -67,7 +70,11 @@ public class DressUpView extends View {
                     try {
                         cis = context.getAssets().open(dc.getFilename());
                         Bitmap bm = BitmapFactory.decodeStream(cis);
+                        int[] src = AndroidUtils.bitmapToIntArray(bm);
+                        int[] dst = filter.filter(src, bm.getWidth(), bm.getHeight());
+                        Bitmap outlineBitmap = Bitmap.createBitmap(dst, bm.getWidth(), bm.getHeight(), Bitmap.Config.ARGB_8888);
                         dc.setBitmap(bm);
+                        dc.setOutline(outlineBitmap);
                         dc.setX(x);
                         dc.setY(y);
                         x = (int)(x+bm.getWidth());
@@ -120,11 +127,20 @@ public class DressUpView extends View {
                                 dc.setY(getHeight() - (int)(dc.getBitmap().getHeight()*factor));
                             }
                         }
-                        Rect cr1 = new Rect();
-                        cr1.set(0, 0, dc.getBitmap().getWidth(), dc.getBitmap().getHeight());
+                        //-- draw outline of selected
+                        if (dc==selected) {
+                            Rect cr3 = new Rect();
+                            int left = (int) (dc.getSnapX()*factor)+offset;
+                            int top = (int) (dc.getSnapY()*factor);
+                            cr3.set(left, top,
+                                    (int) (left + dc.getOutline().getWidth() * factor),
+                                    (int) (top + dc.getOutline().getHeight() * factor)
+                            );
+                            canvas.drawBitmap(dc.getOutline(), null, cr3, null);
+                        }
                         Rect cr2 = new Rect();
-                        cr2.set(dc.getX(), dc.getY(), (int)(dc.getX()+cr1.right*factor), (int)(dc.getY()+cr1.bottom*factor));
-                        canvas.drawBitmap(dc.getBitmap(), cr1, cr2, null);
+                        cr2.set(dc.getX(), dc.getY(), (int)(dc.getX()+dc.getBitmap().getWidth()*factor), (int)(dc.getY()+dc.getBitmap().getHeight()*factor));
+                        canvas.drawBitmap(dc.getBitmap(), null, cr2, null);
                     }
 //                    if (selected!=null) {
 //                        Paint paint = new Paint();

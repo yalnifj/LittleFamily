@@ -85,6 +85,8 @@ public class ScratchView extends ImageView {
         super.setImageBitmap(bm);
         int w = this.getWidth();
         int h = this.getHeight();
+        if (w==0) w=600;
+        if (h==0) h=600;
         mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         mCanvas = new Canvas(mBitmap);
         mPaint.setStrokeWidth(w<h?w*0.15f:h*0.15f);
