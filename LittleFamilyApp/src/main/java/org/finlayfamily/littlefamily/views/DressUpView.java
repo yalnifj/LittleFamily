@@ -52,6 +52,7 @@ public class DressUpView extends View {
     public void setDollConfig(DollConfig dollConfig) {
         this.dollConfig = dollConfig;
         AlphaOutlineFilter filter = new AlphaOutlineFilter(Color.RED);
+        //BlurFilter blurFilter = new BlurFilter();
 
         String dollFilename = dollConfig.getDoll();
         try {
@@ -72,6 +73,7 @@ public class DressUpView extends View {
                         Bitmap bm = BitmapFactory.decodeStream(cis);
                         int[] src = AndroidUtils.bitmapToIntArray(bm);
                         int[] dst = filter.filter(src, bm.getWidth(), bm.getHeight());
+                        //dst = blurFilter.filter(dst, bm.getWidth(), bm.getHeight());
                         Bitmap outlineBitmap = Bitmap.createBitmap(dst, bm.getWidth(), bm.getHeight(), Bitmap.Config.ARGB_8888);
                         dc.setBitmap(bm);
                         dc.setOutline(outlineBitmap);
@@ -86,6 +88,7 @@ public class DressUpView extends View {
         } catch (Exception e) {
             Log.e("DressUpView", "Error drawing image", e);
         }
+        this.invalidate();
     }
 
     @Override

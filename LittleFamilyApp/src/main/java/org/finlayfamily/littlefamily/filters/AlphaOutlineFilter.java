@@ -1,5 +1,6 @@
 package org.finlayfamily.littlefamily.filters;
 
+import android.graphics.Color;
 import android.graphics.Rect;
 
 import com.jabistudio.androidjhlabs.filter.WholeImageFilter;
@@ -7,8 +8,8 @@ import com.jabistudio.androidjhlabs.filter.WholeImageFilter;
 public class AlphaOutlineFilter extends WholeImageFilter {
     protected int outlineColor;
     protected int alphaColor = 0x00ffffff;
-    protected int alphaThreshhold1 = 50;
-    protected int alphaThreshhold2 = 100;
+    protected int alphaThreshhold1 = 10;
+    protected int alphaThreshhold2 = 10;
     protected int outlineWidth = 2;
 
     public AlphaOutlineFilter(int outlineColor) {
@@ -23,22 +24,22 @@ public class AlphaOutlineFilter extends WholeImageFilter {
         int y = 0;
         //--top edge
         for (x = 0; x < width; x++) {
-            int a2 = inPixels[y * width + x] & 0xff000000;
+            int a2 = Color.alpha(inPixels[y * width + x]);
             if (a2 > alphaThreshhold2) {
                 outPixels[index++] = outlineColor;
             } else {
                 outPixels[index++] = alphaColor;
             }
         }
-        for (y = 1; y < height-1; y++) {
+        for (y = 1; y < height; y++) {
             boolean flip = false;
             int count = 0;
             boolean showAlpha = true;
             for (x = 0; x < width-outlineWidth; x++) {
                 if (x>0) {
-                    int a1 = inPixels[y * width + x - 1] & 0xff000000;
-                    int a2 = inPixels[y * width + x] & 0xff000000;
-                    int u = inPixels[(y - 1) * width + x] & 0xff000000;
+                    int l = Color.alpha(inPixels[y * width + x - 1]);
+                    int a = Color.alpha(inPixels[y * width + x]);
+                    int u = Color.alpha(inPixels[(y - 1) * width + x]);
 
                     if (count > outlineWidth) {
                         showAlpha = true;
@@ -46,9 +47,9 @@ public class AlphaOutlineFilter extends WholeImageFilter {
                     }
 
                     if (count==0) {
-                        if (!flip && a1 < alphaThreshhold1 && (a2 > alphaThreshhold2 || u > alphaThreshhold2)) {
+                        if (!flip && (l < alphaThreshhold1 && a > alphaThreshhold2) || (a < alphaThreshhold1 && u > alphaThreshhold2)) {
                             showAlpha = false;
-                        } else if (flip && a1 > alphaThreshhold2 && (a2 < alphaThreshhold1 || u < alphaThreshhold1)) {
+                        } else if (flip && (l > alphaThreshhold2 && a < alphaThreshhold1) || (a > alphaThreshhold2 && u < alphaThreshhold1)) {
                             showAlpha = false;
                         }
                     }
@@ -62,7 +63,7 @@ public class AlphaOutlineFilter extends WholeImageFilter {
                     }
                 } else {
                     //-- left edge case
-                    int a2 = inPixels[y * width + x] & 0xff000000;
+                    int a2 = Color.alpha(inPixels[y * width + x]);
                     if (a2 < alphaThreshhold1) {
                         outPixels[index++] = alphaColor;
                     } else {
@@ -76,7 +77,7 @@ public class AlphaOutlineFilter extends WholeImageFilter {
             showAlpha = true;
             //-- right edge case
             for (x=width-outlineWidth; x < width; x++) {
-                int a2 = inPixels[y * width + x] & 0xff000000;
+                int a2 = Color.alpha(inPixels[y * width + x]);
                 if (showAlpha && a2 < alphaThreshhold1) {
                     outPixels[index++] = alphaColor;
                 } else {
@@ -86,8 +87,10 @@ public class AlphaOutlineFilter extends WholeImageFilter {
             }
         }
         //--bottom edge
+        y=height-1;
+        index=y * width;
         for (x = 0; x < width; x++) {
-            int a2 = inPixels[y * width + x] & 0xff000000;
+            int a2 = Color.alpha(inPixels[y * width + x]);
             if (a2 > alphaThreshhold2) {
                 outPixels[index++] = outlineColor;
             } else {

@@ -4,7 +4,9 @@ import org.finlayfamily.littlefamily.data.LittlePerson;
 import org.gedcomx.types.GenderType;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by jfinlay on 4/16/2015.
@@ -35,4 +37,9 @@ public class DressUpDolls {
         return dc;
     }
 
+    public Set<String> getDollPlaces() {
+        HashSet<String> places = new HashSet<>(countryMappings.keySet());
+        places.remove("unknown");
+        return places;
+    }
 }
