@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -38,7 +39,6 @@ public class ColoringView extends ImageView implements ColoringImageFilterTask.L
     private Paint       mPaint;
     private boolean loaded;
     private boolean complete;
-    private Drawable spinner;
 
     public ColoringView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -64,13 +64,16 @@ public class ColoringView extends ImageView implements ColoringImageFilterTask.L
         mPaint.setStrokeCap(Paint.Cap.ROUND);
         mPaint.setStrokeWidth(10);
         paint2 = new Paint(Paint.DITHER_FLAG);
-
-        spinner = context.getResources().getDrawable(R.drawable.abc_spinner_mtrl_am_alpha);
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
+
+        if (originalBitmap!=null) {
+            float ratio = (float) (originalBitmap.getWidth()) / originalBitmap.getHeight();
+            h = (int) (w / ratio);
+        }
 
         mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         mCanvas = new Canvas(mBitmap);
@@ -78,32 +81,26 @@ public class ColoringView extends ImageView implements ColoringImageFilterTask.L
         Paint background = new Paint();
         background.setColor(Color.WHITE);
         mCanvas.drawRect(0,0,w,h,background);
-
-        if (w>0) {
-            if (originalBitmap != null)
-                originalBitmap = Bitmap.createBitmap(originalBitmap, 0, 0, Math.min(w, originalBitmap.getWidth()), Math.min(h, originalBitmap.getHeight()));
-
-            if (outlineBitmap != null)
-                outlineBitmap = Bitmap.createBitmap(outlineBitmap, 0, 0, Math.min(w, originalBitmap.getWidth()), Math.min(h, originalBitmap.getHeight()));
-        }
     }
 
     @Override
     protected void onDraw(Canvas canvas)
     {
-        //super.onDraw(canvas);
-        if (!loaded) {
-            spinner.draw(canvas);
-        } else {
-            canvas.drawBitmap(originalBitmap, 0, 0, paint2);
-            if (!complete) {
-                canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
-                if (outlineBitmap != null) {
-                    canvas.drawBitmap(outlineBitmap, 0, 0, paint2);
-                }
+        int w = this.getWidth();
+        int h = this.getHeight();
 
-                canvas.drawPath(circlePath, circlePaint);
+        float ratio = (float) (originalBitmap.getWidth()) / originalBitmap.getHeight();
+        h = (int) (w / ratio);
+        Rect dst = new Rect();
+        dst.set(0,0,w,h);
+        canvas.drawBitmap(originalBitmap, null, dst, paint2);
+        if (!complete) {
+            canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
+            if (outlineBitmap != null) {
+                canvas.drawBitmap(outlineBitmap, null, dst, paint2);
             }
+
+            canvas.drawPath(circlePath, circlePaint);
         }
     }
 
@@ -120,6 +117,8 @@ public class ColoringView extends ImageView implements ColoringImageFilterTask.L
             int h = this.getHeight();
             if (w==0) w = 700;
             if (h==0) h = 700;
+            float ratio = (float) (originalBitmap.getWidth()) / originalBitmap.getHeight();
+            h = (int) (w / ratio);
             mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
             mCanvas = new Canvas(mBitmap);
             mPaint.setStrokeWidth(w < h ? w * 0.15f : h * 0.15f);
@@ -173,8 +172,8 @@ public class ColoringView extends ImageView implements ColoringImageFilterTask.L
         int yd = (int) mPaint.getStrokeWidth()/2;
         int count = 0;
         int total = 0;
-        for(int y=yd; y<this.getHeight(); y+=yd) {
-            for(int x=xd; x<this.getWidth(); x+=xd) {
+        for(int y=yd; y<mBitmap.getHeight(); y+=yd) {
+            for(int x=xd; x<mBitmap.getWidth(); x+=xd) {
                 total++;
                 int pixel = mBitmap.getPixel(x,y);
                 if (Color.alpha(pixel) < 200) count++;

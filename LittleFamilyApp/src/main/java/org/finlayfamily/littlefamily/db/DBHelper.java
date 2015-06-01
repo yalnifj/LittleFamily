@@ -317,6 +317,60 @@ public class DBHelper extends SQLiteOpenHelper {
 
         return people;
     }
+
+	public List<LittlePerson> getChildrenForPerson(int id) {
+		List<LittlePerson> people = new ArrayList<>();
+		SQLiteDatabase db = getReadableDatabase();
+		String[] projection = {
+				COL_GIVEN_NAME, COL_GENDER, COL_PHOTO_PATH, COL_NAME,
+				COL_AGE, COL_BIRTH_DATE, COL_BIRTH_PLACE, COL_NATIONALITY, COL_FAMILY_SEARCH_ID, COL_LAST_SYNC,
+				"p."+COL_ID, COL_ALIVE, COL_ACTIVE, COL_HAS_PARENTS
+		};
+		String selection = "r."+COL_ID1+" LIKE ? and r."+COL_TYPE+"=? and p.active='Y'";
+
+		String[] selectionArgs = { String.valueOf(id), String.valueOf(RelationshipType.PARENTCHILD.getId()) };
+		String tables = TABLE_LITTLE_PERSON + " p join " + TABLE_RELATIONSHIP + " r on r."+COL_ID2+"=p."+COL_ID;
+
+		Map<Integer, LittlePerson> personMap = new HashMap<>();
+		Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, "p."+COL_ID);
+		while (c.moveToNext()) {
+			LittlePerson p = personFromCursor(c);
+			personMap.put(p.getId(), p);
+		}
+
+		c.close();
+		people.addAll(personMap.values());
+
+		return people;
+	}
+
+	public List<LittlePerson> getSpousesForPerson(int id) {
+		List<LittlePerson> people = new ArrayList<>();
+		SQLiteDatabase db = getReadableDatabase();
+		String[] projection = {
+				COL_GIVEN_NAME, COL_GENDER, COL_PHOTO_PATH, COL_NAME,
+				COL_AGE, COL_BIRTH_DATE, COL_BIRTH_PLACE, COL_NATIONALITY, COL_FAMILY_SEARCH_ID, COL_LAST_SYNC,
+				"p."+COL_ID, COL_ALIVE, COL_ACTIVE, COL_HAS_PARENTS
+		};
+		String selection = "(r."+COL_ID1+" LIKE ? or r."+COL_ID2+" LIKE ?) and r."+COL_TYPE+"=? and p.active='Y'";
+
+		String[] selectionArgs = { String.valueOf(id), String.valueOf(id), String.valueOf(RelationshipType.SPOUSE.getId()) };
+		String tables = TABLE_LITTLE_PERSON + " p join " + TABLE_RELATIONSHIP + " r on r."+COL_ID1+"=p."+COL_ID+" or r."+COL_ID2+"=p."+COL_ID;
+
+		Map<Integer, LittlePerson> personMap = new HashMap<>();
+		Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, "p."+COL_ID);
+		while (c.moveToNext()) {
+			LittlePerson p = personFromCursor(c);
+			if (p.getId()!=id) {
+				personMap.put(p.getId(), p);
+			}
+		}
+
+		c.close();
+		people.addAll(personMap.values());
+
+		return people;
+	}
 	
 	public LittlePerson personFromCursor(Cursor c) {
 		LittlePerson person = new LittlePerson();

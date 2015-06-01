@@ -14,6 +14,7 @@ import org.finlayfamily.littlefamily.events.EventQueue;
 import org.finlayfamily.littlefamily.sprites.AnimatedBitmapSprite;
 import org.finlayfamily.littlefamily.sprites.ClippedAnimatedBitmapSprite;
 import org.finlayfamily.littlefamily.sprites.MovingAnimatedBitmapSprite;
+import org.finlayfamily.littlefamily.sprites.Sprite;
 import org.finlayfamily.littlefamily.sprites.TouchEventGameSprite;
 import org.finlayfamily.littlefamily.sprites.TouchStateAnimatedBitmapSprite;
 import org.finlayfamily.littlefamily.views.SpritedClippedSurfaceView;
@@ -21,16 +22,12 @@ import org.finlayfamily.littlefamily.views.SpritedClippedSurfaceView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeActivity extends LittleFamilyActivity implements EventListener {
-    public static final String TOPIC_START_MATCH    = "startMatch";
-    public static final String TOPIC_START_SCRATCH  = "startScratch";
-    public static final String TOPIC_START_COLORING = "startColoring";
-    public static final String TOPIC_START_DRESSUP  = "startDressUp";
-    public static final String TOPIC_START_PUZZLE   = "startPuzzle";
+public class HomeActivity extends LittleFamilyActivity {
+
 
     private LittlePerson selectedPerson;
     private ArrayList<LittlePerson> people;
-
+    private ClippedAnimatedBitmapSprite homeBackground;
     private SpritedClippedSurfaceView homeView;
 
     @Override
@@ -50,26 +47,23 @@ public class HomeActivity extends LittleFamilyActivity implements EventListener 
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        EventQueue.getInstance().subscribe(TOPIC_START_MATCH, this);
-        EventQueue.getInstance().subscribe(TOPIC_START_COLORING, this);
-        EventQueue.getInstance().subscribe(TOPIC_START_DRESSUP, this);
-        EventQueue.getInstance().subscribe(TOPIC_START_PUZZLE, this);
-        EventQueue.getInstance().subscribe(TOPIC_START_SCRATCH, this);
+    protected void onDestroy() {
+        super.onDestroy();
+
+        homeView.stop();
+
+        if (homeView.getSprites()!=null) {
+            for (Sprite s : homeView.getSprites()) {
+                s.onDestroy();
+            }
+            homeView.getSprites().clear();
+        }
+        if (homeBackground!=null) {
+            homeBackground.onDestroy();
+        }
+        homeBackground = null;
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        EventQueue.getInstance().unSubscribe(TOPIC_START_MATCH, this);
-        EventQueue.getInstance().unSubscribe(TOPIC_START_COLORING, this);
-        EventQueue.getInstance().unSubscribe(TOPIC_START_DRESSUP, this);
-        EventQueue.getInstance().unSubscribe(TOPIC_START_PUZZLE, this);
-        EventQueue.getInstance().unSubscribe(TOPIC_START_SCRATCH, this);
-    }
-
-    private ClippedAnimatedBitmapSprite homeBackground;
     private void setupHomeViewSprites() {
         //-- background
         float scale = 1.0f;
@@ -111,9 +105,10 @@ public class HomeActivity extends LittleFamilyActivity implements EventListener 
             homeView.addSprite(cloud2);
 
             Bitmap treeBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_tree1);
-            AnimatedBitmapSprite tree = new AnimatedBitmapSprite(treeBm);
+            TouchEventGameSprite tree = new TouchEventGameSprite(treeBm, LittleFamilyActivity.TOPIC_START_TREE);
             tree.setX(100);
             tree.setY(500);
+            tree.setSelectable(true);
             homeView.addSprite(tree);
 
             Bitmap flowerBm2 = BitmapFactory.decodeResource(getResources(), R.drawable.house_flowers_a1);
@@ -332,58 +327,5 @@ public class HomeActivity extends LittleFamilyActivity implements EventListener 
         }
     }
 
-    @Override
-    public void onEvent(String topic, Object o) {
-        switch(topic) {
-            case TOPIC_START_COLORING:
-                startColoringGame(homeView);
-                break;
-            case TOPIC_START_DRESSUP:
-                startHeritageDressUpGame(homeView);
-                break;
-            case TOPIC_START_MATCH:
-                startMatchGame(homeView);
-                break;
-            case TOPIC_START_PUZZLE:
-                startPuzzleGame(homeView);
-                break;
-            case TOPIC_START_SCRATCH:
-                startScratchGame((homeView));
-                break;
-        }
-    }
 
-    public void startMatchGame(View view) {
-        Intent intent = new Intent( this, MatchGameActivity.class );
-        intent.putExtra(ChooseFamilyMember.FAMILY, people);
-        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, selectedPerson);
-        startActivity(intent);
-    }
-
-    public void startScratchGame(View view) {
-        Intent intent = new Intent( this, ScratchGameActivity.class );
-        intent.putExtra(ChooseFamilyMember.FAMILY, people);
-        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, selectedPerson);
-        startActivity(intent);
-    }
-
-    public void startColoringGame(View view) {
-        Intent intent = new Intent( this, ColoringGameActivity.class );
-        intent.putExtra(ChooseFamilyMember.FAMILY, people);
-        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, selectedPerson);
-        startActivity(intent);
-    }
-
-    public void startHeritageDressUpGame(View view) {
-        Intent intent = new Intent( this, ChooseCultureActivity.class );
-        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, selectedPerson);
-        startActivity(intent);
-    }
-
-    public void startPuzzleGame(View view) {
-        Intent intent = new Intent( this, PuzzleGameActivity.class );
-        intent.putExtra(ChooseFamilyMember.FAMILY, people);
-        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, selectedPerson);
-        startActivity(intent);
-    }
 }

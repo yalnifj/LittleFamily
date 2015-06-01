@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.view.SurfaceHolder;
 
 import org.finlayfamily.littlefamily.sprites.Sprite;
 
@@ -116,5 +117,16 @@ public class SpritedSurfaceView extends AbstractTouchAnimatedSurfaceView {
             s.onRelease(x, y);
         }
         selectedSprites.clear();
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        super.surfaceDestroyed(holder);
+        if (sprites!=null){
+            for(Sprite s : sprites) {
+                s.onDestroy();
+            }
+        }
+        sprites.clear();
     }
 }

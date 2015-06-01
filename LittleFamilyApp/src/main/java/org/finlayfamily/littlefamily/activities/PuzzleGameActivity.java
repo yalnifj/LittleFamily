@@ -32,7 +32,6 @@ public class PuzzleGameActivity extends LittleFamilyActivity implements Memories
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_puzzle_game);
-        setupTopBar();
 
         puzzleSurfaceView =(PuzzleSurfaceView) findViewById(R.id.puzzleSurfaceView);
         puzzleGame = new PuzzleGame(2, 2);

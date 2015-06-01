@@ -19,12 +19,6 @@ import org.finlayfamily.littlefamily.data.LittlePerson;
 
 import java.util.ArrayList;
 
-/**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
- *
- * @see SystemUiHider
- */
 public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterView.OnItemClickListener, FamilyLoaderTask.Listener, PersonLoaderTask.Listener {
     public static final String SELECTED_PERSON = "selectedPerson";
     public static final String FAMILY = "family";
@@ -55,7 +49,6 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        updateColumns();
     }
 
     @Override
@@ -122,11 +115,8 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
     }
 
     private void updateColumns() {
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x;
-        int height = size.y;
+        int width = getScreenWidth();
+        int height = getScreenHeight();
         int cols = 2;
         while(cols < 12 && (width / cols) * Math.ceil(((double)adapter.getCount()) / cols) > height) cols++;
         gridView.setNumColumns(cols);

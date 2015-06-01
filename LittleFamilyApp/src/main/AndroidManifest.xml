@@ -106,6 +106,14 @@
             android:name=".activities.HomeActivity"
             android:label="@string/title_activity_home" >
         </activity>
+        <activity
+            android:name=".activities.MyTreeActivity"
+            android:label="@string/title_activity_my_tree"
+            android:parentActivityName=".activities.HomeActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.finlayfamily.littlefamily.activities.HomeActivity" />
+        </activity>
     </application>
 
 </manifest>

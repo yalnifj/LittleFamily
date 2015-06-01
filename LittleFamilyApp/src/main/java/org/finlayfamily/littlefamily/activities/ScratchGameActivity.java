@@ -36,7 +36,6 @@ public class ScratchGameActivity extends LittleFamilyActivity implements Memorie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scratch_game);
-        setupTopBar();
 
         layeredImage = (ScratchView) findViewById(R.id.layeredImage);
         layeredImage.registerListener(this);
@@ -113,10 +112,13 @@ public class ScratchGameActivity extends LittleFamilyActivity implements Memorie
                     usedPhotos.remove(0);
                 }
                 usedPhotos.add(photo);
-                int width = layeredImage.getWidth();
-                int height = layeredImage.getHeight();
-                if (width<5) width = 300;
-                if (height<5) height = 300;
+                int width = layeredImage.getWidth()/2;
+                int height = layeredImage.getHeight()/2;
+                if (width<5) width = getScreenWidth()/2;
+                if (height<5) height = getScreenHeight()/2 - 25;
+                if (imageBitmap!=null) {
+                    imageBitmap.recycle();
+                }
                 imageBitmap = ImageHelper.loadBitmapFromFile(imagePath, 0, width, height, true);
                 setupCanvas();
             } else {

@@ -141,4 +141,17 @@ public class AnimatedBitmapSprite extends Sprite {
     public void onRelease(float x, float y) {
 
     }
+
+    @Override
+    public void onDestroy() {
+        for(List<Bitmap> list : bitmaps.values()) {
+            if (list!=null) {
+                for (Bitmap bm : list) {
+                    bm.recycle();
+                }
+                list.clear();
+            }
+        }
+        bitmaps.clear();
+    }
 }

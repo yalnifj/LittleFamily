@@ -512,6 +512,30 @@ public class DataService implements AuthTask.Listener {
         return parents;
     }
 
+    public List<LittlePerson> getChildren(LittlePerson person) throws Exception {
+        List<LittlePerson> children = getDBHelper().getChildrenForPerson(person.getId());
+        if (children==null || children.size()==0) {
+            getFamilyMembersFromRemoteService(person, false);
+            children = getDBHelper().getChildrenForPerson(person.getId());
+            if (children == null) {
+                children = new ArrayList<>();
+            }
+        }
+        return children;
+    }
+
+    public List<LittlePerson> getSpouses(LittlePerson person) throws Exception {
+        List<LittlePerson> spouses = getDBHelper().getSpousesForPerson(person.getId());
+        if (spouses==null || spouses.size()==0) {
+            getFamilyMembersFromRemoteService(person, false);
+            spouses = getDBHelper().getChildrenForPerson(person.getId());
+            if (spouses == null) {
+                spouses = new ArrayList<>();
+            }
+        }
+        return spouses;
+    }
+
     public List<Media> getMediaForPerson(LittlePerson person) throws Exception {
         List<Media> media = getDBHelper().getMediaForPerson(person.getId());
         if (media==null || media.size()==0) {
@@ -522,24 +546,28 @@ public class DataService implements AuthTask.Listener {
                 if (sds!=null) {
                     for (SourceDescription sd : sds) {
                         Media med = getDBHelper().getMediaByFamilySearchId(sd.getId());
-                        if (med==null) {
+                        if (med == null) {
                             List<Link> links = sd.getLinks();
                             if (links != null) {
                                 for (Link link : links) {
-                                    if (link.getRel() != null && link.getRel().equals("image")) {
-                                        med = new Media();
-                                        med.setType("photo");
-                                        med.setFamilySearchId(sd.getId());
-                                        String localPath = DataHelper.downloadFile(link.getHref().toString(), person.getFamilySearchId(), DataHelper.lastPath(link.getHref().toString()), remoteService, context);
-                                        if (localPath!=null) {
-                                            med.setLocalPath(localPath);
-                                            getDBHelper().persistMedia(med);
-                                            media.add(med);
-                                            Tag tag = new Tag();
-                                            tag.setMediaId(med.getId());
-                                            tag.setPersonId(person.getId());
-                                            getDBHelper().persistTag(tag);
+                                    try {
+                                        if (link.getRel() != null && link.getRel().equals("image")) {
+                                            med = new Media();
+                                            med.setType("photo");
+                                            med.setFamilySearchId(sd.getId());
+                                            String localPath = DataHelper.downloadFile(link.getHref().toString(), person.getFamilySearchId(), DataHelper.lastPath(link.getHref().toString()), remoteService, context);
+                                            if (localPath != null) {
+                                                med.setLocalPath(localPath);
+                                                getDBHelper().persistMedia(med);
+                                                media.add(med);
+                                                Tag tag = new Tag();
+                                                tag.setMediaId(med.getId());
+                                                tag.setPersonId(person.getId());
+                                                getDBHelper().persistTag(tag);
+                                            }
                                         }
+                                    } catch(Exception e) {
+                                        Log.e(this.getClass().getSimpleName(), "Error loading image ", e);
                                     }
                                 }
                             }
@@ -548,7 +576,6 @@ public class DataService implements AuthTask.Listener {
                 }
             } catch(RemoteServiceSearchException e) {
                 Log.e(this.getClass().getSimpleName(), "error", e);
-                Toast.makeText(context, "Error communicating with FamilySearch. " + e, Toast.LENGTH_LONG).show();
             }
         }
         return media;

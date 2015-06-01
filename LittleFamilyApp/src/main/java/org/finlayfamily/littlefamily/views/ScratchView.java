@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.ImageView;
@@ -21,6 +22,7 @@ import java.util.List;
 public class ScratchView extends ImageView {
     public int width;
     public  int height;
+    private Bitmap imageBitmap;
     private Bitmap  mBitmap;
     private Canvas  mCanvas;
     private Path    mPath;
@@ -28,7 +30,8 @@ public class ScratchView extends ImageView {
     Context context;
     private Paint circlePaint;
     private Path circlePath;
-    private Paint       mPaint;
+    private Paint mPaint;
+    private boolean complete = false;
 
     public ScratchView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -59,6 +62,11 @@ public class ScratchView extends ImageView {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
+        if (imageBitmap!=null) {
+            float ratio = (float) (imageBitmap.getWidth()) / imageBitmap.getHeight();
+            h = (int) (w / ratio);
+        }
+
         mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         mCanvas = new Canvas(mBitmap);
         mPaint.setStrokeWidth(w<h?w*0.15f:h*0.15f);
@@ -70,29 +78,40 @@ public class ScratchView extends ImageView {
     @Override
     protected void onDraw(Canvas canvas)
     {
-        super.onDraw(canvas);
+        //super.onDraw(canvas);
+        int w = this.getWidth();
+        int h = this.getHeight();
 
-        canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
-
-        //canvas.drawPath(mPath, mPaint);
-
-        canvas.drawPath(circlePath, circlePaint);
+        float ratio = (float) (imageBitmap.getWidth()) / imageBitmap.getHeight();
+        h = (int) (w / ratio);
+        Rect dst = new Rect();
+        dst.set(0,0,w,h);
+        canvas.drawBitmap(imageBitmap, null, dst, null);
+        if (!complete) {
+            canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
+            canvas.drawPath(circlePath, circlePaint);
+        }
     }
 
     @Override
     public void setImageBitmap(Bitmap bm)
     {
         super.setImageBitmap(bm);
+        this.imageBitmap = bm;
         int w = this.getWidth();
         int h = this.getHeight();
         if (w==0) w=600;
-        if (h==0) h=600;
+
+        float ratio = (float) (imageBitmap.getWidth()) / imageBitmap.getHeight();
+        h = (int) (w / ratio);
+
         mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         mCanvas = new Canvas(mBitmap);
         mPaint.setStrokeWidth(w<h?w*0.15f:h*0.15f);
         Paint background = new Paint();
         background.setColor(Color.GRAY);
         mCanvas.drawRect(0,0,w,h,background);
+        complete = false;
     }
 
     private float mX, mY;
@@ -133,14 +152,15 @@ public class ScratchView extends ImageView {
         int yd = (int) mPaint.getStrokeWidth()/2;
         int count = 0;
         int total = 0;
-        for(int y=yd; y<this.getHeight(); y+=yd) {
-            for(int x=xd; x<this.getWidth(); x+=xd) {
+        for(int y=yd; y<mBitmap.getHeight(); y+=yd) {
+            for(int x=xd; x<mBitmap.getWidth(); x+=xd) {
                 total++;
                 int pixel = mBitmap.getPixel(x,y);
                 if (Color.alpha(pixel) < 200) count++;
             }
         }
         if (count > total * 0.90) {
+            complete = true;
             for(ScratchCompleteListener l : listeners) {
                 l.onScratchComplete();
             }

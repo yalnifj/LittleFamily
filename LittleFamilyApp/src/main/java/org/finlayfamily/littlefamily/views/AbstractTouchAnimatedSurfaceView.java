@@ -120,6 +120,10 @@ public abstract class AbstractTouchAnimatedSurfaceView extends SurfaceView imple
 
     public abstract void doMove(float oldX, float oldY, float newX, float newY);
 
+    public void stop() {
+        animationThread.setRunning(false);
+    }
+
     public class AnimationThread extends Thread {
         private SurfaceHolder holder;
         private Context context;

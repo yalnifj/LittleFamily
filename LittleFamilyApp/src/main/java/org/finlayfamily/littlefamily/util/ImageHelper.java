@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -18,6 +19,7 @@ import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Contacts.Photo;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Display;
 
 import java.io.File;
 import java.io.FileDescriptor;
@@ -126,7 +128,6 @@ public class ImageHelper {
 	            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
 	        }
 
-            /*
             if (bitmap!=null) {
                 // Re-scale the bitmap if necessary
                 sourceWidth = bitmap.getWidth();
@@ -140,7 +141,7 @@ public class ImageHelper {
                     bitmap = Bitmap.createScaledBitmap(bitmap, sourceWidth, sourceHeight, true);
                 }
             }
-            */
+
 	    } catch (Exception e) {
 	    }
 	    return bitmap;

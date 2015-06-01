@@ -37,6 +37,7 @@ public abstract class RemoteServiceBase implements RemoteService {
     protected Long minRequestTime = 250L;
 
     protected RemoteResult getRestData(String method, Uri action, Bundle params, Bundle headers) throws RemoteServiceSearchException {
+        Log.d(this.getClass().getSimpleName(), Thread.currentThread().getName()+" requesting data from "+action.toString());
         int retries = 0;
         while(retries < 3) {
             try {

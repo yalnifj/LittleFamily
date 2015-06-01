@@ -103,4 +103,6 @@ public abstract class Sprite {
         }
         return false;
     }
+
+    public abstract void onDestroy();
 }

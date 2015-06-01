@@ -24,7 +24,6 @@ public class HeritageDressUpActivity extends LittleFamilyActivity implements Dre
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_heritage_dress_up);
-        setupTopBar();
 
         Intent intent = getIntent();
         dollConfig = (DollConfig) intent.getSerializableExtra(ChooseCultureActivity.DOLL_CONFIG);

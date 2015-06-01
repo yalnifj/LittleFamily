@@ -1,5 +1,6 @@
 package org.finlayfamily.littlefamily.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
@@ -12,7 +13,7 @@ import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.data.DataService;
 import org.finlayfamily.littlefamily.views.AnimationDrawableCallback;
 
-public class SplashActivity extends LittleFamilyActivity {
+public class SplashActivity extends Activity {
 
     private AnimationDrawable plantAnimation;
     private DataService dataService;

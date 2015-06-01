@@ -48,7 +48,6 @@ public class ChooseCultureActivity extends LittleFamilyActivity implements Herit
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_culture);
-        setupTopBar();
 
         chartView = (PersonHeritageChartView) findViewById(R.id.personChart);
         titleView = (TextView) findViewById(R.id.titleText);
@@ -71,6 +70,8 @@ public class ChooseCultureActivity extends LittleFamilyActivity implements Herit
         chartView.addListener(this);
 
         dressUpDolls = new DressUpDolls();
+
+        setupTopBar();
     }
 
     public void startDressUpActivity(View view) {
