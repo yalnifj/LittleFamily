@@ -11,13 +11,8 @@ import org.finlayfamily.littlefamily.data.DataService;
 import org.finlayfamily.littlefamily.data.LittlePerson;
 import org.finlayfamily.littlefamily.data.TreeNode;
 import org.finlayfamily.littlefamily.sprites.AnimatedBitmapSprite;
-import org.finlayfamily.littlefamily.sprites.Sprite;
 import org.finlayfamily.littlefamily.sprites.TreePersonAnimatedSprite;
-import org.finlayfamily.littlefamily.util.ImageHelper;
 import org.finlayfamily.littlefamily.views.SpritedClippedSurfaceView;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTask.Listener{
 
@@ -41,6 +36,8 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
         selectedPerson = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
         dataService = DataService.getInstance();
         dataService.setContext(this);
+
+        setupTopBar();
     }
 
     @Override
@@ -57,13 +54,8 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
         super.onDestroy();
 
         treeView.stop();
+        treeView.onDestroy();
 
-        if (treeView.getSprites()!=null) {
-            for(Sprite s : treeView.getSprites()) {
-                s.onDestroy();
-            }
-            treeView.getSprites().clear();
-        }
         if (treeBackground!=null) {
             treeBackground.onDestroy();
         }
@@ -71,14 +63,12 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
     }
 
     private void setupTreeViewSprites() {
-        int width = 600;
-        int height = 600;
-        if (root.getChildren()!=null) {
-            int childW = root.getChildren().size()*200;
-            if (childW > width) width = childW;
-        }
-        treeView.setMaxWidth(width);
-        treeView.setMaxHeight(height);
+        int width = getScreenWidth();
+        int height = getScreenHeight();
+        int minx = 0;
+        int miny = 0;
+        int maxx = 0;
+        int maxy = 0;
 
         treeBackground = new AnimatedBitmapSprite(BitmapFactory.decodeResource(getResources(), R.drawable.tree_background));
         treeBackground.setWidth(treeView.getWidth());
@@ -88,23 +78,42 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
         leftLeaf = BitmapFactory.decodeResource(getResources(), R.drawable.leaf_left);
         rightLeaf = BitmapFactory.decodeResource(getResources(), R.drawable.leaf_right);
 
-        TreePersonAnimatedSprite rootSprite = new TreePersonAnimatedSprite(root.getPerson(), this, rightLeaf);
-        rootSprite.setX(width / 2 - rootSprite.getWidth() / 2);
-        rootSprite.setY(height / 2 - rootSprite.getHeight() / 2);
-        treeView.addSprite(rootSprite);
+        addTreeSprite(root, 0, 0);
 
-        addNode(root.getLeft(), (int) rootSprite.getX() - rootSprite.getWidth(), (int) (rootSprite.getY() - rootSprite.getHeight() - 10));
-        addNode(root.getRight(), (int) rootSprite.getX() + rootSprite.getWidth(), (int) (rootSprite.getY() - rootSprite.getHeight() - 10));
+        treeView.setMaxWidth(width);
+        treeView.setMaxHeight(height);
 
         hideLoadingDialog();
     }
 
-    private void addNode(TreeNode node, int x, int y) {
-        if (node==null) return;
-        TreePersonAnimatedSprite sprite = new TreePersonAnimatedSprite(node.getPerson(), this, leftLeaf);
+    /**
+     * recursively walk the tree and add the sprites
+     * automatically adjusts positions based on position of parent nodes
+     * @param node
+     * @param x
+     * @param y
+     * @return
+     */
+    public TreePersonAnimatedSprite addTreeSprite(TreeNode node, int x, int y) {
+        if (x < 0) x = 0;
+        if (y < 0) y = 0;
+        TreePersonAnimatedSprite sprite = new TreePersonAnimatedSprite(node.getPerson(), this, rightLeaf);
+        int xdiff = (int) (sprite.getWidth()*0.75);
+        int ydiff = sprite.getHeight()-10;
+        if (node.getLeft()!=null) {
+            TreePersonAnimatedSprite father = addTreeSprite(node.getLeft(), x-xdiff, y - ydiff);
+            x = (int) (father.getX()+xdiff);
+            y = (int) (father.getY()+ydiff);
+        }
+        if (node.getRight()!=null) {
+            TreePersonAnimatedSprite mother = addTreeSprite(node.getRight(), x+xdiff, y - ydiff);
+            y = (int) (mother.getY()+ydiff);
+        }
         sprite.setX(x);
         sprite.setY(y);
         treeView.addSprite(sprite);
+
+        return sprite;
     }
 
     @Override

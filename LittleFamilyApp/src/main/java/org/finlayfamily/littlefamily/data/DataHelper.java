@@ -6,7 +6,6 @@ import android.util.Log;
 
 import org.finlayfamily.littlefamily.remote.RemoteService;
 import org.finlayfamily.littlefamily.remote.RemoteServiceSearchException;
-import org.finlayfamily.littlefamily.remote.familysearch.FamilySearchService;
 import org.finlayfamily.littlefamily.util.ImageHelper;
 import org.gedcomx.conclusion.Person;
 import org.gedcomx.links.Link;
@@ -23,26 +22,17 @@ public class DataHelper {
         LittlePerson person = new LittlePerson(fsPerson);
         person.setLastSync(new Date());
 
-        File imageFile = getImageFile(fsPerson.getId(), "portrait.jpg", context);
-        if (checkCache && imageFile!=null && imageFile.exists()) {
-            person.setPhotoPath(imageFile.getAbsolutePath());
-        } else {
-            try {
-                Link portrait = service.getPersonPortrait(fsPerson.getId(), checkCache);
-                if (portrait != null) {
-                    String imagePath = null;
-                    try {
-                        Uri uri = Uri.parse(portrait.getHref().toString());
-                        imagePath = service.downloadImage(uri, fsPerson.getId(), "portrait.jpg", context);
-                        person.setPhotoPath(imagePath);
-                    } catch (MalformedURLException e) {
-                        Log.e("buildLittlePerson", "error", e);
-                    }
-                }
-            } catch (Exception e) {
-                Log.e("buildLittlePerson", "error", e);
+        try {
+            Link portrait = service.getPersonPortrait(fsPerson.getId(), checkCache);
+            if (portrait != null) {
+                String imagePath = null;
+                imagePath = DataHelper.downloadFile(portrait.getHref().toString(), fsPerson.getId(), DataHelper.lastPath(portrait.getHref().toString()), service, context);
+                person.setPhotoPath(imagePath);
             }
+        } catch (Exception e) {
+            Log.e("buildLittlePerson", "error", e);
         }
+
         return person;
     }
 

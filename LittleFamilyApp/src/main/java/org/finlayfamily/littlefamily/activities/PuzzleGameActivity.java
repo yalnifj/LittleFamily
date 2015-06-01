@@ -43,6 +43,8 @@ public class PuzzleGameActivity extends LittleFamilyActivity implements Memories
         people = (List<LittlePerson>) intent.getSerializableExtra(ChooseFamilyMember.FAMILY);
 
         usedPhotos = new ArrayList<>(3);
+
+        setupTopBar();
     }
 
     @Override

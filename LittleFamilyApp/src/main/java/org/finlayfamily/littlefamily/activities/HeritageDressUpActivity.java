@@ -35,6 +35,8 @@ public class HeritageDressUpActivity extends LittleFamilyActivity implements Dre
         dollGrid.setAdapter(adapter);
         dollGrid.setNumColumns(adapter.getCount());
         dollGrid.setOnItemClickListener(this);
+
+        setupTopBar();
     }
 
     @Override

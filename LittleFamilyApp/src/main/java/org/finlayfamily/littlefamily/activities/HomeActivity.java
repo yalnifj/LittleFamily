@@ -5,16 +5,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Bundle;
-import android.view.View;
 
 import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.data.LittlePerson;
-import org.finlayfamily.littlefamily.events.EventListener;
-import org.finlayfamily.littlefamily.events.EventQueue;
 import org.finlayfamily.littlefamily.sprites.AnimatedBitmapSprite;
 import org.finlayfamily.littlefamily.sprites.ClippedAnimatedBitmapSprite;
 import org.finlayfamily.littlefamily.sprites.MovingAnimatedBitmapSprite;
-import org.finlayfamily.littlefamily.sprites.Sprite;
 import org.finlayfamily.littlefamily.sprites.TouchEventGameSprite;
 import org.finlayfamily.littlefamily.sprites.TouchStateAnimatedBitmapSprite;
 import org.finlayfamily.littlefamily.views.SpritedClippedSurfaceView;
@@ -51,13 +47,7 @@ public class HomeActivity extends LittleFamilyActivity {
         super.onDestroy();
 
         homeView.stop();
-
-        if (homeView.getSprites()!=null) {
-            for (Sprite s : homeView.getSprites()) {
-                s.onDestroy();
-            }
-            homeView.getSprites().clear();
-        }
+        homeView.onDestroy();
         if (homeBackground!=null) {
             homeBackground.onDestroy();
         }

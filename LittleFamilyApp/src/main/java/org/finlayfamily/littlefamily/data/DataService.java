@@ -3,7 +3,6 @@ package org.finlayfamily.littlefamily.data;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.finlayfamily.littlefamily.activities.tasks.AuthTask;
 import org.finlayfamily.littlefamily.db.DBHelper;

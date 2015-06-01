@@ -55,6 +55,7 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
     private Map<String, Link> linkCache;
     private Map<String, List<SourceDescription>> memories = null;
     private Map<String, List<FamilyHolder>> families = null;
+    private Map<String, String> recordCache = null;
     private String encodedAuthToken = null;
     private int delayCount = 0;
     private String defaultPersonId;
@@ -68,6 +69,7 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
         closeRelatives = new HashMap<>();
         memories = new HashMap<>();
         families = new HashMap<>();
+        recordCache = new HashMap<>();
         gedcomParser = new GedcomParser();
         this.baseUrl = baseUrl;
         this.defaultPersonId = defaultPersonId;
@@ -172,7 +174,7 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
         }
 
         if (!checkCache || personCache.get(personId)==null) {
-            String gedcom = getGedcomRecord(personId);
+            String gedcom = getGedcomRecord(personId, checkCache);
 
             if (!gedcom.isEmpty()) {
                 try {
@@ -221,7 +223,7 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
                         if(link.getHref()!=null && link.getHref().toString().startsWith("@")) {
                             String objeid =link.getHref().toString().replaceAll("@","");
                             try {
-                                String gedcom = getGedcomRecord(objeid);
+                                String gedcom = getGedcomRecord(objeid, checkCache);
                                 if (!gedcom.isEmpty()) {
                                     SourceDescription sd = gedcomParser.parseObje(gedcom, baseUrl);
                                     if (sd != null) {
@@ -270,7 +272,7 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
             if (fams != null) {
                 for(Link fam : fams) {
                     String famid = fam.getHref().toString().replaceAll("@","");
-                    String gedcom = getGedcomRecord(famid);
+                    String gedcom = getGedcomRecord(famid, checkCache);
                     if (!gedcom.isEmpty()) {
                         try {
                             FamilyHolder fh = gedcomParser.parseFamily(gedcom);
@@ -278,7 +280,6 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
                                 for (Link p : fh.getParents()) {
                                     String relId = p.getHref().toString().replaceAll("@", "");
                                     if (!relId.equals(personId)) {
-                                        getPerson(relId, true);
                                         Relationship rel = new Relationship();
                                         rel.setKnownType(RelationshipType.ParentChild);
                                         ResourceReference rr = new ResourceReference();
@@ -295,7 +296,6 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
                                 for (Link p : fh.getParents()) {
                                     String relId = p.getHref().toString().replaceAll("@", "");
                                     if (!relId.equals(personId)) {
-                                        getPerson(relId, true);
                                         Relationship rel = new Relationship();
                                         rel.setKnownType(RelationshipType.Couple);
                                         ResourceReference rr = new ResourceReference();
@@ -310,7 +310,6 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
                                 for (Link p : fh.getChildren()) {
                                     String relId = p.getHref().toString().replaceAll("@", "");
                                     if (!relId.equals(personId)) {
-                                        getPerson(relId, true);
                                         Relationship rel = new Relationship();
                                         rel.setKnownType(RelationshipType.ParentChild);
                                         ResourceReference rr = new ResourceReference();
@@ -353,7 +352,7 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
                     for(Link link : sr.getLinks()) {
                         if(link.getHref()!=null && link.getHref().toString().startsWith("@")) {
                             String objeid =link.getHref().toString().replaceAll("@","");
-                            String gedcom = getGedcomRecord(objeid);
+                            String gedcom = getGedcomRecord(objeid, checkCache);
                             if (!gedcom.isEmpty()) {
                                 try {
                                     SourceDescription sd = gedcomParser.parseObje(gedcom, baseUrl);
@@ -436,7 +435,9 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
         return null;
     }
 
-    private String getGedcomRecord(String recordId) throws RemoteServiceSearchException {
+    private String getGedcomRecord(String recordId, boolean checkCache) throws RemoteServiceSearchException {
+        if (checkCache && recordCache.containsKey(recordId)) return recordCache.get(recordId);
+
         Uri uri = Uri.parse(baseUrl + "client.php");
         Bundle headers = new Bundle();
         headers.putString("User-Agent", "PGVAgent");

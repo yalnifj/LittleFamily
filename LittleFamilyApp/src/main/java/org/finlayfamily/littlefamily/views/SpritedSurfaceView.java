@@ -55,20 +55,26 @@ public class SpritedSurfaceView extends AbstractTouchAnimatedSurfaceView {
     }
 
     public void addSprite(Sprite s) {
-        sprites.add(s);
+        synchronized (sprites) {
+            sprites.add(s);
+        }
     }
 
     public void removeSprite(Sprite s) {
-        sprites.remove(s);
+        synchronized (sprites) {
+            sprites.remove(s);
+        }
     }
 
     @Override
     public void doStep() {
-        Iterator<Sprite> i = sprites.iterator();
-        while(i.hasNext()){
-            Sprite s = i.next();
-            s.doStep();
-            if (s.isRemoveMe()) i.remove();
+        synchronized (sprites) {
+            Iterator<Sprite> i = sprites.iterator();
+            while (i.hasNext()) {
+                Sprite s = i.next();
+                s.doStep();
+                if (s.isRemoveMe()) i.remove();
+            }
         }
     }
 
@@ -83,9 +89,11 @@ public class SpritedSurfaceView extends AbstractTouchAnimatedSurfaceView {
             canvas.drawRect(0,0,getWidth(),getHeight(),basePaint);
         }
 
-        for(Sprite s : sprites) {
-            if (s.getX()+s.getWidth()>=0 && s.getX()<=getWidth() && s.getY()+s.getHeight()>=0 && s.getY()<=getHeight()) {
-                s.doDraw(canvas);
+        synchronized (sprites) {
+            for (Sprite s : sprites) {
+                if (s.getX() + s.getWidth() >= 0 && s.getX() <= getWidth() && s.getY() + s.getHeight() >= 0 && s.getY() <= getHeight()) {
+                    s.doDraw(canvas);
+                }
             }
         }
     }
@@ -122,11 +130,13 @@ public class SpritedSurfaceView extends AbstractTouchAnimatedSurfaceView {
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         super.surfaceDestroyed(holder);
-        if (sprites!=null){
-            for(Sprite s : sprites) {
-                s.onDestroy();
+        synchronized (sprites) {
+            if (sprites != null) {
+                for (Sprite s : sprites) {
+                    s.onDestroy();
+                }
             }
+            sprites.clear();
         }
-        sprites.clear();
     }
 }

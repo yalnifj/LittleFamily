@@ -60,11 +60,15 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
     }
 
     public void addSprite(Sprite s) {
-        sprites.add(s);
+        synchronized (sprites) {
+            sprites.add(s);
+        }
     }
 
     public void removeSprite(Sprite s) {
-        sprites.remove(s);
+        synchronized (sprites) {
+            sprites.remove(s);
+        }
     }
 
     public int getMaxHeight() {
@@ -101,11 +105,13 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
 
     @Override
     public void doStep() {
-        Iterator<Sprite> i = sprites.iterator();
-        while(i.hasNext()){
-            Sprite s = i.next();
-            s.doStep();
-            if (s.isRemoveMe()) i.remove();
+        synchronized (sprites) {
+            Iterator<Sprite> i = sprites.iterator();
+            while (i.hasNext()) {
+                Sprite s = i.next();
+                s.doStep();
+                if (s.isRemoveMe()) i.remove();
+            }
         }
     }
 
@@ -119,18 +125,20 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
         }
 
         canvas.translate(-clipX, -clipY);
-        for(Sprite s : sprites) {
-            if (s.getX()+s.getWidth()>=clipX && s.getX()<=getWidth()+clipX && s.getY()+s.getHeight()>=clipY && s.getY()<=getHeight()+clipY) {
-                Matrix m = s.getMatrix();
-                Matrix old = null;
-                if (m!=null) {
-                    old = new Matrix();
-                    old.set(m);
-                    m.postTranslate(-clipX, -clipY);
-                }
-                s.doDraw(canvas);
-                if (m!=null) {
-                    m.set(old);
+        synchronized (sprites) {
+            for (Sprite s : sprites) {
+                if (s.getX() + s.getWidth() >= clipX && s.getX() <= getWidth() + clipX && s.getY() + s.getHeight() >= clipY && s.getY() <= getHeight() + clipY) {
+                    Matrix m = s.getMatrix();
+                    Matrix old = null;
+                    if (m != null) {
+                        old = new Matrix();
+                        old.set(m);
+                        m.postTranslate(-clipX, -clipY);
+                    }
+                    s.doDraw(canvas);
+                    if (m != null) {
+                        m.set(old);
+                    }
                 }
             }
         }
@@ -161,10 +169,12 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
     protected void touch_start(float x, float y) {
         super.touch_start(x, y);
 
-        for(Sprite s : sprites) {
-            if (s.inSprite(x+clipX, y+clipY)) {
-                selectedSprites.add(s);
-                s.onSelect(x, y);
+        synchronized (sprites) {
+            for (Sprite s : sprites) {
+                if (s.inSprite(x + clipX, y + clipY)) {
+                    selectedSprites.add(s);
+                    s.onSelect(x, y);
+                }
             }
         }
     }
@@ -177,5 +187,16 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
             s.onRelease(x+clipX, y+clipY);
         }
         selectedSprites.clear();
+    }
+
+    public void onDestroy() {
+        synchronized (sprites) {
+            List<Sprite> spriteList = sprites;
+            sprites = null;
+            for (Sprite s : spriteList) {
+                s.onDestroy();
+            }
+            spriteList.clear();
+        }
     }
 }

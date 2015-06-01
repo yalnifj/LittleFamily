@@ -348,10 +348,10 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
                         Gedcomx doc = serializer.read(Gedcomx.class, result.getData());
                         if (doc.getRelationships() != null && doc.getRelationships().size() > 0) {
                             List<Relationship> relatives = new ArrayList<>(doc.getRelationships());
-                            for (Relationship r : relatives) {
-                                getPerson(r.getPerson1().getResourceId(), checkCache);
-                                getPerson(r.getPerson2().getResourceId(), checkCache);
-                            }
+                            //for (Relationship r : relatives) {
+                                //getPerson(r.getPerson1().getResourceId(), checkCache);
+                                //getPerson(r.getPerson2().getResourceId(), checkCache);
+                            //}
                             closeRelatives.put(person.getId(), relatives);
                             Log.i(TAG, "getCloseRelatives " + doc.getRelationships().size() + ": " + personId);
                         }

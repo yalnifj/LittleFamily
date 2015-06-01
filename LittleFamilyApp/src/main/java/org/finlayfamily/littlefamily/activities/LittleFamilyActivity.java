@@ -100,7 +100,9 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     }
 
     public void hideLoadingDialog() {
-        loadingDialog.dismiss();
+        if (loadingDialog!=null && loadingDialog.isVisible()) {
+            loadingDialog.dismissAllowingStateLoss();
+        }
     }
 
     @Override

@@ -8,7 +8,6 @@ import android.graphics.Rect;
 
 import org.finlayfamily.littlefamily.activities.LittleFamilyActivity;
 import org.finlayfamily.littlefamily.data.LittlePerson;
-import org.finlayfamily.littlefamily.events.EventQueue;
 import org.finlayfamily.littlefamily.util.ImageHelper;
 
 /**
@@ -37,13 +36,15 @@ public class TreePersonAnimatedSprite extends Sprite {
 
         photo = null;
         if (person.getPhotoPath() != null) {
-            photo = ImageHelper.loadBitmapFromFile(person.getPhotoPath(), ImageHelper.getOrientation(person.getPhotoPath()), (int) (width * 0.8), (int) (height * 0.8), false);
+            photo = ImageHelper.loadBitmapFromFile(person.getPhotoPath(), ImageHelper.getOrientation(person.getPhotoPath()), (int) (width * 0.7), (int) (height * 0.7), false);
         } else {
-            photo = ImageHelper.loadBitmapFromResource(activity, person.getDefaultPhotoResource(), 0, (int)(width*0.8), (int) (height*0.8));
+            photo = ImageHelper.loadBitmapFromResource(activity, person.getDefaultPhotoResource(), 0, (int)(width*0.7), (int) (height*0.7));
         }
 
         textPaint = new Paint();
         textPaint.setColor(Color.WHITE);
+        textPaint.setTextSize(32);
+        textPaint.setTextAlign(Paint.Align.CENTER);
     }
 
     @Override
@@ -57,11 +58,20 @@ public class TreePersonAnimatedSprite extends Sprite {
         dst.set((int)getX(), (int)getY(), (int)(getX()+getWidth()), (int) (getY()+getHeight()));
         canvas.drawBitmap(leafBitmap, null, dst, null);
         Rect photoRect = new Rect();
-        photoRect.set((int) (getX() +width*0.1f), (int)(getY() + height * 0.1f),
-                (int) (getX() +width*0.9f), (int)(getY() + height * 0.9f));
-        canvas.drawBitmap(photo, width * 0.1f, height * 0.1f, null);
+        float ratio = ((float)photo.getWidth())/photo.getHeight();
+        int pw = (int) (width*0.7f);
+        int ph = (int) (width*0.7f);
+        if (photo.getWidth() > photo.getHeight()) {
+            ph = (int) (pw / ratio);
+        } else {
+            pw = (int) (ph * ratio);
+        }
+        int px = (int) (getX() + (width/2  - pw/2));
+        int py = (int) (getY() + (height/2 - ph/2));
+        photoRect.set(px, py, px + pw, py + ph);
+        canvas.drawBitmap(photo, null, photoRect, null);
 
-        canvas.drawText(person.getGivenName(), 0, height*0.9f, textPaint);
+        canvas.drawText(person.getGivenName(), getX() + width/2, getY()+height, textPaint);
     }
 
     @Override

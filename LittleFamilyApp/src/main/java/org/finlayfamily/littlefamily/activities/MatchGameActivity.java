@@ -60,6 +60,8 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
         gridView.setOnItemClickListener(this);
         updateColumns();
 
+        setupTopBar();
+
         if (people!=null && people.size()>1) {
             FamilyLoaderTask task = new FamilyLoaderTask(this, this);
             task.execute(people.get(backgroundLoadIndex));
