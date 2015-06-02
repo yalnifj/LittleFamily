@@ -9,6 +9,8 @@ public class TreeNode {
     private LittlePerson person;
     private TreeNode left;
     private TreeNode right;
+    private String relationship;
+    private int depth;
     private List<LittlePerson> spouses;
     private List<LittlePerson> children;
 
@@ -50,5 +52,21 @@ public class TreeNode {
 
     public void setSpouses(List<LittlePerson> spouses) {
         this.spouses = spouses;
+    }
+
+    public String getRelationship() {
+        return relationship;
+    }
+
+    public void setRelationship(String relationship) {
+        this.relationship = relationship;
+    }
+
+    public int getDepth() {
+        return depth;
+    }
+
+    public void setDepth(int depth) {
+        this.depth = depth;
     }
 }

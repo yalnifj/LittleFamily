@@ -13,6 +13,7 @@ import org.finlayfamily.littlefamily.data.TreeNode;
 import org.finlayfamily.littlefamily.sprites.AnimatedBitmapSprite;
 import org.finlayfamily.littlefamily.sprites.TreePersonAnimatedSprite;
 import org.finlayfamily.littlefamily.views.SpritedClippedSurfaceView;
+import org.gedcomx.types.GenderType;
 
 public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTask.Listener{
 
@@ -24,6 +25,8 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
     private TreeNode root;
     private Bitmap leftLeaf;
     private Bitmap rightLeaf;
+    private int maxX = 0;
+    private int maxY = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +48,7 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
         super.onStart();
 
         showLoadingDialog();
-        TreeLoaderTask task = new TreeLoaderTask(this, this);
+        TreeLoaderTask task = new TreeLoaderTask(this, this, 0);
         task.execute(selectedPerson);
     }
 
@@ -65,10 +68,8 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
     private void setupTreeViewSprites() {
         int width = getScreenWidth();
         int height = getScreenHeight();
-        int minx = 0;
-        int miny = 0;
-        int maxx = 0;
-        int maxy = 0;
+        maxX = width;
+        maxY = height;
 
         treeBackground = new AnimatedBitmapSprite(BitmapFactory.decodeResource(getResources(), R.drawable.tree_background));
         treeBackground.setWidth(treeView.getWidth());
@@ -78,10 +79,16 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
         leftLeaf = BitmapFactory.decodeResource(getResources(), R.drawable.leaf_left);
         rightLeaf = BitmapFactory.decodeResource(getResources(), R.drawable.leaf_right);
 
-        addTreeSprite(root, 0, 0);
+        TreePersonAnimatedSprite rootSprite = addTreeSprite(root, 0, 0);
 
-        treeView.setMaxWidth(width);
-        treeView.setMaxHeight(height);
+        treeView.setMaxWidth(maxX);
+        treeView.setMaxHeight(maxY);
+        int clipX = (int) rootSprite.getX() - width/2;
+        int clipY = (int) rootSprite.getY() - height/2;
+        if (clipX < 0) clipX = 0;
+        if (clipY < 0) clipY = 0;
+        treeView.setClipX(clipX);
+        treeView.setClipY(clipY);
 
         hideLoadingDialog();
     }
@@ -97,21 +104,37 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
     public TreePersonAnimatedSprite addTreeSprite(TreeNode node, int x, int y) {
         if (x < 0) x = 0;
         if (y < 0) y = 0;
-        TreePersonAnimatedSprite sprite = new TreePersonAnimatedSprite(node.getPerson(), this, rightLeaf);
-        int xdiff = (int) (sprite.getWidth()*0.75);
-        int ydiff = sprite.getHeight()-10;
+
+        int ny = y;
+        int mx = x;
+        int my = y;
         if (node.getLeft()!=null) {
-            TreePersonAnimatedSprite father = addTreeSprite(node.getLeft(), x-xdiff, y - ydiff);
-            x = (int) (father.getX()+xdiff);
-            y = (int) (father.getY()+ydiff);
+            TreePersonAnimatedSprite father = addTreeSprite(node.getLeft(), x, y);
+            ny = (int) (father.getY()+father.getHeight()+10);
+            mx = (int) (father.getX()+father.getWidth());
+            my = (int) father.getY();
+            x = (int) (father.getX());
         }
         if (node.getRight()!=null) {
-            TreePersonAnimatedSprite mother = addTreeSprite(node.getRight(), x+xdiff, y - ydiff);
-            y = (int) (mother.getY()+ydiff);
+            TreePersonAnimatedSprite mother = addTreeSprite(node.getRight(), mx, my);
+            ny = (int) (mother.getY()+mother.getHeight()+10);
         }
+
+        Bitmap leaf = leftLeaf;
+        if (node.getPerson().getGender()== GenderType.Female) {
+            leaf = rightLeaf;
+        }
+        TreePersonAnimatedSprite sprite = new TreePersonAnimatedSprite(node, this, leaf);
+        //if (node.getPerson().getGender()== GenderType.Female) {
+        //    x = x+sprite.getWidth();
+        //}
+
         sprite.setX(x);
-        sprite.setY(y);
+        sprite.setY(ny);
         treeView.addSprite(sprite);
+
+        if (x+sprite.getWidth() > maxX) maxX = x+sprite.getWidth();
+        if (y+sprite.getHeight() > maxY) maxY = y+sprite.getHeight();
 
         return sprite;
     }

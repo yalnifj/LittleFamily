@@ -8,6 +8,7 @@ import android.graphics.Rect;
 
 import org.finlayfamily.littlefamily.activities.LittleFamilyActivity;
 import org.finlayfamily.littlefamily.data.LittlePerson;
+import org.finlayfamily.littlefamily.data.TreeNode;
 import org.finlayfamily.littlefamily.util.ImageHelper;
 
 /**
@@ -15,6 +16,7 @@ import org.finlayfamily.littlefamily.util.ImageHelper;
  */
 public class TreePersonAnimatedSprite extends Sprite {
     protected LittlePerson person;
+    protected TreeNode node;
     protected LittleFamilyActivity activity;
     protected Bitmap leafBitmap;
     protected Bitmap photo;
@@ -26,8 +28,9 @@ public class TreePersonAnimatedSprite extends Sprite {
     public static final int STATE_OPEN = 2;
     public static final int STATE_ANIMATING_CLOSED = 3;
 
-    public TreePersonAnimatedSprite(LittlePerson person, LittleFamilyActivity activity, Bitmap leafBitmap) {
-        this.person = person;
+    public TreePersonAnimatedSprite(TreeNode personNode, LittleFamilyActivity activity, Bitmap leafBitmap) {
+        this.person = personNode.getPerson();
+        this.node = personNode;
         this.activity = activity;
         this.leafBitmap = leafBitmap;
         this.selectable = true;
