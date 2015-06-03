@@ -92,7 +92,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     public void showLoadingDialog() {
         if (loadingDialog==null) {
             loadingDialog = new LoadingDialog();
-            loadingDialog.setStyle(DialogFragment.STYLE_NO_FRAME, R.style.Theme_AppCompat_Light);
+            loadingDialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Theme_AppCompat_Dialog);
         }
         if (!loadingDialog.isVisible()) {
             loadingDialog.show(getFragmentManager(), "Loading");

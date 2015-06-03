@@ -7,11 +7,11 @@ import java.util.List;
  */
 public class TreeNode {
     private LittlePerson person;
+    private List<LittlePerson> spouses;
+    private int shownSpouse = 0;
     private TreeNode left;
     private TreeNode right;
-    private String relationship;
     private int depth;
-    private List<LittlePerson> spouses;
     private List<LittlePerson> children;
 
     public LittlePerson getPerson() {
@@ -54,12 +54,18 @@ public class TreeNode {
         this.spouses = spouses;
     }
 
-    public String getRelationship() {
-        return relationship;
+    public int getShownSpouse() {
+        return shownSpouse;
     }
 
-    public void setRelationship(String relationship) {
-        this.relationship = relationship;
+    public void setShownSpouse(int shownSpouse) {
+        this.shownSpouse = shownSpouse;
+    }
+
+    public LittlePerson getSpouse() {
+        if (this.spouses==null) return null;
+        if (this.spouses.size()<=this.shownSpouse) return null;
+        return this.spouses.get(this.shownSpouse);
     }
 
     public int getDepth() {
