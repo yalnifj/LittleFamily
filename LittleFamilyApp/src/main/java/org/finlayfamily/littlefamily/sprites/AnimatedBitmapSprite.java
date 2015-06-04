@@ -127,6 +127,22 @@ public class AnimatedBitmapSprite extends Sprite {
         }
     }
 
+    public boolean inSprite(float tx, float ty) {
+        if (!selectable) return false;
+        if (tx>=x && tx<=x+width && ty>=y && ty<=y+height) {
+            if (bitmaps!=null) {
+                List<Bitmap> frames = bitmaps.get(state);
+                Bitmap bitmap = frames.get(frame);
+                int color = bitmap.getPixel((int)(tx-x), (int)(ty-y));
+                int alpha = Color.alpha(color);
+                if (alpha > 50) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     @Override
     public void onSelect(float x, float y) {
 

@@ -12,6 +12,7 @@ public abstract class Sprite {
     protected int width;
     protected int height;
     protected int state;
+    protected boolean selected;
     protected boolean selectable;
     protected boolean removeMe;
     protected Matrix matrix;
@@ -88,6 +89,14 @@ public abstract class Sprite {
 
     public void setMatrix(Matrix matrix) {
         this.matrix = matrix;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 
     public abstract void doStep();

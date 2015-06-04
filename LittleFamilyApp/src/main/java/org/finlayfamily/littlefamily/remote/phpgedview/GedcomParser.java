@@ -256,9 +256,11 @@ public class GedcomParser {
     public Name parseName(List<String> lines) {
         Name name = new Name();
         NameForm form = null;
+        String wholeName = lines.get(0).substring(7);
         for(int s=1; s<lines.size(); s++) {
             if (form==null) {
                 form = new NameForm();
+                form.setFullText(wholeName.replaceAll("/", ""));
             }
             String line = lines.get(s);
             String[] parts = line.split(" ", 3);
@@ -288,13 +290,14 @@ public class GedcomParser {
             }
             //-- TODO parse SOUR, NOTE, etc.
         }
+
         if (form!=null) name.addNameForm(form);
         else {
-            String wholeName = lines.get(0).substring(7);
             Pattern p = Pattern.compile("(.*)/(.*)/(.*)");
             Matcher m = p.matcher(wholeName);
             if (m.find()) {
                 form = new NameForm();
+                form.setFullText(wholeName.replaceAll("/", ""));
                 String givn = m.group(1).trim();
                 if (!givn.isEmpty()) {
                     NamePart part = new NamePart();

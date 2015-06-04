@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.Build;
 
 import org.finlayfamily.littlefamily.activities.LittleFamilyActivity;
 import org.finlayfamily.littlefamily.data.LittlePerson;
@@ -16,6 +17,14 @@ import org.gedcomx.types.GenderType;
  * Created by Parents on 5/29/2015.
  */
 public class TreePersonAnimatedSprite extends Sprite {
+    public static final int STATE_CLOSED = 0;
+    public static final int STATE_ANIMATING_OPEN_LEFT = 1;
+    public static final int STATE_ANIMATING_OPEN_RIGHT = 2;
+    public static final int STATE_OPEN_LEFT = 3;
+    public static final int STATE_OPEN_RIGHT = 4;
+    public static final int STATE_ANIMATING_CLOSED_LEFT = 5;
+    public static final int STATE_ANIMATING_CLOSED_RIGHT = 6;
+
     protected LittlePerson person;
     protected TreeNode node;
     protected LittleFamilyActivity activity;
@@ -26,11 +35,13 @@ public class TreePersonAnimatedSprite extends Sprite {
     protected boolean moved;
     protected Paint textPaint;
     protected int treeWidth;
-
-    public static final int STATE_CLOSED = 0;
-    public static final int STATE_ANIMATING_OPEN = 1;
-    public static final int STATE_OPEN = 2;
-    public static final int STATE_ANIMATING_CLOSED = 3;
+    protected int detailWidth;
+    protected int detailHeight;
+    protected int dWidth;
+    protected int dHeight;
+    protected boolean opened;
+    protected Paint openPaint;
+    protected Paint shadowPaint;
 
     public TreePersonAnimatedSprite(TreeNode personNode, LittleFamilyActivity activity, Bitmap leftLeaf, Bitmap rightLeaf) {
         this.person = personNode.getPerson();
@@ -40,6 +51,8 @@ public class TreePersonAnimatedSprite extends Sprite {
         this.rightLeaf = rightLeaf;
         this.selectable = true;
         this.setHeight(leftLeaf.getHeight());
+        this.detailWidth = 400;
+        this.detailHeight = 300;
 
         if (personNode.getSpouse()!=null) {
             this.setWidth(leftLeaf.getWidth() + rightLeaf.getWidth());
@@ -67,9 +80,17 @@ public class TreePersonAnimatedSprite extends Sprite {
         textPaint.setColor(Color.WHITE);
         textPaint.setTextSize(32);
         textPaint.setTextAlign(Paint.Align.CENTER);
+
+        openPaint = new Paint();
+        openPaint.setColor(Color.parseColor("#448844"));
+        openPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+
+        shadowPaint = new Paint();
+        shadowPaint.setColor(Color.parseColor("#77001100"));
+        shadowPaint.setStyle(Paint.Style.FILL_AND_STROKE);
     }
 
-    protected String getAncestralRelationship(TreeNode node) {
+    protected String getAncestralRelationship(LittlePerson p) {
         String rel = "";
         for(int g=3; g<=node.getDepth(); g++) {
             rel += "Great ";
@@ -77,11 +98,19 @@ public class TreePersonAnimatedSprite extends Sprite {
         if (node.getDepth()>=2) {
             rel += "Grand ";
         }
-        if (node.getPerson().getGender()== GenderType.Female) {
-            rel += "Mother";
+        if (p.getGender()== GenderType.Female) {
+            if (node.getDepth()==0) {
+                rel = "Sister";
+            } else {
+                rel += "Mother";
+            }
         }
-        else if (node.getPerson().getGender()==GenderType.Male) {
-            rel += "Father";
+        else if (p.getGender()==GenderType.Male) {
+            if (node.getDepth()==0) {
+                rel = "Brother";
+            } else {
+                rel += "Father";
+            }
         } else {
             rel += "Parent";
         }
@@ -98,7 +127,27 @@ public class TreePersonAnimatedSprite extends Sprite {
 
     @Override
     public void doStep() {
-
+        if (state==STATE_ANIMATING_OPEN_LEFT || state==STATE_ANIMATING_OPEN_RIGHT) {
+            dWidth += 30;
+            dHeight += 30;
+            if (dWidth > detailWidth) dWidth = detailWidth;
+            if (dHeight > detailHeight) dHeight = detailHeight;
+            if (dWidth==detailWidth && dHeight==detailHeight) {
+                if (state==STATE_ANIMATING_OPEN_LEFT) state = STATE_OPEN_LEFT;
+                else state = STATE_OPEN_RIGHT;
+                opened = true;
+            }
+        }
+        if (state==STATE_ANIMATING_CLOSED_LEFT || state==STATE_ANIMATING_CLOSED_RIGHT) {
+            dWidth -= 30;
+            dHeight -= 30;
+            if (dWidth < 0) dWidth = 0;
+            if (dHeight < 0) dHeight = 0;
+            if (dWidth==0 && dHeight==0) {
+                state = STATE_CLOSED;
+                opened = false;
+            }
+        }
     }
 
     @Override
@@ -162,11 +211,52 @@ public class TreePersonAnimatedSprite extends Sprite {
         photoRect.set(px, py, px + pw, py + ph);
         canvas.drawBitmap(photo, null, photoRect, null);
         canvas.drawText(person.getGivenName(), px + pw/2, getY()+height, textPaint);
+
+        if (state==STATE_ANIMATING_OPEN_LEFT || state==STATE_OPEN_LEFT || state==STATE_ANIMATING_CLOSED_LEFT) {
+            if (Build.VERSION.SDK_INT > 20) {
+                canvas.drawRoundRect(getX() + leftLeaf.getWidth()+10, getY()+10, getX() + leftLeaf.getWidth() + dWidth+10, getY() + dHeight+10, 10, 10, shadowPaint);
+                canvas.drawRoundRect(getX() + leftLeaf.getWidth(), getY(), getX() + leftLeaf.getWidth() + dWidth, getY() + dHeight, 10, 10, openPaint);
+            } else {
+                canvas.drawRect(getX() + leftLeaf.getWidth()+10, getY()+10, getX() + leftLeaf.getWidth() + dWidth+10, getY() + dHeight+10, shadowPaint);
+                canvas.drawRect(getX() + leftLeaf.getWidth(), getY(), getX() + leftLeaf.getWidth() + dWidth, getY() + dHeight, openPaint);
+            }
+        }
+        if (state==STATE_ANIMATING_OPEN_RIGHT || state==STATE_OPEN_RIGHT || state==STATE_ANIMATING_CLOSED_RIGHT) {
+            if (Build.VERSION.SDK_INT > 20) {
+                canvas.drawRoundRect(getX() + getWidth()+10, getY()+10, getX() + getWidth() + dWidth+10, getY() + dHeight+10, 10, 10, shadowPaint);
+                canvas.drawRoundRect(getX() + getWidth(), getY(), getX() + getWidth() + dWidth, getY() + dHeight, 10, 10, openPaint);
+            } else {
+                canvas.drawRect(getX() + getWidth()+10, getY()+10, getX() + getWidth() + dWidth+10, getY() + dHeight+10, shadowPaint);
+                canvas.drawRect(getX() + getWidth(), getY(), getX() + getWidth() + dWidth, getY() + dHeight, openPaint);
+            }
+        }
+
+        LittlePerson detailPerson = node.getPerson();
+        if (state==STATE_OPEN_LEFT) {
+            if (node.getSpouse() != null && detailPerson.getGender() == GenderType.Female) {
+                detailPerson = node.getSpouse();
+            }
+            String name = detailPerson.getName();
+            if (name==null) name = detailPerson.getGivenName();
+            canvas.drawText(name, getX() + leftLeaf.getWidth() + detailWidth/2, getY()+30, textPaint);
+            String relationship = getAncestralRelationship(detailPerson);
+            canvas.drawText(relationship, getX() + leftLeaf.getWidth() + detailWidth/2, getY()+60, textPaint);
+
+        } else if (state==STATE_OPEN_RIGHT) {
+            if (node.getSpouse() != null && detailPerson.getGender() != GenderType.Female) {
+                detailPerson = node.getSpouse();
+            }
+            String name = detailPerson.getName();
+            if (name==null) name = detailPerson.getGivenName();
+            canvas.drawText(name, getX() + getWidth() + detailWidth/2, getY()+30, textPaint);
+            String relationship = getAncestralRelationship(detailPerson);
+            canvas.drawText(relationship, getX() + getWidth() + detailWidth/2, getY()+60, textPaint);
+        }
     }
 
     @Override
     public void onSelect(float x, float y) {
-
+        selected = true;
     }
 
     @Override
@@ -178,8 +268,29 @@ public class TreePersonAnimatedSprite extends Sprite {
     @Override
     public void onRelease(float x, float y) {
         if (!moved) {
-            state = STATE_ANIMATING_OPEN;
+            if (!opened) {
+                dWidth = 0;
+                dHeight = 0;
+                if (node.getSpouse() == null) {
+                    state = STATE_ANIMATING_OPEN_LEFT;
+                } else {
+                    if (x < getX() + getWidth() / 2) {
+                        state = STATE_ANIMATING_OPEN_LEFT;
+                    } else {
+                        state = STATE_ANIMATING_OPEN_RIGHT;
+                    }
+                }
+            } else {
+                dWidth = detailWidth;
+                dHeight = detailHeight;
+                if (state==STATE_OPEN_LEFT) {
+                    state = STATE_ANIMATING_CLOSED_LEFT;
+                } else {
+                    state = STATE_ANIMATING_CLOSED_RIGHT;
+                }
+            }
         }
+        selected = false;
         moved = false;
     }
 
@@ -190,4 +301,10 @@ public class TreePersonAnimatedSprite extends Sprite {
         photo.recycle();
         photo = null;
     }
+
+    public boolean isOpened() {
+        return opened;
+    }
+
+
 }

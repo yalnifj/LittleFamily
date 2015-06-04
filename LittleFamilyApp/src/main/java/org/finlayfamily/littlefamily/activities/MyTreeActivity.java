@@ -11,8 +11,12 @@ import org.finlayfamily.littlefamily.data.DataService;
 import org.finlayfamily.littlefamily.data.LittlePerson;
 import org.finlayfamily.littlefamily.data.TreeNode;
 import org.finlayfamily.littlefamily.sprites.AnimatedBitmapSprite;
+import org.finlayfamily.littlefamily.sprites.Sprite;
 import org.finlayfamily.littlefamily.sprites.TreePersonAnimatedSprite;
 import org.finlayfamily.littlefamily.views.SpritedClippedSurfaceView;
+
+import java.util.Collections;
+import java.util.List;
 
 public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTask.Listener{
 
@@ -46,9 +50,11 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
     protected void onStart() {
         super.onStart();
 
-        showLoadingDialog();
-        TreeLoaderTask task = new TreeLoaderTask(this, this, 0, 2);
-        task.execute(selectedPerson);
+        if (treeView.getSprites().size()==0) {
+            showLoadingDialog();
+            TreeLoaderTask task = new TreeLoaderTask(this, this, 0, 2);
+            task.execute(selectedPerson);
+        }
     }
 
     @Override
@@ -88,6 +94,10 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
         if (clipY < 0) clipY = 0;
         treeView.setClipX(clipX);
         treeView.setClipY(clipY);
+
+        //-- prevent overlapping
+        List<Sprite> sprites = treeView.getSprites();
+        Collections.reverse(sprites);
 
         hideLoadingDialog();
     }

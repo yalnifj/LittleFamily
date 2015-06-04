@@ -34,16 +34,24 @@ public class TreeLoaderTask extends AsyncTask<LittlePerson, Integer, TreeNode> {
     protected TreeNode doInBackground(LittlePerson[] persons) {
         Log.d(this.getClass().getSimpleName(), "Starting TreeLoaderTask.doInBackground "+persons);
         TreeNode root = new TreeNode();
-        for (LittlePerson person : persons) {
-            try {
-                root.setPerson(person);
-                root.setDepth(startingDepth);
-                addSpouses(root);
-                addParents(root);
-                addChildren(root, 1);
-            } catch (Exception e) {
-                Log.e(this.getClass().getSimpleName(), "error", e);
+        LittlePerson person = persons[0];
+        try {
+            /*
+            List<LittlePerson> children = dataService.getChildren(person);
+            if (children==null || children.size()==0) {
+                List<LittlePerson> parents = dataService.getParents(person);
+                if (parents!=null && parents.size()>0) {
+                    person = parents.get(0);
+                }
             }
+            */
+            root.setPerson(person);
+            root.setDepth(startingDepth);
+            addSpouses(root);
+            addParents(root);
+            addChildren(root, 1);
+        } catch (Exception e) {
+            Log.e(this.getClass().getSimpleName(), "error", e);
         }
         return root;
     }
