@@ -62,7 +62,7 @@ public abstract class AbstractTouchAnimatedSurfaceView extends SurfaceView imple
         mX = x;
         mY = y;
     }
-    private void touch_move(float x, float y) {
+    protected void touch_move(float x, float y) {
         float dx = Math.abs(x - mX);
         float dy = Math.abs(y - mY);
         if (dx >= touchTolerance || dy >= touchTolerance) {

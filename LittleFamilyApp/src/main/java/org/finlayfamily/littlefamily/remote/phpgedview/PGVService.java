@@ -230,7 +230,7 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
                                         List<Link> links = sd.getLinks();
                                         for (Link link2 : links) {
                                             if (link2.getRel() != null && link2.getRel().equals("image")) {
-                                                if (portrait == null || sd.getSortKey().equals("1")) {
+                                                if (portrait == null || (sd.getSortKey()!=null && sd.getSortKey().equals("1"))) {
                                                     portrait = link2;
                                                 }
                                             }

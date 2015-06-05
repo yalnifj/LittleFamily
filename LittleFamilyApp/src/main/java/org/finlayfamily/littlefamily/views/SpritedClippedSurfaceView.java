@@ -149,7 +149,7 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
         boolean selectedMoved = false;
         if (selectedSprites.size() > 0) {
             for (Sprite s : selectedSprites) {
-                selectedMoved |= s.onMove(oldX, oldY, newX, newY);
+                selectedMoved |= s.onMove(oldX+clipX, oldY+clipY, newX+clipX, newY+clipY);
             }
         }
         if (!selectedMoved) {
@@ -173,7 +173,7 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
             for (Sprite s : sprites) {
                 if (s.inSprite(x + clipX, y + clipY)) {
                     selectedSprites.add(s);
-                    s.onSelect(x, y);
+                    s.onSelect(x + clipX, y + clipY);
                 }
             }
         }

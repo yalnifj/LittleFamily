@@ -42,6 +42,7 @@ public class TreePersonAnimatedSprite extends Sprite {
     protected boolean opened;
     protected Paint openPaint;
     protected Paint shadowPaint;
+    protected float scale;
 
     public TreePersonAnimatedSprite(TreeNode personNode, LittleFamilyActivity activity, Bitmap leftLeaf, Bitmap rightLeaf) {
         this.person = personNode.getPerson();
@@ -53,6 +54,7 @@ public class TreePersonAnimatedSprite extends Sprite {
         this.setHeight(leftLeaf.getHeight());
         this.detailWidth = 400;
         this.detailHeight = 300;
+        this.scale = 1;
 
         if (personNode.getSpouse()!=null) {
             this.setWidth(leftLeaf.getWidth() + rightLeaf.getWidth());
@@ -123,6 +125,14 @@ public class TreePersonAnimatedSprite extends Sprite {
 
     public void setTreeWidth(int treeWidth) {
         this.treeWidth = treeWidth;
+    }
+
+    public float getScale() {
+        return scale;
+    }
+
+    public void setScale(float scale) {
+        this.scale = scale;
     }
 
     @Override
@@ -300,6 +310,14 @@ public class TreePersonAnimatedSprite extends Sprite {
         rightLeaf = null;
         photo.recycle();
         photo = null;
+    }
+
+    public boolean inSprite(float tx, float ty) {
+        if (!selectable) return false;
+        if (tx>=x*scale && tx<=(x+width)*scale && ty>=y*scale && ty<=(y+height)*scale) {
+            return true;
+        }
+        return false;
     }
 
     public boolean isOpened() {

@@ -267,6 +267,39 @@ public class HomeActivity extends LittleFamilyActivity {
             wardrobe.setSelectable(true);
             homeView.addSprite(wardrobe);
 
+            Bitmap adultBedBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_adult_bed);
+            AnimatedBitmapSprite adultBed = new AnimatedBitmapSprite(adultBedBm);
+            adultBed.setX(975);
+            adultBed.setY(693);
+            homeView.addSprite(adultBed);
+
+            Bitmap adultVanityBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_adult_vanity);
+            AnimatedBitmapSprite adultVanity = new AnimatedBitmapSprite(adultVanityBm);
+            adultVanity.setX(1350);
+            adultVanity.setY(800);
+            homeView.addSprite(adultVanity);
+
+            Bitmap lightABm = BitmapFactory.decodeResource(getResources(), R.drawable.house_light_a1);
+            TouchStateAnimatedBitmapSprite lightA = new TouchStateAnimatedBitmapSprite(lightABm, this);
+            lightA.setX(1340);
+            lightA.setY(652);
+            List<Bitmap> lightAonOff = new ArrayList<>(1);
+            lightAonOff.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_light_a2));
+            lightA.getBitmaps().put(1, lightAonOff);
+            lightA.getAudio().put(0, R.raw.pullchainslowon);
+            lightA.getAudio().put(1, R.raw.pullchainslowon);
+            homeView.addSprite(lightA);
+
+            Bitmap lightBBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_light_b1);
+            TouchStateAnimatedBitmapSprite lightB = new TouchStateAnimatedBitmapSprite(lightBBm, this);
+            lightB.setX(1045);
+            lightB.setY(650);
+            List<Bitmap> lightBonOff = new ArrayList<>(1);
+            lightBonOff.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_light_b2));
+            lightB.getBitmaps().put(1, lightBonOff);
+            lightB.getAudio().put(0, R.raw.pullchainslowon);
+            lightB.getAudio().put(1, R.raw.pullchainslowon);
+            homeView.addSprite(lightB);
 
 
             Bitmap blocksBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_toys_blocks);

@@ -13,7 +13,7 @@ import org.finlayfamily.littlefamily.data.TreeNode;
 import org.finlayfamily.littlefamily.sprites.AnimatedBitmapSprite;
 import org.finlayfamily.littlefamily.sprites.Sprite;
 import org.finlayfamily.littlefamily.sprites.TreePersonAnimatedSprite;
-import org.finlayfamily.littlefamily.views.SpritedClippedSurfaceView;
+import org.finlayfamily.littlefamily.views.TreeSpriteSurfaceView;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,7 +23,7 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
     private LittlePerson selectedPerson;
     private DataService dataService;
 
-    private SpritedClippedSurfaceView treeView;
+    private TreeSpriteSurfaceView treeView;
     private AnimatedBitmapSprite treeBackground = null;
     private TreeNode root;
     private Bitmap leftLeaf;
@@ -36,7 +36,7 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_tree);
 
-        treeView = (SpritedClippedSurfaceView) findViewById(R.id.treeView);
+        treeView = (TreeSpriteSurfaceView) findViewById(R.id.treeView);
 
         Intent intent = getIntent();
         selectedPerson = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);

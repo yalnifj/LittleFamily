@@ -93,7 +93,7 @@ public class MatchGameListAdapter extends BaseAdapter {
 
         if (width>0) {
             Paint paint = new Paint();
-            paint.setColor(Color.parseColor("#e9afaf"));
+            paint.setColor(Color.parseColor("#d99f9f"));
             paint.setStyle(Paint.Style.FILL);
 
             MatchPerson person = (MatchPerson) getItem(index);

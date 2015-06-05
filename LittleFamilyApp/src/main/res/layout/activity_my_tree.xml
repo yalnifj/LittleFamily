@@ -16,7 +16,7 @@
         android:layout_centerHorizontal="true" />
 
     <view
-        class="org.finlayfamily.littlefamily.views.SpritedClippedSurfaceView"
+        class="org.finlayfamily.littlefamily.views.TreeSpriteSurfaceView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/treeView"

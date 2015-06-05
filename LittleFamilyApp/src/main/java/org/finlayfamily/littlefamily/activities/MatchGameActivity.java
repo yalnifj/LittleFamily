@@ -81,14 +81,10 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
 			// speed up the flipover by clearing the handler and
 			// flipping in the same thread. then proceed to flip the next card
 			flipHandler.removeCallbacksAndMessages(null);
-			new flipOverHandler().run();
+			new flipOverHandler(null).run();
 		}
 		MatchPerson person = (MatchPerson) adapter.getItem(position);
         String name = person.getPerson().getGivenName();
-        //-- TODO get relationship name
-        if (name != null) {
-            speak(name);
-        }
 
 		if (!person.isFlipped()){
 			if (flip1 < 0) flip1 = position;
@@ -105,7 +101,7 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
 				flip1 = -1;
 				flip2 = -1;
 				flipHandler = new Handler();
-				flipHandler.postDelayed(new flipOverHandler(), FLIP_OVER_DELAY);
+				flipHandler.postDelayed(new flipOverHandler(name), FLIP_OVER_DELAY);
 			}
             ObjectAnimator anim = (ObjectAnimator) AnimatorInflater.loadAnimator(this, R.animator.flipping);
             anim.setTarget(view);
@@ -129,9 +125,23 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
     }
 
     public class flipOverHandler implements Runnable {
+        String name;
+
+        public flipOverHandler(String name) {
+            this.name = name;
+        }
+
         @Override
         public void run() {
+            //-- TODO get relationship name
+            if (name != null) {
+                speak(name);
+            }
             if (game.allMatched()) {
+                if (backgroundLoadIndex<people.size()) {
+                    FamilyLoaderTask task = new FamilyLoaderTask(MatchGameActivity.this, MatchGameActivity.this);
+                    task.execute(people.get(backgroundLoadIndex));
+                }
                 playCompleteSound();
                 game.levelUp();
                 adapter.setFamily(game.getBoard());
