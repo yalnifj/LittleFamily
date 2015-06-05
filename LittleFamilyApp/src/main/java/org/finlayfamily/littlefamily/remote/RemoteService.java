@@ -41,6 +41,10 @@ public interface RemoteService {
 
     List<Relationship> getCloseRelatives(String personId, boolean checkCache) throws RemoteServiceSearchException;
 
+    List<Relationship> getParents(String personId, boolean checkCache) throws RemoteServiceSearchException;
+    List<Relationship> getChildren(String personId, boolean checkCache) throws RemoteServiceSearchException;
+    List<Relationship> getSpouses(String personId, boolean checkCache) throws RemoteServiceSearchException;
+
     List<SourceDescription> getPersonMemories(String personId, boolean checkCache) throws RemoteServiceSearchException;
 
     String downloadImage(Uri uri, String folderName, String fileName, Context context) throws MalformedURLException, RemoteServiceSearchException;

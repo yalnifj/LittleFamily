@@ -334,6 +334,138 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
         return closeRelatives.get(personId);
     }
 
+    public List<Relationship> getParents(String personId, boolean checkCache) throws RemoteServiceSearchException {
+        if (sessionId==null) {
+            throw new RemoteServiceSearchException("Not Authenticated with PhpGedView.", 0);
+        }
+        Person person = getPerson(personId, checkCache);
+        if (person==null) {
+            throw new RemoteServiceSearchException("Unable to get person "+personId+" from PGV", 0);
+        }
+
+        List<Relationship> family = new ArrayList<>();
+        List<Link> fams = person.getLinks();
+        if (fams != null) {
+            for(Link fam : fams) {
+                if (fam.getRel().equals("FAMC")) {
+                    String famid = fam.getHref().toString().replaceAll("@", "");
+                    String gedcom = getGedcomRecord(famid, checkCache);
+                    if (!gedcom.isEmpty()) {
+                        try {
+                            FamilyHolder fh = gedcomParser.parseFamily(gedcom);
+                            for (Link p : fh.getParents()) {
+                                String relId = p.getHref().toString().replaceAll("@", "");
+                                if (!relId.equals(personId)) {
+                                    Relationship rel = new Relationship();
+                                    rel.setKnownType(RelationshipType.ParentChild);
+                                    ResourceReference rr = new ResourceReference();
+                                    rr.setResourceId(relId);
+                                    rel.setPerson1(rr);
+                                    ResourceReference rr2 = new ResourceReference();
+                                    rr2.setResourceId(personId);
+                                    rel.setPerson2(rr2);
+                                    family.add(rel);
+                                }
+                            }
+                        } catch (GedcomParseException e) {
+                            Log.e(TAG, "Error parsing gedcom for family " + famid, e);
+                        }
+                    }
+                }
+            }
+        }
+
+        return family;
+    }
+
+    public List<Relationship> getChildren(String personId, boolean checkCache) throws RemoteServiceSearchException {
+        if (sessionId==null) {
+            throw new RemoteServiceSearchException("Not Authenticated with PhpGedView.", 0);
+        }
+        Person person = getPerson(personId, checkCache);
+        if (person==null) {
+            throw new RemoteServiceSearchException("Unable to get person "+personId+" from PGV", 0);
+        }
+
+        List<Relationship> family = new ArrayList<>();
+        List<Link> fams = person.getLinks();
+        if (fams != null) {
+            for(Link fam : fams) {
+                if (fam.getRel().equals("FAMS")) {
+                    String famid = fam.getHref().toString().replaceAll("@", "");
+                    String gedcom = getGedcomRecord(famid, checkCache);
+                    if (!gedcom.isEmpty()) {
+                        try {
+                            FamilyHolder fh = gedcomParser.parseFamily(gedcom);
+                            for (Link p : fh.getChildren()) {
+                                String relId = p.getHref().toString().replaceAll("@", "");
+                                if (!relId.equals(personId)) {
+                                    Relationship rel = new Relationship();
+                                    rel.setKnownType(RelationshipType.ParentChild);
+                                    ResourceReference rr = new ResourceReference();
+                                    rr.setResourceId(personId);
+                                    rel.setPerson1(rr);
+                                    ResourceReference rr2 = new ResourceReference();
+                                    rr2.setResourceId(relId);
+                                    rel.setPerson2(rr2);
+                                    family.add(rel);
+                                }
+                            }
+                        } catch (GedcomParseException e) {
+                            Log.e(TAG, "Error parsing gedcom for family " + famid, e);
+                        }
+                    }
+                }
+            }
+        }
+
+        return family;
+    }
+
+    public List<Relationship> getSpouses(String personId, boolean checkCache) throws RemoteServiceSearchException {
+        if (sessionId==null) {
+            throw new RemoteServiceSearchException("Not Authenticated with PhpGedView.", 0);
+        }
+        Person person = getPerson(personId, checkCache);
+        if (person==null) {
+            throw new RemoteServiceSearchException("Unable to get person "+personId+" from PGV", 0);
+        }
+
+        List<Relationship> family = new ArrayList<>();
+        List<Link> fams = person.getLinks();
+        if (fams != null) {
+            for(Link fam : fams) {
+                if (fam.getRel().equals("FAMS")) {
+                    String famid = fam.getHref().toString().replaceAll("@", "");
+                    String gedcom = getGedcomRecord(famid, checkCache);
+                    if (!gedcom.isEmpty()) {
+                        try {
+                            FamilyHolder fh = gedcomParser.parseFamily(gedcom);
+                            for (Link p : fh.getParents()) {
+                                String relId = p.getHref().toString().replaceAll("@", "");
+                                if (!relId.equals(personId)) {
+                                    Relationship rel = new Relationship();
+                                    rel.setKnownType(RelationshipType.Couple);
+                                    ResourceReference rr = new ResourceReference();
+                                    rr.setResourceId(relId);
+                                    rel.setPerson1(rr);
+                                    ResourceReference rr2 = new ResourceReference();
+                                    rr2.setResourceId(personId);
+                                    rel.setPerson2(rr2);
+                                    family.add(rel);
+                                }
+                            }
+                        } catch (GedcomParseException e) {
+                            Log.e(TAG, "Error parsing gedcom for family " + famid, e);
+                        }
+                    }
+                }
+            }
+        }
+
+        return family;
+    }
+
     @Override
     public List<SourceDescription> getPersonMemories(String personId, boolean checkCache) throws RemoteServiceSearchException {
         if (sessionId==null) {

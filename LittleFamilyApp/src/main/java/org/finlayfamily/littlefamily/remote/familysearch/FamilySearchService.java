@@ -348,10 +348,6 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
                         Gedcomx doc = serializer.read(Gedcomx.class, result.getData());
                         if (doc.getRelationships() != null && doc.getRelationships().size() > 0) {
                             List<Relationship> relatives = new ArrayList<>(doc.getRelationships());
-                            //for (Relationship r : relatives) {
-                                //getPerson(r.getPerson1().getResourceId(), checkCache);
-                                //getPerson(r.getPerson2().getResourceId(), checkCache);
-                            //}
                             closeRelatives.put(person.getId(), relatives);
                             Log.i(TAG, "getCloseRelatives " + doc.getRelationships().size() + ": " + personId);
                         }
@@ -368,6 +364,129 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
         }
 
         return closeRelatives.get(person.getId());
+    }
+
+    public List<Relationship> getParents(String personId, boolean checkCache) throws RemoteServiceSearchException {
+        if (sessionId==null) {
+            throw new RemoteServiceSearchException("Not Authenticated with FamilySearch.", 0);
+        }
+
+        Person person = this.getPerson(personId, checkCache);
+        if (person==null) {
+            throw new RemoteServiceSearchException("Unable to get person "+personId+" from FamilySearch", 0);
+        }
+
+        Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+person.getId()+"/parent-relationships");
+        Bundle headers = new Bundle();
+        headers.putString("Authorization", "Bearer " + sessionId);
+        headers.putString("Accept", "application/x-gedcomx-v1+xml");
+        Bundle params = new Bundle();
+
+        RemoteResult result = getRestData(METHOD_GET, uri, params, headers);
+        if (result!=null) {
+            if (result.isSuccess()) {
+                Serializer serializer = GedcomxSerializer.create();
+                try {
+                    Gedcomx doc = serializer.read(Gedcomx.class, result.getData());
+                    if (doc.getRelationships() != null && doc.getRelationships().size() > 0) {
+                        List<Relationship> relatives = new ArrayList<>(doc.getRelationships());
+                        Log.i(TAG, "getParents " + doc.getRelationships().size() + ": " + personId);
+                        return relatives;
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "error", e);
+                }
+            } else {
+                //-- check status and retry if possible
+                if (handleStatusCodes(result)) {
+                    return getParents(personId, checkCache);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public List<Relationship> getChildren(String personId, boolean checkCache) throws RemoteServiceSearchException {
+        if (sessionId==null) {
+            throw new RemoteServiceSearchException("Not Authenticated with FamilySearch.", 0);
+        }
+
+        Person person = this.getPerson(personId, checkCache);
+        if (person==null) {
+            throw new RemoteServiceSearchException("Unable to get person "+personId+" from FamilySearch", 0);
+        }
+
+        Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+person.getId()+"/child-relationships");
+        Bundle headers = new Bundle();
+        headers.putString("Authorization", "Bearer " + sessionId);
+        headers.putString("Accept", "application/x-gedcomx-v1+xml");
+        Bundle params = new Bundle();
+
+        RemoteResult result = getRestData(METHOD_GET, uri, params, headers);
+        if (result!=null) {
+            if (result.isSuccess()) {
+                Serializer serializer = GedcomxSerializer.create();
+                try {
+                    Gedcomx doc = serializer.read(Gedcomx.class, result.getData());
+                    if (doc.getRelationships() != null && doc.getRelationships().size() > 0) {
+                        List<Relationship> relatives = new ArrayList<>(doc.getRelationships());
+                        Log.i(TAG, "getChildren " + doc.getRelationships().size() + ": " + personId);
+                        return relatives;
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "error", e);
+                }
+            } else {
+                //-- check status and retry if possible
+                if (handleStatusCodes(result)) {
+                    return getChildren(personId, checkCache);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public List<Relationship> getSpouses(String personId, boolean checkCache) throws RemoteServiceSearchException {
+        if (sessionId==null) {
+            throw new RemoteServiceSearchException("Not Authenticated with FamilySearch.", 0);
+        }
+
+        Person person = this.getPerson(personId, checkCache);
+        if (person==null) {
+            throw new RemoteServiceSearchException("Unable to get person "+personId+" from FamilySearch", 0);
+        }
+
+        Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+person.getId()+"/spouse-relationships");
+        Bundle headers = new Bundle();
+        headers.putString("Authorization", "Bearer " + sessionId);
+        headers.putString("Accept", "application/x-gedcomx-v1+xml");
+        Bundle params = new Bundle();
+
+        RemoteResult result = getRestData(METHOD_GET, uri, params, headers);
+        if (result!=null) {
+            if (result.isSuccess()) {
+                Serializer serializer = GedcomxSerializer.create();
+                try {
+                    Gedcomx doc = serializer.read(Gedcomx.class, result.getData());
+                    if (doc.getRelationships() != null && doc.getRelationships().size() > 0) {
+                        List<Relationship> relatives = new ArrayList<>(doc.getRelationships());
+                        Log.i(TAG, "getSpouses " + doc.getRelationships().size() + ": " + personId);
+                        return relatives;
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "error", e);
+                }
+            } else {
+                //-- check status and retry if possible
+                if (handleStatusCodes(result)) {
+                    return getChildren(personId, checkCache);
+                }
+            }
+        }
+
+        return null;
     }
 
     @Override

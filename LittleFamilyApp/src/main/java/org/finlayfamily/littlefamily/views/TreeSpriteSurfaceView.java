@@ -79,9 +79,9 @@ public class TreeSpriteSurfaceView extends SpritedClippedSurfaceView {
 
         synchronized (sprites) {
             for (Sprite s : sprites) {
-                if (s.inSprite((x + clipX)*scale, (y + clipY)*scale)) {
+                if (s.inSprite(x + clipX*scale, y + clipY*scale)) {
                     selectedSprites.add(s);
-                    s.onSelect((x + clipX)*scale, (y + clipY)*scale);
+                    s.onSelect(x + clipX*scale, y + clipY*scale);
                 } else {
                     if (s.getState()==TreePersonAnimatedSprite.STATE_ANIMATING_OPEN_LEFT) s.setState(TreePersonAnimatedSprite.STATE_ANIMATING_CLOSED_LEFT);
                     if (s.getState()==TreePersonAnimatedSprite.STATE_ANIMATING_OPEN_RIGHT) s.setState(TreePersonAnimatedSprite.STATE_ANIMATING_CLOSED_RIGHT);
@@ -95,7 +95,7 @@ public class TreeSpriteSurfaceView extends SpritedClippedSurfaceView {
         super.touch_up(x, y);
 
         for(Sprite s : selectedSprites) {
-            s.onRelease((x+clipX)*scale, (y+clipY)*scale);
+            s.onRelease(x+clipX*scale, y+clipY*scale);
         }
         selectedSprites.clear();
     }
@@ -105,7 +105,7 @@ public class TreeSpriteSurfaceView extends SpritedClippedSurfaceView {
         boolean selectedMoved = false;
         if (selectedSprites.size() > 0) {
             for (Sprite s : selectedSprites) {
-                selectedMoved |= s.onMove((oldX+clipX)*scale, (oldY+clipY)*scale, (newX+clipX)*scale, (newY+clipY)*scale);
+                selectedMoved |= s.onMove(oldX+clipX*scale, oldY+clipY*scale, newX+clipX*scale, newY+clipY*scale);
             }
         }
         if (!selectedMoved) {

@@ -34,6 +34,8 @@ public class LittlePerson implements Serializable {
     private GenderType gender;
 	private Date birthDate;
     private Boolean hasParents;
+    private Boolean hasChildren;
+    private Boolean hasSpouses;
 
     @Override
     public String toString() {
@@ -60,7 +62,11 @@ public class LittlePerson implements Serializable {
     public LittlePerson(Person fsPerson) {
         setName(fsPerson.getFullName());
         setFamilySearchId(fsPerson.getId());
-        setGender(fsPerson.getGender().getKnownType());
+        if (fsPerson.getGender()!=null) {
+            setGender(fsPerson.getGender().getKnownType());
+        } else {
+            setGender(GenderType.Unknown);
+        }
         Name name = null;
         for(Name n : fsPerson.getNames()) {
             if (n==null || (n.getPreferred()!=null && n.getPreferred())) {
@@ -291,6 +297,22 @@ public class LittlePerson implements Serializable {
 
     public void setHasParents(Boolean hasParents) {
         this.hasParents = hasParents;
+    }
+
+    public Boolean isHasChildren() {
+        return hasChildren;
+    }
+
+    public void setHasChildren(Boolean hasChildren) {
+        this.hasChildren = hasChildren;
+    }
+
+    public Boolean isHasSpouses() {
+        return hasSpouses;
+    }
+
+    public void setHasSpouses(Boolean hasSpouses) {
+        this.hasSpouses = hasSpouses;
     }
 
     @Override
