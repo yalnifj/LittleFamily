@@ -16,6 +16,7 @@ public abstract class Sprite {
     protected boolean selectable;
     protected boolean removeMe;
     protected Matrix matrix;
+    protected float scale;
 
     public Sprite() {
         x = 0;
@@ -25,6 +26,7 @@ public abstract class Sprite {
         state = 0;
         selectable = false;
         removeMe = false;
+        this.scale = 1;
     }
 
     public void setHeight(int height) {
@@ -99,6 +101,14 @@ public abstract class Sprite {
         this.selected = selected;
     }
 
+    public float getScale() {
+        return scale;
+    }
+
+    public void setScale(float scale) {
+        this.scale = scale;
+    }
+
     public abstract void doStep();
     public abstract void doDraw(Canvas canvas);
     public abstract void onSelect(float x, float y);
@@ -107,7 +117,7 @@ public abstract class Sprite {
 
     public boolean inSprite(float tx, float ty) {
         if (!selectable) return false;
-        if (tx>=x && tx<=x+width && ty>=y && ty<=y+height) {
+        if (tx>=x*scale && tx<=(x+width)*scale && ty>=y && ty<=(y+height)*scale) {
             return true;
         }
         return false;

@@ -35,6 +35,12 @@ Please wait...</string>
     <string name="title_activity_splash">SplashActivity</string>
     <string name="title_activity_puzzle_game">PuzzleGameActivity</string>
     <string name="title_activity_home">HomeActivity</string>
+    <string name="relative_is_your">%1$s is your %2$s.</string>
+    <string name="born_in">%1$s was born in %2$s.</string>
+    <string name="born_on">%1$s was born on %2$s.</string>
+    <string name="born_in_on">%1$s was born in %2$s on %3$s.</string>
+    <string name="he">He</string>
+    <string name="she">She</string>
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

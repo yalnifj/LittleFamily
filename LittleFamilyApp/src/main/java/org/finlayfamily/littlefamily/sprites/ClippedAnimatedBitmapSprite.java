@@ -15,7 +15,6 @@ public class ClippedAnimatedBitmapSprite extends AnimatedBitmapSprite {
     protected int clipY;
     protected int maxWidth;
     protected int maxHeight;
-    protected float scale;
 
     public ClippedAnimatedBitmapSprite(Map<Integer, List<Bitmap>> bitmaps, int maxWidth, int maxHeight) {
         super(bitmaps);
@@ -63,14 +62,6 @@ public class ClippedAnimatedBitmapSprite extends AnimatedBitmapSprite {
         this.maxWidth = maxWidth;
     }
 
-    public float getScale() {
-        return scale;
-    }
-
-    public void setScale(float scale) {
-        this.scale = scale;
-    }
-
     @Override
     public void doDraw(Canvas canvas) {
         if (bitmaps!=null) {
@@ -79,9 +70,9 @@ public class ClippedAnimatedBitmapSprite extends AnimatedBitmapSprite {
                 if (frame >= 0 && frame < frames.size()) {
                     Bitmap bitmap = frames.get(frame);
                     Rect clipRect = new Rect();
-                    clipRect.set(clipX, clipY, clipX + width, clipY + height);
+                    clipRect.set(clipX, clipY, clipX + (int)(width), clipY + (int)(height));
                     Rect rect = new Rect();
-                    rect.set((int) x, (int) y, (int) ((x + width) * scale), (int) ((y + height) * scale));
+                    rect.set((int) (x), (int) (y), (int) ((x + width) ), (int) ((y + height) ));
                     if (matrix!=null) {
                         canvas.save();
                         canvas.setMatrix(matrix);
@@ -101,10 +92,10 @@ public class ClippedAnimatedBitmapSprite extends AnimatedBitmapSprite {
         clipY -= (newY-oldY);
 
         if (clipX < 0) clipX = 0;
-        if (clipX + width > maxWidth) clipX = maxWidth - width;
+        if (clipX + (int)(width*scale) > maxWidth*scale) clipX = (int) ((maxWidth - width)*scale);
 
         if (clipY < 0) clipY = 0;
-        if (clipY + height > maxHeight) clipY = maxHeight - height;
+        if (clipY + height*scale > maxHeight*scale) clipY = (int)((maxHeight - height)*scale);
         return true;
     }
 }

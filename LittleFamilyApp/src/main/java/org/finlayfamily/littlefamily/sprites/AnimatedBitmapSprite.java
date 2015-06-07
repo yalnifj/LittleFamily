@@ -113,7 +113,7 @@ public class AnimatedBitmapSprite extends Sprite {
                 if (frame >= 0 && frame < frames.size()) {
                     Bitmap bitmap = frames.get(frame);
                     Rect rect = new Rect();
-                    rect.set((int)x, (int)y, (int)x + width, (int)y + height);
+                    rect.set((int)(x), (int)(y), (int)((x + width)), (int)((y + height)));
                     if (matrix!=null) {
                         canvas.save();
                         canvas.setMatrix(matrix);
@@ -129,11 +129,11 @@ public class AnimatedBitmapSprite extends Sprite {
 
     public boolean inSprite(float tx, float ty) {
         if (!selectable) return false;
-        if (tx>=x && tx<=x+width && ty>=y && ty<=y+height) {
+        if (tx>=x*scale && tx<=(x+width)*scale && ty>=y && ty<=(y+height)*scale) {
             if (bitmaps!=null) {
                 List<Bitmap> frames = bitmaps.get(state);
                 Bitmap bitmap = frames.get(frame);
-                int color = bitmap.getPixel((int)(tx-x), (int)(ty-y));
+                int color = bitmap.getPixel((int)(tx-x*scale), (int)(ty-y*scale));
                 int alpha = Color.alpha(color);
                 if (alpha > 50) {
                     return true;

@@ -25,16 +25,16 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.49497475"
-     inkscape:cx="-64.400419"
-     inkscape:cy="1117.2927"
+     inkscape:zoom="0.9899495"
+     inkscape:cx="276.26143"
+     inkscape:cy="558.13605"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1331"
+     inkscape:window-width="1019"
      inkscape:window-height="696"
-     inkscape:window-x="125"
-     inkscape:window-y="125"
+     inkscape:window-x="1485"
+     inkscape:window-y="267"
      inkscape:window-maximized="0"
      inkscape:snap-grids="true" />
   <metadata
@@ -45,7 +45,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -260,5 +260,114 @@
        inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\growing_plant\plant1.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90" />
+    <path
+       inkscape:connector-curvature="0"
+       style="fill:#016700"
+       d="M 34.430211,506.49613 C 25.110547,494.85712 20.506285,449.94909 21.274603,433.3214 c 0.09317,-14.42127 4.153102,-29.56192 11.111327,-41.9855 2.499611,-4.18918 4.902861,-9.10818 9.163636,-11.2037 2.654074,-0.61147 5.117007,1.05566 7.530124,2.03331 -0.02118,2.83273 -3.031452,3.52243 -4.148928,5.66798 -11.51347,12.78043 -17.798808,30.74655 -19.077371,48.78969 -1.723751,17.02295 3.286199,44.24959 14.340859,65.87478 1.06433,2.08205 -4.302496,5.82344 -5.764039,3.99817 z"
+       id="path4154-8-0-5"
+       sodipodi:nodetypes="sccccccss"
+       inkscape:export-filename="C:\Users\Parents\Documents\GitHub\LittleFamily\LittleFamilyApp\src\main\res\drawable\vine.png"
+       inkscape:export-xdpi="77.96347"
+       inkscape:export-ydpi="77.96347" />
+    <path
+       style="fill:#016700"
+       d="m 47.209455,478.44597 c -4.346012,-6.8926 -2.629183,-13.17567 -8.659479,-16.09027 -4.437184,-2.14463 -7.566639,-0.65673 -11.592047,2.29697 2.675637,-0.76429 4.172406,-0.82611 6.23203,-0.48896 4.670167,0.76474 4.716116,4.57657 8.70049,8.22383 -3.322257,-2.20239 -4.317573,-5.99632 -6.773784,-6.98096 -3.029806,-1.21481 -5.204812,-0.31243 -8.418859,0.11902 11.102662,3.13602 5.672248,9.99695 20.511124,12.92056 z"
+       id="path4152-7-46"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="C:\Users\Parents\Documents\GitHub\LittleFamily\LittleFamilyApp\src\main\res\drawable\vine.png"
+       inkscape:export-xdpi="77.96347"
+       inkscape:export-ydpi="77.96347" />
+    <path
+       style="fill:#016700"
+       d="m 3.9493912,442.34301 c 4.34602,-6.8926 2.62919,-13.17567 8.6594798,-16.09027 4.43719,-2.14463 7.56664,-0.65673 11.59205,2.29697 -2.67564,-0.76429 -4.17241,-0.82611 -6.23203,-0.48896 -4.67017,0.76474 -4.71612,4.57657 -8.7004898,8.22383 3.3222598,-2.20239 4.3175698,-5.99632 6.7737798,-6.98096 3.02981,-1.21481 5.20482,-0.31243 8.41886,0.11902 -11.10266,3.13602 -5.67225,9.99695 -20.5111198,12.92056 z"
+       id="path4152-7-46-5"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="C:\Users\Parents\Documents\GitHub\LittleFamily\LittleFamilyApp\src\main\res\drawable\vine.png"
+       inkscape:export-xdpi="77.96347"
+       inkscape:export-ydpi="77.96347" />
+    <path
+       inkscape:connector-curvature="0"
+       style="fill:#016700"
+       d="m 195.23924,523.52387 c -15.59339,7.16231 -77.12787,10.45473 -98.005693,6.86675 -18.164352,-2.54937 -36.841168,-9.11412 -51.805978,-18.06011 -5.030841,-3.16703 -10.990971,-6.36387 -13.208413,-10.9024 -0.506877,-2.70885 1.838734,-4.84177 3.310516,-7.04329 3.567689,0.50358 4.137763,3.57534 6.730551,5.03764 14.961936,13.47722 36.978284,22.7075 59.589127,27.03744 24.31147,1.56248 62.58829,-1.83113 90.93856,-8.99409 2.72954,-0.68964 4.89671,4.93484 2.45133,6.05806 z"
+       id="path4154-8-0-5-9"
+       sodipodi:nodetypes="sccccccss"
+       inkscape:export-filename="C:\Users\Parents\Documents\GitHub\LittleFamily\LittleFamilyApp\src\main\res\drawable\vineh2.png"
+       inkscape:export-xdpi="79.540382"
+       inkscape:export-ydpi="79.540382" />
+    <path
+       style="fill:#016700"
+       d="m 15.264342,515.42765 c 7.938537,-1.83722 13.307367,1.8506 18.043191,-2.88557 3.484707,-3.48494 3.108878,-6.92965 1.643473,-11.70258 -0.158261,2.77816 -0.592163,4.21198 -1.587968,6.04612 -2.25822,4.15881 -5.873094,2.94849 -10.627901,5.51159 3.172558,-2.41305 7.082759,-2.10515 8.82048,-4.10087 2.14373,-2.46169 2.006874,-4.81248 2.65658,-7.98961 -6.613228,9.45351 -11.306371,2.06866 -18.947867,15.12037 z"
+       id="path4152-7-46-3"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="C:\Users\Parents\Documents\GitHub\LittleFamily\LittleFamilyApp\src\main\res\drawable\vineh2.png"
+       inkscape:export-xdpi="79.540382"
+       inkscape:export-ydpi="79.540382" />
+    <path
+       style="fill:#016700"
+       d="m 106.79446,501.95039 c -7.35098,3.5155 -13.391947,1.08008 -16.987643,6.73076 -2.645791,4.15787 -1.531682,7.43905 0.934164,11.78046 -0.448145,-2.74633 -0.33559,-4.24016 0.238649,-6.24662 1.302328,-4.54964 5.093668,-4.15226 9.17928,-7.68576 -2.573572,3.0438 -6.457478,3.59141 -7.720909,5.91655 -1.558705,2.8681 -0.915223,5.13324 -0.860235,8.37564 4.405132,-10.66295 10.588444,-4.47197 15.216834,-18.87048 z"
+       id="path4152-7-46-5-2"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="C:\Users\Parents\Documents\GitHub\LittleFamily\LittleFamilyApp\src\main\res\drawable\vineh2.png"
+       inkscape:export-xdpi="79.540382"
+       inkscape:export-ydpi="79.540382" />
+    <path
+       inkscape:connector-curvature="0"
+       style="fill:#016700"
+       d="m 348.76047,518.97968 c -14.12751,-8.15867 -72.56572,-18.9301 -92.89953,-18.54801 -17.62945,-0.15854 -36.18081,3.06173 -51.44191,8.80438 -5.14763,2.06746 -11.18635,4.04049 -13.79359,7.64797 -0.77592,2.2586 1.23556,4.39145 2.40475,6.47033 3.46294,0.0287 4.3383,-2.53312 6.97299,-3.45287 15.74617,-9.63057 37.77522,-14.70647 59.84472,-15.50134 20.82723,-1.19225 62.4978,10.04516 88.81371,19.85185 2.53367,0.94418 2.31437,-3.99283 0.0989,-5.27231 z"
+       id="path4154-8-0-5-9-2"
+       sodipodi:nodetypes="sccccccss"
+       inkscape:export-filename="C:\Users\Parents\Documents\GitHub\LittleFamily\LittleFamilyApp\src\main\res\drawable\vineh.png"
+       inkscape:export-xdpi="84.353775"
+       inkscape:export-ydpi="84.353775" />
+    <path
+       style="fill:#016700"
+       d="m 291.10087,490.92534 c -7.82557,0.65573 -12.42283,-3.77806 -17.60453,0.21409 -3.81276,2.93748 -3.94025,6.40011 -3.21649,11.33611 0.54256,-2.72509 1.15829,-4.07998 2.36604,-5.74865 2.73878,-3.78358 6.01361,-2.0573 10.90699,-3.897 -3.36413,1.9228 -7.04768,1.04601 -8.98535,2.76595 -2.39037,2.12147 -2.59139,4.46699 -3.65861,7.51484 7.63625,-8.38398 11.0682,-0.39183 20.19188,-12.1848 z"
+       id="path4152-7-46-3-3"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="C:\Users\Parents\Documents\GitHub\LittleFamily\LittleFamilyApp\src\main\res\drawable\vineh.png"
+       inkscape:export-xdpi="84.353775"
+       inkscape:export-ydpi="84.353775" />
+    <path
+       style="fill:#016700"
+       d="m 262.06097,525.05541 c -6.58601,-4.43539 -12.66084,-2.80051 -15.39321,-8.86822 -2.01053,-4.46473 -0.53779,-7.57456 2.35839,-11.56117 -0.76991,2.66546 -0.84824,4.16131 -0.54926,6.22514 0.67819,4.67972 4.35004,4.77529 7.81394,8.80682 -2.08017,-3.35066 -5.72287,-4.39527 -6.64069,-6.86409 -1.13238,-3.04538 -0.23572,-5.20845 0.22027,-8.41661 2.88206,11.14255 9.56021,5.80193 12.19076,20.6776 z"
+       id="path4152-7-46-5-2-1"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="C:\Users\Parents\Documents\GitHub\LittleFamily\LittleFamilyApp\src\main\res\drawable\vineh.png"
+       inkscape:export-xdpi="84.353775"
+       inkscape:export-ydpi="84.353775" />
+    <path
+       inkscape:connector-curvature="0"
+       style="fill:#016700"
+       d="m 352.5032,523.49172 c 11.9321,-10.24603 30.46782,-57.93803 33.87831,-76.60764 3.51293,-16.02816 3.36471,-33.9902 -0.26879,-49.76728 -1.37366,-5.36387 -2.47167,-11.50993 -6.07374,-15.05495 -2.41712,-1.43836 -5.21848,-0.29371 -7.79933,0.10018 -0.68723,3.14919 2.05522,4.77631 2.60119,7.47692 7.95511,17.47722 9.55224,39.21151 6.28215,59.59776 -2.58413,19.38175 -18.52351,51.43135 -34.63064,72.26104 -1.55078,2.00546 4.13962,3.60082 6.01085,1.99401 z"
+       id="path4154-8-0-5-5"
+       sodipodi:nodetypes="sccccccss"
+       inkscape:export-filename="C:\Users\Parents\Documents\GitHub\LittleFamily\LittleFamilyApp\src\main\res\drawable\vine3.png"
+       inkscape:export-xdpi="78.785461"
+       inkscape:export-ydpi="78.785461" />
+    <path
+       style="fill:#016700"
+       d="m 349.99477,491.88194 c 5.9303,-5.96812 5.83776,-12.92372 12.40502,-14.32865 4.83229,-1.0338 7.49073,1.33994 10.65049,5.46857 -2.39982,-1.50433 -3.83367,-1.96765 -5.91221,-2.16859 -4.71312,-0.45536 -5.71,3.4743 -10.47929,6.18283 3.76717,-1.39103 5.67884,-5.04885 8.30316,-5.41167 3.23723,-0.4478 5.1178,1.06576 8.12211,2.36958 -11.53408,0.28039 -7.9901,8.8245 -23.08882,7.88827 z"
+       id="path4152-7-46-9"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="C:\Users\Parents\Documents\GitHub\LittleFamily\LittleFamilyApp\src\main\res\drawable\vine3.png"
+       inkscape:export-xdpi="78.785461"
+       inkscape:export-ydpi="78.785461" />
+    <path
+       style="fill:#016700"
+       d="m 400.90318,466.09051 c -2.48606,-8.28751 0.74616,-14.32687 -4.36466,-18.95006 -3.76063,-3.40184 -7.16258,-2.69823 -11.7983,-0.71788 2.78174,-0.0764 4.24648,0.25906 6.15654,1.15731 4.33098,2.03703 3.42308,5.99121 6.36981,10.82612 -2.66662,-3.16406 -2.68244,-7.35305 -4.81474,-9.02671 -2.63019,-2.06474 -4.96168,-1.71194 -8.18159,-2.12341 9.967,6.20568 2.9946,11.85169 16.63238,18.83468 z"
+       id="path4152-7-46-5-8"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="C:\Users\Parents\Documents\GitHub\LittleFamily\LittleFamilyApp\src\main\res\drawable\vine3.png"
+       inkscape:export-xdpi="78.785461"
+       inkscape:export-ydpi="78.785461" />
+    <path
+       inkscape:connector-curvature="0"
+       style="fill:#016700"
+       d="m 206.77673,644.63515 c 9.31967,-11.63901 7.86301,-57.55718 7.09469,-74.18487 -0.0932,-14.42127 -4.1531,-29.56192 -11.11133,-41.9855 -2.49961,-4.18918 -4.90286,-9.10818 -9.16363,-11.2037 -2.65408,-0.61147 -5.11701,1.05566 -7.53013,2.03331 0.0212,2.83273 3.03146,3.52243 4.14893,5.66798 11.51347,12.78043 17.79881,30.74655 19.07737,48.78969 1.72375,17.02295 2.77472,45.25973 -8.27994,66.88492 -1.06433,2.08205 4.3025,5.82344 5.76404,3.99817 z"
+       id="path4154-8-0-5-53"
+       sodipodi:nodetypes="sccccccss"
+       inkscape:export-filename="C:\Users\Parents\Documents\GitHub\LittleFamily\LittleFamilyApp\src\main\res\drawable\vine2.png"
+       inkscape:export-xdpi="87.895653"
+       inkscape:export-ydpi="87.895653" />
   </g>
 </svg>

@@ -92,7 +92,7 @@ public class TouchStateAnimatedBitmapSprite extends AnimatedBitmapSprite {
     }
 
     public boolean inSprite(float tx, float ty) {
-        if (tx>=x && tx<=x+width && ty>=y && ty<=y+height) {
+        if (tx>=x*scale && tx<=(x+width)*scale && ty>=y*scale && ty<=(y+height)*scale) {
             if (!stateTransitions.containsKey(state) || stateTransitions.get(state)==TRANSITION_CLICK) {
                 state++;
                 if (state >= bitmaps.size()) state = 0;

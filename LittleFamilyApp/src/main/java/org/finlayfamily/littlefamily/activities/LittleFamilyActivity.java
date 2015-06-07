@@ -145,7 +145,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         super.onDestroy();
     }
 
-    protected void speak(String message) {
+    public void speak(String message) {
         Log.d("LittleFamilyActivity", "Speaking: " + message);
         if (tts!=null) {
             if (Build.VERSION.SDK_INT > 20) {

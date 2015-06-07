@@ -9,7 +9,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.Rect;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -19,12 +18,14 @@ import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Contacts.Photo;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.Display;
 
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ImageHelper {
 	/**
@@ -167,14 +168,63 @@ public class ImageHelper {
 
             // Calculate the maximum required scaling ratio if required and load the bitmap
             if (sourceWidth > targetWidth || sourceHeight > targetHeight) {
-                float widthRatio = (float)sourceWidth / (float)targetWidth;
-                float heightRatio = (float)sourceHeight / (float)targetHeight;
-                float maxRatio = Math.max(widthRatio, heightRatio);
                 options.inJustDecodeBounds = false;
                 options.inSampleSize = calculateInSampleSize(options, targetWidth, targetHeight);
                 bitmap = BitmapFactory.decodeResource(context.getResources(), resourceId, options);
             } else {
                 bitmap = BitmapFactory.decodeResource(context.getResources(), resourceId);
+            }
+
+            // Rotate the bitmap if required
+            if (orientation > 0) {
+                Matrix matrix = new Matrix();
+                matrix.postRotate(orientation);
+                bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            }
+
+            if (bitmap!=null) {
+                // Re-scale the bitmap if necessary
+                sourceWidth = bitmap.getWidth();
+                sourceHeight = bitmap.getHeight();
+                if (sourceWidth != targetWidth || sourceHeight != targetHeight) {
+                    float widthRatio = (float) sourceWidth / (float) targetWidth;
+                    float heightRatio = (float) sourceHeight / (float) targetHeight;
+                    float maxRatio = Math.max(widthRatio, heightRatio);
+                    sourceWidth = (int) ((float) sourceWidth / maxRatio);
+                    sourceHeight = (int) ((float) sourceHeight / maxRatio);
+                    bitmap = Bitmap.createScaledBitmap(bitmap, sourceWidth, sourceHeight, true);
+                }
+            }
+        } catch (Exception e) {
+        }
+        return bitmap;
+    }
+
+    public static Bitmap loadBitmapFromStream(InputStream is, int orientation, final int targetWidth, final int targetHeight) {
+        Bitmap bitmap = null;
+        try {
+            // First decode with inJustDecodeBounds=true to check dimensions
+            final BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(is, null, options);
+
+            // Adjust extents
+            int sourceWidth, sourceHeight;
+            if (orientation == 90 || orientation == 270) {
+                sourceWidth = options.outHeight;
+                sourceHeight = options.outWidth;
+            } else {
+                sourceWidth = options.outWidth;
+                sourceHeight = options.outHeight;
+            }
+
+            // Calculate the maximum required scaling ratio if required and load the bitmap
+            if (sourceWidth > targetWidth || sourceHeight > targetHeight) {
+                options.inJustDecodeBounds = false;
+                options.inSampleSize = calculateInSampleSize(options, targetWidth, targetHeight);
+                bitmap = BitmapFactory.decodeStream(is, null, options);
+            } else {
+                bitmap = BitmapFactory.decodeStream(is);
             }
 
             // Rotate the bitmap if required
@@ -387,5 +437,30 @@ public class ImageHelper {
         }
 
         return inSampleSize;
+    }
+
+    public static List<String> wrapText(String text, float detailWidth, Paint textPaint) {
+        List<String> texts = new ArrayList<>(1);
+        if (textPaint.measureText(text) > detailWidth*1.5) {
+            String[] words = text.split("\\s");
+            float size = 0;
+            String line = "";
+            for (String word : words) {
+                size += textPaint.measureText(line + word + " ");
+                if (size >= detailWidth*1.5) {
+                    texts.add(line);
+                    line = word+" ";
+                    size = (int)textPaint.measureText(line);
+                } else {
+                    line += word+" ";
+                }
+            }
+            if (!line.isEmpty()) {
+                texts.add(line);
+            }
+        } else {
+            texts.add(text);
+        }
+        return texts;
     }
 }

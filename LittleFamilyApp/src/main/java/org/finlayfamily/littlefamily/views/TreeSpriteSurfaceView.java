@@ -16,6 +16,7 @@ import org.finlayfamily.littlefamily.sprites.TreePersonAnimatedSprite;
 public class TreeSpriteSurfaceView extends SpritedClippedSurfaceView {
     private ScaleGestureDetector mScaleDetector;
     protected float scale = 0.7f;
+    protected boolean moved;
 
     public TreeSpriteSurfaceView(Context context) {
         super(context);
@@ -82,9 +83,9 @@ public class TreeSpriteSurfaceView extends SpritedClippedSurfaceView {
                 if (s.inSprite(x + clipX*scale, y + clipY*scale)) {
                     selectedSprites.add(s);
                     s.onSelect(x + clipX*scale, y + clipY*scale);
-                } else {
-                    if (s.getState()==TreePersonAnimatedSprite.STATE_ANIMATING_OPEN_LEFT) s.setState(TreePersonAnimatedSprite.STATE_ANIMATING_CLOSED_LEFT);
-                    if (s.getState()==TreePersonAnimatedSprite.STATE_ANIMATING_OPEN_RIGHT) s.setState(TreePersonAnimatedSprite.STATE_ANIMATING_CLOSED_RIGHT);
+                } else if (!moved){
+                    if (s.getState()==TreePersonAnimatedSprite.STATE_OPEN_LEFT) s.setState(TreePersonAnimatedSprite.STATE_ANIMATING_CLOSED_LEFT);
+                    if (s.getState()==TreePersonAnimatedSprite.STATE_OPEN_RIGHT) s.setState(TreePersonAnimatedSprite.STATE_ANIMATING_CLOSED_RIGHT);
                 }
             }
         }
@@ -94,15 +95,19 @@ public class TreeSpriteSurfaceView extends SpritedClippedSurfaceView {
     protected void touch_up(float x, float y) {
         super.touch_up(x, y);
 
-        for(Sprite s : selectedSprites) {
-            s.onRelease(x+clipX*scale, y+clipY*scale);
+        if (!moved) {
+            for (Sprite s : selectedSprites) {
+                s.onRelease(x + clipX * scale, y + clipY * scale);
+            }
+            selectedSprites.clear();
         }
-        selectedSprites.clear();
+        moved = false;
     }
 
     @Override
     public void doMove(float oldX, float oldY, float newX, float newY) {
         boolean selectedMoved = false;
+        moved = true;
         if (selectedSprites.size() > 0) {
             for (Sprite s : selectedSprites) {
                 selectedMoved |= s.onMove(oldX+clipX*scale, oldY+clipY*scale, newX+clipX*scale, newY+clipY*scale);
@@ -114,10 +119,10 @@ public class TreeSpriteSurfaceView extends SpritedClippedSurfaceView {
             clipY -= (newY-oldY);
 
             if (clipX < 0) clipX = 0;
-            if (clipX + getWidth() > maxWidth) clipX = maxWidth - getWidth();
+            if (clipX + getWidth() > maxWidth*scale) clipX = (int) (maxWidth*scale - getWidth());
 
             if (clipY < 0) clipY = 0;
-            if (clipY + getHeight() > maxHeight) clipY = maxHeight - getHeight();
+            if (clipY + getHeight() > maxHeight*scale) clipY = (int) (maxHeight*scale - getHeight());
         }
     }
 
@@ -135,11 +140,9 @@ public class TreeSpriteSurfaceView extends SpritedClippedSurfaceView {
         canvas.scale(scale, scale);
         synchronized (sprites) {
             for (Sprite s : sprites) {
-                if (s instanceof TreePersonAnimatedSprite) {
-                    ((TreePersonAnimatedSprite)s).setScale(scale);
-                }
-                if ((s.getX() + s.getWidth())*scale >= clipX*scale && s.getX()*scale <= (getWidth() + clipX)*scale
-                        && (s.getY() + s.getHeight())*scale >= clipY*scale && s.getY()*scale <= (getHeight()+ clipY)*scale ) {
+                s.setScale(scale);
+                if ((s.getX() + s.getWidth())*scale >= clipX*scale && s.getX()*scale <= getWidth() + clipX*scale
+                        && (s.getY() + s.getHeight())*scale >= clipY*scale && s.getY()*scale <= getHeight()+ clipY*scale ) {
                     Matrix m = s.getMatrix();
                     Matrix old = null;
                     if (m != null) {
