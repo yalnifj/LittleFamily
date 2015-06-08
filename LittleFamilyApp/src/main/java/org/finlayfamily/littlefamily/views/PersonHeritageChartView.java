@@ -206,7 +206,8 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
 						p.setStrokeWidth(5);
 					}
                     int height = (int)(this.getHeight()*path.getPercent());
-                    canvas.drawText((path.getPercent()*100)+"%"+" "+path.getPlace(), this.getWidth()/2 + 10, top+(height/3), p);
+                    String text = String.format("%1$.2f%% %2$s", (path.getPercent()*100), path.getPlace());
+                    canvas.drawText(text, this.getWidth()/2 + 10, top+(height/3), p);
                     canvas.drawLine(this.getWidth()/2.5f, top+(height/2), this.getWidth()/2, top+(height/3)+4, p);
                     canvas.drawLine(this.getWidth()/2, top+(height/3)+4, this.getWidth(), top+(height/3)+4, p);
                     top += height;

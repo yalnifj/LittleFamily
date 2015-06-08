@@ -60,6 +60,9 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
     }
 
     public void addSprite(Sprite s) {
+        if (sprites==null) {
+            sprites = new ArrayList<>();
+        }
         synchronized (sprites) {
             sprites.add(s);
         }

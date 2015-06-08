@@ -11,6 +11,7 @@ import org.finlayfamily.littlefamily.remote.RemoteService;
 import org.finlayfamily.littlefamily.remote.RemoteServiceSearchException;
 import org.finlayfamily.littlefamily.remote.familysearch.FamilySearchService;
 import org.finlayfamily.littlefamily.remote.phpgedview.PGVService;
+import org.finlayfamily.littlefamily.util.PlaceHelper;
 import org.gedcomx.atom.Entry;
 import org.gedcomx.conclusion.Person;
 import org.gedcomx.conclusion.Relationship;
@@ -206,7 +207,7 @@ public class DataService implements AuthTask.Listener {
                         Calendar cal = Calendar.getInstance();
                         cal.add(Calendar.HOUR, -1);
                         LittlePerson person = tp.person;
-                        if (person.getLastSync().before(cal.getTime()) || person.isHasChildren()==null || person.isHasSpouses()==null || person.isHasParents()==null) {
+                        if (person.getLastSync().before(cal.getTime()) || person.isHasParents()==null) {
                             Log.d("SyncThread", "Synchronizing person " + person.getId() + " " + person.getFamilySearchId() + " " + person.getName());
                             Entry entry = remoteService.getLastChangeForPerson(person.getFamilySearchId());
                             Log.d("SyncThread", "Synchronizing person local date=" + person.getLastSync() + " remote date=" + entry);
@@ -299,9 +300,12 @@ public class DataService implements AuthTask.Listener {
 
                     //-- force load of family members if we haven't previously loaded them
                     //--- allows building the tree in the background
-                    if (tp.depth < 13) {
+                    if (tp.depth < 6 || tp.person.isHasParents() == null) {
                         QDepth = tp.depth;
-                        if (tp.person.isHasParents() == null) {
+                        LittlePerson defaultPerson = getDefaultPerson();
+                        String defaultPlace = PlaceHelper.getPlaceCountry(defaultPerson.getBirthPlace());
+                        String place = PlaceHelper.getPlaceCountry(tp.person.getBirthPlace());
+                        if (place!=null && place.equals(defaultPlace) && tp.person.isHasParents() == null) {
                             List<LittlePerson> parents = getParentsFromRemoteService(tp.person);
                             for (LittlePerson p : parents) {
                                 addToSyncQ(p, tp.depth+1);
@@ -321,8 +325,8 @@ public class DataService implements AuthTask.Listener {
         private org.finlayfamily.littlefamily.data.Relationship syncRelationship(LittlePerson person, String fsid, org.finlayfamily.littlefamily.data.RelationshipType type) throws Exception {
             LittlePerson relative = getDBHelper().getPersonByFamilySearchId(fsid);
             if (relative==null) {
-                Person fsPerson2 = remoteService.getPerson(fsid, false);
-                relative = DataHelper.buildLittlePerson(fsPerson2, context, remoteService, false);
+                Person fsPerson2 = remoteService.getPerson(fsid, true);
+                relative = DataHelper.buildLittlePerson(fsPerson2, context, remoteService, true);
                 getDBHelper().persistLittlePerson(relative);
             }
             if (relative!=null) {

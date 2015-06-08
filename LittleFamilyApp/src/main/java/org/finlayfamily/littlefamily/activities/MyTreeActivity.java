@@ -131,8 +131,8 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
 
         TreePersonAnimatedSprite rootSprite = addTreeSprite(root, 20, 20, true);
 
-        treeView.setMaxWidth(maxX);
-        treeView.setMaxHeight(maxY);
+        treeView.setMaxWidth(maxX*2);
+        treeView.setMaxHeight(maxY*2);
         int clipX = (int) rootSprite.getX() - width/2 - rootSprite.getWidth()/2;
         int clipY = (int) rootSprite.getY() - height/2;
         if (clipX < 0) clipX = 0;

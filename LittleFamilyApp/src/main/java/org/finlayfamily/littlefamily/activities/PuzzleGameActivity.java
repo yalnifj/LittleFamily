@@ -41,6 +41,7 @@ public class PuzzleGameActivity extends LittleFamilyActivity implements Memories
 
         Intent intent = getIntent();
         people = (List<LittlePerson>) intent.getSerializableExtra(ChooseFamilyMember.FAMILY);
+        selectedPerson = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
 
         usedPhotos = new ArrayList<>(3);
 
@@ -126,7 +127,7 @@ public class PuzzleGameActivity extends LittleFamilyActivity implements Memories
                 photo = photos.get(index);
                 //-- stop if we've used all of these images
                 if (index==origIndex) {
-                    loadRandomImage();
+                    loadMoreFamilyMembers();
                     return;
                 }
             }

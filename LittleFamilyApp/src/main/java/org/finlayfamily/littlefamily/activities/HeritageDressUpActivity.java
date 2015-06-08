@@ -10,6 +10,8 @@ import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.activities.adapters.DressUpDollsAdapter;
 import org.finlayfamily.littlefamily.data.LittlePerson;
 import org.finlayfamily.littlefamily.games.DollConfig;
+import org.finlayfamily.littlefamily.games.DressUpDolls;
+import org.finlayfamily.littlefamily.util.PlaceHelper;
 import org.finlayfamily.littlefamily.views.DressUpView;
 
 public class HeritageDressUpActivity extends LittleFamilyActivity implements DressUpView.DressedListener, AdapterView.OnItemClickListener {
@@ -28,6 +30,10 @@ public class HeritageDressUpActivity extends LittleFamilyActivity implements Dre
         Intent intent = getIntent();
         dollConfig = (DollConfig) intent.getSerializableExtra(ChooseCultureActivity.DOLL_CONFIG);
         person = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
+        if (dollConfig==null) {
+            DressUpDolls dressUpDolls = new DressUpDolls();
+            dollConfig = dressUpDolls.getDollConfig(PlaceHelper.getTopPlace(person.getBirthPlace()), person);
+        }
 
         dressUpView = (DressUpView) findViewById(R.id.dress_up_view);
         dollGrid = (GridView) findViewById(R.id.dollGrid);

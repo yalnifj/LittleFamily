@@ -261,7 +261,7 @@ public class HomeActivity extends LittleFamilyActivity {
             homeView.addSprite(toaster);
 
             Bitmap wardrobeBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_adult_wardrobe);
-            TouchEventGameSprite wardrobe = new TouchEventGameSprite(wardrobeBm, TOPIC_START_DRESSUP);
+            TouchEventGameSprite wardrobe = new TouchEventGameSprite(wardrobeBm, TOPIC_START_HERITAGE_CALC);
             wardrobe.setX(1500);
             wardrobe.setY(700);
             wardrobe.setSelectable(true);

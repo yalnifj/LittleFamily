@@ -83,9 +83,6 @@ public class TreeSpriteSurfaceView extends SpritedClippedSurfaceView {
                 if (s.inSprite(x + clipX*scale, y + clipY*scale)) {
                     selectedSprites.add(s);
                     s.onSelect(x + clipX*scale, y + clipY*scale);
-                } else if (!moved){
-                    if (s.getState()==TreePersonAnimatedSprite.STATE_OPEN_LEFT) s.setState(TreePersonAnimatedSprite.STATE_ANIMATING_CLOSED_LEFT);
-                    if (s.getState()==TreePersonAnimatedSprite.STATE_OPEN_RIGHT) s.setState(TreePersonAnimatedSprite.STATE_ANIMATING_CLOSED_RIGHT);
                 }
             }
         }
@@ -93,13 +90,17 @@ public class TreeSpriteSurfaceView extends SpritedClippedSurfaceView {
 
     @Override
     protected void touch_up(float x, float y) {
-        super.touch_up(x, y);
-
+        for (Sprite s : selectedSprites) {
+            s.onRelease(x + clipX * scale, y + clipY * scale);
+        }
+        selectedSprites.clear();
         if (!moved) {
-            for (Sprite s : selectedSprites) {
-                s.onRelease(x + clipX * scale, y + clipY * scale);
+            for (Sprite s : sprites) {
+                if (s.getState() == TreePersonAnimatedSprite.STATE_OPEN_LEFT)
+                    s.setState(TreePersonAnimatedSprite.STATE_ANIMATING_CLOSED_LEFT);
+                if (s.getState() == TreePersonAnimatedSprite.STATE_OPEN_RIGHT)
+                    s.setState(TreePersonAnimatedSprite.STATE_ANIMATING_CLOSED_RIGHT);
             }
-            selectedSprites.clear();
         }
         moved = false;
     }

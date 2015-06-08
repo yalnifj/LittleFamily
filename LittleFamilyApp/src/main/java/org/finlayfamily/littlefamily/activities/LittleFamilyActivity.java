@@ -30,6 +30,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     public static final String TOPIC_START_DRESSUP  = "startDressUp";
     public static final String TOPIC_START_PUZZLE   = "startPuzzle";
     public static final String TOPIC_START_TREE = "startTree";
+    public static final String TOPIC_START_HERITAGE_CALC = "startHeritageCalc";
     protected TextToSpeech tts;
     protected MediaPlayer mediaPlayer;
     protected TopBarFragment topBar;
@@ -71,6 +72,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         EventQueue.getInstance().subscribe(TOPIC_START_MATCH, this);
         EventQueue.getInstance().subscribe(TOPIC_START_COLORING, this);
         EventQueue.getInstance().subscribe(TOPIC_START_DRESSUP, this);
+        EventQueue.getInstance().subscribe(TOPIC_START_HERITAGE_CALC, this);
         EventQueue.getInstance().subscribe(TOPIC_START_PUZZLE, this);
         EventQueue.getInstance().subscribe(TOPIC_START_SCRATCH, this);
         EventQueue.getInstance().subscribe(TOPIC_START_TREE, this);
@@ -84,6 +86,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         EventQueue.getInstance().unSubscribe(TOPIC_START_MATCH, this);
         EventQueue.getInstance().unSubscribe(TOPIC_START_COLORING, this);
         EventQueue.getInstance().unSubscribe(TOPIC_START_DRESSUP, this);
+        EventQueue.getInstance().unSubscribe(TOPIC_START_HERITAGE_CALC, this);
         EventQueue.getInstance().unSubscribe(TOPIC_START_PUZZLE, this);
         EventQueue.getInstance().unSubscribe(TOPIC_START_SCRATCH, this);
         EventQueue.getInstance().unSubscribe(TOPIC_START_TREE, this);
@@ -179,69 +182,102 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
 
     @Override
     public void onEvent(String topic, Object o) {
-        View view = null;
-        if (o instanceof View) {
-            view = (View) o;
+        LittlePerson person = selectedPerson;
+        if (o instanceof LittlePerson) {
+            person = (LittlePerson) o;
         }
         switch(topic) {
             case TOPIC_START_COLORING:
-                startColoringGame(view);
+                startColoringGame(person);
                 break;
             case TOPIC_START_DRESSUP:
-                startHeritageDressUpGame(view);
+                startHeritageDressUpGame(person);
+                break;
+            case TOPIC_START_HERITAGE_CALC:
+                startHeritageCalc(person);
                 break;
             case TOPIC_START_MATCH:
-                startMatchGame(view);
+                startMatchGame(person);
                 break;
             case TOPIC_START_PUZZLE:
-                startPuzzleGame(view);
+                startPuzzleGame(person);
                 break;
             case TOPIC_START_SCRATCH:
-                startScratchGame(view);
+                startScratchGame(person);
                 break;
             case TOPIC_START_TREE:
-                startTreeGame(view);
+                startTreeGame(person);
                 break;
         }
     }
 
-    public void startMatchGame(View view) {
+    public void startMatchGame(LittlePerson person) {
         Intent intent = new Intent( this, MatchGameActivity.class );
-        intent.putExtra(ChooseFamilyMember.FAMILY, people);
-        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, selectedPerson);
+        if (person!=selectedPerson) {
+            ArrayList<LittlePerson> people = new ArrayList<>();
+            people.add(person);
+            intent.putExtra(ChooseFamilyMember.FAMILY, people);
+        } else {
+            intent.putExtra(ChooseFamilyMember.FAMILY, people);
+        }
+        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
         startActivity(intent);
     }
 
-    public void startScratchGame(View view) {
+    public void startScratchGame(LittlePerson person) {
         Intent intent = new Intent( this, ScratchGameActivity.class );
-        intent.putExtra(ChooseFamilyMember.FAMILY, people);
-        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, selectedPerson);
+        if (person!=selectedPerson) {
+            ArrayList<LittlePerson> people = new ArrayList<>();
+            people.add(person);
+            intent.putExtra(ChooseFamilyMember.FAMILY, people);
+        } else {
+            intent.putExtra(ChooseFamilyMember.FAMILY, people);
+        }
+        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
         startActivity(intent);
     }
 
-    public void startColoringGame(View view) {
+    public void startColoringGame(LittlePerson person) {
         Intent intent = new Intent( this, ColoringGameActivity.class );
-        intent.putExtra(ChooseFamilyMember.FAMILY, people);
-        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, selectedPerson);
+        if (person!=selectedPerson) {
+            ArrayList<LittlePerson> people = new ArrayList<>();
+            people.add(person);
+            intent.putExtra(ChooseFamilyMember.FAMILY, people);
+        } else {
+            intent.putExtra(ChooseFamilyMember.FAMILY, people);
+        }
+        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
         startActivity(intent);
     }
 
-    public void startHeritageDressUpGame(View view) {
+    public void startHeritageCalc(LittlePerson person) {
         Intent intent = new Intent( this, ChooseCultureActivity.class );
-        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, selectedPerson);
+        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
         startActivity(intent);
     }
 
-    public void startPuzzleGame(View view) {
+    public void startHeritageDressUpGame(LittlePerson person) {
+        Intent intent = new Intent( this, HeritageDressUpActivity.class );
+        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
+        startActivity(intent);
+    }
+
+    public void startPuzzleGame(LittlePerson person) {
         Intent intent = new Intent( this, PuzzleGameActivity.class );
-        intent.putExtra(ChooseFamilyMember.FAMILY, people);
-        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, selectedPerson);
+        if (person!=selectedPerson) {
+            ArrayList<LittlePerson> people = new ArrayList<>();
+            people.add(person);
+            intent.putExtra(ChooseFamilyMember.FAMILY, people);
+        } else {
+            intent.putExtra(ChooseFamilyMember.FAMILY, people);
+        }
+        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
         startActivity(intent);
     }
 
-    public void startTreeGame(View view) {
+    public void startTreeGame(LittlePerson person) {
         Intent intent = new Intent( this, MyTreeActivity.class );
-        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, selectedPerson);
+        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
         startActivity(intent);
     }
 }

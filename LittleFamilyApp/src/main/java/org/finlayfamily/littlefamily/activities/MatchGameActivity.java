@@ -45,9 +45,7 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
 
         Intent intent = getIntent();
         people = (List<LittlePerson>) intent.getSerializableExtra(ChooseFamilyMember.FAMILY);
-        if (people!=null && people.size()>0) {
-            selectedPerson = people.get(0);
-        }
+        selectedPerson = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
 
         game = new MatchingGame(1, people);
         game.setupLevel();

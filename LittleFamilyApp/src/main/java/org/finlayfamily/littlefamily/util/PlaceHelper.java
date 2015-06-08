@@ -7,6 +7,7 @@ import java.util.Locale;
  * Created by Parents on 3/24/2015.
  */
 public class PlaceHelper {
+    public static String UNKNOWN="Unknown";
     private static String[] usStates = {
             "alabama", "alaska", "arizona", "arkansas", "california", "colorado", "connecticut",
             "delaware","florida","georgia","hawaii","idaho","illinois","indiana","iowa","kansas",
@@ -58,5 +59,13 @@ public class PlaceHelper {
         if (place==null) return null;
         String[] parts = place.split("[,]+");
         return parts[parts.length-1].trim();
+    }
+
+    public static String getPlaceCountry(String p) {
+        String place = PlaceHelper.getTopPlace(p);
+        if (place == null) place = UNKNOWN;
+        if (!place.equals("United States") && PlaceHelper.isInUS(place))
+            place = "United States";
+        return place;
     }
 }

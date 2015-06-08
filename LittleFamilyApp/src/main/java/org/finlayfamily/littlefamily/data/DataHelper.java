@@ -23,7 +23,7 @@ public class DataHelper {
         person.setLastSync(new Date());
 
         try {
-            Link portrait = service.getPersonPortrait(fsPerson.getId(), checkCache);
+            Link portrait = service.getPersonPortrait(fsPerson.getId(), true);
             if (portrait != null) {
                 String imagePath = null;
                 imagePath = DataHelper.downloadFile(portrait.getHref().toString(), fsPerson.getId(), DataHelper.lastPath(portrait.getHref().toString()), service, context);

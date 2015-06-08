@@ -18,7 +18,6 @@ import java.util.List;
  */
 public class HeritageCalculatorTask extends AsyncTask<LittlePerson, Integer, ArrayList<HeritagePath>> {
     private static final int MAX_PATHS=13;
-    private static String UNKNOWN="Unknown";
     private Listener listener;
     private Context context;
     private DataService dataService;
@@ -38,9 +37,7 @@ public class HeritageCalculatorTask extends AsyncTask<LittlePerson, Integer, Arr
         LinkedList<HeritagePath> paths = new LinkedList<>();
         LittlePerson person = persons[0];
 
-        String origin = PlaceHelper.getTopPlace(person.getBirthPlace());
-        if (origin==null) origin = "Unknown";
-        if (!origin.equals("United States") && PlaceHelper.isInUS(origin)) origin = "United States";
+        String origin = PlaceHelper.getPlaceCountry(person.getBirthPlace());
 
         HeritagePath first = new HeritagePath();
         first.setPercent(1.0);
@@ -52,11 +49,14 @@ public class HeritageCalculatorTask extends AsyncTask<LittlePerson, Integer, Arr
         while(paths.size() > 0) {
             try {
                 HeritagePath path = paths.removeFirst();
-                if (path.getTreePath().size()>=MAX_PATHS || (!path.getPlace().equals(origin) && !path.getPlace().equals(UNKNOWN))) {
+                if (path.getTreePath().size()>=MAX_PATHS || (!path.getPlace().equals(origin) && !path.getPlace().equals(PlaceHelper.UNKNOWN))) {
                     returnPaths.add(path);
                 }
                 else {
-                    List<LittlePerson> parents = dataService.getParents(path.getTreePath().get(path.getTreePath().size() - 1));
+                    //List<LittlePerson> parents = dataService.getParents(path.getTreePath().get(path.getTreePath().size() - 1));
+                    //-- only use the database for speed
+                    LittlePerson pathPerson = path.getTreePath().get(path.getTreePath().size() - 1);
+                    List<LittlePerson> parents = dataService.getDBHelper().getParentsForPerson(pathPerson.getId());
                     if (parents != null && parents.size()>0) {
                         for (LittlePerson parent : parents) {
                             HeritagePath ppath = new HeritagePath();
@@ -64,10 +64,7 @@ public class HeritageCalculatorTask extends AsyncTask<LittlePerson, Integer, Arr
                             if (parent.getNationality()!=null) {
                                 ppath.setPlace(parent.getNationality());
                             } else {
-                                String place = PlaceHelper.getTopPlace(parent.getBirthPlace());
-                                if (place == null) place = UNKNOWN;
-                                if (!place.equals("United States") && PlaceHelper.isInUS(place))
-                                    place = "United States";
+                                String place = PlaceHelper.getPlaceCountry(parent.getBirthPlace());
                                 ppath.setPlace(place);
                             }
                             ppath.setTreePath(new ArrayList<LittlePerson>(path.getTreePath()));
@@ -75,6 +72,10 @@ public class HeritageCalculatorTask extends AsyncTask<LittlePerson, Integer, Arr
                             paths.add(ppath);
                         }
                     } else {
+                        //-- if we don't know if this person has parents, then sync them to pick up the parents next time
+                        if (pathPerson.isHasParents()==null) {
+                            dataService.addToSyncQ(pathPerson, 1);
+                        }
                         returnPaths.add(path);
                     }
                 }
