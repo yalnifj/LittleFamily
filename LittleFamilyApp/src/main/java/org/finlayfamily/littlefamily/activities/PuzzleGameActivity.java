@@ -51,8 +51,16 @@ public class PuzzleGameActivity extends LittleFamilyActivity implements Memories
     @Override
     protected void onStart() {
         super.onStart();
-        showLoadingDialog();
-        loadRandomImage();
+        if (people==null) {
+            people = new ArrayList<>();
+            people.add(selectedPerson);
+        }
+        if (people.size()<2) {
+            loadMoreFamilyMembers();
+        } else {
+            showLoadingDialog();
+            loadRandomImage();
+        }
     }
 
     private void loadRandomImage() {

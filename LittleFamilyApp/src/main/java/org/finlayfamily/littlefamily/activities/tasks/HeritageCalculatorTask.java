@@ -83,6 +83,13 @@ public class HeritageCalculatorTask extends AsyncTask<LittlePerson, Integer, Arr
                 Log.e(this.getClass().getSimpleName(), "error", e);
             }
         }
+        for (HeritagePath path : returnPaths) {
+            try {
+                dataService.addToSyncQ(path.getTreePath().get(path.getTreePath().size()-1), path.getTreePath().size());
+            } catch (Exception e) {
+                Log.e(this.getClass().getSimpleName(), "error", e);
+            }
+        }
         return returnPaths;
     }
 

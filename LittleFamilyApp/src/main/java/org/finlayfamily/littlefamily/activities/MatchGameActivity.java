@@ -36,7 +36,7 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
 	private int flip1 = -1;
 	private int flip2 = -1;
 
-    private int backgroundLoadIndex = 1;
+    private int backgroundLoadIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +60,11 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
 
         setupTopBar();
 
-        if (people!=null && people.size()>1) {
+        if (people==null) {
+            people = new ArrayList<>();
+            people.add(selectedPerson);
+        }
+        if (people.size()<2) {
             FamilyLoaderTask task = new FamilyLoaderTask(this, this);
             task.execute(people.get(backgroundLoadIndex));
         }
@@ -116,7 +120,7 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
         }
 
         backgroundLoadIndex++;
-        if (backgroundLoadIndex < game.getBoard().size()/2) {
+        if (backgroundLoadIndex < people.size() && people.size() < game.getBoard().size()/2) {
             FamilyLoaderTask task = new FamilyLoaderTask(this, this);
             task.execute(people.get(backgroundLoadIndex));
         }

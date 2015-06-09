@@ -3,7 +3,6 @@ package org.finlayfamily.littlefamily.activities.tasks;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.finlayfamily.littlefamily.data.DataService;
 import org.finlayfamily.littlefamily.data.LittlePerson;
@@ -34,7 +33,10 @@ public class FamilyLoaderTask extends AsyncTask<LittlePerson, Integer, ArrayList
             try {
                 List<LittlePerson> people = dataService.getFamilyMembers(person);
                 if (people != null) {
-                    familyMembers.addAll(people);
+                    for (LittlePerson p : people) {
+                        familyMembers.add(p);
+                        dataService.addToSyncQ(p, 1);
+                    }
                 }
             } catch (Exception e) {
                 Log.e(this.getClass().getSimpleName(), "error", e);

@@ -15,7 +15,7 @@ import org.finlayfamily.littlefamily.sprites.TreePersonAnimatedSprite;
  */
 public class TreeSpriteSurfaceView extends SpritedClippedSurfaceView {
     private ScaleGestureDetector mScaleDetector;
-    protected float scale = 0.7f;
+    protected float scale = 0.5f;
     protected boolean moved;
 
     public TreeSpriteSurfaceView(Context context) {
@@ -76,7 +76,8 @@ public class TreeSpriteSurfaceView extends SpritedClippedSurfaceView {
 
     @Override
     protected void touch_start(float x, float y) {
-        super.touch_start(x, y);
+        mX = x;
+        mY = y;
 
         synchronized (sprites) {
             for (Sprite s : sprites) {
