@@ -41,6 +41,10 @@ Please wait...</string>
     <string name="born_in_on">%1$s was born in %2$s on %3$s.</string>
     <string name="he">He</string>
     <string name="she">She</string>
+    <string name="you_are">You are %1$s.</string>
+    <string name="you_born_in">You were born in %1$s.</string>
+    <string name="you_born_on">You were born on %1$s.</string>
+    <string name="you_born_in_on">You were born in %1$s on %2$s.</string>
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

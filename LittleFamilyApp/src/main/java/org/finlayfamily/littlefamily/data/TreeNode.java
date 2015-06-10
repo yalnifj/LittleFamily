@@ -12,6 +12,7 @@ public class TreeNode {
     private TreeNode left;
     private TreeNode right;
     private int depth;
+    private boolean isRoot;
     private List<LittlePerson> children;
 
     public LittlePerson getPerson() {
@@ -74,5 +75,13 @@ public class TreeNode {
 
     public void setDepth(int depth) {
         this.depth = depth;
+    }
+
+    public boolean isRoot() {
+        return isRoot;
+    }
+
+    public void setIsRoot(boolean isRoot) {
+        this.isRoot = isRoot;
     }
 }

@@ -21,13 +21,14 @@ import java.util.Collections;
 import java.util.List;
 
 public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTask.Listener{
-
+    public static final int buttonSize = 100;
     private LittlePerson selectedPerson;
     private DataService dataService;
 
     private TreeSpriteSurfaceView treeView;
     private AnimatedBitmapSprite treeBackground = null;
     private TreeNode root;
+    private TreePersonAnimatedSprite rootSprite;
     private Bitmap leftLeaf;
     private Bitmap rightLeaf;
     private Bitmap vineBm;
@@ -92,6 +93,11 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
 
@@ -102,6 +108,18 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
             treeBackground.onDestroy();
         }
         treeBackground = null;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        treeView.pause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        treeView.resume();
     }
 
     private void setupTreeViewSprites() {
@@ -126,17 +144,22 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
 
         BitmapFactory.Options opts = new BitmapFactory.Options();
 
-        matchBtn = ImageHelper.loadBitmapFromResource(this, R.drawable.house_familyroom_frame, 0, 80, 80);
-        puzzleBtn = ImageHelper.loadBitmapFromResource(this, R.drawable.house_toys_blocks, 0, 80, 80);
+        matchBtn = ImageHelper.loadBitmapFromResource(this, R.drawable.house_familyroom_frame, 0, buttonSize, buttonSize);
+        puzzleBtn = ImageHelper.loadBitmapFromResource(this, R.drawable.house_toys_blocks, 0, buttonSize, buttonSize);
 
-        TreePersonAnimatedSprite rootSprite = addTreeSprite(root, 20, 20, true);
+        rootSprite = addTreeSprite(root, 20, 20, true);
+        if (root.getChildren()!=null && root.getChildren().size()>0) {
+            addChildSprites(root.getChildren(), rootSprite.getX(), rootSprite.getY()+rootSprite.getHeight()+vineBm.getHeight());
+        } else if (root.getLeft()!=null && root.getLeft().getChildren()!=null && root.getLeft().getChildren().size()>0){
+            treeView.getSprites().remove(rootSprite);
+            addChildSprites(root.getLeft().getChildren(), rootSprite.getX(), rootSprite.getY());
+        }
 
-        treeView.setMaxWidth(maxX*2);
-        treeView.setMaxHeight(maxY*2);
+        treeView.setMaxWidth(maxX * 2);
+        treeView.setMaxHeight(maxY * 2);
         int clipX = (int) rootSprite.getX() - width/2 - rootSprite.getWidth()/2;
-        int clipY = (int) rootSprite.getY() - height/2;
         if (clipX < 0) clipX = 0;
-        if (clipY < 0) clipY = 0;
+        int clipY = 0;
         treeView.setClipX(clipX);
         treeView.setClipY(clipY);
 
@@ -261,6 +284,28 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
 
         sprite.setTreeWidth(treeWidth);
         return sprite;
+    }
+
+    private void addChildSprites(List<LittlePerson> children, float x, float y) {
+        if (children.size()>1) {
+            x = x - leftLeaf.getWidth() * children.size()/2;
+            if (x<0) x = 0;
+        }
+        for(LittlePerson child : children) {
+            if (!child.equals(root.getPerson())) {
+                TreeNode childNode = new TreeNode();
+                childNode.setPerson(child);
+                childNode.setDepth(0);
+                childNode.setIsRoot(false);
+
+                TreePersonAnimatedSprite childSprite = addTreeSprite(childNode, (int)x, (int)y, true);
+                x = x+childSprite.getWidth()+20;
+            } else {
+                rootSprite.setX(x);
+                treeView.addSprite(rootSprite);
+                x = x+rootSprite.getWidth()+20;
+            }
+        }
     }
 
     private void addDownVine(TreePersonAnimatedSprite sprite, boolean leftSide) {

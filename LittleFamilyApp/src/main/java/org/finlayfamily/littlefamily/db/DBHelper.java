@@ -336,14 +336,16 @@ public class DBHelper extends SQLiteOpenHelper {
 		String tables = TABLE_LITTLE_PERSON + " p join " + TABLE_RELATIONSHIP + " r on r."+COL_ID2+"=p."+COL_ID;
 
 		Map<Integer, LittlePerson> personMap = new HashMap<>();
-		Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, "p."+COL_ID);
+		Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, "p."+COL_AGE+" desc");
 		while (c.moveToNext()) {
 			LittlePerson p = personFromCursor(c);
-			personMap.put(p.getId(), p);
+			if (!personMap.containsKey(p.getId())) {
+				personMap.put(p.getId(), p);
+				people.add(p);
+			}
 		}
 
 		c.close();
-		people.addAll(personMap.values());
 
 		return people;
 	}

@@ -33,9 +33,11 @@ public abstract class AbstractTouchAnimatedSurfaceView extends SurfaceView imple
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        animationThread = new AnimationThread(holder, context, this);
-        animationThread.setRunning(true);
-        animationThread.start();
+        if (animationThread==null || !animationThread.isAlive()) {
+            animationThread = new AnimationThread(holder, context, this);
+            animationThread.setRunning(true);
+            animationThread.start();
+        }
     }
 
     @Override
@@ -53,6 +55,18 @@ public abstract class AbstractTouchAnimatedSurfaceView extends SurfaceView imple
             } catch(Exception e) {
                 Log.v("Exception Occured", e.getMessage());
             }
+        }
+    }
+
+    public void pause() {
+        stop();
+    }
+
+    public void resume() {
+        if (animationThread==null || !animationThread.isAlive()) {
+            animationThread = new AnimationThread(getHolder(), context, this);
+            animationThread.setRunning(true);
+            animationThread.start();
         }
     }
 
@@ -122,6 +136,15 @@ public abstract class AbstractTouchAnimatedSurfaceView extends SurfaceView imple
 
     public void stop() {
         animationThread.setRunning(false);
+        boolean retry = true;
+        while(retry)  {
+            try {
+                animationThread.join();
+                retry = false;
+            } catch(Exception e) {
+                Log.v("Exception Occured", e.getMessage());
+            }
+        }
     }
 
     public class AnimationThread extends Thread {

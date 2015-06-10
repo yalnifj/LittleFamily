@@ -100,7 +100,7 @@ public class TreePersonAnimatedSprite extends Sprite {
         String thumbnailFile = dollConfig.getThumbnail();
         try {
             InputStream is = activity.getAssets().open(thumbnailFile);
-            dressUpBtn = ImageHelper.loadBitmapFromStream(is, 0, 80, 80);
+            dressUpBtn = ImageHelper.loadBitmapFromStream(is, 0, MyTreeActivity.buttonSize, MyTreeActivity.buttonSize);
             activityButtons.add(dressUpBtn);
             is.close();
         } catch (IOException e) {
@@ -118,7 +118,7 @@ public class TreePersonAnimatedSprite extends Sprite {
             thumbnailFile = dollConfig.getThumbnail();
             try {
                 InputStream is = activity.getAssets().open(thumbnailFile);
-                spDressUpBtn = ImageHelper.loadBitmapFromStream(is, 0, 80, 80);
+                spDressUpBtn = ImageHelper.loadBitmapFromStream(is, 0, MyTreeActivity.buttonSize, MyTreeActivity.buttonSize);
                 spActivityButtons.add(spDressUpBtn);
                 is.close();
             } catch (IOException e) {
@@ -154,6 +154,7 @@ public class TreePersonAnimatedSprite extends Sprite {
     }
 
     protected String getAncestralRelationship(LittlePerson p) {
+        if (node.isRoot()) return "You";
         String rel = "";
         for(int g=3; g<=node.getDepth(); g++) {
             rel += "Great ";
@@ -289,7 +290,7 @@ public class TreePersonAnimatedSprite extends Sprite {
         int x = (int) getX();
         int y = (int) getY();
         int px = x + (leftLeaf.getWidth()/2  - pw / 2);
-        if (node.getPerson().getGender()==GenderType.Female) {
+        if (node.getSpouse()!=null && node.getPerson().getGender()==GenderType.Female) {
             px = px + leftLeaf.getWidth();
         }
         int py = y + (height / 2 - ph / 2);
@@ -348,7 +349,7 @@ public class TreePersonAnimatedSprite extends Sprite {
             canvas.drawText(relationship, getX() + getWidth() + detailWidth/2, getY()+70, textPaint);
 
             float bx = getX() + getWidth() + 20;
-            float by = getY() + detailHeight -100;
+            float by = getY() + detailHeight -MyTreeActivity.buttonSize;
             for(Bitmap button : spActivityButtons) {
                 canvas.drawBitmap(button, bx, by, null);
                 bx += button.getWidth()+20;
@@ -357,20 +358,34 @@ public class TreePersonAnimatedSprite extends Sprite {
     }
 
     public String getBirthText(LittlePerson detailPerson) {
-        String heshe = activity.getResources().getString(R.string.he);
-        if (detailPerson.getGender()==GenderType.Female) {
-            heshe = activity.getResources().getString(R.string.she);
-        }
         String text = "";
-        if (detailPerson.getBirthPlace()==null) {
-            text = String.format(activity.getResources().getString(R.string.born_on),
-                    heshe, df.format(detailPerson.getBirthDate()));
-        } else if (detailPerson.getBirthDate()==null) {
-            text = String.format(activity.getResources().getString(R.string.born_in),
-                    heshe, detailPerson.getBirthPlace());
-        } else {
-            text = String.format(activity.getResources().getString(R.string.born_in_on),
-                    heshe, detailPerson.getBirthPlace(), df.format(detailPerson.getBirthDate()));
+        if (node.isRoot()) {
+            if (detailPerson.getBirthPlace()==null) {
+                text = String.format(activity.getResources().getString(R.string.you_born_on),
+                        df.format(detailPerson.getBirthDate()));
+            } else if (detailPerson.getBirthDate()==null) {
+                text = String.format(activity.getResources().getString(R.string.you_born_in),
+                        detailPerson.getBirthPlace());
+            } else {
+                text = String.format(activity.getResources().getString(R.string.you_born_in_on),
+                        detailPerson.getBirthPlace(), df.format(detailPerson.getBirthDate()));
+            }
+        }
+        else {
+            String heshe = activity.getResources().getString(R.string.he);
+            if (detailPerson.getGender() == GenderType.Female) {
+                heshe = activity.getResources().getString(R.string.she);
+            }
+            if (detailPerson.getBirthPlace() == null) {
+                text = String.format(activity.getResources().getString(R.string.born_on),
+                        heshe, df.format(detailPerson.getBirthDate()));
+            } else if (detailPerson.getBirthDate() == null) {
+                text = String.format(activity.getResources().getString(R.string.born_in),
+                        heshe, detailPerson.getBirthPlace());
+            } else {
+                text = String.format(activity.getResources().getString(R.string.born_in_on),
+                        heshe, detailPerson.getBirthPlace(), df.format(detailPerson.getBirthDate()));
+            }
         }
         return text;
     }
@@ -406,7 +421,7 @@ public class TreePersonAnimatedSprite extends Sprite {
                 dHeight = detailHeight;
                 if (state==STATE_OPEN_LEFT) {
                     float bx = getX() + leftLeaf.getWidth() + 20;
-                    float by = getY() + detailHeight - 100;
+                    float by = getY() + detailHeight - MyTreeActivity.buttonSize;
                     for (Bitmap button : activityButtons) {
                         if (x > bx * scale && y > by * scale
                                 && x < (bx + button.getWidth()) * scale && y < (getY() + detailHeight) * scale) {
@@ -422,7 +437,7 @@ public class TreePersonAnimatedSprite extends Sprite {
                         state = STATE_ANIMATING_OPEN_LEFT;
                     } else {
                         float bx = getX() + getWidth() + 20;
-                        float by = getY() + detailHeight - 100;
+                        float by = getY() + detailHeight - MyTreeActivity.buttonSize;
                         for (Bitmap button : spActivityButtons) {
                             if (x > bx * scale && y > by * scale
                                     && x < (bx + button.getWidth()) * scale && y < (getY() + detailHeight) * scale) {
