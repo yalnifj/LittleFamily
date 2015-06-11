@@ -25,16 +25,16 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.9899495"
-     inkscape:cx="276.26143"
-     inkscape:cy="558.13605"
+     inkscape:zoom="1.0576218"
+     inkscape:cx="161.50765"
+     inkscape:cy="460.79101"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1019"
      inkscape:window-height="696"
-     inkscape:window-x="1485"
-     inkscape:window-y="267"
+     inkscape:window-x="2069"
+     inkscape:window-y="199"
      inkscape:window-maximized="0"
      inkscape:snap-grids="true" />
   <metadata
@@ -369,5 +369,27 @@
        inkscape:export-filename="C:\Users\Parents\Documents\GitHub\LittleFamily\LittleFamilyApp\src\main\res\drawable\vine2.png"
        inkscape:export-xdpi="87.895653"
        inkscape:export-ydpi="87.895653" />
+    <g
+       id="g4289"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\vine_arrow.png"
+       inkscape:export-xdpi="85.053719"
+       inkscape:export-ydpi="85.053719">
+      <path
+         sodipodi:nodetypes="cccccccccc"
+         inkscape:connector-curvature="0"
+         id="path4154-8-0-5-55"
+         d="m 279.50735,580.04684 c -1.47205,1.01252 -2.91718,1.96819 -4.44299,3.07035 -4.39677,9.92181 -2.0945,35.51281 1.88436,43.83594 0.70734,1.38064 6.89309,-0.84473 6.19927,-1.97461 -6.39555,-11.29361 -8.31318,-33.45167 -1.37924,-42.41602 -0.10596,-0.0884 -0.21167,-0.18974 -0.31605,-0.32031 l -0.002,0 c -0.45998,-0.55145 -1.16784,-1.25015 -1.92101,-2.18163 -0.007,-0.005 -0.0146,-0.009 -0.0224,-0.0137 z"
+         style="fill:#016700" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path4152-7-46-58"
+         d="m 286.64471,584.79543 c -0.93295,-1.18666 -1.97058,-2.14907 -3.13148,-3.00609 -0.2875,0.0471 -0.63546,-0.17385 -0.92403,-0.64438 -0.99075,-0.65306 -2.06425,-1.25633 -3.23802,-1.86634 2.34124,2.0884 3.48056,3.4333 4.84943,5.48851 3.10376,4.66028 1.35307,6.54712 2.59873,11.97155 -1.43141,-4.11733 -0.39267,-6.86611 -1.75233,-9.59882 -1.67705,-3.371 -3.71271,-4.93362 -6.2972,-7.67762 6.76161,11.71659 -0.47569,10.04636 9.15491,25.09261 0.006,-7.32629 4.22133,-8.78657 1.11603,-15.73616 -0.71403,-1.59802 -1.50024,-2.90928 -2.37604,-4.02326 z"
+         style="fill:#016700" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path4152-7-46-5-1"
+         d="m 272.03669,581.41752 c -1.89928,0.98185 -3.67162,2.38266 -5.50781,4.5557 -4.99087,5.90644 -1.60538,8.50799 -3.87891,15.6507 13.45442,-11.97556 6.34166,-12.36949 16.14649,-21.90102 -3.2082,1.95267 -5.5485,2.90706 -8.125,5.72434 -2.08877,2.2838 -1.99719,5.25354 -4.58203,8.86689 2.82219,-4.93929 1.81248,-7.26587 6.08984,-10.9413 1.88642,-1.62086 3.34235,-2.61503 6.125,-3.99635 -2.34228,0.49609 -4.3683,1.05921 -6.26758,2.04104 z"
+         style="fill:#016700" />
+    </g>
   </g>
 </svg>

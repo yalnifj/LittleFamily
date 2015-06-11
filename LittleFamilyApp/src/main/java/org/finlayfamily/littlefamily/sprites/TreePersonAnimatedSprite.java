@@ -101,7 +101,11 @@ public class TreePersonAnimatedSprite extends Sprite {
         try {
             InputStream is = activity.getAssets().open(thumbnailFile);
             dressUpBtn = ImageHelper.loadBitmapFromStream(is, 0, MyTreeActivity.buttonSize, MyTreeActivity.buttonSize);
-            activityButtons.add(dressUpBtn);
+            if (node.getPerson().getGender()==GenderType.Female && node.getSpouse()!=null) {
+                spActivityButtons.add(dressUpBtn);
+            } else {
+                activityButtons.add(dressUpBtn);
+            }
             is.close();
         } catch (IOException e) {
             Log.e("TreePersonAnimatedSprit", "Error opening asset file", e);
@@ -119,7 +123,11 @@ public class TreePersonAnimatedSprite extends Sprite {
             try {
                 InputStream is = activity.getAssets().open(thumbnailFile);
                 spDressUpBtn = ImageHelper.loadBitmapFromStream(is, 0, MyTreeActivity.buttonSize, MyTreeActivity.buttonSize);
-                spActivityButtons.add(spDressUpBtn);
+                if (node.getSpouse().getGender()==GenderType.Female) {
+                    spActivityButtons.add(spDressUpBtn);
+                } else {
+                    activityButtons.add(spDressUpBtn);
+                }
                 is.close();
             } catch (IOException e) {
                 Log.e("TreePersonAnimatedSprit", "Error opening asset file", e);
@@ -154,7 +162,6 @@ public class TreePersonAnimatedSprite extends Sprite {
     }
 
     protected String getAncestralRelationship(LittlePerson p) {
-        if (node.isRoot()) return "You";
         String rel = "";
         for(int g=3; g<=node.getDepth(); g++) {
             rel += "Great ";
@@ -164,14 +171,24 @@ public class TreePersonAnimatedSprite extends Sprite {
         }
         if (p.getGender()== GenderType.Female) {
             if (node.getDepth()==0) {
-                rel = "Sister";
+                if (node.isRoot()) {
+                    if (p==node.getPerson()) rel = "You";
+                    else rel = "Wife";
+                } else {
+                    rel = "Sister";
+                }
             } else {
                 rel += "Mother";
             }
         }
         else if (p.getGender()==GenderType.Male) {
             if (node.getDepth()==0) {
-                rel = "Brother";
+                if (node.isRoot()) {
+                    if (p==node.getPerson()) rel = "You";
+                    else rel = "Husband";
+                } else {
+                    rel = "Brother";
+                }
             } else {
                 rel += "Father";
             }
@@ -199,11 +216,19 @@ public class TreePersonAnimatedSprite extends Sprite {
             if (dWidth==detailWidth && dHeight==detailHeight) {
                 if (state==STATE_ANIMATING_OPEN_LEFT) {
                     state = STATE_OPEN_LEFT;
+                    LittlePerson person = father;
+                    if (person==null) person = mother;
                     try {
-                        String text = String.format(activity.getResources().getString(R.string.relative_is_your),
-                                father.getName(), getAncestralRelationship(father));
-                        if (father.getBirthDate()!=null || father.getBirthPlace()!=null) {
-                            String birthText = getBirthText(father);
+                        String relationship = getAncestralRelationship(person);
+                        String text = "";
+                        if (!relationship.equalsIgnoreCase("you")) {
+                            text = String.format(activity.getResources().getString(R.string.relative_is_your),
+                                    person.getName(), relationship);
+                        } else {
+                            text = String.format(activity.getResources().getString(R.string.player_greeting), person.getGivenName());
+                        }
+                        if (person.getBirthDate()!=null || person.getBirthPlace()!=null) {
+                            String birthText = getBirthText(person);
                             text += " " + birthText;
                         }
                         activity.speak(text);
@@ -212,8 +237,14 @@ public class TreePersonAnimatedSprite extends Sprite {
                 else {
                     state = STATE_OPEN_RIGHT;
                     try {
-                        String text = String.format(activity.getResources().getString(R.string.relative_is_your),
-                                mother.getName(), getAncestralRelationship(mother));
+                        String relationship = getAncestralRelationship(mother);
+                        String text = "";
+                        if (!relationship.equalsIgnoreCase("you")) {
+                            text = String.format(activity.getResources().getString(R.string.relative_is_your),
+                                    mother.getName(), relationship);
+                        } else {
+                            text = String.format(activity.getResources().getString(R.string.player_greeting), mother.getGivenName());
+                        }
                         if (mother.getBirthDate()!=null || mother.getBirthPlace()!=null) {
                             String birthText = getBirthText(mother);
                             text += " " + birthText;
