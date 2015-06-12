@@ -13,6 +13,7 @@ public class TreeNode {
     private TreeNode right;
     private int depth;
     private boolean isRoot;
+    private boolean hasParents;
     private List<LittlePerson> children;
 
     public LittlePerson getPerson() {
@@ -61,6 +62,14 @@ public class TreeNode {
 
     public void setShownSpouse(int shownSpouse) {
         this.shownSpouse = shownSpouse;
+    }
+
+    public boolean isHasParents() {
+        return hasParents;
+    }
+
+    public void setHasParents(boolean hasParents) {
+        this.hasParents = hasParents;
     }
 
     public LittlePerson getSpouse() {

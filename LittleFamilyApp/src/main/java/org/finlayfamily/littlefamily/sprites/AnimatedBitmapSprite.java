@@ -22,6 +22,7 @@ public class AnimatedBitmapSprite extends Sprite {
     protected boolean bounce;
     protected boolean backward;
     protected Paint basePaint;
+    protected boolean ignoreAlpha;
 
     public AnimatedBitmapSprite() {
         super();
@@ -84,6 +85,14 @@ public class AnimatedBitmapSprite extends Sprite {
         this.stepsPerFrame = stepsPerFrame;
     }
 
+    public boolean isIgnoreAlpha() {
+        return ignoreAlpha;
+    }
+
+    public void setIgnoreAlpha(boolean ignoreAlpha) {
+        this.ignoreAlpha = ignoreAlpha;
+    }
+
     @Override
     public void doStep() {
         if (bitmaps!=null && bitmaps.get(state)!=null && bitmaps.get(state).size()>1 ) {
@@ -129,7 +138,10 @@ public class AnimatedBitmapSprite extends Sprite {
 
     public boolean inSprite(float tx, float ty) {
         if (!selectable) return false;
-        if (tx>=x*scale && tx<=(x+width)*scale && ty>=y && ty<=(y+height)*scale) {
+        if (tx>=x*scale && tx<=(x+width)*scale && ty>=y*scale && ty<=(y+height)*scale) {
+            if (ignoreAlpha) {
+                return true;
+            }
             if (bitmaps!=null) {
                 List<Bitmap> frames = bitmaps.get(state);
                 Bitmap bitmap = frames.get(frame);

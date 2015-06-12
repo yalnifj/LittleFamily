@@ -62,7 +62,23 @@ public class TreeLoaderTask extends AsyncTask<LittlePerson, Integer, TreeNode> {
     }
 
     protected void addParents(TreeNode node) throws Exception {
-        if (node.getDepth() > startingDepth+maxDepth) return;
+        if (node.getDepth() > startingDepth+maxDepth) {
+            LittlePerson person = node.getPerson();
+            List<LittlePerson> parents = dataService.getParents(person);
+            if (parents!=null && parents.size()>0) {
+                node.setHasParents(true);
+            } else {
+                LittlePerson spouse = node.getSpouse();
+                if (spouse!=null) {
+                    List<LittlePerson> sparents = dataService.getParents(spouse);
+                    if (sparents != null && sparents.size() > 0) {
+                        node.setHasParents(true);
+                    }
+                }
+            }
+            return;
+        }
+
         LittlePerson person = node.getPerson();
         List<LittlePerson> parents = dataService.getParents(person);
         if (parents!=null && parents.size()>0) {

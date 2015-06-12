@@ -10,18 +10,24 @@ import org.finlayfamily.littlefamily.activities.tasks.TreeLoaderTask;
 import org.finlayfamily.littlefamily.data.DataService;
 import org.finlayfamily.littlefamily.data.LittlePerson;
 import org.finlayfamily.littlefamily.data.TreeNode;
+import org.finlayfamily.littlefamily.events.EventListener;
+import org.finlayfamily.littlefamily.events.EventQueue;
 import org.finlayfamily.littlefamily.games.DressUpDolls;
 import org.finlayfamily.littlefamily.sprites.AnimatedBitmapSprite;
 import org.finlayfamily.littlefamily.sprites.Sprite;
+import org.finlayfamily.littlefamily.sprites.TouchEventGameSprite;
 import org.finlayfamily.littlefamily.sprites.TreePersonAnimatedSprite;
 import org.finlayfamily.littlefamily.util.ImageHelper;
 import org.finlayfamily.littlefamily.views.TreeSpriteSurfaceView;
 import org.gedcomx.types.GenderType;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTask.Listener{
+public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTask.Listener, EventListener{
+    public static final String TOPIC_NAVIGATE_UP_TREE = "navigateUpTree";
+    public static final String DATA_TREE_NODE = "dataTreeNode";
     public static final int buttonSize = 100;
     private LittlePerson selectedPerson;
     private DataService dataService;
@@ -43,30 +49,21 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
     private DressUpDolls dressUpDolls;
     private int maxX = 0;
     private int maxY = 0;
+    private TouchEventGameSprite touchedArrow;
 
     public Bitmap getMatchBtn() {
         return matchBtn;
-    }
-
-    public void setMatchBtn(Bitmap matchBtn) {
-        this.matchBtn = matchBtn;
     }
 
     public Bitmap getPuzzleBtn() {
         return puzzleBtn;
     }
 
-    public void setPuzzleBtn(Bitmap puzzleBtn) {
-        this.puzzleBtn = puzzleBtn;
-    }
-
     public DressUpDolls getDressUpDolls() {
         return dressUpDolls;
     }
 
-    public void setDressUpDolls(DressUpDolls dressUpDolls) {
-        this.dressUpDolls = dressUpDolls;
-    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +76,8 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
         selectedPerson = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
         dataService = DataService.getInstance();
         dataService.setContext(this);
+
+        EventQueue.getInstance().subscribe(TOPIC_NAVIGATE_UP_TREE, this);
 
         setupTopBar();
     }
@@ -191,6 +190,18 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
             TreePersonAnimatedSprite sprite = new TreePersonAnimatedSprite(node, this, leftLeaf, rightLeaf);
             sprite.setX(x);
             sprite.setY(y);
+
+            if (node.isHasParents()) {
+                TouchEventGameSprite upArrow = new TouchEventGameSprite(this.vineArrow, TOPIC_NAVIGATE_UP_TREE);
+                upArrow.setX(sprite.getX() + sprite.getWidth() / 2 - upArrow.getWidth() / 2);
+                upArrow.setY(y);
+                upArrow.setData(DATA_TREE_NODE, node);
+                upArrow.setIgnoreAlpha(true);
+                y = y + upArrow.getHeight();
+                sprite.setY(y);
+                treeView.addSprite(upArrow);
+            }
+
             if (x+sprite.getWidth() > maxX) maxX = x+sprite.getWidth();
             if (y+sprite.getHeight() > maxY) maxY = y+sprite.getHeight();
             sprite.setTreeWidth(sprite.getWidth());
@@ -198,6 +209,7 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
                 addDownVine(sprite, leftSide);
             }
             treeView.addSprite(sprite);
+
             return sprite;
         }
 
@@ -362,8 +374,54 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
 
     @Override
     public void onComplete(TreeNode root) {
-        this.root = root;
+        if (root.getDepth()==0) {
+            this.root = root;
+            setupTreeViewSprites();
+        } else {
+            treeView.removeSprite(touchedArrow);
+            List<Sprite> oldSprites = new ArrayList<>(treeView.getSprites());
+            int xdiff = 0;
+            int ydiff = 0;
+            TreeNode node = (TreeNode) touchedArrow.getData(DATA_TREE_NODE);
+            int x = (int) touchedArrow.getX() - leftLeaf.getWidth();
+            int y = (int) touchedArrow.getY();
+            if (root.getLeft()!=null) {
+                node.setLeft(root.getLeft());
+                TreePersonAnimatedSprite sprite = addTreeSprite(root.getLeft(), x, y, true);
+                x = x + sprite.getTreeWidth();
+                if (touchedArrow.getX() - sprite.getX()>xdiff) xdiff = (int) (touchedArrow.getX() - sprite.getX());
+                if (touchedArrow.getY() - sprite.getY()>ydiff) ydiff = (int) (touchedArrow.getY() - sprite.getY());
+            } else {
+                x = (int) touchedArrow.getX() + leftLeaf.getWidth();
+            }
+            if (root.getRight()!=null) {
+                node.setRight(root.getRight());
+                TreePersonAnimatedSprite sprite = addTreeSprite(root.getRight(), x, y, true);
+                if (x - sprite.getX()>xdiff) xdiff = (int) (x - sprite.getX());
+                if (y - sprite.getY()>ydiff) ydiff = (int) (y - sprite.getY());
+            }
+            if (xdiff>0 || ydiff >0) {
+                for(Sprite s : oldSprites) {
+                    s.setX(s.getX()+xdiff);
+                    s.setY(s.getY()+ydiff);
+                }
+            }
+            hideLoadingDialog();
+        }
+    }
 
-        setupTreeViewSprites();
+    @Override
+    public void onEvent(String topic, Object o) {
+        super.onEvent(topic, o);
+
+        if (topic.equals(TOPIC_NAVIGATE_UP_TREE)) {
+            touchedArrow = (TouchEventGameSprite) o;
+            TreeNode node = (TreeNode) touchedArrow.getData(DATA_TREE_NODE);
+            LittlePerson person = node.getPerson();
+            showLoadingDialog();
+            TreeLoaderTask task = new TreeLoaderTask(this, this, 3, 4);
+            task.execute(person);
+
+        }
     }
 }

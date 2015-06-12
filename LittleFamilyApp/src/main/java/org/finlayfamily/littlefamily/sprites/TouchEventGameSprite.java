@@ -4,16 +4,22 @@ import android.graphics.Bitmap;
 
 import org.finlayfamily.littlefamily.events.EventQueue;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by jfinlay on 5/22/2015.
  */
 public class TouchEventGameSprite extends AnimatedBitmapSprite {
     protected boolean moved;
     protected String eventTopic;
+    protected Map<String, Object> data;
 
     public TouchEventGameSprite(Bitmap bitmap, String eventTopic) {
         super(bitmap);
         this.eventTopic = eventTopic;
+        this.data = new HashMap<>(0);
+        this.selectable = true;
     }
 
     public String getEventTopic() {
@@ -39,5 +45,13 @@ public class TouchEventGameSprite extends AnimatedBitmapSprite {
             EventQueue.getInstance().publish(eventTopic, this);
         }
         moved = false;
+    }
+
+    public void setData(String key, Object value) {
+        data.put(key, value);
+    }
+
+    public Object getData(String key) {
+        return data.get(key);
     }
 }
