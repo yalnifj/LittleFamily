@@ -25,9 +25,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ImageHelper {
+
+    private static Map<Object, Bitmap> bitmapCache = new HashMap<>();
+
 	/**
 	 * Load a contact photo thumbnail and return it as a Bitmap, resizing the
 	 * image to the provided image dimensions as needed.
@@ -149,30 +154,33 @@ public class ImageHelper {
 	}
 
     public static Bitmap loadBitmapFromResource(Context context, int resourceId, int orientation, final int targetWidth, final int targetHeight) {
-        Bitmap bitmap = null;
+        Bitmap bitmap = bitmapCache.get(resourceId);
         try {
-            // First decode with inJustDecodeBounds=true to check dimensions
-            final BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-            BitmapFactory.decodeResource(context.getResources(), resourceId, options);
-
-            // Adjust extents
             int sourceWidth, sourceHeight;
-            if (orientation == 90 || orientation == 270) {
-                sourceWidth = options.outHeight;
-                sourceHeight = options.outWidth;
-            } else {
-                sourceWidth = options.outWidth;
-                sourceHeight = options.outHeight;
-            }
+            if (bitmap==null) {
+                // First decode with inJustDecodeBounds=true to check dimensions
+                final BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
+                BitmapFactory.decodeResource(context.getResources(), resourceId, options);
 
-            // Calculate the maximum required scaling ratio if required and load the bitmap
-            if (sourceWidth > targetWidth || sourceHeight > targetHeight) {
-                options.inJustDecodeBounds = false;
-                options.inSampleSize = calculateInSampleSize(options, targetWidth, targetHeight);
-                bitmap = BitmapFactory.decodeResource(context.getResources(), resourceId, options);
-            } else {
-                bitmap = BitmapFactory.decodeResource(context.getResources(), resourceId);
+                // Adjust extents
+                if (orientation == 90 || orientation == 270) {
+                    sourceWidth = options.outHeight;
+                    sourceHeight = options.outWidth;
+                } else {
+                    sourceWidth = options.outWidth;
+                    sourceHeight = options.outHeight;
+                }
+
+                // Calculate the maximum required scaling ratio if required and load the bitmap
+                if (sourceWidth > targetWidth || sourceHeight > targetHeight) {
+                    options.inJustDecodeBounds = false;
+                    options.inSampleSize = calculateInSampleSize(options, targetWidth, targetHeight);
+                    bitmap = BitmapFactory.decodeResource(context.getResources(), resourceId, options);
+                } else {
+                    bitmap = BitmapFactory.decodeResource(context.getResources(), resourceId);
+                }
+                bitmapCache.put(resourceId, bitmap);
             }
 
             // Rotate the bitmap if required

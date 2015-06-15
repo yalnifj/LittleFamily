@@ -388,6 +388,8 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
             if (root.getLeft()!=null) {
                 node.setLeft(root.getLeft());
                 TreePersonAnimatedSprite sprite = addTreeSprite(root.getLeft(), x, y, true);
+                xdiff = (int) (xdiff + sprite.getX()-x);
+                ydiff = (int) (sprite.getY()+sprite.getHeight() - y);
                 x = x + sprite.getTreeWidth();
                 if (touchedArrow.getX() - sprite.getX()>xdiff) xdiff = (int) (touchedArrow.getX() - sprite.getX());
                 if (touchedArrow.getY() - sprite.getY()>ydiff) ydiff = (int) (touchedArrow.getY() - sprite.getY());
@@ -397,8 +399,8 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
             if (root.getRight()!=null) {
                 node.setRight(root.getRight());
                 TreePersonAnimatedSprite sprite = addTreeSprite(root.getRight(), x, y, true);
-                if (x - sprite.getX()>xdiff) xdiff = (int) (x - sprite.getX());
-                if (y - sprite.getY()>ydiff) ydiff = (int) (y - sprite.getY());
+                int ydiff2 = (int) (sprite.getY()+sprite.getHeight() - y);
+                if (ydiff2>ydiff) ydiff = ydiff2;
             }
             if (xdiff>0 || ydiff >0) {
                 for(Sprite s : oldSprites) {
@@ -419,7 +421,7 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
             TreeNode node = (TreeNode) touchedArrow.getData(DATA_TREE_NODE);
             LittlePerson person = node.getPerson();
             showLoadingDialog();
-            TreeLoaderTask task = new TreeLoaderTask(this, this, 3, 4);
+            TreeLoaderTask task = new TreeLoaderTask(this, this, node.getDepth(), 0);
             task.execute(person);
 
         }
