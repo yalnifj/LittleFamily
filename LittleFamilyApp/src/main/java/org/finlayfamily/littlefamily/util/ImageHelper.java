@@ -25,13 +25,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ImageHelper {
-
-    private static Map<Object, Bitmap> bitmapCache = new HashMap<>();
 
 	/**
 	 * Load a contact photo thumbnail and return it as a Bitmap, resizing the
@@ -154,7 +150,7 @@ public class ImageHelper {
 	}
 
     public static Bitmap loadBitmapFromResource(Context context, int resourceId, int orientation, final int targetWidth, final int targetHeight) {
-        Bitmap bitmap = bitmapCache.get(resourceId);
+        Bitmap bitmap = null;
         try {
             int sourceWidth, sourceHeight;
             if (bitmap==null) {
@@ -180,7 +176,6 @@ public class ImageHelper {
                 } else {
                     bitmap = BitmapFactory.decodeResource(context.getResources(), resourceId);
                 }
-                bitmapCache.put(resourceId, bitmap);
             }
 
             // Rotate the bitmap if required

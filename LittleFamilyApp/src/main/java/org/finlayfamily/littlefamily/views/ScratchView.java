@@ -82,11 +82,13 @@ public class ScratchView extends ImageView {
         int w = this.getWidth();
         int h = this.getHeight();
 
-        float ratio = (float) (imageBitmap.getWidth()) / imageBitmap.getHeight();
-        h = (int) (w / ratio);
-        Rect dst = new Rect();
-        dst.set(0,0,w,h);
-        canvas.drawBitmap(imageBitmap, null, dst, null);
+        if (imageBitmap!=null) {
+            float ratio = (float) (imageBitmap.getWidth()) / imageBitmap.getHeight();
+            h = (int) (w / ratio);
+            Rect dst = new Rect();
+            dst.set(0, 0, w, h);
+            canvas.drawBitmap(imageBitmap, null, dst, null);
+        }
         if (!complete) {
             canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
             canvas.drawPath(circlePath, circlePaint);
@@ -148,8 +150,8 @@ public class ScratchView extends ImageView {
         mPath.reset();
 
         // check if scratch is complete
-        int xd = (int) mPaint.getStrokeWidth()/2;
-        int yd = (int) mPaint.getStrokeWidth()/2;
+        int xd = (int) mPaint.getStrokeWidth()/3;
+        int yd = (int) mPaint.getStrokeWidth()/3;
         int count = 0;
         int total = 0;
         for(int y=yd; y<mBitmap.getHeight(); y+=yd) {

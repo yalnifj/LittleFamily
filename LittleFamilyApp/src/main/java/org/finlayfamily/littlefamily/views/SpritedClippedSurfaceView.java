@@ -161,10 +161,10 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
             clipY -= (newY-oldY);
 
             if (clipX < 0) clipX = 0;
-            if (clipX + getWidth() > maxWidth) clipX = maxWidth - getWidth();
+            else if (clipX + getWidth() > maxWidth) clipX = maxWidth - getWidth();
 
             if (clipY < 0) clipY = 0;
-            if (clipY + getHeight() > maxHeight) clipY = maxHeight - getHeight();
+            else if (clipY + getHeight() > maxHeight) clipY = maxHeight - getHeight();
         }
     }
 

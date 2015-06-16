@@ -86,6 +86,11 @@ public class TreeSpriteSurfaceView extends SpritedClippedSurfaceView {
                     s.onSelect(x + clipX*scale, y + clipY*scale);
                 }
             }
+            //-- keep selected sprite on top
+            for (Sprite s : selectedSprites) {
+                sprites.remove(s);
+                sprites.add(s);
+            }
         }
     }
 

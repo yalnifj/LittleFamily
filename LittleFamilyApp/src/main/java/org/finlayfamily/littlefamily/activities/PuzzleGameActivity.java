@@ -58,7 +58,6 @@ public class PuzzleGameActivity extends LittleFamilyActivity implements Memories
         if (people.size()<2) {
             loadMoreFamilyMembers();
         } else {
-            showLoadingDialog();
             loadRandomImage();
         }
     }
@@ -67,6 +66,7 @@ public class PuzzleGameActivity extends LittleFamilyActivity implements Memories
         if (people!=null && people.size()>0) {
             Random rand = new Random();
             selectedPerson = people.get(rand.nextInt(people.size()));
+            showLoadingDialog();
             MemoriesLoaderTask task = new MemoriesLoaderTask(this, this);
             task.execute(selectedPerson);
         }

@@ -89,7 +89,8 @@ public class TreePersonAnimatedSprite extends Sprite {
         photo = null;
         if (node.getPerson().getPhotoPath() != null) {
             photo = ImageHelper.loadBitmapFromFile(node.getPerson().getPhotoPath(), ImageHelper.getOrientation(node.getPerson().getPhotoPath()), (int) (leftLeaf.getWidth() * 0.7), (int) (height * 0.7), false);
-        } else {
+        }
+        if (photo==null){
             photo = ImageHelper.loadBitmapFromResource(activity, node.getPerson().getDefaultPhotoResource(), 0, (int)(leftLeaf.getWidth()*0.7), (int) (height*0.7));
         }
         String place = "unknown";
@@ -115,7 +116,8 @@ public class TreePersonAnimatedSprite extends Sprite {
         if (node.getSpouse()!=null) {
             if (node.getSpouse().getPhotoPath() != null) {
                 spPhoto = ImageHelper.loadBitmapFromFile(node.getSpouse().getPhotoPath(), ImageHelper.getOrientation(node.getSpouse().getPhotoPath()), (int) (leftLeaf.getWidth() * 0.7), (int) (height * 0.7), false);
-            } else {
+            }
+            if (spPhoto==null) {
                 spPhoto = ImageHelper.loadBitmapFromResource(activity, node.getSpouse().getDefaultPhotoResource(), 0, (int) (leftLeaf.getWidth() * 0.7), (int) (height * 0.7));
             }
             dollConfig = activity.getDressUpDolls().getDollConfig(place, node.getSpouse());
@@ -159,6 +161,10 @@ public class TreePersonAnimatedSprite extends Sprite {
         shadowPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
         df = DateFormat.getDateInstance(DateFormat.MEDIUM);
+    }
+
+    public TreeNode getNode() {
+        return node;
     }
 
     protected String getAncestralRelationship(LittlePerson p) {

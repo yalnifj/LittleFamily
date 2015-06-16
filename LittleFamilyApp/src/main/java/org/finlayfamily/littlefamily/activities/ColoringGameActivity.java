@@ -42,6 +42,7 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Memori
 
         Intent intent = getIntent();
         people = (List<LittlePerson>) intent.getSerializableExtra(ChooseFamilyMember.FAMILY);
+        selectedPerson = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
 
         usedPhotos = new ArrayList<>(3);
 
@@ -52,8 +53,15 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Memori
     protected void onStart() {
         super.onStart();
         loading = true;
-        showLoadingDialog();
-        loadRandomImage();
+        if (people==null) {
+            people = new ArrayList<>();
+            people.add(selectedPerson);
+        }
+        if (people.size()<2) {
+            loadMoreFamilyMembers();
+        } else {
+            loadRandomImage();
+        }
     }
 
     public void setupCanvas() {
@@ -63,6 +71,7 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Memori
     private void loadRandomImage() {
         if (people!=null && people.size()>0) {
             Random rand = new Random();
+            showLoadingDialog();
             selectedPerson = people.get(rand.nextInt(people.size()));
             MemoriesLoaderTask task = new MemoriesLoaderTask(this, this);
             task.execute(selectedPerson);

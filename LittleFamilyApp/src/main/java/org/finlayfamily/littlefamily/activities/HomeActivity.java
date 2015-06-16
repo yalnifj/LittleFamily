@@ -9,7 +9,7 @@ import android.os.Bundle;
 import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.data.LittlePerson;
 import org.finlayfamily.littlefamily.sprites.AnimatedBitmapSprite;
-import org.finlayfamily.littlefamily.sprites.ClippedAnimatedBitmapSprite;
+import org.finlayfamily.littlefamily.sprites.ClippedRepeatedBackgroundSprite;
 import org.finlayfamily.littlefamily.sprites.MovingAnimatedBitmapSprite;
 import org.finlayfamily.littlefamily.sprites.TouchEventGameSprite;
 import org.finlayfamily.littlefamily.sprites.TouchStateAnimatedBitmapSprite;
@@ -23,7 +23,7 @@ public class HomeActivity extends LittleFamilyActivity {
 
     private LittlePerson selectedPerson;
     private ArrayList<LittlePerson> people;
-    private ClippedAnimatedBitmapSprite homeBackground;
+    private ClippedRepeatedBackgroundSprite homeBackground;
     private SpritedClippedSurfaceView homeView;
 
     @Override
@@ -64,18 +64,16 @@ public class HomeActivity extends LittleFamilyActivity {
 
     private void setupHomeViewSprites() {
         //-- background
-        float scale = 1.0f;
         if (homeBackground==null) {
-            Bitmap backBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.house_background);
-            int maxWidth = (int) (backBitmap.getWidth() * scale);
-            int maxHeight = (int) (backBitmap.getHeight() * scale);
+            Bitmap backBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.house_background2);
+            int maxWidth = 1280*2;
+            int maxHeight = 720*2;
             homeView.setMaxHeight(maxHeight);
             homeView.setMaxWidth(maxWidth);
 
-            homeBackground = new ClippedAnimatedBitmapSprite(backBitmap, backBitmap.getWidth(), backBitmap.getHeight());
+            homeBackground = new ClippedRepeatedBackgroundSprite(backBitmap, maxWidth, maxHeight);
             homeBackground.setWidth(homeView.getWidth());
             homeBackground.setHeight(homeView.getHeight());
-            homeBackground.setScale(scale);
             homeBackground.setClipX(800);
             homeBackground.setClipY(200);
             homeView.setBackgroundSprite(homeBackground);
@@ -83,8 +81,8 @@ public class HomeActivity extends LittleFamilyActivity {
 
             Bitmap cloudBm1 = BitmapFactory.decodeResource(getResources(), R.drawable.house_cloud1);
             MovingAnimatedBitmapSprite cloud1 = new MovingAnimatedBitmapSprite(cloudBm1, maxWidth, maxHeight);
-            cloud1.setWidth((int) (cloudBm1.getWidth() * scale));
-            cloud1.setHeight((int) (cloudBm1.getHeight() * scale));
+            cloud1.setWidth((int) (cloudBm1.getWidth()));
+            cloud1.setHeight((int) (cloudBm1.getHeight()));
             cloud1.setSlope(0);
             cloud1.setSpeed(0.5f);
             cloud1.setY(30);
@@ -93,11 +91,11 @@ public class HomeActivity extends LittleFamilyActivity {
 
             Bitmap cloudBm2 = BitmapFactory.decodeResource(getResources(), R.drawable.house_cloud2);
             MovingAnimatedBitmapSprite cloud2 = new MovingAnimatedBitmapSprite(cloudBm2, maxWidth, maxHeight);
-            cloud2.setWidth((int) (cloudBm2.getWidth() * scale));
-            cloud2.setHeight((int) (cloudBm2.getHeight() * scale));
+            cloud2.setWidth((int) (cloudBm2.getWidth()));
+            cloud2.setHeight((int) (cloudBm2.getHeight()));
             cloud2.setSlope(0);
             cloud2.setSpeed(0.5f);
-            cloud2.setX((int) (backBitmap.getWidth() * 0.75));
+            cloud2.setX((int) (maxWidth * 0.75));
             cloud2.setY(50);
             cloud2.setWrap(true);
             homeView.addSprite(cloud2);

@@ -42,6 +42,7 @@ public class ScratchGameActivity extends LittleFamilyActivity implements Memorie
 
         Intent intent = getIntent();
         people = (List<LittlePerson>) intent.getSerializableExtra(ChooseFamilyMember.FAMILY);
+        selectedPerson = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
 
         usedPhotos = new ArrayList<>(5);
 
@@ -51,8 +52,15 @@ public class ScratchGameActivity extends LittleFamilyActivity implements Memorie
     @Override
     protected void onStart() {
         super.onStart();
-        showLoadingDialog();
-        loadRandomImage();
+        if (people==null) {
+            people = new ArrayList<>();
+            people.add(selectedPerson);
+        }
+        if (people.size()<2) {
+            loadMoreFamilyMembers();
+        } else {
+            loadRandomImage();
+        }
     }
 
     public void setupCanvas() {
@@ -64,6 +72,7 @@ public class ScratchGameActivity extends LittleFamilyActivity implements Memorie
         if (people!=null && people.size()>0) {
             Random rand = new Random();
             selectedPerson = people.get(rand.nextInt(people.size()));
+            showLoadingDialog();
             MemoriesLoaderTask task = new MemoriesLoaderTask(this, this);
             task.execute(selectedPerson);
         }
