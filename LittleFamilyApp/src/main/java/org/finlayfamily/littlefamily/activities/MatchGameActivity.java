@@ -24,8 +24,8 @@ import java.util.List;
 
 public class MatchGameActivity extends LittleFamilyActivity implements AdapterView.OnItemClickListener, FamilyLoaderTask.Listener {
 
-    private static long FLIP_OVER_DELAY = 2000;
-    private static long FLIP_TIME = 700;
+    private static long FLIP_OVER_DELAY = 2500;
+    private static long FLIP_TIME = 800;
     private MatchingGame game;
     private List<LittlePerson> people;
     private LittlePerson selectedPerson;
@@ -120,9 +120,9 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
         }
 
         backgroundLoadIndex++;
-        if (backgroundLoadIndex < people.size() && people.size() < game.getBoard().size()/2) {
+        if (people.size() < game.getBoard().size()/2) {
             FamilyLoaderTask task = new FamilyLoaderTask(this, this);
-            task.execute(people.get(backgroundLoadIndex));
+            task.execute(people.get(backgroundLoadIndex % people.size()));
         }
     }
 

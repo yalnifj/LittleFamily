@@ -52,6 +52,7 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
     private int maxY = 0;
     private TouchEventGameSprite touchedArrow;
     private Map<Integer, List<Sprite>> loadedLevels;
+    private Map<Integer, List<Sprite>> levelArrows;
     private int maxLevel=2;
 
     public Bitmap getMatchBtn() {
@@ -82,6 +83,7 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
 
         EventQueue.getInstance().subscribe(TOPIC_NAVIGATE_UP_TREE, this);
         loadedLevels = new HashMap<>();
+        levelArrows = new HashMap<>();
 
         setupTopBar();
     }
@@ -189,6 +191,7 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
         if (y < 0) y = 0;
         int treeWidth = 0;
         if (loadedLevels.get(node.getDepth())==null) loadedLevels.put(node.getDepth(), new ArrayList<Sprite>());
+        if (levelArrows.get(node.getDepth())==null) levelArrows.put(node.getDepth(), new ArrayList<Sprite>());
         if (loadedLevels.get(node.getDepth()+1)==null) loadedLevels.put(node.getDepth()+1, new ArrayList<Sprite>());
 
         //-- basis case
@@ -206,6 +209,8 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
                 y = y + upArrow.getHeight();
                 sprite.setY(y);
                 treeView.addSprite(upArrow);
+                levelArrows.get(node.getDepth()).add(upArrow);
+                loadedLevels.get(node.getDepth()).add(upArrow);
             }
 
             if (x+sprite.getWidth() > maxX) maxX = x+sprite.getWidth();
@@ -394,15 +399,21 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
             this.root = root;
             setupTreeViewSprites();
         } else {
-            treeView.removeSprite(touchedArrow);
             TreeNode node = (TreeNode) touchedArrow.getData(DATA_TREE_NODE);
             Integer level = node.getDepth()+1;
-            for(int l = level; l<maxLevel; l++) {
+            for(int l = level; l<=maxLevel; l++) {
                 if (loadedLevels.get(l)!=null && loadedLevels.get(l).size()>0) {
                     for(Sprite s : loadedLevels.get(l)) {
                         treeView.removeSprite(s);
                     }
                     loadedLevels.get(l).clear();
+                }
+            }
+            if (levelArrows.get(level-1)!=null) {
+                for(Sprite a : levelArrows.get(level-1)) {
+                    if (!treeView.getSprites().contains(a)) {
+                        treeView.addSprite(a);
+                    }
                 }
             }
             maxLevel = level;
@@ -450,14 +461,15 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
                 if (ydiff2>ydiff) ydiff = ydiff2;
             }
             if (xdiff>0 || ydiff >0) {
-                treeView.setMaxHeight(treeView.getMaxHeight()+ydiff);
-                treeView.setMaxWidth(treeView.getMaxWidth()+xdiff);
-                vineh.setY(vineh.getY()+ydiff);
+                treeView.setMaxHeight(treeView.getMaxHeight() + ydiff);
+                treeView.setMaxWidth(treeView.getMaxWidth() + xdiff);
+                vineh.setY(vineh.getY() + ydiff);
                 for(Sprite s : oldSprites) {
                     s.setX(s.getX()+xdiff);
                     s.setY(s.getY()+ydiff);
                 }
             }
+            treeView.removeSprite(touchedArrow);
             hideLoadingDialog();
         }
     }
