@@ -31,6 +31,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     public static final String TOPIC_START_PUZZLE   = "startPuzzle";
     public static final String TOPIC_START_TREE = "startTree";
     public static final String TOPIC_START_HERITAGE_CALC = "startHeritageCalc";
+    public static final String TOPIC_START_BUBBLES = "startBubblePop";
     protected TextToSpeech tts;
     protected MediaPlayer mediaPlayer;
     protected TopBarFragment topBar;
@@ -76,6 +77,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         EventQueue.getInstance().subscribe(TOPIC_START_PUZZLE, this);
         EventQueue.getInstance().subscribe(TOPIC_START_SCRATCH, this);
         EventQueue.getInstance().subscribe(TOPIC_START_TREE, this);
+        EventQueue.getInstance().subscribe(TOPIC_START_BUBBLES, this);
     }
 
     @Override
@@ -90,6 +92,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         EventQueue.getInstance().unSubscribe(TOPIC_START_PUZZLE, this);
         EventQueue.getInstance().unSubscribe(TOPIC_START_SCRATCH, this);
         EventQueue.getInstance().unSubscribe(TOPIC_START_TREE, this);
+        EventQueue.getInstance().unSubscribe(TOPIC_START_BUBBLES, this);
     }
 
     public void showLoadingDialog() {
@@ -205,6 +208,9 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
             case TOPIC_START_TREE:
                 startTreeGame(person);
                 break;
+            case TOPIC_START_BUBBLES:
+                startBubbleGame(person);
+                break;
         }
     }
 
@@ -274,6 +280,12 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
 
     public void startTreeGame(LittlePerson person) {
         Intent intent = new Intent( this, MyTreeActivity.class );
+        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
+        startActivity(intent);
+    }
+
+    public void startBubbleGame(LittlePerson person) {
+        Intent intent = new Intent( this, BubblePopActivity.class );
         intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
         startActivity(intent);
     }

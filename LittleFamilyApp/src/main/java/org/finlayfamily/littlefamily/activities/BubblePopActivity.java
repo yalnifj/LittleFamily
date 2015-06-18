@@ -38,11 +38,10 @@ public class BubblePopActivity extends LittleFamilyActivity implements ParentsLo
 
     @Override
     public void onComplete(ArrayList<LittlePerson> parents) {
-        hideLoadingDialog();
-        bubbleView.setParents(parents);
         ArrayList<LittlePerson> children = new ArrayList<>(3);
         children.add(selectedPerson);
-        bubbleView.setChildren(children);
+        bubbleView.setParentsAndChildren(parents, children);
+        hideLoadingDialog();
     }
 
     @Override

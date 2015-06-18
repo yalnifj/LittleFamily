@@ -266,6 +266,22 @@ public class HomeActivity extends LittleFamilyActivity {
 
             homeView.addSprite(toaster);
 
+            Bitmap bubbles1bm = BitmapFactory.decodeResource(getResources(), R.drawable.bubbles1);
+            TouchEventGameSprite bubbles = new TouchEventGameSprite(bubbles1bm, TOPIC_START_BUBBLES);
+            bubbles.getBitmaps().get(0).add(BitmapFactory.decodeResource(getResources(), R.drawable.bubbles2));
+            bubbles.getBitmaps().get(0).add(BitmapFactory.decodeResource(getResources(), R.drawable.bubbles3));
+            bubbles.getBitmaps().get(0).add(BitmapFactory.decodeResource(getResources(), R.drawable.bubbles4));
+            bubbles.getBitmaps().get(0).add(BitmapFactory.decodeResource(getResources(), R.drawable.bubbles5));
+            bubbles.getBitmaps().get(0).add(BitmapFactory.decodeResource(getResources(), R.drawable.bubbles6));
+            bubbles.getBitmaps().get(0).add(BitmapFactory.decodeResource(getResources(), R.drawable.bubbles7));
+            bubbles.getBitmaps().get(0).add(BitmapFactory.decodeResource(getResources(), R.drawable.bubbles8));
+            bubbles.setStepsPerFrame(5);
+            bubbles.setX(1820);
+            bubbles.setY(1135);
+            bubbles.setSelectable(true);
+            bubbles.setIgnoreAlpha(true);
+            homeView.addSprite(bubbles);
+
             Bitmap wardrobeBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_adult_wardrobe);
             TouchEventGameSprite wardrobe = new TouchEventGameSprite(wardrobeBm, TOPIC_START_HERITAGE_CALC);
             wardrobe.setX(1500);
