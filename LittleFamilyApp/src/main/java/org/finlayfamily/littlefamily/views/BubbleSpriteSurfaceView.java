@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 
 import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.data.LittlePerson;
-import org.finlayfamily.littlefamily.sprites.BouncingAnimatedBitmapSprite;
+import org.finlayfamily.littlefamily.sprites.BubbleAnimatedBitmapSprite;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +22,7 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView {
     private List<LittlePerson> parents;
     private List<LittlePerson> children;
     private Bitmap bubbleBm;
+    private List<Bitmap> popping;
     private boolean spritesCreated = false;
 
     private List<BubbleCompleteListener> listeners;
@@ -31,6 +32,12 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView {
         listeners = new ArrayList<>(1);
         bubbleBm = BitmapFactory.decodeResource(context.getResources(), R.drawable.bubble);
         backgroundBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.bubble_background);
+        popping = new ArrayList<>(5);
+        popping.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.bubble_pop1));
+        popping.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.bubble_pop2));
+        popping.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.bubble_pop3));
+        popping.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.bubble_pop4));
+        popping.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.bubble_pop5));
     }
 
     public BubbleSpriteSurfaceView(Context context, AttributeSet attrs) {
@@ -38,6 +45,12 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView {
         listeners = new ArrayList<>(1);
         bubbleBm = BitmapFactory.decodeResource(context.getResources(), R.drawable.bubble);
         backgroundBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.bubble_background);
+        popping = new ArrayList<>(5);
+        popping.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.bubble_pop1));
+        popping.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.bubble_pop2));
+        popping.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.bubble_pop3));
+        popping.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.bubble_pop4));
+        popping.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.bubble_pop5));
     }
 
     public List<LittlePerson> getParents() {
@@ -69,28 +82,33 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView {
     @Override
     public void doStep() {
         super.doStep();
-        //-- add random bubbles
+        //-- add more random bubbles at random times
+    }
+
+    public void createSprites() {
+        Random rand = new Random();
+        int count = rand.nextInt(8) + 4;
+        for (int b = 0; b < count; b++) {
+            BubbleAnimatedBitmapSprite bubble = new BubbleAnimatedBitmapSprite(bubbleBm, getWidth(), getHeight());
+            bubble.getBitmaps().put(1, popping);
+            int width = (int) (bubbleBm.getWidth() * (0.5 + rand.nextFloat()));
+            bubble.setWidth(width);
+            bubble.setHeight(width);
+            int slope = 5 - rand.nextInt(10);
+            bubble.setSlope(slope);
+            float speed = 5.0f - rand.nextFloat()*10.0f;
+            bubble.setSpeed(speed);
+            bubble.setY(rand.nextInt(getHeight()-bubble.getHeight()));
+            bubble.setX(rand.nextInt(getWidth()-bubble.getWidth()));
+            addSprite(bubble);
+        }
+        spritesCreated = true;
     }
 
     @Override
     public void doDraw(Canvas canvas) {
         if (!spritesCreated) {
-            Random rand = new Random();
-            int count = rand.nextInt(8) + 4;
-            for (int b = 0; b < count; b++) {
-                BouncingAnimatedBitmapSprite bubble = new BouncingAnimatedBitmapSprite(bubbleBm, getWidth(), getHeight());
-                int width = (int) (bubbleBm.getWidth() * (0.5 + rand.nextFloat()));
-                bubble.setWidth(width);
-                bubble.setHeight(width);
-                int slope = 5 - rand.nextInt(10);
-                bubble.setSlope(slope);
-                float speed = 5.0f - rand.nextFloat()*10.0f;
-                bubble.setSpeed(speed);
-                bubble.setY(rand.nextInt(getHeight()-bubble.getHeight()));
-                bubble.setX(rand.nextInt(getWidth()-bubble.getWidth()));
-                addSprite(bubble);
-            }
-            spritesCreated = true;
+            createSprites();
         }
 
         super.doDraw(canvas);

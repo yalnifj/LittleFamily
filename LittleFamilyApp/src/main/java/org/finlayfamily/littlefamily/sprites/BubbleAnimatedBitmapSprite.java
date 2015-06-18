@@ -26,6 +26,7 @@ public class BubbleAnimatedBitmapSprite extends BouncingAnimatedBitmapSprite {
         super.doStep();
 
         if (state==1 && frame==0 && oldFrame!=0) {
+            frame = 5;
             setRemoveMe(true);
         }
         oldFrame = frame;
