@@ -114,6 +114,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.finlayfamily.littlefamily.activities.HomeActivity" />
         </activity>
+        <activity
+            android:name=".activities.BubblePopActivity"
+            android:label="@string/title_activity_bubble_pop"
+            android:parentActivityName=".activities.HomeActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.finlayfamily.littlefamily.activities.HomeActivity" />
+        </activity>
     </application>
 
 </manifest>
