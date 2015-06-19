@@ -184,8 +184,8 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
         faucet.getBitmaps().put(4, rwater);
         faucet.setStateTransition(4, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
         faucet.getBitmaps().put(5, turning);
-        faucet.setStateTransition(4, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP3);
-        faucet.setStateTransitionEvent(0, TOPIC_WATER_ADDED);
+        faucet.setStateTransition(5, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP3);
+        faucet.setStateTransitionEvent(4, TOPIC_WATER_ADDED);
         Rect touchRect = new Rect();
         touchRect.set(80, 80, faucet1bm.getWidth()-5, (int) (faucet1bm.getHeight()*0.8f));
         faucet.setTouchRectangles(0, touchRect);
