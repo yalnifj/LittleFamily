@@ -102,6 +102,36 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView {
             bubble.setX(rand.nextInt(getWidth()-bubble.getWidth()));
             addSprite(bubble);
         }
+		
+		if (parents!=null) {
+			for (LittlePerson parent : parents) {
+				BubbleAnimatedBitmapSprite bubble = new BubbleAnimatedBitmapSprite(bubbleBm, getWidth(), getHeight());
+				bubble.getBitmaps().put(1, popping);
+				int slope = 5 - rand.nextInt(10);
+				bubble.setSlope(slope);
+				float speed = 5.0f - rand.nextFloat()*10.0f;
+				bubble.setSpeed(speed);
+				bubble.setY(rand.nextInt(getHeight()-bubble.getHeight()));
+				bubble.setX(rand.nextInt(getWidth()-bubble.getWidth()));
+				bubble.setPerson(parent);
+				addSprite(bubble);
+			}
+		}
+		
+		if (children!=null) {
+			for (LittlePerson child : children) {
+				BubbleAnimatedBitmapSprite bubble = new BubbleAnimatedBitmapSprite(bubbleBm, getWidth(), getHeight());
+				bubble.getBitmaps().put(1, popping);
+				int slope = 5 - rand.nextInt(10);
+				bubble.setSlope(slope);
+				float speed = 5.0f - rand.nextFloat()*10.0f;
+				bubble.setSpeed(speed);
+				bubble.setY(rand.nextInt(getHeight()-bubble.getHeight()));
+				bubble.setX(rand.nextInt(getWidth()-bubble.getWidth()));
+				bubble.setPerson(child);
+				addSprite(bubble);
+			}
+		}
         spritesCreated = true;
     }
 
