@@ -3,10 +3,15 @@ package org.finlayfamily.littlefamily.sprites;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
-import java.util.List;
-import java.util.Map;
+import android.media.MediaPlayer;
+
+import org.finlayfamily.littlefamily.R;
+import org.finlayfamily.littlefamily.activities.LittleFamilyActivity;
 import org.finlayfamily.littlefamily.data.LittlePerson;
 import org.finlayfamily.littlefamily.util.ImageHelper;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by kids on 5/21/15.
@@ -15,15 +20,18 @@ public class BubbleAnimatedBitmapSprite extends BouncingAnimatedBitmapSprite {
 
 	private Bitmap photo;
 	private LittlePerson person;
+    private LittleFamilyActivity activity;
 	
-    public BubbleAnimatedBitmapSprite(Bitmap bitmap, int maxWidth, int maxHeight) {
+    public BubbleAnimatedBitmapSprite(Bitmap bitmap, int maxWidth, int maxHeight, LittleFamilyActivity activity) {
         super(bitmap, maxWidth, maxHeight);
         setSelectable(true);
+        this.activity = activity;
     }
 
-    public BubbleAnimatedBitmapSprite(Map<Integer, List<Bitmap>> bitmaps, int maxWidth, int maxHeight) {
+    public BubbleAnimatedBitmapSprite(Map<Integer, List<Bitmap>> bitmaps, int maxWidth, int maxHeight, LittleFamilyActivity activity) {
         super(bitmaps, maxWidth, maxHeight);
         setSelectable(true);
+        this.activity = activity;
     }
 
     private int oldFrame = 0;
@@ -78,6 +86,19 @@ public class BubbleAnimatedBitmapSprite extends BouncingAnimatedBitmapSprite {
     public void onRelease(float x, float y) {
         super.onRelease(x, y);
         state = 1;
+
+        try {
+            MediaPlayer mediaPlayer = MediaPlayer.create(activity, R.raw.pop);
+            mediaPlayer.start();
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    mp.release();
+                }
+            });
+        } catch (Exception e) {
+            // just let things go on
+        }
     }
 	
 	

@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.util.AttributeSet;
 
 import org.finlayfamily.littlefamily.R;
+import org.finlayfamily.littlefamily.activities.LittleFamilyActivity;
 import org.finlayfamily.littlefamily.data.LittlePerson;
 import org.finlayfamily.littlefamily.sprites.BubbleAnimatedBitmapSprite;
 
@@ -25,6 +26,7 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView {
     private List<Bitmap> popping;
     private boolean spritesCreated = false;
 
+    private LittleFamilyActivity activity;
     private List<BubbleCompleteListener> listeners;
 
     public BubbleSpriteSurfaceView(Context context) {
@@ -89,7 +91,7 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView {
         Random rand = new Random();
         int count = rand.nextInt(8) + 4;
         for (int b = 0; b < count; b++) {
-            BubbleAnimatedBitmapSprite bubble = new BubbleAnimatedBitmapSprite(bubbleBm, getWidth(), getHeight());
+            BubbleAnimatedBitmapSprite bubble = new BubbleAnimatedBitmapSprite(bubbleBm, getWidth(), getHeight(), activity);
             bubble.getBitmaps().put(1, popping);
             int width = (int) (bubbleBm.getWidth() * (0.5 + rand.nextFloat()));
             bubble.setWidth(width);
@@ -105,7 +107,7 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView {
 		
 		if (parents!=null) {
 			for (LittlePerson parent : parents) {
-				BubbleAnimatedBitmapSprite bubble = new BubbleAnimatedBitmapSprite(bubbleBm, getWidth(), getHeight());
+				BubbleAnimatedBitmapSprite bubble = new BubbleAnimatedBitmapSprite(bubbleBm, getWidth(), getHeight(), activity);
 				bubble.getBitmaps().put(1, popping);
 				int slope = 5 - rand.nextInt(10);
 				bubble.setSlope(slope);
@@ -120,7 +122,7 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView {
 		
 		if (children!=null) {
 			for (LittlePerson child : children) {
-				BubbleAnimatedBitmapSprite bubble = new BubbleAnimatedBitmapSprite(bubbleBm, getWidth(), getHeight());
+				BubbleAnimatedBitmapSprite bubble = new BubbleAnimatedBitmapSprite(bubbleBm, getWidth(), getHeight(), activity);
 				bubble.getBitmaps().put(1, popping);
 				int slope = 5 - rand.nextInt(10);
 				bubble.setSlope(slope);
