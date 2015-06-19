@@ -2,7 +2,11 @@ package org.finlayfamily.littlefamily.sprites;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Rect;
 import android.media.MediaPlayer;
+
+import org.finlayfamily.littlefamily.events.EventQueue;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +24,8 @@ public class TouchStateAnimatedBitmapSprite extends AnimatedBitmapSprite {
 
     protected Map<Integer, Integer> audio;
     protected Map<Integer, Integer> stateTransitions;
+    protected Map<Integer, String> stateTransitionEvents;
+    protected Map<Integer, Rect> touchRectangles;
     protected boolean stateChanged;
     protected Context context;
     protected int loops;
@@ -28,6 +34,8 @@ public class TouchStateAnimatedBitmapSprite extends AnimatedBitmapSprite {
         audio = new HashMap<>();
         this.context = context;
         stateTransitions = new HashMap<>();
+        stateTransitionEvents = new HashMap<>();
+        touchRectangles = new HashMap<>();
     }
 
     public TouchStateAnimatedBitmapSprite(Bitmap bitmap, Context context) {
@@ -35,6 +43,8 @@ public class TouchStateAnimatedBitmapSprite extends AnimatedBitmapSprite {
         audio = new HashMap<>();
         this.context = context;
         stateTransitions = new HashMap<>();
+        stateTransitionEvents = new HashMap<>();
+        touchRectangles = new HashMap<>();
     }
 
     public TouchStateAnimatedBitmapSprite(Map<Integer, List<Bitmap>> bitmaps, Context context) {
@@ -54,6 +64,14 @@ public class TouchStateAnimatedBitmapSprite extends AnimatedBitmapSprite {
 
     public void setStateTransition(int state, int transition) {
         stateTransitions.put(state, transition);
+    }
+
+    public void setStateTransitionEvent(int state, String topic) {
+        stateTransitionEvents.put(state, topic);
+    }
+
+    public void setTouchRectangles(int state, Rect rect) {
+        touchRectangles.put(state, rect);
     }
 
     @Override
@@ -76,6 +94,9 @@ public class TouchStateAnimatedBitmapSprite extends AnimatedBitmapSprite {
                     // just let things go on
                 }
             }
+            if (stateTransitionEvents.containsKey(state)) {
+                EventQueue.getInstance().publish(stateTransitionEvents.get(state), this);
+            }
         }
         int oldframe = frame;
         super.doStep();
@@ -94,11 +115,41 @@ public class TouchStateAnimatedBitmapSprite extends AnimatedBitmapSprite {
     public boolean inSprite(float tx, float ty) {
         if (tx>=x*scale && tx<=(x+width)*scale && ty>=y*scale && ty<=(y+height)*scale) {
             if (!stateTransitions.containsKey(state) || stateTransitions.get(state)==TRANSITION_CLICK) {
-                state++;
-                if (state >= bitmaps.size()) state = 0;
-                stateChanged = true;
+                if (ignoreAlpha) {
+                    return true;
+                }
+                if (touchRectangles.get(state)!=null) {
+                    int px = (int)(tx-x*scale);
+                    int py = (int)(ty-y*scale);
+                    if (touchRectangles.get(state).contains(px, py)) {
+                        return true;
+                    }
+                }
+                if (bitmaps!=null) {
+                    List<Bitmap> frames = bitmaps.get(state);
+                    Bitmap bitmap = frames.get(frame);
+                    int px = (int)(tx-x*scale);
+                    int py = (int)(ty-y*scale);
+                    if (px<bitmap.getWidth() && py < bitmap.getHeight()) {
+                        int color = bitmap.getPixel(px, py);
+                        int alpha = Color.alpha(color);
+                        if (alpha > 50) {
+                            return true;
+                        }
+                    }
+                }
             }
         }
         return false;
+    }
+
+    @Override
+    public void onRelease(float x, float y) {
+        super.onRelease(x, y);
+        if (!stateTransitions.containsKey(state) || stateTransitions.get(state)==TRANSITION_CLICK) {
+            state++;
+            if (state >= bitmaps.size()) state = 0;
+            stateChanged = true;
+        }
     }
 }

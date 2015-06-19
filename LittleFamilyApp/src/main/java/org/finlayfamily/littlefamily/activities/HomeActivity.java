@@ -16,6 +16,7 @@ import org.finlayfamily.littlefamily.sprites.TouchStateAnimatedBitmapSprite;
 import org.finlayfamily.littlefamily.views.SpritedClippedSurfaceView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class HomeActivity extends LittleFamilyActivity {
@@ -210,12 +211,13 @@ public class HomeActivity extends LittleFamilyActivity {
             List<Bitmap> fallen = new ArrayList<>(1);
             fallen.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy6));
             childTeddy.getBitmaps().put(2, fallen);
-            List<Bitmap> rising = new ArrayList<>(5);
-            rising.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy6));
-            rising.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy5));
-            rising.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy4));
-            rising.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy3));
-            rising.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy2));
+            List<Bitmap> rising = new ArrayList<>(falling);
+            Collections.reverse(rising);
+            //rising.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy6));
+            //rising.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy5));
+            //rising.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy4));
+            //rising.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy3));
+            //rising.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy2));
             childTeddy.getBitmaps().put(3, rising);
             childTeddy.getAudio().put(3, R.raw.slide_whistle_up04);
             childTeddy.setStateTransition(3, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);

@@ -26,12 +26,16 @@ public class BubbleAnimatedBitmapSprite extends BouncingAnimatedBitmapSprite {
         super(bitmap, maxWidth, maxHeight);
         setSelectable(true);
         this.activity = activity;
+        setIgnoreAlpha(true);
+        setStepsPerFrame(2);
     }
 
     public BubbleAnimatedBitmapSprite(Map<Integer, List<Bitmap>> bitmaps, int maxWidth, int maxHeight, LittleFamilyActivity activity) {
         super(bitmaps, maxWidth, maxHeight);
         setSelectable(true);
         this.activity = activity;
+        setIgnoreAlpha(true);
+        setStepsPerFrame(2);
     }
 
     private int oldFrame = 0;
@@ -74,11 +78,13 @@ public class BubbleAnimatedBitmapSprite extends BouncingAnimatedBitmapSprite {
     public void doDraw(Canvas canvas) {
 		if (photo!=null){
 			Rect rect = new Rect();
-			rect.set((int)(x+width*0.3), (int)(y+height*0.3), photo.getWidth(), photo.getHeight());
+            int px = (int)(x+width*0.2);
+            int py = (int)(y+height*0.2);
+			rect.set(px, py, px+photo.getWidth(), py+photo.getHeight());
 			canvas.drawBitmap(photo, null, rect, null);
 		}
 		if (state<2) {
-			super.doDraw(canvas);
+            super.doDraw(canvas);
 		}
 	}
 

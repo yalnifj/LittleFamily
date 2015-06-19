@@ -31,9 +31,9 @@ public class BubblePopActivity extends LittleFamilyActivity implements ParentsLo
     @Override
     protected void onStart() {
         super.onStart();
+        //showLoadingDialog();
         ParentsLoaderTask loader = new ParentsLoaderTask(this, this);
         loader.execute(selectedPerson);
-        showLoadingDialog();
     }
 
     @Override
@@ -41,7 +41,7 @@ public class BubblePopActivity extends LittleFamilyActivity implements ParentsLo
         ArrayList<LittlePerson> children = new ArrayList<>(3);
         children.add(selectedPerson);
         bubbleView.setParentsAndChildren(parents, children);
-        hideLoadingDialog();
+        //hideLoadingDialog();
     }
 
     @Override
