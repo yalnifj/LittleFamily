@@ -23,6 +23,7 @@ public class SpritedSurfaceView extends AbstractTouchAnimatedSurfaceView {
     protected Bitmap backgroundBitmap;
     protected Paint basePaint;
     protected List<Sprite> selectedSprites;
+    protected boolean multiSelect = true;
 
     public SpritedSurfaceView(Context context) {
         super(context);
@@ -109,10 +110,12 @@ public class SpritedSurfaceView extends AbstractTouchAnimatedSurfaceView {
     protected void touch_start(float x, float y) {
         super.touch_start(x, y);
 
-        for(Sprite s : sprites) {
+        for(int i=sprites.size()-1; i>=0; i--) {
+            Sprite s = sprites.get(i);
             if (s.inSprite(x, y)) {
                 selectedSprites.add(s);
                 s.onSelect(x, y);
+                if (!multiSelect) break;
             }
         }
     }

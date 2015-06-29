@@ -48,6 +48,9 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
     private Bitmap matchBtn;
     private Bitmap puzzleBtn;
     private DressUpDolls dressUpDolls;
+    private Bitmap pencilBtn;
+    private Bitmap paintBtn;
+    private Bitmap bubbleBtn;
     private int maxX = 0;
     private int maxY = 0;
     private TouchEventGameSprite touchedArrow;
@@ -67,7 +70,17 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
         return dressUpDolls;
     }
 
+    public Bitmap getPaintBtn() {
+        return paintBtn;
+    }
 
+    public Bitmap getPencilBtn() {
+        return pencilBtn;
+    }
+
+    public Bitmap getBubbleBtn() {
+        return bubbleBtn;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,6 +167,9 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
 
         matchBtn = ImageHelper.loadBitmapFromResource(this, R.drawable.house_familyroom_frame, 0, buttonSize, buttonSize);
         puzzleBtn = ImageHelper.loadBitmapFromResource(this, R.drawable.house_toys_blocks, 0, buttonSize, buttonSize);
+        paintBtn = ImageHelper.loadBitmapFromResource(this, R.drawable.painting, 0, buttonSize, buttonSize);
+        pencilBtn = ImageHelper.loadBitmapFromResource(this, R.drawable.pencils, 0, buttonSize, buttonSize);
+        bubbleBtn = ImageHelper.loadBitmapFromResource(this, R.drawable.bubble, 0, buttonSize, buttonSize);
 
         rootSprite = addTreeSprite(root, 20, 40, true);
         if (root.getChildren()!=null && root.getChildren().size()>0) {

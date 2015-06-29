@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 
@@ -14,6 +16,7 @@ import org.finlayfamily.littlefamily.events.EventListener;
 import org.finlayfamily.littlefamily.events.EventQueue;
 import org.finlayfamily.littlefamily.sprites.AnimatedBitmapSprite;
 import org.finlayfamily.littlefamily.sprites.BubbleAnimatedBitmapSprite;
+import org.finlayfamily.littlefamily.sprites.Sprite;
 import org.finlayfamily.littlefamily.sprites.TouchStateAnimatedBitmapSprite;
 
 import java.util.ArrayList;
@@ -31,13 +34,21 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
     private List<LittlePerson> parents;
     private List<LittlePerson> children;
     private Bitmap bubbleBm;
+    private Bitmap spotBm;
+    private Bitmap spotHBm;
+    private Bitmap spotDownBm;
+    private Bitmap spotDownHBm;
     private List<Bitmap> popping;
     private boolean spritesCreated = false;
     private boolean hasSoap;
     private boolean addBubbles;
     private int bubbleCount = 0;
-    private int bubbleAddWait = 3;
+    private int bubbleAddWait = 5;
     private int bubbleStep = 0;
+    private AnimatedBitmapSprite fatherSpot;
+    private AnimatedBitmapSprite motherSpot;
+    private AnimatedBitmapSprite childSpot;
+    private Paint spotPaint;
 
     private LittleFamilyActivity activity;
     private List<BubbleCompleteListener> listeners;
@@ -66,6 +77,9 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
         EventQueue.getInstance().subscribe(TOPIC_WATER_ADDED, this);
         hasSoap = false;
         addBubbles = false;
+        multiSelect = false;
+        spotPaint = new Paint();
+        spotPaint.setColor(Color.parseColor("#ffd12d2d"));
     }
 
     public List<LittlePerson> getParents() {
@@ -132,8 +146,8 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
                 bubble.setSlope(slope);
                 float speed = 5.0f - rand.nextFloat() * 10.0f;
                 bubble.setSpeed(speed);
-                bubble.setY(getHeight() * 0.75f);
-                bubble.setX(getWidth() * 0.4f + rand.nextInt(50));
+                bubble.setY(getHeight() * 0.70f);
+                bubble.setX(getWidth() * 0.35f + rand.nextInt(60));
                 addSprite(bubble);
                 bubbleStep = 0;
             } else {
@@ -143,6 +157,38 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
     }
 
     public void createSprites() {
+
+        spotBm = BitmapFactory.decodeResource(getResources(), R.drawable.bubble_spot);
+        spotHBm = BitmapFactory.decodeResource(getResources(), R.drawable.bubble_spot_h);
+        spotDownBm = BitmapFactory.decodeResource(getResources(), R.drawable.bubble_spot_down);
+        spotDownHBm = BitmapFactory.decodeResource(getResources(), R.drawable.bubble_spot_down_h);
+        fatherSpot = new AnimatedBitmapSprite(spotBm);
+        List<Bitmap> highlighted = new ArrayList<>(1);
+        highlighted.add(spotHBm);
+        fatherSpot.getBitmaps().put(1, highlighted);
+        int fx = (int) ((getWidth()/2)-(spotBm.getWidth()*1.3f));
+        int fy = getHeight()/10;
+        fatherSpot.setX(fx);
+        fatherSpot.setY(fy);
+        addSprite(fatherSpot);
+
+        motherSpot = new AnimatedBitmapSprite(spotBm);
+        motherSpot.getBitmaps().put(1, highlighted);
+        int mx = (int) ((getWidth()/2)+(spotBm.getWidth()*0.3f));
+        int my = getHeight()/10;
+        motherSpot.setX(mx);
+        motherSpot.setY(my);
+        addSprite(motherSpot);
+
+        childSpot = new AnimatedBitmapSprite(spotDownBm);
+        List<Bitmap> highlightedDown = new ArrayList<>(1);
+        highlightedDown.add(spotDownHBm);
+        childSpot.getBitmaps().put(1, highlightedDown);
+        int cx = (int) ((getWidth()/2)-(spotDownBm.getWidth()/2));
+        int cy = spotDownBm.getHeight()+getHeight()/10;
+        childSpot.setX(cx);
+        childSpot.setY(cy);
+        addSprite(childSpot);
 
         Bitmap sinkBm = BitmapFactory.decodeResource(getResources(), R.drawable.sink);
         AnimatedBitmapSprite sink = new AnimatedBitmapSprite(sinkBm);
@@ -187,7 +233,7 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
         faucet.setStateTransition(5, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP3);
         faucet.setStateTransitionEvent(4, TOPIC_WATER_ADDED);
         Rect touchRect = new Rect();
-        touchRect.set(80, 80, faucet1bm.getWidth()-5, (int) (faucet1bm.getHeight()*0.8f));
+        touchRect.set(85, 90, faucet1bm.getWidth()-10, (int) (faucet1bm.getHeight()*0.8f));
         faucet.setTouchRectangles(0, touchRect);
         addSprite(faucet);
 
@@ -281,6 +327,23 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
             createSprites();
         }
 
-        super.doDraw(canvas);
+        if (backgroundBitmap!=null) {
+            Rect rect = new Rect();
+            rect.set(0,0,getWidth(),getHeight());
+            canvas.drawBitmap(backgroundBitmap, null, rect, basePaint);
+        } else {
+            basePaint.setColor(Color.WHITE);
+            canvas.drawRect(0,0,getWidth(),getHeight(),basePaint);
+        }
+
+        canvas.drawRect(fatherSpot.getX()+70, childSpot.getY()-10, motherSpot.getX()+motherSpot.getWidth()-70, childSpot.getY()+10, spotPaint);
+
+        synchronized (sprites) {
+            for (Sprite s : sprites) {
+                if (s.getX() + s.getWidth() >= 0 && s.getX() <= getWidth() && s.getY() + s.getHeight() >= 0 && s.getY() <= getHeight()) {
+                    s.doDraw(canvas);
+                }
+            }
+        }
     }
 }

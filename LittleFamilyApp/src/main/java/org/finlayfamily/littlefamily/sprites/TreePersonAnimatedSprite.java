@@ -75,10 +75,15 @@ public class TreePersonAnimatedSprite extends Sprite {
         activityButtons = new ArrayList<>();
         activityButtons.add(activity.getMatchBtn());
         activityButtons.add(activity.getPuzzleBtn());
+        activityButtons.add(activity.getPaintBtn());
+        activityButtons.add(activity.getPencilBtn());
+        activityButtons.add(activity.getBubbleBtn());
         spActivityButtons = new ArrayList<>();
         spActivityButtons.add(activity.getMatchBtn());
         spActivityButtons.add(activity.getPuzzleBtn());
-
+        spActivityButtons.add(activity.getPaintBtn());
+        spActivityButtons.add(activity.getPencilBtn());
+        spActivityButtons.add(activity.getBubbleBtn());
 
         if (personNode.getSpouse()!=null) {
             this.setWidth(leftLeaf.getWidth() + rightLeaf.getWidth());
@@ -368,10 +373,16 @@ public class TreePersonAnimatedSprite extends Sprite {
             canvas.drawText(relationship, getX() + leftLeaf.getWidth() + detailWidth / 2, getY() + 70, textPaint);
 
             float bx = getX() + leftLeaf.getWidth() + 20;
-            float by = getY() + detailHeight -100;
+            float by = getY() + detailHeight -MyTreeActivity.buttonSize*2;
+            int count=1;
             for(Bitmap button : activityButtons) {
                 canvas.drawBitmap(button, bx, by, null);
                 bx += button.getWidth()+20;
+                if (count % 3 == 0) {
+                    bx = getX() + leftLeaf.getWidth() + 20;
+                    by+=MyTreeActivity.buttonSize;
+                }
+                count++;
             }
         } else if (state==STATE_OPEN_RIGHT) {
             Bitmap duBtn = dressUpBtn;
@@ -386,10 +397,16 @@ public class TreePersonAnimatedSprite extends Sprite {
             canvas.drawText(relationship, getX() + getWidth() + detailWidth/2, getY()+70, textPaint);
 
             float bx = getX() + getWidth() + 20;
-            float by = getY() + detailHeight -MyTreeActivity.buttonSize;
+            float by = getY() + detailHeight -MyTreeActivity.buttonSize*2;
+            int count=1;
             for(Bitmap button : spActivityButtons) {
                 canvas.drawBitmap(button, bx, by, null);
                 bx += button.getWidth()+20;
+                if (count % 3 == 0) {
+                    bx = getX() + getWidth() + 20;
+                    by+=MyTreeActivity.buttonSize;
+                }
+                count++;
             }
         }
     }
@@ -458,13 +475,19 @@ public class TreePersonAnimatedSprite extends Sprite {
                 dHeight = detailHeight;
                 if (state==STATE_OPEN_LEFT) {
                     float bx = getX() + leftLeaf.getWidth() + 20;
-                    float by = getY() + detailHeight - MyTreeActivity.buttonSize;
+                    float by = getY() + detailHeight - MyTreeActivity.buttonSize*2;
+                    int count=1;
                     for (Bitmap button : activityButtons) {
                         if (x > bx * scale && y > by * scale
                                 && x < (bx + button.getWidth()) * scale && y < (getY() + detailHeight) * scale) {
                             sendEvent(button, node.getPerson());
                         }
                         bx += button.getWidth() + 20;
+                        if (count % 3 == 0) {
+                            by+=MyTreeActivity.buttonSize;
+                            bx = getX() + leftLeaf.getWidth() + 20;
+                        }
+                        count++;
                     }
                     state = STATE_ANIMATING_CLOSED_LEFT;
                 } else {
@@ -474,13 +497,19 @@ public class TreePersonAnimatedSprite extends Sprite {
                         state = STATE_ANIMATING_OPEN_LEFT;
                     } else {
                         float bx = getX() + getWidth() + 20;
-                        float by = getY() + detailHeight - MyTreeActivity.buttonSize;
+                        float by = getY() + detailHeight - MyTreeActivity.buttonSize*2;
+                        int count=1;
                         for (Bitmap button : spActivityButtons) {
                             if (x > bx * scale && y > by * scale
                                     && x < (bx + button.getWidth()) * scale && y < (getY() + detailHeight) * scale) {
                                 sendEvent(button, node.getSpouse());
                             }
                             bx += button.getWidth() + 20;
+                            if (count % 3 == 0) {
+                                bx = getX() + getWidth() + 20;
+                                by+=MyTreeActivity.buttonSize;
+                            }
+                            count++;
                         }
                         state = STATE_ANIMATING_CLOSED_RIGHT;
                     }
@@ -527,6 +556,12 @@ public class TreePersonAnimatedSprite extends Sprite {
             EventQueue.getInstance().publish(LittleFamilyActivity.TOPIC_START_MATCH, person);
         else if (button==activity.getPuzzleBtn())
             EventQueue.getInstance().publish(LittleFamilyActivity.TOPIC_START_PUZZLE, person);
+        else if (button==activity.getPaintBtn())
+            EventQueue.getInstance().publish(LittleFamilyActivity.TOPIC_START_COLORING, person);
+        else if (button==activity.getPencilBtn())
+            EventQueue.getInstance().publish(LittleFamilyActivity.TOPIC_START_SCRATCH, person);
+        else if (button==activity.getBubbleBtn())
+            EventQueue.getInstance().publish(LittleFamilyActivity.TOPIC_START_BUBBLES, person);
         else
             EventQueue.getInstance().publish(LittleFamilyActivity.TOPIC_START_DRESSUP, person);
     }
