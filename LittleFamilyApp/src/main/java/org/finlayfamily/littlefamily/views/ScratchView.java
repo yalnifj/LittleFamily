@@ -161,7 +161,7 @@ public class ScratchView extends ImageView {
                 if (Color.alpha(pixel) < 200) count++;
             }
         }
-        if (count > total * 0.90) {
+        if (count > total * 0.95) {
             complete = true;
             for(ScratchCompleteListener l : listeners) {
                 l.onScratchComplete();

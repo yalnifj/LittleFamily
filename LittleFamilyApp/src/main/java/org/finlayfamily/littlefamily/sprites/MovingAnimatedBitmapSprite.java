@@ -71,7 +71,7 @@ public class MovingAnimatedBitmapSprite extends AnimatedBitmapSprite {
     public void doStep() {
         super.doStep();
         this.x = this.x + this.speed;
-        this.y = this.y + this.slope * this.speed;
+        this.y = this.y + this.slope;
         if (this.speed > 0) {
             if (this.x > this.maxWidth) {
                 if (wrap) {
@@ -93,7 +93,7 @@ public class MovingAnimatedBitmapSprite extends AnimatedBitmapSprite {
         if (this.slope > 0) {
             if (this.y > this.maxHeight) {
                 if (wrap) {
-                    this.y = 0.0f - (this.height - this.slope * this.speed);
+                    this.y = 0.0f - (this.height - this.slope);
                 } else {
                     setRemoveMe(true);
                 }
@@ -101,7 +101,7 @@ public class MovingAnimatedBitmapSprite extends AnimatedBitmapSprite {
         } else if (this.slope < 0) {
             if (this.y + this.height < 0) {
                 if (wrap) {
-                    this.y = this.maxHeight + this.slope * this.speed;
+                    this.y = this.maxHeight + this.slope;
                 } else {
                     setRemoveMe(true);
                 }

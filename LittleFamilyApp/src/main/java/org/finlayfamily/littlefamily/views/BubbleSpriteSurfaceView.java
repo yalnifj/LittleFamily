@@ -33,6 +33,7 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
 
     private List<LittlePerson> parents;
     private List<LittlePerson> children;
+    private List<LittlePerson> random;
     private Bitmap bubbleBm;
     private Bitmap spotBm;
     private Bitmap spotHBm;
@@ -45,6 +46,7 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
     private int bubbleCount = 0;
     private int bubbleAddWait = 5;
     private int bubbleStep = 0;
+    private int popped = 0;
     private AnimatedBitmapSprite fatherSpot;
     private AnimatedBitmapSprite motherSpot;
     private AnimatedBitmapSprite childSpot;
@@ -89,6 +91,12 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
     public void setParentsAndChildren(List<LittlePerson> parents, List<LittlePerson> children) {
         this.parents = parents;
         this.children = children;
+        this.random = new ArrayList<>(3);
+        popped = 0;
+        if (parents.size()>0) random.add(parents.get(0));
+        if (parents.size()>1) random.add(parents.get(1));
+        if (children.size()>0) random.add(children.get(0));
+        Collections.shuffle(random);
 
         synchronized (sprites) {
             this.sprites.clear();
@@ -98,6 +106,43 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
 
     public List<LittlePerson> getChildren() {
         return children;
+    }
+
+    public LittlePerson getNextPerson() {
+        return random.get(popped);
+    }
+
+    public void nextBubble() {
+        popped++;
+        if (popped>=random.size()) {
+            for(BubbleCompleteListener l : listeners) {
+                l.onBubbleComplete();
+            }
+        } else {
+            if (parents.size() > 0 && parents.get(0) == getNextPerson()) {
+                fatherSpot.setState(1);
+            } else {
+                fatherSpot.setState(0);
+            }
+            if (parents.size() > 1 && parents.get(1) == getNextPerson()) {
+                motherSpot.setState(1);
+            } else {
+                motherSpot.setState(0);
+            }
+            if (children.size() > 0 && children.get(0) == getNextPerson()) {
+                childSpot.setState(1);
+            } else {
+                childSpot.setState(0);
+            }
+        }
+    }
+
+    public LittleFamilyActivity getActivity() {
+        return activity;
+    }
+
+    public void setActivity(LittleFamilyActivity activity) {
+        this.activity = activity;
     }
 
     public void registerListener(BubbleCompleteListener l) {
@@ -137,7 +182,7 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
             if (bubbleStep>=bubbleAddWait) {
                 bubbleCount--;
                 Random rand = new Random();
-                BubbleAnimatedBitmapSprite bubble = new BubbleAnimatedBitmapSprite(bubbleBm, getWidth(), getHeight(), activity);
+                BubbleAnimatedBitmapSprite bubble = new BubbleAnimatedBitmapSprite(bubbleBm, getWidth(), getHeight(), activity, this);
                 bubble.getBitmaps().put(1, popping);
                 int width = (int) (bubbleBm.getWidth() * (0.5 + rand.nextFloat()));
                 bubble.setWidth(width);
@@ -275,7 +320,7 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
         Random rand = new Random();
         int count = rand.nextInt(8) + 4;
         for (int b = 0; b < count; b++) {
-            BubbleAnimatedBitmapSprite bubble = new BubbleAnimatedBitmapSprite(bubbleBm, getWidth(), getHeight(), activity);
+            BubbleAnimatedBitmapSprite bubble = new BubbleAnimatedBitmapSprite(bubbleBm, getWidth(), getHeight(), activity, this);
             bubble.getBitmaps().put(1, popping);
             int width = (int) (bubbleBm.getWidth() * (0.5 + rand.nextFloat()));
             bubble.setWidth(width);
@@ -289,34 +334,36 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
             addSprite(bubble);
         }
 		
-		if (parents!=null) {
-			for (LittlePerson parent : parents) {
-				BubbleAnimatedBitmapSprite bubble = new BubbleAnimatedBitmapSprite(bubbleBm, getWidth(), getHeight(), activity);
-				bubble.getBitmaps().put(1, popping);
-				int slope = 5 - rand.nextInt(10);
-				bubble.setSlope(slope);
-				float speed = 5.0f - rand.nextFloat()*10.0f;
-				bubble.setSpeed(speed);
-				bubble.setY(rand.nextInt(getHeight()-bubble.getHeight()));
-				bubble.setX(rand.nextInt(getWidth()-bubble.getWidth()));
-				bubble.setPerson(parent);
-				addSprite(bubble);
-			}
-		}
-		
-		if (children!=null) {
-			for (LittlePerson child : children) {
-				BubbleAnimatedBitmapSprite bubble = new BubbleAnimatedBitmapSprite(bubbleBm, getWidth(), getHeight(), activity);
-				bubble.getBitmaps().put(1, popping);
-				int slope = 5 - rand.nextInt(10);
-				bubble.setSlope(slope);
-				float speed = 5.0f - rand.nextFloat()*10.0f;
-				bubble.setSpeed(speed);
-				bubble.setY(rand.nextInt(getHeight()-bubble.getHeight()));
-				bubble.setX(rand.nextInt(getWidth()-bubble.getWidth()));
-				bubble.setPerson(child);
-				addSprite(bubble);
-			}
+		if (random!=null) {
+            count = 0;
+			for (LittlePerson person : random) {
+                BubbleAnimatedBitmapSprite bubble = new BubbleAnimatedBitmapSprite(bubbleBm, getWidth(), getHeight(), activity, this);
+                bubble.getBitmaps().put(1, popping);
+                int slope = 5 - rand.nextInt(10);
+                bubble.setSlope(slope);
+                float speed = 5.0f - rand.nextFloat() * 10.0f;
+                bubble.setSpeed(speed);
+                bubble.setY(rand.nextInt(getHeight() - bubble.getHeight()));
+                bubble.setX(rand.nextInt(getWidth() - bubble.getWidth()));
+                bubble.setPerson(person);
+                if (parents.size() > 0 && parents.get(0) == person) {
+                    bubble.setMx((int) (fatherSpot.getX() + 3));
+                    bubble.setMy((int) (fatherSpot.getY() + 3));
+                    if (count==0) fatherSpot.setState(1);
+                }
+                if (parents.size() > 1 && parents.get(1) == person) {
+                    bubble.setMx((int) (motherSpot.getX() + 3));
+                    bubble.setMy((int) (motherSpot.getY() + 3));
+                    if (count==0) motherSpot.setState(1);
+                }
+                if (children.size() > 0 && children.get(0) == person) {
+                    bubble.setMx((int) (childSpot.getX() + 3));
+                    bubble.setMy((int) (childSpot.getY() + 15));
+                    if (count==0) childSpot.setState(1);
+                }
+                addSprite(bubble);
+                count++;
+            }
 		}
         spritesCreated = true;
     }

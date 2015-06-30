@@ -80,14 +80,12 @@ public class BouncingAnimatedBitmapSprite extends AnimatedBitmapSprite {
     public void doStep() {
         super.doStep();
         this.x = this.x + this.speed;
-        this.y = this.y + this.slope * this.speed;
+        this.y = this.y + this.slope;
         if (this.x + this.width > this.maxWidth) {
             this.speed = -1 * this.speed;
-            this.slope = -1 * this.slope;
         }
         if (this.x < minX) {
             this.speed = -1 * this.speed;
-            this.slope = -1 * this.slope;
         }
         if (this.y + this.height > this.maxHeight) {
             this.slope = -1 * this.slope;

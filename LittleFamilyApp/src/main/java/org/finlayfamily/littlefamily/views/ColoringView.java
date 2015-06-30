@@ -9,12 +9,10 @@ import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 
-import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.activities.tasks.ColoringImageFilterTask;
 
 import java.util.ArrayList;
@@ -168,8 +166,8 @@ public class ColoringView extends ImageView implements ColoringImageFilterTask.L
         mPath.reset();
 
         // check if scratch is complete
-        int xd = (int) mPaint.getStrokeWidth()/2;
-        int yd = (int) mPaint.getStrokeWidth()/2;
+        int xd = (int) mPaint.getStrokeWidth()/3;
+        int yd = (int) mPaint.getStrokeWidth()/3;
         int count = 0;
         int total = 0;
         for(int y=yd; y<mBitmap.getHeight(); y+=yd) {
@@ -179,7 +177,7 @@ public class ColoringView extends ImageView implements ColoringImageFilterTask.L
                 if (Color.alpha(pixel) < 200) count++;
             }
         }
-        if (count > total * 0.90) {
+        if (count > total * 0.95) {
             complete = true;
             for(ColoringCompleteListener l : listeners) {
                 l.onColoringComplete();

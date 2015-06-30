@@ -112,6 +112,7 @@ public class HomeActivity extends LittleFamilyActivity {
             TouchStateAnimatedBitmapSprite flower1 = new TouchStateAnimatedBitmapSprite(flowerBm2, this);
             flower1.setX(180);
             flower1.setY(1200);
+            flower1.setIgnoreAlpha(true);
             List<Bitmap> spinning = new ArrayList<>(5);
             spinning.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_flowers_a2));
             spinning.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_flowers_a3));
@@ -130,6 +131,7 @@ public class HomeActivity extends LittleFamilyActivity {
             TouchStateAnimatedBitmapSprite flower2 = new TouchStateAnimatedBitmapSprite(flowerBm2, this);
             flower2.setX(530);
             flower2.setY(1200);
+            flower2.setIgnoreAlpha(true);
             List<Bitmap> spinning2 = new ArrayList<>(5);
             spinning2.addAll(spinning); //-- reuse the bitmaps
             flower2.getBitmaps().put(1, spinning2);

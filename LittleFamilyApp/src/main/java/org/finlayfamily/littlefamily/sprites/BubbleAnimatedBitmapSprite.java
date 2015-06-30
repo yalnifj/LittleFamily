@@ -9,9 +9,11 @@ import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.activities.LittleFamilyActivity;
 import org.finlayfamily.littlefamily.data.LittlePerson;
 import org.finlayfamily.littlefamily.util.ImageHelper;
+import org.finlayfamily.littlefamily.views.BubbleSpriteSurfaceView;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Created by kids on 5/21/15.
@@ -21,26 +23,55 @@ public class BubbleAnimatedBitmapSprite extends BouncingAnimatedBitmapSprite {
 	private Bitmap photo;
 	private LittlePerson person;
     private LittleFamilyActivity activity;
+    private BubbleSpriteSurfaceView view;
+    private int mx;
+    private int my;
+    private int oldFrame = 0;
+    private int stepCount = 0;
 	
-    public BubbleAnimatedBitmapSprite(Bitmap bitmap, int maxWidth, int maxHeight, LittleFamilyActivity activity) {
+    public BubbleAnimatedBitmapSprite(Bitmap bitmap, int maxWidth, int maxHeight, LittleFamilyActivity activity, BubbleSpriteSurfaceView view) {
         super(bitmap, maxWidth, maxHeight);
         setSelectable(true);
         this.activity = activity;
         setIgnoreAlpha(true);
         setStepsPerFrame(2);
+        this.view = view;
     }
 
-    public BubbleAnimatedBitmapSprite(Map<Integer, List<Bitmap>> bitmaps, int maxWidth, int maxHeight, LittleFamilyActivity activity) {
+    public BubbleAnimatedBitmapSprite(Map<Integer, List<Bitmap>> bitmaps, int maxWidth, int maxHeight, LittleFamilyActivity activity, BubbleSpriteSurfaceView view) {
         super(bitmaps, maxWidth, maxHeight);
         setSelectable(true);
         this.activity = activity;
         setIgnoreAlpha(true);
         setStepsPerFrame(2);
+        this.view = view;
     }
 
-    private int oldFrame = 0;
+    public int getMx() {
+        return mx;
+    }
 
-	public void setPerson(LittlePerson person)
+    public void setMx(int mx) {
+        this.mx = mx;
+    }
+
+    public int getMy() {
+        return my;
+    }
+
+    public void setMy(int my) {
+        this.my = my;
+    }
+
+    public BubbleSpriteSurfaceView getView() {
+        return view;
+    }
+
+    public void setView(BubbleSpriteSurfaceView view) {
+        this.view = view;
+    }
+
+    public void setPerson(LittlePerson person)
 	{
 		this.person = person;
 		photo = null;
@@ -67,9 +98,32 @@ public class BubbleAnimatedBitmapSprite extends BouncingAnimatedBitmapSprite {
             	setRemoveMe(true);
 			} else {
 				state = 2;
-				slope = 0;
-				speed = 0;
 			}
+        }
+        if (state==2) {
+            speed = (mx - x)/10;
+            slope = (my - y)/10;
+            if (speed > 10) speed=10;
+            if (speed < -10) speed=-10;
+            if (slope > 10) slope = 10;
+            if (slope < -10) slope = -10;
+            if (x > mx - 3 && x < mx +3) x = mx;
+            if (y > my - 3 && y < my +3) y = my;
+            if (x==mx && y==my) {
+                state = 3;
+                slope = 0;
+                speed = 0;
+                view.nextBubble();
+                if (person.getGivenName()!=null) {
+                    activity.speak(person.getGivenName());
+                }
+            }
+        }
+        if (stepCount > 0) {
+            Random rand = new Random();
+            x += 5 - rand.nextInt(10);
+            y += 5 - rand.nextInt(10);
+            stepCount--;
         }
         oldFrame = frame;
     }
@@ -91,19 +145,25 @@ public class BubbleAnimatedBitmapSprite extends BouncingAnimatedBitmapSprite {
     @Override
     public void onRelease(float x, float y) {
         super.onRelease(x, y);
-        state = 1;
+        if (state==0) {
+            if (person==null || person==view.getNextPerson()) {
+                state = 1;
 
-        try {
-            MediaPlayer mediaPlayer = MediaPlayer.create(activity, R.raw.pop);
-            mediaPlayer.start();
-            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    mp.release();
+                try {
+                    MediaPlayer mediaPlayer = MediaPlayer.create(activity, R.raw.pop);
+                    mediaPlayer.start();
+                    mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        @Override
+                        public void onCompletion(MediaPlayer mp) {
+                            mp.release();
+                        }
+                    });
+                } catch (Exception e) {
+                    // just let things go on
                 }
-            });
-        } catch (Exception e) {
-            // just let things go on
+            } else if (person!=null) {
+                stepCount = 10;
+            }
         }
     }
 	

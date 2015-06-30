@@ -1063,7 +1063,7 @@
        x2="291.29169"
        y2="379.47369"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="translate(-49.61632,0.0435385)" />
+       gradientTransform="translate(-133.61632,0.0435385)" />
     <filter
        style="color-interpolation-filters:sRGB;"
        inkscape:label="Drop Shadow"
@@ -2092,16 +2092,16 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.48792887"
-     inkscape:cx="305.01158"
-     inkscape:cy="704.25853"
+     inkscape:zoom="0.53081324"
+     inkscape:cx="309.23251"
+     inkscape:cy="931.61494"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1113"
-     inkscape:window-height="674"
-     inkscape:window-x="178"
-     inkscape:window-y="187"
+     inkscape:window-width="1087"
+     inkscape:window-height="706"
+     inkscape:window-x="87"
+     inkscape:window-y="62"
      inkscape:window-maximized="0"
      showguides="false" />
   <metadata
@@ -2161,8 +2161,8 @@
        id="g5905"
        style="filter:url(#filter5920)"
        inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\little_family_logo.png"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96">
+       inkscape:export-xdpi="47.998459"
+       inkscape:export-ydpi="47.998459">
       <g
          transform="translate(56.677792,111.29511)"
          id="g6932">
@@ -2251,8 +2251,8 @@
        id="g6082"
        style="filter:url(#filter6101)"
        inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\little_family_logo.png"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96">
+       inkscape:export-xdpi="47.998459"
+       inkscape:export-ydpi="47.998459">
       <g
          id="g6932-8"
          transform="translate(370.58975,115.23632)">
@@ -2360,8 +2360,8 @@
        id="g6042"
        style="filter:url(#filter6058)"
        inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\little_family_logo.png"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96">
+       inkscape:export-xdpi="47.998459"
+       inkscape:export-ydpi="47.998459">
       <g
          id="g6932-8-3"
          transform="matrix(1.4034072,0,0,1.4034072,236.28298,35.534531)">
@@ -2457,8 +2457,8 @@
        id="g5932"
        style="filter:url(#filter5944)"
        inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\little_family_logo.png"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96">
+       inkscape:export-xdpi="47.998459"
+       inkscape:export-ydpi="47.998459">
       <g
          transform="matrix(1.4594657,0,0,1.5394249,111.84979,8.7475528)"
          id="g6932-7">
@@ -2527,8 +2527,8 @@
        id="g5865"
        style="filter:url(#filter5879)"
        inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\little_family_logo.png"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96">
+       inkscape:export-xdpi="47.998459"
+       inkscape:export-ydpi="47.998459">
       <ellipse
          ry="16.470169"
          rx="11.096388"
@@ -2621,8 +2621,8 @@
        id="g5972"
        style="filter:url(#filter5983)"
        inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\little_family_logo.png"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96">
+       inkscape:export-xdpi="47.998459"
+       inkscape:export-ydpi="47.998459">
       <ellipse
          ry="64.377678"
          rx="59.352062"
@@ -2690,8 +2690,8 @@
        transform="translate(56.677792,111.29511)"
        style="filter:url(#filter5853)"
        inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\little_family_logo.png"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96">
+       inkscape:export-xdpi="47.998459"
+       inkscape:export-ydpi="47.998459">
       <circle
          r="10.698911"
          cy="60.920246"
@@ -2781,8 +2781,8 @@
        id="g6021"
        style="filter:url(#filter6070)"
        inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\little_family_logo.png"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96">
+       inkscape:export-xdpi="47.998459"
+       inkscape:export-ydpi="47.998459">
       <circle
          r="45.872417"
          cy="173.98566"
@@ -2866,18 +2866,19 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:70px;line-height:50%;font-family:'Cooper Black';-inkscape-font-specification:'Cooper Black, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient7603);fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;filter:url(#filter7723)"
-       x="61.365501"
+       x="-22.634499"
        y="381.88266"
        id="text6113"
        sodipodi:linespacing="50%"
        inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\little_family_logo.png"
        inkscape:export-xdpi="47.998459"
-       inkscape:export-ydpi="47.998459"><tspan
+       inkscape:export-ydpi="47.998459"
+       transform="matrix(0.90996725,0,0,1.0350139,27.529596,-12.744683)"><tspan
          sodipodi:role="line"
          id="tspan6115"
-         x="61.365501"
+         x="-22.634499"
          y="381.88266"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:70px;line-height:50%;font-family:'Cooper Black';-inkscape-font-specification:'Cooper Black, Normal';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient7603);fill-opacity:1;stroke:#000000;stroke-opacity:1">Little Family</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:70px;line-height:50%;font-family:'Cooper Black';-inkscape-font-specification:'Cooper Black, Normal';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient7603);fill-opacity:1;stroke:#000000;stroke-opacity:1">Little Family Tree</tspan></text>
     <g
        transform="translate(277.60374,600.7739)"
        id="g6042-4"
