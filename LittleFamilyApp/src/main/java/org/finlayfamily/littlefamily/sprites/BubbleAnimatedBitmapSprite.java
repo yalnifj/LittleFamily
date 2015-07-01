@@ -28,6 +28,8 @@ public class BubbleAnimatedBitmapSprite extends BouncingAnimatedBitmapSprite {
     private int my;
     private int oldFrame = 0;
     private int stepCount = 0;
+    private int sWidth;
+    private int sHeight;
 	
     public BubbleAnimatedBitmapSprite(Bitmap bitmap, int maxWidth, int maxHeight, LittleFamilyActivity activity, BubbleSpriteSurfaceView view) {
         super(bitmap, maxWidth, maxHeight);
@@ -123,7 +125,16 @@ public class BubbleAnimatedBitmapSprite extends BouncingAnimatedBitmapSprite {
             Random rand = new Random();
             x += 5 - rand.nextInt(10);
             y += 5 - rand.nextInt(10);
+            width += 5 - rand.nextInt(10);
+            height += 5 - rand.nextInt(10);
             stepCount--;
+            if (stepCount==0) {
+                width = sWidth;
+                height = sHeight;
+            }
+        } else {
+            sWidth = width;
+            sHeight = height;
         }
         oldFrame = frame;
     }
