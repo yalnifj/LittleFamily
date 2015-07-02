@@ -121,15 +121,18 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
         } else {
             if (parents.size() > 0 && parents.get(0) == getNextPerson()) {
                 fatherSpot.setState(1);
+                activity.speak(activity.getResources().getString(R.string.who_is_father));
             } else {
                 fatherSpot.setState(0);
             }
             if (parents.size() > 1 && parents.get(1) == getNextPerson()) {
+                activity.speak(activity.getResources().getString(R.string.who_is_mother));
                 motherSpot.setState(1);
             } else {
                 motherSpot.setState(0);
             }
             if (children.size() > 0 && children.get(0) == getNextPerson()) {
+                activity.speak(activity.getResources().getString(R.string.who_is_child));
                 childSpot.setState(1);
             } else {
                 childSpot.setState(0);
@@ -349,17 +352,26 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
                 if (parents.size() > 0 && parents.get(0) == person) {
                     bubble.setMx((int) (fatherSpot.getX() + 3));
                     bubble.setMy((int) (fatherSpot.getY() + 3));
-                    if (count==0) fatherSpot.setState(1);
+                    if (count==0) {
+                        fatherSpot.setState(1);
+                        activity.speak(activity.getResources().getString(R.string.who_is_father));
+                    }
                 }
                 if (parents.size() > 1 && parents.get(1) == person) {
                     bubble.setMx((int) (motherSpot.getX() + 3));
                     bubble.setMy((int) (motherSpot.getY() + 3));
-                    if (count==0) motherSpot.setState(1);
+                    if (count==0) {
+                        motherSpot.setState(1);
+                        activity.speak(activity.getResources().getString(R.string.who_is_mother));
+                    }
                 }
                 if (children.size() > 0 && children.get(0) == person) {
                     bubble.setMx((int) (childSpot.getX() + 3));
                     bubble.setMy((int) (childSpot.getY() + 15));
-                    if (count==0) childSpot.setState(1);
+                    if (count==0) {
+                        childSpot.setState(1);
+                        activity.speak(activity.getResources().getString(R.string.who_is_child));
+                    }
                 }
                 addSprite(bubble);
                 count++;

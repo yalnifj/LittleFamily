@@ -45,6 +45,9 @@ Please wait...</string>
     <string name="you_born_in">You were born in %1$s.</string>
     <string name="you_born_on">You were born on %1$s.</string>
     <string name="you_born_in_on">You were born in %1$s on %2$s.</string>
+    <string name="who_is_father">Find the father?</string>
+    <string name="who_is_mother">Find the mother?</string>
+    <string name="who_is_child">Find the child?</string>
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
