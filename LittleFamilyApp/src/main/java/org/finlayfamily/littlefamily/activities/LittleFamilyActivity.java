@@ -38,6 +38,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     protected LittlePerson selectedPerson;
     protected LoadingDialog loadingDialog;
     protected ArrayList<LittlePerson> people;
+    protected Boolean dialogShown = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,16 +97,24 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     }
 
     public void showLoadingDialog() {
-        loadingDialog = new LoadingDialog();
-        loadingDialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Theme_AppCompat_Dialog);
-        loadingDialog.show(getFragmentManager(), "Loading");
+        synchronized (dialogShown) {
+            if (!dialogShown) {
+                loadingDialog = new LoadingDialog();
+                loadingDialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Theme_AppCompat_Dialog);
+                loadingDialog.show(getFragmentManager(), "Loading");
+                dialogShown = true;
+            }
+        }
     }
 
     public void hideLoadingDialog() {
-        if (loadingDialog!=null && loadingDialog.isVisible()) {
-            loadingDialog.dismissAllowingStateLoss();
+        synchronized (dialogShown) {
+            if (loadingDialog != null && loadingDialog.isVisible()) {
+                loadingDialog.dismissAllowingStateLoss();
+            }
+            dialogShown = false;
+            loadingDialog = null;
         }
-        loadingDialog = null;
     }
 
     @Override

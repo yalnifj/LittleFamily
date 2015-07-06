@@ -20,6 +20,8 @@ import java.util.List;
  */
 public class PuzzleSurfaceView extends AbstractTouchAnimatedSurfaceView {
 
+    public static final int thumbnailHeight = 75;
+
     private PuzzleGame game;
     private Bitmap bitmap;
     private Paint outlinePaint;
@@ -35,6 +37,7 @@ public class PuzzleSurfaceView extends AbstractTouchAnimatedSurfaceView {
     private int pieceHeight;
     private boolean animating = false;
     private boolean checkGame = false;
+    private boolean showHint = false;
 
     public PuzzleSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -106,7 +109,7 @@ public class PuzzleSurfaceView extends AbstractTouchAnimatedSurfaceView {
         canvas.drawRect(0, 0, getWidth(), getHeight(), backPaint);
         if (bitmap!=null) {
             int width = getWidth();
-            int height = getHeight();
+            int height = getHeight() - thumbnailHeight;
             pieceWidth = width / game.getCols();
             pieceHeight = height / game.getRows();
             int bWidth = bitmap.getWidth() / game.getCols();
@@ -160,6 +163,17 @@ public class PuzzleSurfaceView extends AbstractTouchAnimatedSurfaceView {
                 canvas.drawBitmap(bitmap, src, dst, outlinePaint);
                 canvas.drawRect(dst, outlinePaint);
             }
+
+            Rect dst = new Rect();
+            float ratio = (float)bWidth / bHeight;
+            dst.set(0, height, (int) (thumbnailHeight * ratio), height+thumbnailHeight);
+            canvas.drawBitmap(bitmap, null, dst, null);
+
+            if (showHint) {
+                Rect dst1 = new Rect();
+                dst1.set(0, 0, pieceWidth*game.getCols(), pieceHeight*game.getRows());
+                canvas.drawBitmap(bitmap, null, dst1, null);
+            }
         }
     }
 
@@ -182,11 +196,17 @@ public class PuzzleSurfaceView extends AbstractTouchAnimatedSurfaceView {
                 }
             }
         }
+
+        float ratio = (float)bitmap.getWidth() / bitmap.getHeight();
+        if (x <= thumbnailHeight*ratio && y >= thumbnailHeight) {
+            showHint = true;
+        }
     }
 
     @Override
     protected void touch_up(float x, float y) {
         super.touch_up(x, y);
+        showHint = false;
         if (selected!=null) {
             int col = (int) (x / pieceWidth);
             int row = (int) (y / pieceHeight);
