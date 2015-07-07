@@ -2,9 +2,7 @@ package org.finlayfamily.littlefamily.activities;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Point;
 import android.os.Bundle;
-import android.view.Display;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -13,7 +11,6 @@ import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.activities.adapters.FamilyMemberListAdapter;
 import org.finlayfamily.littlefamily.activities.tasks.FamilyLoaderTask;
 import org.finlayfamily.littlefamily.activities.tasks.PersonLoaderTask;
-import org.finlayfamily.littlefamily.activities.util.SystemUiHider;
 import org.finlayfamily.littlefamily.data.DataService;
 import org.finlayfamily.littlefamily.data.LittlePerson;
 
@@ -54,13 +51,12 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
     @Override
     protected void onStart() {
         super.onStart();
-
+        DataService.getInstance().registerNetworkStateListener(this);
         try {
             if (!dataService.hasData()) {
                 Intent intent = new Intent( this, ChooseRemoteService.class );
                 startActivityForResult( intent, LOGIN_REQUEST );
             } else {
-                showLoadingDialog();
                 PersonLoaderTask task = new PersonLoaderTask(this, this);
                 task.execute();
             }
@@ -68,6 +64,12 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        DataService.getInstance().unregisterNetworkStateListener(this);
     }
 
     @Override
@@ -91,7 +93,6 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         launchGame = true;
-        showLoadingDialog();
         selectedPerson = (LittlePerson) gridView.getItemAtPosition(position);
         FamilyLoaderTask task = new FamilyLoaderTask(this, this);
 		task.execute(selectedPerson);
@@ -111,7 +112,6 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
             updateColumns();
             speak(getResources().getString(R.string.title_activity_choose_family_member));
         }
-        hideLoadingDialog();
     }
 
     private void updateColumns() {

@@ -8,6 +8,7 @@ import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.activities.tasks.FamilyLoaderTask;
 import org.finlayfamily.littlefamily.activities.tasks.MemoriesLoaderTask;
 import org.finlayfamily.littlefamily.activities.tasks.WaitTask;
+import org.finlayfamily.littlefamily.data.DataService;
 import org.finlayfamily.littlefamily.data.LittlePerson;
 import org.finlayfamily.littlefamily.data.Media;
 import org.finlayfamily.littlefamily.games.PuzzleGame;
@@ -51,6 +52,7 @@ public class PuzzleGameActivity extends LittleFamilyActivity implements Memories
     @Override
     protected void onStart() {
         super.onStart();
+        DataService.getInstance().registerNetworkStateListener(this);
         if (people==null) {
             people = new ArrayList<>();
             people.add(selectedPerson);
@@ -62,18 +64,22 @@ public class PuzzleGameActivity extends LittleFamilyActivity implements Memories
         }
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        DataService.getInstance().unregisterNetworkStateListener(this);
+    }
+
     private void loadRandomImage() {
         if (people!=null && people.size()>0) {
             Random rand = new Random();
             selectedPerson = people.get(rand.nextInt(people.size()));
-            showLoadingDialog();
             MemoriesLoaderTask task = new MemoriesLoaderTask(this, this);
             task.execute(selectedPerson);
         }
     }
 
     private void loadMoreFamilyMembers() {
-        showLoadingDialog();
         if (backgroundLoadIndex < people.size() && backgroundLoadIndex < 20) {
             FamilyLoaderTask task = new FamilyLoaderTask(new FamilyLoaderListener(), this);
             task.execute(people.get(backgroundLoadIndex));
@@ -95,7 +101,6 @@ public class PuzzleGameActivity extends LittleFamilyActivity implements Memories
             }
             puzzleGame.setupLevel(rows, cols);
         }
-        hideLoadingDialog();
         puzzleSurfaceView.setBitmap(imageBitmap);
     }
 

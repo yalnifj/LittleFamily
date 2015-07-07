@@ -15,6 +15,7 @@ import android.widget.GridView;
 import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.activities.adapters.MatchGameListAdapter;
 import org.finlayfamily.littlefamily.activities.tasks.FamilyLoaderTask;
+import org.finlayfamily.littlefamily.data.DataService;
 import org.finlayfamily.littlefamily.data.LittlePerson;
 import org.finlayfamily.littlefamily.data.MatchPerson;
 import org.finlayfamily.littlefamily.games.MatchingGame;
@@ -64,10 +65,22 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
             people = new ArrayList<>();
             people.add(selectedPerson);
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        DataService.getInstance().registerNetworkStateListener(this);
         if (people.size()<2) {
             FamilyLoaderTask task = new FamilyLoaderTask(this, this);
             task.execute(people.get(backgroundLoadIndex));
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        DataService.getInstance().unregisterNetworkStateListener(this);
     }
 
     @Override

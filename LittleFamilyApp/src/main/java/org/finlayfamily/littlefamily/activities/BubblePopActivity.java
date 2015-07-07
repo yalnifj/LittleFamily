@@ -5,6 +5,8 @@ import android.os.Bundle;
 
 import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.activities.tasks.ParentsLoaderTask;
+import org.finlayfamily.littlefamily.activities.tasks.WaitTask;
+import org.finlayfamily.littlefamily.data.DataService;
 import org.finlayfamily.littlefamily.data.LittlePerson;
 import org.finlayfamily.littlefamily.views.BubbleSpriteSurfaceView;
 
@@ -38,9 +40,15 @@ public class BubblePopActivity extends LittleFamilyActivity implements ParentsLo
     @Override
     protected void onStart() {
         super.onStart();
-        //showLoadingDialog();
+        DataService.getInstance().registerNetworkStateListener(this);
         ParentsLoaderTask loader = new ParentsLoaderTask(this, this);
         loader.execute(que.peek());
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        DataService.getInstance().unregisterNetworkStateListener(this);
     }
 
     @Override
@@ -49,13 +57,22 @@ public class BubblePopActivity extends LittleFamilyActivity implements ParentsLo
         ArrayList<LittlePerson> children = new ArrayList<>(3);
         children.add(que.poll());
         bubbleView.setParentsAndChildren(parents, children);
-        //hideLoadingDialog();
     }
 
     @Override
     public void onBubbleComplete() {
         playCompleteSound();
-        ParentsLoaderTask loader = new ParentsLoaderTask(this, this);
-        loader.execute(que.peek());
+        WaitTask waiter = new WaitTask(new WaitTask.WaitTaskListener() {
+            @Override
+            public void onProgressUpdate(Integer progress) {
+            }
+
+            @Override
+            public void onComplete(Integer progress) {
+                ParentsLoaderTask loader = new ParentsLoaderTask(BubblePopActivity.this, BubblePopActivity.this);
+                loader.execute(que.peek());
+            }
+        });
+        waiter.execute(3000L);
     }
 }

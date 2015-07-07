@@ -138,17 +138,21 @@ public class AnimatedBitmapSprite extends Sprite {
 
     public boolean inSprite(float tx, float ty) {
         if (!selectable) return false;
-        if (tx>=x*scale && tx<=(x+width)*scale && ty>=y*scale && ty<=(y+height)*scale) {
+        if (tx>=x*scale && tx<(x+width)*scale && ty>=y*scale && ty<=(y+height)*scale) {
             if (ignoreAlpha) {
                 return true;
             }
             if (bitmaps!=null) {
                 List<Bitmap> frames = bitmaps.get(state);
                 Bitmap bitmap = frames.get(frame);
-                int color = bitmap.getPixel((int)(tx-x*scale), (int)(ty-y*scale));
-                int alpha = Color.alpha(color);
-                if (alpha > 50) {
-                    return true;
+                int bx = (int)(tx-x*scale);
+                int by = (int)(ty-y*scale);
+                if (bx < bitmap.getWidth() && by < bitmap.getHeight()) {
+                    int color = bitmap.getPixel(bx, by);
+                    int alpha = Color.alpha(color);
+                    if (alpha > 50) {
+                        return true;
+                    }
                 }
             }
         }

@@ -8,6 +8,7 @@ import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.activities.tasks.FamilyLoaderTask;
 import org.finlayfamily.littlefamily.activities.tasks.MemoriesLoaderTask;
 import org.finlayfamily.littlefamily.activities.tasks.WaitTask;
+import org.finlayfamily.littlefamily.data.DataService;
 import org.finlayfamily.littlefamily.data.LittlePerson;
 import org.finlayfamily.littlefamily.data.Media;
 import org.finlayfamily.littlefamily.util.ImageHelper;
@@ -52,6 +53,7 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Memori
     @Override
     protected void onStart() {
         super.onStart();
+        DataService.getInstance().registerNetworkStateListener(this);
         loading = true;
         if (people==null) {
             people = new ArrayList<>();
@@ -64,6 +66,12 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Memori
         }
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        DataService.getInstance().unregisterNetworkStateListener(this);
+    }
+
     public void setupCanvas() {
         layeredImage.setImageBitmap(imageBitmap);
     }
@@ -71,7 +79,6 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Memori
     private void loadRandomImage() {
         if (people!=null && people.size()>0) {
             Random rand = new Random();
-            showLoadingDialog();
             selectedPerson = people.get(rand.nextInt(people.size()));
             MemoriesLoaderTask task = new MemoriesLoaderTask(this, this);
             task.execute(selectedPerson);
@@ -80,7 +87,6 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Memori
 
     private void loadMoreFamilyMembers() {
         loading = true;
-        showLoadingDialog();
         if (backgroundLoadIndex < people.size() && backgroundLoadIndex < 20) {
             FamilyLoaderTask task = new FamilyLoaderTask(new FamilyLoaderListener(), this);
             task.execute(people.get(backgroundLoadIndex));
@@ -158,7 +164,7 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Memori
 
     @Override
     public void onColoringReady() {
-        hideLoadingDialog();
+        //hideLoadingDialog();
     }
 
     public class FamilyLoaderListener implements FamilyLoaderTask.Listener {

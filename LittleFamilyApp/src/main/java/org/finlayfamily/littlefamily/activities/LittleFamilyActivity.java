@@ -13,6 +13,8 @@ import android.view.Display;
 import android.view.View;
 
 import org.finlayfamily.littlefamily.R;
+import org.finlayfamily.littlefamily.data.DataNetworkState;
+import org.finlayfamily.littlefamily.data.DataNetworkStateListener;
 import org.finlayfamily.littlefamily.data.LittlePerson;
 import org.finlayfamily.littlefamily.events.EventListener;
 import org.finlayfamily.littlefamily.events.EventQueue;
@@ -23,7 +25,8 @@ import java.util.Locale;
 /**
  * Created by kids on 4/18/15.
  */
-public class LittleFamilyActivity extends FragmentActivity implements TextToSpeech.OnInitListener, TopBarFragment.OnFragmentInteractionListener, EventListener {
+public class LittleFamilyActivity extends FragmentActivity implements TextToSpeech.OnInitListener, TopBarFragment.OnFragmentInteractionListener,
+        EventListener, DataNetworkStateListener {
     public static final String TOPIC_START_MATCH    = "startMatch";
     public static final String TOPIC_START_SCRATCH  = "startScratch";
     public static final String TOPIC_START_COLORING = "startColoring";
@@ -157,6 +160,16 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         super.onDestroy();
     }
 
+    @Override
+    public void remoteStateChanged(DataNetworkState state) {
+        if (state==DataNetworkState.REMOTE_STARTING) {
+            showLoadingDialog();
+        }
+        if (state==DataNetworkState.REMOTE_FINISHED) {
+            hideLoadingDialog();
+        }
+    }
+
     public void speak(String message) {
         Log.d("LittleFamilyActivity", "Speaking: " + message);
         if (tts!=null) {
@@ -178,11 +191,10 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     }
 
     public void onProfileButtonPressed(View view) {
-
-    }
-
-    public void onActivityButtonPressed(View view) {
-
+        Intent intent = new Intent(this, ChooseFamilyMember.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish(); // call this to finish the current activity
     }
 
     public void onSettingsButtonPressed(View view) {

@@ -150,8 +150,8 @@ public class ScratchView extends ImageView {
         mPath.reset();
 
         // check if scratch is complete
-        int xd = (int) mPaint.getStrokeWidth()/3;
-        int yd = (int) mPaint.getStrokeWidth()/3;
+        int xd = (int) mPaint.getStrokeWidth()/5;
+        int yd = (int) mPaint.getStrokeWidth()/5;
         int count = 0;
         int total = 0;
         for(int y=yd; y<mBitmap.getHeight(); y+=yd) {
@@ -161,7 +161,7 @@ public class ScratchView extends ImageView {
                 if (Color.alpha(pixel) < 200) count++;
             }
         }
-        if (count > total * 0.95) {
+        if (count > total * 0.97) {
             complete = true;
             for(ScratchCompleteListener l : listeners) {
                 l.onScratchComplete();

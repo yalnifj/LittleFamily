@@ -9,6 +9,7 @@ import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.activities.tasks.FamilyLoaderTask;
 import org.finlayfamily.littlefamily.activities.tasks.MemoriesLoaderTask;
 import org.finlayfamily.littlefamily.activities.tasks.WaitTask;
+import org.finlayfamily.littlefamily.data.DataService;
 import org.finlayfamily.littlefamily.data.LittlePerson;
 import org.finlayfamily.littlefamily.data.Media;
 import org.finlayfamily.littlefamily.util.ImageHelper;
@@ -52,6 +53,7 @@ public class ScratchGameActivity extends LittleFamilyActivity implements Memorie
     @Override
     protected void onStart() {
         super.onStart();
+        DataService.getInstance().registerNetworkStateListener(this);
         if (people==null) {
             people = new ArrayList<>();
             people.add(selectedPerson);
@@ -63,8 +65,13 @@ public class ScratchGameActivity extends LittleFamilyActivity implements Memorie
         }
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        DataService.getInstance().registerNetworkStateListener(this);
+    }
+
     public void setupCanvas() {
-        hideLoadingDialog();
         layeredImage.setImageBitmap(imageBitmap);
     }
 
@@ -72,14 +79,12 @@ public class ScratchGameActivity extends LittleFamilyActivity implements Memorie
         if (people!=null && people.size()>0) {
             Random rand = new Random();
             selectedPerson = people.get(rand.nextInt(people.size()));
-            showLoadingDialog();
             MemoriesLoaderTask task = new MemoriesLoaderTask(this, this);
             task.execute(selectedPerson);
         }
     }
 
     private void loadMoreFamilyMembers() {
-        showLoadingDialog();
         if (backgroundLoadIndex < people.size() && backgroundLoadIndex < 20) {
             FamilyLoaderTask task = new FamilyLoaderTask(new FamilyLoaderListener(), this);
             task.execute(people.get(backgroundLoadIndex));

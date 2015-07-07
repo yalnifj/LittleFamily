@@ -35,6 +35,7 @@ public class DataService implements AuthTask.Listener {
     public static final String SERVICE_TOKEN = "Token";
     public static final String SERVICE_BASEURL = "BaseUrl";
     public static final String SERVICE_DEFAULTPERSONID = "DefaultPersonId";
+    public static final String SERVICE_USERNAME= "Username";
 
     private RemoteService remoteService;
     private DBHelper dbHelper = null;
@@ -48,6 +49,9 @@ public class DataService implements AuthTask.Listener {
     private boolean authenticating = false;
     private String serviceType = null;
 
+    private List<DataNetworkStateListener> listeners;
+    private DataNetworkState currentState = DataNetworkState.REMOTE_FINISHED;
+
     private static DataService ourInstance = new DataService();
 
     public static DataService getInstance() {
@@ -56,6 +60,7 @@ public class DataService implements AuthTask.Listener {
 
     private DataService() {
         syncQ = new LinkedList<>();
+        listeners = new ArrayList<>();
     }
 
     public DBHelper getDBHelper() throws Exception {
@@ -343,6 +348,7 @@ public class DataService implements AuthTask.Listener {
             return null;
         }
     }
+    //--end sync thread
 
     public void addToSyncQ(LittlePerson person, int depth) throws Exception {
         Calendar cal = Calendar.getInstance();
@@ -367,14 +373,33 @@ public class DataService implements AuthTask.Listener {
         }
     }
 
+    public void registerNetworkStateListener(DataNetworkStateListener listener) {
+        this.listeners.add(listener);
+    }
+
+    public void unregisterNetworkStateListener(DataNetworkStateListener listener) {
+        this.listeners.remove(listener);
+    }
+
+    public void fireNetworkStateChanged(DataNetworkState newState) {
+        if (newState != currentState) {
+            currentState = newState;
+            for (DataNetworkStateListener listener : listeners) {
+                listener.remoteStateChanged(newState);
+            }
+        }
+    }
+
     public LittlePerson getDefaultPerson() throws Exception {
         LittlePerson person = getDBHelper().getFirstPerson();
 
         if (person==null) {
+            fireNetworkStateChanged(DataNetworkState.REMOTE_STARTING);
             waitForAuth();
             Person fsPerson = remoteService.getCurrentPerson();
             person = DataHelper.buildLittlePerson(fsPerson, context, remoteService, true);
             getDBHelper().persistLittlePerson(person);
+            fireNetworkStateChanged(DataNetworkState.REMOTE_FINISHED);
         } else {
             addToSyncQ(person, 0);
         }
@@ -395,7 +420,9 @@ public class DataService implements AuthTask.Listener {
     public List<LittlePerson> getFamilyMembers(LittlePerson person, boolean loadSpouse) throws Exception {
         List<LittlePerson> family = getDBHelper().getRelativesForPerson(person.getId(), loadSpouse);
         if ((family==null || family.size()==0) && (person.isHasSpouses()==null || person.isHasParents()==null || person.isHasChildren()==null)) {
+            fireNetworkStateChanged(DataNetworkState.REMOTE_STARTING);
             family = getFamilyMembersFromRemoteService(person, loadSpouse);
+            fireNetworkStateChanged(DataNetworkState.REMOTE_FINISHED);
         } else {
             addToSyncQ(family, 1);
         }
@@ -556,6 +583,7 @@ public class DataService implements AuthTask.Listener {
         List<LittlePerson> parents = getDBHelper().getParentsForPerson(person.getId());
         if (parents==null || parents.size()==0) {
             if (person.isHasParents()==null || person.isHasParents()) {
+                fireNetworkStateChanged(DataNetworkState.REMOTE_STARTING);
                 getParentsFromRemoteService(person);
                 parents = getDBHelper().getParentsForPerson(person.getId());
                 if (parents == null) {
@@ -568,6 +596,7 @@ public class DataService implements AuthTask.Listener {
                     person.setHasParents(true);
                     getDBHelper().persistLittlePerson(person);
                 }
+                fireNetworkStateChanged(DataNetworkState.REMOTE_FINISHED);
             }
         } else {
             addToSyncQ(parents, 1);
@@ -579,6 +608,7 @@ public class DataService implements AuthTask.Listener {
         List<LittlePerson> children = getDBHelper().getChildrenForPerson(person.getId());
         if (children==null || children.size()==0) {
             if (person.isHasChildren()==null || person.isHasChildren()) {
+                fireNetworkStateChanged(DataNetworkState.REMOTE_STARTING);
                 getChildrenFromRemoteService(person);
                 children = getDBHelper().getChildrenForPerson(person.getId());
                 if (children == null) {
@@ -591,6 +621,7 @@ public class DataService implements AuthTask.Listener {
                     person.setHasChildren(true);
                     getDBHelper().persistLittlePerson(person);
                 }
+                fireNetworkStateChanged(DataNetworkState.REMOTE_FINISHED);
             }
         } else {
             addToSyncQ(children, 2);
@@ -602,6 +633,7 @@ public class DataService implements AuthTask.Listener {
         List<LittlePerson> spouses = getDBHelper().getSpousesForPerson(person.getId());
         if (spouses==null || spouses.size()==0) {
             if (person.isHasSpouses()==null || person.isHasSpouses()) {
+                fireNetworkStateChanged(DataNetworkState.REMOTE_STARTING);
                 getSpousesFromRemoteService(person);
                 spouses = getDBHelper().getSpousesForPerson(person.getId());
                 if (spouses == null) {
@@ -614,6 +646,7 @@ public class DataService implements AuthTask.Listener {
                     person.setHasSpouses(true);
                     getDBHelper().persistLittlePerson(person);
                 }
+                fireNetworkStateChanged(DataNetworkState.REMOTE_FINISHED);
             }
         } else {
             addToSyncQ(spouses, 1);
@@ -626,6 +659,7 @@ public class DataService implements AuthTask.Listener {
         if (media==null || media.size()==0) {
             media = new ArrayList<>();
             try {
+                fireNetworkStateChanged(DataNetworkState.REMOTE_STARTING);
                 waitForAuth();
                 List<SourceDescription> sds = remoteService.getPersonMemories(person.getFamilySearchId(), true);
                 if (sds!=null) {
@@ -659,6 +693,7 @@ public class DataService implements AuthTask.Listener {
                         }
                     }
                 }
+                fireNetworkStateChanged(DataNetworkState.REMOTE_FINISHED);
             } catch(RemoteServiceSearchException e) {
                 Log.e(this.getClass().getSimpleName(), "error", e);
             }
