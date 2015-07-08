@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -50,14 +51,35 @@ public class PGVLoginActivity extends Activity implements AuthTask.Listener, Per
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pgvlogin);
 
+        dataService = DataService.getInstance();
+        dataService.setContext(this);
+
         // Set up the login form.
         mPgvUrlView = (EditText) findViewById(R.id.pgv_url);
-        mPgvUrlView.setText(PGV_DEFAULT_URL);
+        try {
+            String baseUrl = dataService.getDBHelper().getProperty(DataService.SERVICE_TYPE_PHPGEDVIEW+DataService.SERVICE_BASEURL);
+            if (baseUrl==null) baseUrl = PGV_DEFAULT_URL;
+            mPgvUrlView.setText(baseUrl);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        mEmailView.setText(PGV_DEFAULT_USER);
+        try {
+            String defaultUser = dataService.getDBHelper().getProperty(DataService.SERVICE_USERNAME);
+            if (defaultUser==null) defaultUser = PGV_DEFAULT_USER;
+            mEmailView.setText(defaultUser);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         mDefaultId = (EditText) findViewById(R.id.default_id);
+        try {
+            String defaultId = dataService.getDBHelper().getProperty(DataService.SERVICE_TYPE_PHPGEDVIEW+DataService.SERVICE_DEFAULTPERSONID);
+            if (defaultId!=null) mDefaultId.setText(defaultId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setText(PGV_DEFAULT_PASS);
@@ -78,10 +100,10 @@ public class PGVLoginActivity extends Activity implements AuthTask.Listener, Per
             public void onClick(View view) {
                 try {
                     String baseUrl = mPgvUrlView.getText().toString();
-                    dataService.getDBHelper().saveProperty(DataService.SERVICE_TYPE_PHPGEDVIEW+DataService.SERVICE_BASEURL, baseUrl);
+                    dataService.getDBHelper().saveProperty(DataService.SERVICE_TYPE_PHPGEDVIEW + DataService.SERVICE_BASEURL, baseUrl);
                     String defaultPersonId = mDefaultId.getText().toString();
                     if (defaultPersonId.isEmpty()) defaultPersonId = "I1";
-                    dataService.getDBHelper().saveProperty(DataService.SERVICE_TYPE_PHPGEDVIEW+DataService.SERVICE_DEFAULTPERSONID, defaultPersonId);
+                    dataService.getDBHelper().saveProperty(DataService.SERVICE_TYPE_PHPGEDVIEW + DataService.SERVICE_DEFAULTPERSONID, defaultPersonId);
                     PGVService remoteService = new PGVService(baseUrl, defaultPersonId);
                     dataService.setRemoteService(DataService.SERVICE_TYPE_PHPGEDVIEW, remoteService);
 
@@ -92,9 +114,6 @@ public class PGVLoginActivity extends Activity implements AuthTask.Listener, Per
                 }
             }
         });
-
-        dataService = DataService.getInstance();
-        dataService.setContext(this);
 
         try {
             String defaultId = dataService.getDBHelper().getProperty(DataService.SERVICE_TYPE_PHPGEDVIEW+DataService.SERVICE_DEFAULTPERSONID);
@@ -174,7 +193,8 @@ public class PGVLoginActivity extends Activity implements AuthTask.Listener, Per
     public void onComplete(RemoteResult response) {
         if (response!=null && response.isSuccess()) {
             try {
-                dataService.getDBHelper().saveProperty(DataService.SERVICE_TYPE, dataService.getRemoteService().getClass().getSimpleName());
+                //dataService.getDBHelper().saveProperty(DataService.SERVICE_TYPE, dataService.getRemoteService().getClass().getSimpleName());
+                PreferenceManager.getDefaultSharedPreferences(this).edit().putString(DataService.SERVICE_TYPE, dataService.getRemoteService().getClass().getSimpleName());
                 dataService.getDBHelper().saveProperty(DataService.SERVICE_TYPE_PHPGEDVIEW+DataService.SERVICE_TOKEN, dataService.getRemoteService().getEncodedAuthToken());
                 dataService.getDBHelper().saveProperty(DataService.SERVICE_USERNAME, mEmailView.getText().toString());
             } catch (Exception e) {

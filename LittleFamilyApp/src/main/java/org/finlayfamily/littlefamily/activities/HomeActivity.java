@@ -41,6 +41,7 @@ public class HomeActivity extends LittleFamilyActivity {
             selectedPerson = people.get(0);
         }
         setupHomeViewSprites();
+        System.gc();
     }
 
     @Override
@@ -381,7 +382,7 @@ public class HomeActivity extends LittleFamilyActivity {
             homeView.addSprite(drums);
 
             homeView.setClipX(800);
-            homeView.setClipY(200);
+            homeView.setClipY(180);
         }
     }
 

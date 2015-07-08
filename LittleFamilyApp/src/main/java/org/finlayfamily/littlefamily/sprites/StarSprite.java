@@ -33,13 +33,19 @@ public class StarSprite extends Sprite {
     @Override
     public void doStep() {
         if (state==0) {
-            width++;
-            height++;
-            if (width==maxWidth) state=1;
+            width+=2;
+            x-=1;
+            height+=2;
+            y-=1;
+            if (width>=maxWidth) state=1;
         } else {
-            width--;
-            height--;
-            if (width==0) {
+            width-=2;
+            x+=1;
+            height-=2;
+            y+=1;
+            if (width<=0 || height<=0) {
+                width = 0;
+                height = 0;
                 state=0;
                 if (fadeOut) {
                     this.setRemoveMe(true);

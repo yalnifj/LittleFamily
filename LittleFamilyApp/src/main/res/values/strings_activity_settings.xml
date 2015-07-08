@@ -29,24 +29,6 @@
     <!-- Example settings for Data & Sync -->
     <string name="pref_header_data_sync">Data &amp; sync</string>
 
-    <string name="pref_title_sync_frequency">Sync frequency</string>
-    <string-array name="pref_sync_frequency_titles">
-        <item>15 minutes</item>
-        <item>30 minutes</item>
-        <item>1 hour</item>
-        <item>3 hours</item>
-        <item>6 hours</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_sync_frequency_values">
-        <item>15</item>
-        <item>30</item>
-        <item>60</item>
-        <item>180</item>
-        <item>360</item>
-        <item>-1</item>
-    </string-array>
-
     <string name="pref_title_system_sync_settings">System sync settings</string>
 
     <!-- Example settings for Notifications -->
@@ -58,4 +40,44 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
+
+    <string name="pref_title_remote_service_type">Remote Tree Type</string>
+    <string-array name="pref_remote_service_titles">
+        <item>FamilySearch</item>
+        <item>PhpGedView</item>
+    </string-array>
+    <string-array name="pref_remote_service_values">
+        <item>FamilySearchService</item>
+        <item>PGVService</item>
+    </string-array>
+
+    <string name="pref_title_manage_creds">Manage Credentials</string>
+    <string name="pref_title_sync_data_background">Sync in Background</string>
+    <string name="pref_title_sync_data_cellular">Sync using cellular data</string>
+
+    <string name="pref_title_sync_delay">Sync Delay</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>1 hour</item>
+        <item>2 hours</item>
+        <item>3 hours</item>
+        <item>4 hours</item>
+        <item>5 hours</item>
+        <item>6 hours</item>
+        <item>8 hours</item>
+        <item>12 hours</item>
+        <item>24 hours</item>
+        <item>48 hours</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>8</item>
+        <item>12</item>
+        <item>24</item>
+        <item>48</item>
+    </string-array>
 </resources>

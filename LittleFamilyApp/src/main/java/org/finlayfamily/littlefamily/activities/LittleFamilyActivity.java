@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.widget.Toast;
 
 import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.data.DataNetworkState;
@@ -35,6 +36,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     public static final String TOPIC_START_TREE = "startTree";
     public static final String TOPIC_START_HERITAGE_CALC = "startHeritageCalc";
     public static final String TOPIC_START_BUBBLES = "startBubblePop";
+    public static final String TOPIC_START_SETTINGS = "startSettings";
     protected TextToSpeech tts;
     protected MediaPlayer mediaPlayer;
     protected TopBarFragment topBar;
@@ -83,6 +85,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         EventQueue.getInstance().subscribe(TOPIC_START_SCRATCH, this);
         EventQueue.getInstance().subscribe(TOPIC_START_TREE, this);
         EventQueue.getInstance().subscribe(TOPIC_START_BUBBLES, this);
+        EventQueue.getInstance().subscribe(TOPIC_START_SETTINGS, this);
     }
 
     @Override
@@ -98,6 +101,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         EventQueue.getInstance().unSubscribe(TOPIC_START_SCRATCH, this);
         EventQueue.getInstance().unSubscribe(TOPIC_START_TREE, this);
         EventQueue.getInstance().unSubscribe(TOPIC_START_BUBBLES, this);
+        EventQueue.getInstance().unSubscribe(TOPIC_START_SETTINGS, this);
     }
 
     public void showLoadingDialog() {
@@ -123,6 +127,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
 
     public void showAdultAuthDialog() {
         adultAuthDialog = new AdultsAuthDialog();
+        adultAuthDialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Theme_AppCompat_Light_Dialog);
         adultAuthDialog.show(getFragmentManager(), "Authenticate");
     }
 
@@ -213,15 +218,12 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         showAdultAuthDialog();
     }
 
-
-    public void adultAuthCancel(View v) {
-        hideAdultAuthDialog();
-    }
-
-    public void adultAuthVerify(View v) {
+    public void adultAuthVerify() {
         if (adultAuthDialog.authenticated()) {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
+        } else {
+            Toast.makeText(this, "Unable to verify password", Toast.LENGTH_LONG).show();
         }
         hideAdultAuthDialog();
     }
@@ -256,6 +258,9 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
                 break;
             case TOPIC_START_BUBBLES:
                 startBubbleGame(person);
+                break;
+            case TOPIC_START_SETTINGS:
+                showAdultAuthDialog();
                 break;
         }
     }

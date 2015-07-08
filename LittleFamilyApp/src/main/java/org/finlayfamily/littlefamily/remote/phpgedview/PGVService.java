@@ -374,6 +374,8 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
                         } catch (GedcomParseException e) {
                             Log.e(TAG, "Error parsing gedcom for family " + famid, e);
                         }
+                    } else {
+                        throw new RemoteServiceSearchException("Unable to find gedcom record for family "+famid, 404);
                     }
                 }
             }
@@ -418,6 +420,8 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
                         } catch (GedcomParseException e) {
                             Log.e(TAG, "Error parsing gedcom for family " + famid, e);
                         }
+                    } else {
+                        throw new RemoteServiceSearchException("Unable to find gedcom record for family "+famid, 404);
                     }
                 }
             }
@@ -462,6 +466,8 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
                         } catch (GedcomParseException e) {
                             Log.e(TAG, "Error parsing gedcom for family " + famid, e);
                         }
+                    } else {
+                        throw new RemoteServiceSearchException("Unable to find gedcom record for family "+famid, 404);
                     }
                 }
             }

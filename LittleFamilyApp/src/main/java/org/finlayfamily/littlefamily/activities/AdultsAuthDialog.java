@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -38,6 +39,34 @@ public class AdultsAuthDialog extends DialogFragment {
             e.printStackTrace();
         }
         passwordField = (EditText) v.findViewById(R.id.password);
+
+        ImageView closeBtn = (ImageView) v.findViewById(R.id.closeImage);
+        closeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LittleFamilyActivity activity = (LittleFamilyActivity) getActivity();
+                activity.hideAdultAuthDialog();
+            }
+        });
+
+        Button cancelBtn = (Button) v.findViewById(R.id.cancelBtn);
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LittleFamilyActivity activity = (LittleFamilyActivity) getActivity();
+                activity.hideAdultAuthDialog();
+            }
+        });
+
+        Button signInBtn = (Button) v.findViewById(R.id.signInBtn);
+        signInBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LittleFamilyActivity activity = (LittleFamilyActivity) getActivity();
+                activity.adultAuthVerify();
+            }
+        });
+
         return v;
     }
 
@@ -73,6 +102,6 @@ public class AdultsAuthDialog extends DialogFragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
+        return true;
     }
 }

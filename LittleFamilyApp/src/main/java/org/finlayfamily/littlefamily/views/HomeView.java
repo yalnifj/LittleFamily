@@ -2,10 +2,15 @@ package org.finlayfamily.littlefamily.views;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.util.AttributeSet;
 
+import org.finlayfamily.littlefamily.activities.LittleFamilyActivity;
 import org.finlayfamily.littlefamily.sprites.Sprite;
 import org.finlayfamily.littlefamily.sprites.StarSprite;
+import org.finlayfamily.littlefamily.sprites.TouchEventGameSprite;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +22,8 @@ import java.util.Random;
 public class HomeView extends SpritedClippedSurfaceView {
 
     private Bitmap starBitmap;
+    private Bitmap lockBitmap;
+    private Sprite lockSprite;
     private long timer;
     private List<Sprite> activitySprites;
     private Random random;
@@ -30,6 +37,8 @@ public class HomeView extends SpritedClippedSurfaceView {
         activitySprites = new ArrayList<>();
         random = new Random();
         timer = 0L;
+        lockBitmap = BitmapFactory.decodeResource(context.getResources(), android.R.drawable.ic_lock_idle_lock);
+        lockSprite = new TouchEventGameSprite(lockBitmap, LittleFamilyActivity.TOPIC_START_SETTINGS);
     }
 
     public HomeView(Context context, AttributeSet attrs) {
@@ -37,6 +46,8 @@ public class HomeView extends SpritedClippedSurfaceView {
         activitySprites = new ArrayList<>();
         random = new Random();
         timer = 0L;
+        lockBitmap = BitmapFactory.decodeResource(context.getResources(), android.R.drawable.ic_lock_idle_lock);
+        lockSprite = new TouchEventGameSprite(lockBitmap, LittleFamilyActivity.TOPIC_START_SETTINGS);
     }
 
     public Bitmap getStarBitmap() {
@@ -55,12 +66,15 @@ public class HomeView extends SpritedClippedSurfaceView {
     public void doStep() {
         super.doStep();
         if (state==0) {
-            if (timer == 0) {
+            if (timer <= 0) {
                 state = 1;
-                timer = random.nextInt(500);
+                timer = random.nextInt(50);
                 int activity = random.nextInt(activitySprites.size());
+                while(activitySprites.get(activity)==activeSprite) {
+                    activity = random.nextInt(activitySprites.size());
+                }
                 activeSprite = activitySprites.get(activity);
-                starCount = 1 + random.nextInt(activeSprite.getWidth()/starBitmap.getWidth());
+                starCount = 4 + random.nextInt(2+activeSprite.getHeight()/starBitmap.getHeight());
             }
             timer--;
         }
@@ -82,6 +96,26 @@ public class HomeView extends SpritedClippedSurfaceView {
                 }
             }
             starDelay--;
+        }
+    }
+
+    @Override
+    public void doDraw(Canvas canvas) {
+        super.doDraw(canvas);
+
+        canvas.setMatrix(new Matrix());
+        canvas.translate(0,0);
+        lockSprite.setX(getWidth() - lockSprite.getWidth() * 1.5f);
+        lockSprite.setY(getHeight() - lockSprite.getHeight() * 1.5f);
+        lockSprite.doDraw(canvas);
+    }
+
+    @Override
+    protected void touch_up(float x, float y) {
+        super.touch_up(x, y);
+
+        if (lockSprite.inSprite(x, y)) {
+            lockSprite.onRelease(x, y);
         }
     }
 }

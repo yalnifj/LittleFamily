@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -46,9 +47,18 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fslogin);
 
+        dataService = DataService.getInstance();
+        dataService.setContext(this);
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        mEmailView.setText(FS_DEFAULT_USER);
+        try {
+            String defaultUser = dataService.getDBHelper().getProperty(DataService.SERVICE_USERNAME);
+            if (defaultUser==null) defaultUser = FS_DEFAULT_USER;
+            mEmailView.setText(defaultUser);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setText(FS_DEFAULT_PASS);
@@ -70,9 +80,6 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
                 attemptLogin();
             }
         });
-
-        dataService = DataService.getInstance();
-        dataService.setContext(this);
     }
 
 
@@ -137,7 +144,8 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
     public void onComplete(RemoteResult response) {
         if (response!=null && response.isSuccess()) {
             try {
-                dataService.getDBHelper().saveProperty(DataService.SERVICE_TYPE, dataService.getRemoteService().getClass().getSimpleName());
+                //dataService.getDBHelper().saveProperty(DataService.SERVICE_TYPE, dataService.getRemoteService().getClass().getSimpleName());
+                PreferenceManager.getDefaultSharedPreferences(this).edit().putString(DataService.SERVICE_TYPE, dataService.getRemoteService().getClass().getSimpleName());
                 dataService.getDBHelper().saveProperty(DataService.SERVICE_TYPE_FAMILYSEARCH+DataService.SERVICE_TOKEN, dataService.getRemoteService().getEncodedAuthToken());
                 dataService.getDBHelper().saveProperty(DataService.SERVICE_USERNAME, mEmailView.getText().toString());
             } catch (Exception e) {

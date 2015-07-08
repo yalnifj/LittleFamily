@@ -8,7 +8,7 @@
 
     <FrameLayout
         android:layout_width="fill_parent"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:id="@+id/topBarFragment"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"

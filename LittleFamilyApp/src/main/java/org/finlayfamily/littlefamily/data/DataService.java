@@ -2,6 +2,7 @@ package org.finlayfamily.littlefamily.data;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import org.finlayfamily.littlefamily.activities.tasks.AuthTask;
@@ -29,7 +30,7 @@ import java.util.Queue;
  * Created by jfinlay on 2/18/2015.
  */
 public class DataService implements AuthTask.Listener {
-    public static final String SERVICE_TYPE = "serviceType";
+    public static final String SERVICE_TYPE = "service_type";
     public static final String SERVICE_TYPE_PHPGEDVIEW = PGVService.class.getSimpleName();
     public static final String SERVICE_TYPE_FAMILYSEARCH = FamilySearchService.class.getSimpleName();
     public static final String SERVICE_TOKEN = "Token";
@@ -76,6 +77,7 @@ public class DataService implements AuthTask.Listener {
     public void setRemoteService(String type, RemoteService service) {
         this.serviceType = type;
         this.remoteService = service;
+        syncQ.clear();
     }
 
     public RemoteService getRemoteService() {
@@ -90,7 +92,8 @@ public class DataService implements AuthTask.Listener {
         this.context = context;
         if (remoteService==null) {
             try {
-                serviceType = getDBHelper().getProperty(SERVICE_TYPE);
+                //serviceType = getDBHelper().getProperty(SERVICE_TYPE);
+                serviceType = PreferenceManager.getDefaultSharedPreferences(context).getString(SERVICE_TYPE, null);
                 if (serviceType != null) {
                     if (serviceType.equals(PGVService.class.getSimpleName())) {
                         String baseUrl = getDBHelper().getProperty(serviceType + SERVICE_BASEURL);
@@ -210,7 +213,9 @@ public class DataService implements AuthTask.Listener {
                     if (tp != null) {
                         getDBHelper().removeFromSyncQ(tp.person.getId());
                         Calendar cal = Calendar.getInstance();
-                        cal.add(Calendar.HOUR, -1);
+                        String syncDelayStr = PreferenceManager.getDefaultSharedPreferences(context).getString("sync_delay", "1");
+                        int syncDelay = Integer.parseInt(syncDelayStr);
+                        cal.add(Calendar.HOUR, -1 * syncDelay);
                         LittlePerson person = tp.person;
                         if (person.getLastSync().before(cal.getTime()) || person.isHasParents()==null) {
                             Log.d("SyncThread", "Synchronizing person " + person.getId() + " " + person.getFamilySearchId() + " " + person.getName());
