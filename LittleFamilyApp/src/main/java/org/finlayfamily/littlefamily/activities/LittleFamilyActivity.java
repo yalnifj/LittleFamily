@@ -42,6 +42,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     protected LoadingDialog loadingDialog;
     protected ArrayList<LittlePerson> people;
     protected Boolean dialogShown = false;
+    protected AdultsAuthDialog adultAuthDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +118,17 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
             }
             dialogShown = false;
             loadingDialog = null;
+        }
+    }
+
+    public void showAdultAuthDialog() {
+        adultAuthDialog = new AdultsAuthDialog();
+        adultAuthDialog.show(getFragmentManager(), "Authenticate");
+    }
+
+    public void hideAdultAuthDialog() {
+        if (adultAuthDialog != null && adultAuthDialog.isVisible()) {
+            adultAuthDialog.dismissAllowingStateLoss();
         }
     }
 
@@ -198,7 +210,20 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     }
 
     public void onSettingsButtonPressed(View view) {
+        showAdultAuthDialog();
+    }
 
+
+    public void adultAuthCancel(View v) {
+        hideAdultAuthDialog();
+    }
+
+    public void adultAuthVerify(View v) {
+        if (adultAuthDialog.authenticated()) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+        }
+        hideAdultAuthDialog();
     }
 
     @Override

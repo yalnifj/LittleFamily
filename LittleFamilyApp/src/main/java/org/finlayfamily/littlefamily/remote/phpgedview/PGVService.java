@@ -117,7 +117,7 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
         params.putString("password",password);
         Bundle headers = new Bundle();
         headers.putString("User-Agent", "PGVAgent");
-        encodedAuthToken = username+":"+password;
+        encodedAuthToken = createEncodedAuthToken(username, password);
 
         RemoteResult data = getRestData(METHOD_POST, action, params, headers);
         if (data!=null) {
@@ -154,6 +154,10 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
     @Override
     public String getEncodedAuthToken() {
         return encodedAuthToken;
+    }
+
+    public String createEncodedAuthToken(String username, String password) {
+        return username+":"+password;
     }
 
     @Override

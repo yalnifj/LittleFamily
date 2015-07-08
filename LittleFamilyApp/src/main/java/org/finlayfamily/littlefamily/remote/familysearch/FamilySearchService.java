@@ -77,7 +77,7 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
 
     @Override
     public RemoteResult authenticate(String username, String password) throws RemoteServiceSearchException {
-        encodedAuthToken = Base64.encodeToString((username + ":" + password).getBytes(), Base64.NO_WRAP);
+        encodedAuthToken = createEncodedAuthToken(username, password);
 
         return authWithToken(encodedAuthToken);
     }
@@ -120,6 +120,10 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
     @Override
     public String getEncodedAuthToken() {
         return encodedAuthToken;
+    }
+
+    public String createEncodedAuthToken(String username, String password) {
+        return Base64.encodeToString((username + ":" + password).getBytes(), Base64.NO_WRAP);
     }
 
     @Override

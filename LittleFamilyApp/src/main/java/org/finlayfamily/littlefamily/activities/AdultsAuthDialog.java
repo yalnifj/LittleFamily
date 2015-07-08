@@ -20,6 +20,7 @@ import java.lang.reflect.Field;
  * Created by jfinlay on 5/27/2015.
  */
 public class AdultsAuthDialog extends DialogFragment {
+    private EditText passwordField;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -36,6 +37,7 @@ public class AdultsAuthDialog extends DialogFragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        passwordField = (EditText) v.findViewById(R.id.password);
         return v;
     }
 
@@ -58,5 +60,19 @@ public class AdultsAuthDialog extends DialogFragment {
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public boolean authenticated() {
+        String password = passwordField.getText().toString();
+        DataService dataService = DataService.getInstance();
+        try {
+            String testToken = dataService.getRemoteService().createEncodedAuthToken(dataService.getDBHelper().getProperty(DataService.SERVICE_USERNAME), password);
+            if (dataService.getRemoteService().getEncodedAuthToken().equals(testToken)) {
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
