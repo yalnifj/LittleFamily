@@ -13,7 +13,7 @@ import org.finlayfamily.littlefamily.sprites.ClippedRepeatedBackgroundSprite;
 import org.finlayfamily.littlefamily.sprites.MovingAnimatedBitmapSprite;
 import org.finlayfamily.littlefamily.sprites.TouchEventGameSprite;
 import org.finlayfamily.littlefamily.sprites.TouchStateAnimatedBitmapSprite;
-import org.finlayfamily.littlefamily.views.SpritedClippedSurfaceView;
+import org.finlayfamily.littlefamily.views.HomeView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,14 +25,14 @@ public class HomeActivity extends LittleFamilyActivity {
     private LittlePerson selectedPerson;
     private ArrayList<LittlePerson> people;
     private ClippedRepeatedBackgroundSprite homeBackground;
-    private SpritedClippedSurfaceView homeView;
+    private HomeView homeView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        homeView = (SpritedClippedSurfaceView) findViewById(R.id.homeView);
+        homeView = (HomeView) findViewById(R.id.homeView);
 
         Intent intent = getIntent();
         people = (ArrayList<LittlePerson>) intent.getSerializableExtra(ChooseFamilyMember.FAMILY);
@@ -79,6 +79,8 @@ public class HomeActivity extends LittleFamilyActivity {
             homeBackground.setClipY(200);
             homeView.setBackgroundSprite(homeBackground);
 
+            Bitmap starBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.star1);
+            homeView.setStarBitmap(starBitmap);
 
             Bitmap cloudBm1 = BitmapFactory.decodeResource(getResources(), R.drawable.house_cloud1);
             MovingAnimatedBitmapSprite cloud1 = new MovingAnimatedBitmapSprite(cloudBm1, maxWidth, maxHeight);
@@ -107,6 +109,7 @@ public class HomeActivity extends LittleFamilyActivity {
             tree.setY(500);
             tree.setSelectable(true);
             homeView.addSprite(tree);
+            homeView.addActivitySprite(tree);
 
             Bitmap flowerBm2 = BitmapFactory.decodeResource(getResources(), R.drawable.house_flowers_a1);
             TouchStateAnimatedBitmapSprite flower1 = new TouchStateAnimatedBitmapSprite(flowerBm2, this);
@@ -157,6 +160,7 @@ public class HomeActivity extends LittleFamilyActivity {
             frameBtn.setY(1035);
             frameBtn.setSelectable(true);
             homeView.addSprite(frameBtn);
+            homeView.addActivitySprite(frameBtn);
 
             Bitmap lampBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_familyroom_lamp1);
             TouchStateAnimatedBitmapSprite lamp = new TouchStateAnimatedBitmapSprite(lampBm, this);
@@ -189,6 +193,7 @@ public class HomeActivity extends LittleFamilyActivity {
             childDesk.setY(800);
             childDesk.setSelectable(true);
             homeView.addSprite(childDesk);
+            homeView.addActivitySprite(childDesk);
 
             Bitmap childPaintBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_paint);
             TouchEventGameSprite childPaint = new TouchEventGameSprite(childPaintBm, TOPIC_START_COLORING);
@@ -196,6 +201,7 @@ public class HomeActivity extends LittleFamilyActivity {
             childPaint.setY(810);
             childPaint.setSelectable(true);
             homeView.addSprite(childPaint);
+            homeView.addActivitySprite(childPaint);
 
             Bitmap childTeddyBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy);
             TouchStateAnimatedBitmapSprite childTeddy = new TouchStateAnimatedBitmapSprite(childTeddyBm, this);
@@ -285,6 +291,7 @@ public class HomeActivity extends LittleFamilyActivity {
             bubbles.setSelectable(true);
             bubbles.setIgnoreAlpha(true);
             homeView.addSprite(bubbles);
+            homeView.addActivitySprite(bubbles);
 
             Bitmap wardrobeBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_adult_wardrobe);
             TouchEventGameSprite wardrobe = new TouchEventGameSprite(wardrobeBm, TOPIC_START_HERITAGE_CALC);
@@ -292,6 +299,7 @@ public class HomeActivity extends LittleFamilyActivity {
             wardrobe.setY(700);
             wardrobe.setSelectable(true);
             homeView.addSprite(wardrobe);
+            homeView.addActivitySprite(wardrobe);
 
             Bitmap adultBedBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_adult_bed);
             AnimatedBitmapSprite adultBed = new AnimatedBitmapSprite(adultBedBm);
@@ -334,6 +342,7 @@ public class HomeActivity extends LittleFamilyActivity {
             blocks.setY(550);
             blocks.setSelectable(true);
             homeView.addSprite(blocks);
+            homeView.addActivitySprite(blocks);
 
             Bitmap horseBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_toys_horse);
             AnimatedBitmapSprite horse = new AnimatedBitmapSprite(horseBm);

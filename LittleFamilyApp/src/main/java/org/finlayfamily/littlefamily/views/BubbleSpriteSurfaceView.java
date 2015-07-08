@@ -18,6 +18,7 @@ import org.finlayfamily.littlefamily.sprites.AnimatedBitmapSprite;
 import org.finlayfamily.littlefamily.sprites.BubbleAnimatedBitmapSprite;
 import org.finlayfamily.littlefamily.sprites.Sprite;
 import org.finlayfamily.littlefamily.sprites.TouchStateAnimatedBitmapSprite;
+import org.gedcomx.types.GenderType;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -121,12 +122,14 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
         } else {
             if (parents.size() > 0 && parents.get(0) == getNextPerson()) {
                 fatherSpot.setState(1);
-                activity.speak(activity.getResources().getString(R.string.who_is_father));
+                if (getNextPerson().getGender()== GenderType.Female) activity.speak(activity.getResources().getString(R.string.who_is_mother));
+                else activity.speak(activity.getResources().getString(R.string.who_is_father));
             } else {
                 fatherSpot.setState(0);
             }
             if (parents.size() > 1 && parents.get(1) == getNextPerson()) {
-                activity.speak(activity.getResources().getString(R.string.who_is_mother));
+                if (getNextPerson().getGender()== GenderType.Female) activity.speak(activity.getResources().getString(R.string.who_is_mother));
+                else activity.speak(activity.getResources().getString(R.string.who_is_father));
                 motherSpot.setState(1);
             } else {
                 motherSpot.setState(0);
@@ -354,7 +357,8 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
                     bubble.setMy((int) (fatherSpot.getY() + 3));
                     if (count==0) {
                         fatherSpot.setState(1);
-                        activity.speak(activity.getResources().getString(R.string.who_is_father));
+                        if (person.getGender()== GenderType.Female) activity.speak(activity.getResources().getString(R.string.who_is_mother));
+                        else activity.speak(activity.getResources().getString(R.string.who_is_father));
                     }
                 }
                 if (parents.size() > 1 && parents.get(1) == person) {
@@ -362,7 +366,8 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
                     bubble.setMy((int) (motherSpot.getY() + 3));
                     if (count==0) {
                         motherSpot.setState(1);
-                        activity.speak(activity.getResources().getString(R.string.who_is_mother));
+                        if (person.getGender()== GenderType.Female) activity.speak(activity.getResources().getString(R.string.who_is_mother));
+                        else activity.speak(activity.getResources().getString(R.string.who_is_father));
                     }
                 }
                 if (children.size() > 0 && children.get(0) == person) {

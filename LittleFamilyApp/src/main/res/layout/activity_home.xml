@@ -9,7 +9,7 @@
     <view
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        class="org.finlayfamily.littlefamily.views.SpritedClippedSurfaceView"
+        class="org.finlayfamily.littlefamily.views.HomeView"
         android:id="@+id/homeView"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />

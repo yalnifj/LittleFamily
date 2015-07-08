@@ -827,16 +827,16 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="2.528835"
-     inkscape:cx="161.44881"
-     inkscape:cy="766.80881"
+     inkscape:cx="100.35348"
+     inkscape:cy="766.41337"
      inkscape:document-units="px"
-     inkscape:current-layer="g4447"
+     inkscape:current-layer="layer1"
      showgrid="true"
-     inkscape:window-width="1081"
-     inkscape:window-height="637"
-     inkscape:window-x="397"
-     inkscape:window-y="203"
-     inkscape:window-maximized="0"
+     inkscape:window-width="1600"
+     inkscape:window-height="1140"
+     inkscape:window-x="-4"
+     inkscape:window-y="-4"
+     inkscape:window-maximized="1"
      showguides="true">
     <inkscape:grid
        type="xygrid"
@@ -891,7 +891,10 @@
        d="m 127.40046,290.95706 -18.23354,-3.21052 -12.981618,13.20027 -2.581091,-18.33324 -16.565739,-8.26715 16.63834,-8.12004 2.743431,-18.30964 12.864147,13.31477 18.26128,-3.04884 -8.68786,16.34903 z"
        inkscape:transform-center-x="-0.50624941"
        inkscape:transform-center-y="-1.1811122"
-       transform="matrix(0.5768665,0.24631021,-0.24631021,0.5768665,102.45984,79.948563)" />
+       transform="matrix(0.5768665,0.24631021,-0.24631021,0.5768665,102.45984,79.948563)"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\star1.png"
+       inkscape:export-xdpi="71.089996"
+       inkscape:export-ydpi="71.089996" />
     <path
        sodipodi:type="star"
        style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7364)"
@@ -909,7 +912,10 @@
        d="m 131.14754,315.68772 -7.12877,1.29839 -2.97183,6.60858 -3.43775,-6.37864 -7.20348,-0.78422 5.00413,-5.2406 -1.48017,-7.09325 6.53047,3.13977 6.28869,-3.59966 -0.96808,7.18109 z"
        inkscape:transform-center-x="0.53784799"
        inkscape:transform-center-y="-0.15382974"
-       transform="matrix(0.51433892,0.21961221,-0.20006273,0.4685534,95.320742,115.78416)" />
+       transform="matrix(0.51433892,0.21961221,-0.20006273,0.4685534,95.320742,115.78416)"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars1.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        sodipodi:type="star"
        style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7352)"
@@ -927,7 +933,10 @@
        d="m 159.6253,332.92428 -6.64207,-6.71138 -9.29416,1.6668 4.33038,-8.39092 -4.45728,-8.3242 9.3184,1.5255 6.53942,-6.81144 1.4287,9.33373 8.49886,4.1145 -8.43541,4.24306 z"
        inkscape:transform-center-x="0.19425944"
        inkscape:transform-center-y="0.53622379"
-       transform="matrix(0.47627176,0.20335831,-0.20535977,0.48095923,104.37557,115.45081)" />
+       transform="matrix(0.47627176,0.20335831,-0.20535977,0.48095923,104.37557,115.45081)"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars1.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        sodipodi:type="star"
        style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7340)"
@@ -945,7 +954,10 @@
        d="m 113.91101,352.40904 -5.76109,-4.9263 -7.32421,1.95306 2.90492,-7.00143 -4.120772,-6.36221 7.556422,0.59917 4.77743,-5.88511 1.76521,7.37174 7.07339,2.72501 -6.46546,3.95681 z"
        inkscape:transform-center-x="-0.051392154"
        inkscape:transform-center-y="0.36051165"
-       transform="matrix(0.37268036,0.1591269,-0.1438693,0.33694657,93.235867,169.84097)" />
+       transform="matrix(0.37268036,0.1591269,-0.1438693,0.33694657,93.235867,169.84097)"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars1.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        sodipodi:type="star"
        style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7328)"
@@ -963,7 +975,10 @@
        d="m 153.62996,349.41138 -5.77263,-2.70072 -5.49739,3.22428 0.7847,-6.32467 -4.76526,-4.23197 6.25761,-1.20814 2.55229,-5.83977 3.08271,5.57799 6.34266,0.62279 -4.35238,4.65553 z"
        inkscape:transform-center-x="-0.38512585"
        inkscape:transform-center-y="0.088823145"
-       transform="matrix(0.41091422,0.17545198,-0.16242807,0.3804118,97.547621,155.04174)" />
+       transform="matrix(0.41091422,0.17545198,-0.16242807,0.3804118,97.547621,155.04174)"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars1.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        sodipodi:type="star"
        style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7316)"
@@ -981,7 +996,10 @@
        d="m 131.89697,376.39028 -4.42805,-4.47425 -6.19611,1.1112 2.88692,-5.59394 -2.97152,-5.54947 6.21227,1.017 4.35961,-4.54096 0.95247,6.22249 5.6659,2.743 -5.62361,2.8287 z"
        inkscape:transform-center-x="0.023538334"
        inkscape:transform-center-y="0.16672319"
-       transform="matrix(0.37567702,0.16040641,-0.13369649,0.31312152,86.485392,184.87471)" />
+       transform="matrix(0.37567702,0.16040641,-0.13369649,0.31312152,86.485392,184.87471)"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars1.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        sodipodi:type="star"
        style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7304)"
@@ -999,7 +1017,10 @@
        d="m 143.13816,297.70177 -3.54706,-2.68917 -4.22615,1.39745 1.46145,-4.20445 -2.63501,-3.58748 4.45028,0.0907 2.59763,-3.61463 1.28898,4.26049 4.24043,1.35351 -3.65365,2.54246 z"
        inkscape:transform-center-x="-0.078045999"
        inkscape:transform-center-y="0.32654396"
-       transform="matrix(0.5768665,0.24631021,-0.24631021,0.5768665,102.45984,79.948563)" />
+       transform="matrix(0.5768665,0.24631021,-0.24631021,0.5768665,102.45984,79.948563)"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars1.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        sodipodi:type="star"
        style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7292)"
@@ -1017,7 +1038,10 @@
        d="m 131.89697,376.39028 -4.42805,-4.47425 -6.19611,1.1112 2.88692,-5.59394 -2.97152,-5.54947 6.21227,1.017 4.35961,-4.54096 0.95247,6.22249 5.6659,2.743 -5.62361,2.8287 z"
        inkscape:transform-center-x="0.023538334"
        inkscape:transform-center-y="0.16672319"
-       transform="matrix(0.37567702,0.16040641,-0.13369649,0.31312152,109.88147,185.19501)" />
+       transform="matrix(0.37567702,0.16040641,-0.13369649,0.31312152,109.88147,185.19501)"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars1.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        sodipodi:type="star"
        style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -1035,7 +1059,10 @@
        d="m 101.99845,269.59874 -1.63593,-6.50465 -6.685697,-0.53673 6.504647,-1.63592 0.53673,-6.6857 1.63592,6.50464 6.6857,0.53673 -6.50464,1.63593 z"
        inkscape:transform-center-x="-0.36054027"
        inkscape:transform-center-y="0.23311854"
-       transform="matrix(0.61500044,0.15133512,-0.15531142,0.63854036,79.83556,77.570149)" />
+       transform="matrix(0.61500044,0.15133512,-0.15531142,0.63854036,79.83556,77.570149)"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\star1.png"
+       inkscape:export-xdpi="71.089996"
+       inkscape:export-ydpi="71.089996" />
     <path
        sodipodi:type="star"
        style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -1053,7 +1080,10 @@
        d="m 101.99845,269.59874 -1.63593,-6.50465 -6.685697,-0.53673 6.504647,-1.63592 0.53673,-6.6857 1.63592,6.50464 6.6857,0.53673 -6.50464,1.63593 z"
        inkscape:transform-center-x="-0.25250183"
        inkscape:transform-center-y="0.16326251"
-       transform="matrix(0.43071143,0.10598654,-0.10877131,0.44719746,94.442235,173.82575)" />
+       transform="matrix(0.43071143,0.10598654,-0.10877131,0.44719746,94.442235,173.82575)"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars1.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        sodipodi:type="star"
        style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -1071,14 +1101,16 @@
        d="m 101.99845,269.59874 -1.63593,-6.50465 -6.685697,-0.53673 6.504647,-1.63592 0.53673,-6.6857 1.63592,6.50464 6.6857,0.53673 -6.50464,1.63593 z"
        inkscape:transform-center-x="-0.2389968"
        inkscape:transform-center-y="0.15453131"
-       transform="matrix(0.40767531,0.10031796,-0.1029538,0.4232796,72.455182,180.22922)" />
+       transform="matrix(0.40767531,0.10031796,-0.1029538,0.4232796,72.455182,180.22922)"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars1.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
   </g>
   <g
      id="g4379"
      inkscape:groupmode="layer"
      inkscape:label="Layer 1 copy"
-     style="display:none"
-     sodipodi:insensitive="true">
+     style="display:inline">
     <path
        transform="matrix(0.43108617,0.18406499,-0.18406499,0.43108617,100.48384,126.52023)"
        inkscape:transform-center-y="-0.88263113"
@@ -1096,7 +1128,10 @@
        sodipodi:sides="5"
        id="path4383"
        style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7376)"
-       sodipodi:type="star" />
+       sodipodi:type="star"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars2.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        transform="matrix(0.61672476,0.26332887,-0.23988782,0.56182504,95.230207,81.083963)"
        inkscape:transform-center-y="-0.18444836"
@@ -1114,7 +1149,10 @@
        sodipodi:sides="5"
        id="path4385"
        style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7364)"
-       sodipodi:type="star" />
+       sodipodi:type="star"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars2.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        transform="matrix(0.57107982,0.24383941,-0.2462393,0.57670039,102.87839,79.079695)"
        inkscape:transform-center-y="0.6429616"
@@ -1132,7 +1170,10 @@
        sodipodi:sides="5"
        id="path4387"
        style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7352)"
-       sodipodi:type="star" />
+       sodipodi:type="star"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars2.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        transform="matrix(0.44686721,0.19080316,-0.17250835,0.40402016,94.730311,143.90149)"
        inkscape:transform-center-y="0.43228471"
@@ -1150,7 +1191,10 @@
        sodipodi:sides="5"
        id="path4389"
        style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7340)"
-       sodipodi:type="star" />
+       sodipodi:type="star"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars2.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        transform="matrix(0.49271202,0.21037798,-0.19476148,0.4561377,95.900375,124.15627)"
        inkscape:transform-center-y="0.1065017"
@@ -1168,7 +1212,10 @@
        sodipodi:sides="5"
        id="path4391"
        style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7328)"
-       sodipodi:type="star" />
+       sodipodi:type="star"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars2.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        transform="matrix(0.45046041,0.1923374,-0.1603105,0.37545242,86.636066,157.92789)"
        inkscape:transform-center-y="0.19992075"
@@ -1186,7 +1233,10 @@
        sodipodi:sides="5"
        id="path4393"
        style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7316)"
-       sodipodi:type="star" />
+       sodipodi:type="star"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars2.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        transform="matrix(0.69169925,0.29534146,-0.29534146,0.69169925,100.58131,39.719387)"
        inkscape:transform-center-y="0.39154606"
@@ -1204,7 +1254,10 @@
        sodipodi:sides="5"
        id="path4395"
        style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7304)"
-       sodipodi:type="star" />
+       sodipodi:type="star"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars2.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        transform="matrix(0.45046041,0.1923374,-0.1603105,0.37545242,110.68944,158.31194)"
        inkscape:transform-center-y="0.19991089"
@@ -1222,7 +1275,10 @@
        sodipodi:sides="5"
        id="path4397"
        style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7292)"
-       sodipodi:type="star" />
+       sodipodi:type="star"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars2.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        transform="matrix(0.78787064,0.19387384,-0.19896784,0.81802739,73.522186,26.050912)"
        inkscape:transform-center-y="0.29864639"
@@ -1240,7 +1296,10 @@
        sodipodi:sides="4"
        id="path4399"
        style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       sodipodi:type="star" />
+       sodipodi:type="star"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars2.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        transform="matrix(0.51645012,0.12708454,-0.13042365,0.53621792,90.967701,149.07492)"
        inkscape:transform-center-y="0.19575999"
@@ -1258,7 +1317,10 @@
        sodipodi:sides="4"
        id="path4401"
        style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       sodipodi:type="star" />
+       sodipodi:type="star"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars2.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        transform="matrix(0.48882837,0.12028755,-0.12344809,0.5075389,73.976993,140.81387)"
        inkscape:transform-center-y="0.18529454"
@@ -1276,7 +1338,10 @@
        sodipodi:sides="4"
        id="path4403"
        style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       sodipodi:type="star" />
+       sodipodi:type="star"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars2.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
   </g>
   <g
      style="display:none"
@@ -1301,7 +1366,10 @@
        d="m 127.40046,290.95706 -18.23354,-3.21052 -12.981618,13.20027 -2.581091,-18.33324 -16.565739,-8.26715 16.63834,-8.12004 2.743431,-18.30964 12.864147,13.31477 18.26128,-3.04884 -8.68786,16.34903 z"
        inkscape:transform-center-x="-0.23767926"
        inkscape:transform-center-y="-0.55451127"
-       transform="matrix(0.27083082,0.11563923,-0.11563923,0.27083082,98.501589,176.29686)" />
+       transform="matrix(0.27083082,0.11563923,-0.11563923,0.27083082,98.501589,176.29686)"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars3.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        sodipodi:type="star"
        style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7364)"
@@ -1319,7 +1387,10 @@
        d="m 131.14754,315.68772 -7.12877,1.29839 -2.97183,6.60858 -3.43775,-6.37864 -7.20348,-0.78422 5.00413,-5.2406 -1.48017,-7.09325 6.53047,3.13977 6.28869,-3.59966 -0.96808,7.18109 z"
        inkscape:transform-center-x="0.81370035"
        inkscape:transform-center-y="-0.23271984"
-       transform="matrix(0.77813248,0.33224668,-0.30267068,0.70886455,96.322351,26.343448)" />
+       transform="matrix(0.77813248,0.33224668,-0.30267068,0.70886455,96.322351,26.343448)"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars3.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        sodipodi:type="star"
        style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7352)"
@@ -1337,7 +1408,10 @@
        d="m 159.6253,332.92428 -6.64207,-6.71138 -9.29416,1.6668 4.33038,-8.39092 -4.45728,-8.3242 9.3184,1.5255 6.53942,-6.81144 1.4287,9.33373 8.49886,4.1145 -8.43541,4.24306 z"
        inkscape:transform-center-x="0.29389786"
        inkscape:transform-center-y="0.81123732"
-       transform="matrix(0.72054146,0.30765648,-0.31068445,0.72763304,99.9722,21.814628)" />
+       transform="matrix(0.72054146,0.30765648,-0.31068445,0.72763304,99.9722,21.814628)"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars3.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        sodipodi:type="star"
        style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7340)"
@@ -1355,7 +1429,10 @@
        d="m 113.91101,352.40904 -5.76109,-4.9263 -7.32421,1.95306 2.90492,-7.00143 -4.120772,-6.36221 7.556422,0.59917 4.77743,-5.88511 1.76521,7.37174 7.07339,2.72501 -6.46546,3.95681 z"
        inkscape:transform-center-x="-0.077749028"
        inkscape:transform-center-y="0.54541225"
-       transform="matrix(0.56382022,0.2407397,-0.21765682,0.50975935,97.691623,101.60142)" />
+       transform="matrix(0.56382022,0.2407397,-0.21765682,0.50975935,97.691623,101.60142)"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars3.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        sodipodi:type="star"
        style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7328)"
@@ -1373,7 +1450,10 @@
        d="m 153.62996,349.41138 -5.77263,-2.70072 -5.49739,3.22428 0.7847,-6.32467 -4.76526,-4.23197 6.25761,-1.20814 2.55229,-5.83977 3.08271,5.57799 6.34266,0.62279 -4.35238,4.65553 z"
        inkscape:transform-center-x="-0.58264795"
        inkscape:transform-center-y="0.13437811"
-       transform="matrix(0.62166343,0.26543761,-0.24573399,0.57551696,95.167913,74.688541)" />
+       transform="matrix(0.62166343,0.26543761,-0.24573399,0.57551696,95.167913,74.688541)"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars3.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        sodipodi:type="star"
        style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7316)"
@@ -1391,7 +1471,10 @@
        d="m 131.89697,376.39028 -4.42805,-4.47425 -6.19611,1.1112 2.88692,-5.59394 -2.97152,-5.54947 6.21227,1.017 4.35961,-4.54096 0.95247,6.22249 5.6659,2.743 -5.62361,2.8287 z"
        inkscape:transform-center-x="0.035605649"
        inkscape:transform-center-y="0.25225277"
-       transform="matrix(0.56835383,0.24267548,-0.20226658,0.47371494,87.478971,115.29879)" />
+       transform="matrix(0.56835383,0.24267548,-0.20226658,0.47371494,87.478971,115.29879)"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars3.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        sodipodi:type="star"
        style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7304)"
@@ -1409,7 +1492,10 @@
        d="m 143.13816,297.70177 -3.54706,-2.68917 -4.22615,1.39745 1.46145,-4.20445 -2.63501,-3.58748 4.45028,0.0907 2.59763,-3.61463 1.28898,4.26049 4.24043,1.35351 -3.65365,2.54246 z"
        inkscape:transform-center-x="-0.11806012"
        inkscape:transform-center-y="0.49402144"
-       transform="matrix(0.87272912,0.37263753,-0.37263753,0.87272912,97.073932,-23.846965)" />
+       transform="matrix(0.87272912,0.37263753,-0.37263753,0.87272912,97.073932,-23.846965)"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars3.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        sodipodi:type="star"
        style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7292)"
@@ -1427,7 +1513,10 @@
        d="m 131.89697,376.39028 -4.42805,-4.47425 -6.19611,1.1112 2.88692,-5.59394 -2.97152,-5.54947 6.21227,1.017 4.35961,-4.54096 0.95247,6.22249 5.6659,2.743 -5.62361,2.8287 z"
        inkscape:transform-center-x="0.035588005"
        inkscape:transform-center-y="0.2522377"
-       transform="matrix(0.56835383,0.24267548,-0.20226658,0.47371494,109.82755,115.78335)" />
+       transform="matrix(0.56835383,0.24267548,-0.20226658,0.47371494,109.82755,115.78335)"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars3.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        sodipodi:type="star"
        style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -1445,7 +1534,10 @@
        d="m 101.99845,269.59874 -1.63593,-6.50465 -6.685697,-0.53673 6.504647,-1.63592 0.53673,-6.6857 1.63592,6.50464 6.6857,0.53673 -6.50464,1.63593 z"
        inkscape:transform-center-x="-0.28453957"
        inkscape:transform-center-y="0.183982"
-       transform="matrix(0.48536048,0.1194342,-0.12257231,0.50393828,83.40673,115.45129)" />
+       transform="matrix(0.48536048,0.1194342,-0.12257231,0.50393828,83.40673,115.45129)"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars3.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        sodipodi:type="star"
        style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -1463,7 +1555,10 @@
        d="m 101.99845,269.59874 -1.63593,-6.50465 -6.685697,-0.53673 6.504647,-1.63592 0.53673,-6.6857 1.63592,6.50464 6.6857,0.53673 -6.50464,1.63593 z"
        inkscape:transform-center-x="-0.38200677"
        inkscape:transform-center-y="0.24698724"
-       transform="matrix(0.65161421,0.1603448,-0.16455781,0.67655559,84.944272,110.12883)" />
+       transform="matrix(0.65161421,0.1603448,-0.16455781,0.67655559,84.944272,110.12883)"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars3.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        sodipodi:type="star"
        style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -1481,7 +1576,10 @@
        d="m 101.99845,269.59874 -1.63593,-6.50465 -6.685697,-0.53673 6.504647,-1.63592 0.53673,-6.6857 1.63592,6.50464 6.6857,0.53673 -6.50464,1.63593 z"
        inkscape:transform-center-x="-0.36157312"
        inkscape:transform-center-y="0.23378877"
-       transform="matrix(0.61676336,0.15176891,-0.15575663,0.64037076,69.506796,101.70573)" />
+       transform="matrix(0.61676336,0.15176891,-0.15575663,0.64037076,69.506796,101.70573)"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars3.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        sodipodi:type="star"
        style="display:inline;opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -1499,13 +1597,17 @@
        d="m 101.99845,269.59874 -1.63593,-6.50465 -6.685697,-0.53673 6.504647,-1.63592 0.53673,-6.6857 1.63592,6.50464 6.6857,0.53673 -6.50464,1.63593 z"
        inkscape:transform-center-x="-0.28453957"
        inkscape:transform-center-y="0.183982"
-       transform="matrix(0.48536048,0.1194342,-0.12257231,0.50393828,68.520755,178.58812)" />
+       transform="matrix(0.48536048,0.1194342,-0.12257231,0.50393828,68.520755,178.58812)"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars3.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
   </g>
   <g
      id="g4447"
      inkscape:groupmode="layer"
      inkscape:label="Layer 1 copy copy copy"
-     style="display:inline">
+     style="display:none"
+     sodipodi:insensitive="true">
     <path
        transform="matrix(0.15796261,0.06785379,-0.06744681,0.15891578,97.832983,210.86095)"
        inkscape:transform-center-y="-0.32537237"
@@ -1523,7 +1625,10 @@
        sodipodi:sides="5"
        id="path4449"
        style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7376)"
-       sodipodi:type="star" />
+       sodipodi:type="star"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars4.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        transform="matrix(0.94363179,0.4029115,-0.36704505,0.85963141,97.026945,-28.083017)"
        inkscape:transform-center-y="-0.28221709"
@@ -1541,7 +1646,10 @@
        sodipodi:sides="5"
        id="path4451"
        style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7364)"
-       sodipodi:type="star" />
+       sodipodi:type="star"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars4.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        transform="matrix(0.68373791,0.2919421,-0.26394978,0.61817896,100.68744,59.181409)"
        inkscape:transform-center-y="0.6614146"
@@ -1559,7 +1667,10 @@
        sodipodi:sides="5"
        id="path4455"
        style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7340)"
-       sodipodi:type="star" />
+       sodipodi:type="star"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars4.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        transform="matrix(0.75388367,0.32189295,-0.29799863,0.69792241,93.626972,24.544489)"
        inkscape:transform-center-y="0.1629573"
@@ -1577,7 +1688,10 @@
        sodipodi:sides="5"
        id="path4457"
        style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7328)"
-       sodipodi:type="star" />
+       sodipodi:type="star"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars4.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        transform="matrix(0.68923577,0.29428959,-0.24528622,0.57446833,88.302684,71.79204)"
        inkscape:transform-center-y="0.30589521"
@@ -1595,7 +1709,10 @@
        sodipodi:sides="5"
        id="path4459"
        style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7316)"
-       sodipodi:type="star" />
+       sodipodi:type="star"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars4.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        transform="matrix(1.0583479,0.451893,-0.451893,1.0583479,93.938379,-88.948321)"
        inkscape:transform-center-y="0.59907001"
@@ -1613,7 +1730,10 @@
        sodipodi:sides="5"
        id="path4461"
        style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7304)"
-       sodipodi:type="star" />
+       sodipodi:type="star"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars4.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        transform="matrix(0.68923577,0.29428959,-0.24528622,0.57446833,109.40454,72.379663)"
        inkscape:transform-center-y="0.30587993"
@@ -1631,7 +1751,10 @@
        sodipodi:sides="5"
        id="path4463"
        style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7292)"
-       sodipodi:type="star" />
+       sodipodi:type="star"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars4.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        transform="matrix(0.74794142,0.18404831,-0.18888417,0.77656982,64.508048,63.307905)"
        inkscape:transform-center-y="0.2835116"
@@ -1649,7 +1772,10 @@
        sodipodi:sides="4"
        id="path4469"
        style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       sodipodi:type="star" />
+       sodipodi:type="star"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars4.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        transform="matrix(0.58859075,0.1448364,-0.14864196,0.61111981,65.312288,148.54224)"
        inkscape:transform-center-y="0.22310742"
@@ -1667,7 +1793,10 @@
        sodipodi:sides="4"
        id="path4471"
        style="display:inline;opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       sodipodi:type="star" />
+       sodipodi:type="star"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars4.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
     <path
        transform="matrix(0.57107982,0.24383941,-0.2462393,0.57670039,102.87839,79.079699)"
        inkscape:transform-center-y="0.6429616"
@@ -1685,6 +1814,422 @@
        sodipodi:sides="5"
        id="path4387-0"
        style="display:inline;opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7352-5)"
-       sodipodi:type="star" />
+       sodipodi:type="star"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars4.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
+  </g>
+  <g
+     style="display:none"
+     inkscape:label="Layer 1 copy copy copy copy"
+     inkscape:groupmode="layer"
+     id="g4333"
+     sodipodi:insensitive="true">
+    <path
+       sodipodi:type="star"
+       style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7376)"
+       id="path4335"
+       sodipodi:sides="5"
+       sodipodi:cx="104.91803"
+       sodipodi:cy="274.46994"
+       sodipodi:r1="27.879831"
+       sodipodi:r2="13.939916"
+       sodipodi:arg1="0.63274884"
+       sodipodi:arg2="1.2610674"
+       inkscape:flatsided="false"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 127.40046,290.95706 -18.23354,-3.21052 -12.981618,13.20027 -2.581091,-18.33324 -16.565739,-8.26715 16.63834,-8.12004 2.743431,-18.30964 12.864147,13.31477 18.26128,-3.04884 -8.68786,16.34903 z"
+       inkscape:transform-center-x="-0.062966296"
+       inkscape:transform-center-y="-0.14778987"
+       transform="matrix(0.0717484,0.03081996,-0.0306351,0.07218134,96.774699,238.55246)"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars5.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
+    <path
+       sodipodi:type="star"
+       style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7364)"
+       id="path4337"
+       sodipodi:sides="5"
+       sodipodi:cx="120.65574"
+       sodipodi:cy="312.69006"
+       sodipodi:r1="10.91164"
+       sodipodi:r2="5.4558201"
+       sodipodi:arg1="0.27829966"
+       sodipodi:arg2="0.90661819"
+       inkscape:flatsided="false"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 131.14754,315.68772 -7.12877,1.29839 -2.97183,6.60858 -3.43775,-6.37864 -7.20348,-0.78422 5.00413,-5.2406 -1.48017,-7.09325 6.53047,3.13977 6.28869,-3.59966 -0.96808,7.18109 z"
+       inkscape:transform-center-x="0.68079568"
+       inkscape:transform-center-y="-0.19470895"
+       transform="matrix(0.65103772,0.27797981,-0.25323455,0.59308353,94.974482,69.018992)"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars5.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
+    <path
+       sodipodi:type="star"
+       style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7340)"
+       id="path4339"
+       sodipodi:sides="5"
+       sodipodi:cx="109.41452"
+       sodipodi:cy="341.91724"
+       sodipodi:r1="11.414742"
+       sodipodi:r2="5.7073708"
+       sodipodi:arg1="1.1659045"
+       sodipodi:arg2="1.7942231"
+       inkscape:flatsided="false"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 113.91101,352.40904 -5.76109,-4.9263 -7.32421,1.95306 2.90492,-7.00143 -4.120772,-6.36221 7.556422,0.59917 4.77743,-5.88511 1.76521,7.37174 7.07339,2.72501 -6.46546,3.95681 z"
+       inkscape:transform-center-x="-0.08160378"
+       inkscape:transform-center-y="0.57244714"
+       transform="matrix(0.59176791,0.25267279,-0.22844573,0.53502733,98.610849,91.909017)"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars5.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
+    <path
+       sodipodi:type="star"
+       style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7328)"
+       id="path4341"
+       sodipodi:sides="5"
+       sodipodi:cx="147.63464"
+       sodipodi:cy="341.91724"
+       sodipodi:r1="9.5971889"
+       sodipodi:r2="4.7985945"
+       sodipodi:arg1="0.89605538"
+       sodipodi:arg2="1.5243739"
+       inkscape:flatsided="false"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 153.62996,349.41138 -5.77263,-2.70072 -5.49739,3.22428 0.7847,-6.32467 -4.76526,-4.23197 6.25761,-1.20814 2.55229,-5.83977 3.08271,5.57799 6.34266,0.62279 -4.35238,4.65553 z"
+       inkscape:transform-center-x="-0.48839692"
+       inkscape:transform-center-y="0.11263714"
+       transform="matrix(0.52110422,0.22250087,-0.20598449,0.48242232,96.532066,112.9014)"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars5.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
+    <path
+       sodipodi:type="star"
+       style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7316)"
+       id="path4343"
+       sodipodi:sides="5"
+       sodipodi:cx="128.89931"
+       sodipodi:cy="367.39731"
+       sodipodi:r1="9.4794273"
+       sodipodi:r2="4.7397137"
+       sodipodi:arg1="1.2490458"
+       sodipodi:arg2="1.8773643"
+       inkscape:flatsided="false"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 131.89697,376.39028 -4.42805,-4.47425 -6.19611,1.1112 2.88692,-5.59394 -2.97152,-5.54947 6.21227,1.017 4.35961,-4.54096 0.95247,6.22249 5.6659,2.743 -5.62361,2.8287 z"
+       inkscape:transform-center-x="0.076093883"
+       inkscape:transform-center-y="0.53904331"
+       transform="matrix(1.2145225,0.5185763,-0.43222603,1.0122875,89.274773,-117.97191)"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars5.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
+    <path
+       sodipodi:type="star"
+       style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7304)"
+       id="path4345"
+       sodipodi:sides="5"
+       sodipodi:cx="140.1405"
+       sodipodi:cy="291.70645"
+       sodipodi:r1="6.7029672"
+       sodipodi:r2="3.3514836"
+       sodipodi:arg1="1.1071487"
+       sodipodi:arg2="1.7354672"
+       inkscape:flatsided="false"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 143.13816,297.70177 -3.54706,-2.68917 -4.22615,1.39745 1.46145,-4.20445 -2.63501,-3.58748 4.45028,0.0907 2.59763,-3.61463 1.28898,4.26049 4.24043,1.35351 -3.65365,2.54246 z"
+       inkscape:transform-center-x="-0.14315876"
+       inkscape:transform-center-y="0.59907001"
+       transform="matrix(1.0583479,0.451893,-0.451893,1.0583479,93.938379,-88.948321)"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars5.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
+    <path
+       sodipodi:type="star"
+       style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7292)"
+       id="path4347"
+       sodipodi:sides="5"
+       sodipodi:cx="128.89931"
+       sodipodi:cy="367.39731"
+       sodipodi:r1="9.4794273"
+       sodipodi:r2="4.7397137"
+       sodipodi:arg1="1.2490458"
+       sodipodi:arg2="1.8773643"
+       inkscape:flatsided="false"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 131.89697,376.39028 -4.42805,-4.47425 -6.19611,1.1112 2.88692,-5.59394 -2.97152,-5.54947 6.21227,1.017 4.35961,-4.54096 0.95247,6.22249 5.6659,2.743 -5.62361,2.8287 z"
+       inkscape:transform-center-x="0.066173373"
+       inkscape:transform-center-y="0.46906243"
+       transform="matrix(1.0569355,0.45128987,-0.37614374,0.8809409,110.08502,-60.454757)"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars5.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
+    <path
+       sodipodi:type="star"
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path4349"
+       sodipodi:sides="4"
+       sodipodi:cx="101.35832"
+       sodipodi:cy="261.91724"
+       sodipodi:r1="7.7081246"
+       sodipodi:r2="1.5416249"
+       sodipodi:arg1="1.4876551"
+       sodipodi:arg2="2.2730533"
+       inkscape:flatsided="false"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 101.99845,269.59874 -1.63593,-6.50465 -6.685697,-0.53673 6.504647,-1.63592 0.53673,-6.6857 1.63592,6.50464 6.6857,0.53673 -6.50464,1.63593 z"
+       inkscape:transform-center-x="-0.30251717"
+       inkscape:transform-center-y="0.19560203"
+       transform="matrix(0.51602551,0.12698003,-0.13031642,0.53577704,72.538794,132.07212)"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars5.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
+    <path
+       sodipodi:type="star"
+       style="display:inline;opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path4352"
+       sodipodi:sides="4"
+       sodipodi:cx="101.35832"
+       sodipodi:cy="261.91724"
+       sodipodi:r1="7.7081246"
+       sodipodi:r2="1.5416249"
+       sodipodi:arg1="1.4876551"
+       sodipodi:arg2="2.2730533"
+       inkscape:flatsided="false"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 101.99845,269.59874 -1.63593,-6.50465 -6.685697,-0.53673 6.504647,-1.63592 0.53673,-6.6857 1.63592,6.50464 6.6857,0.53673 -6.50464,1.63593 z"
+       inkscape:transform-center-x="-0.60803202"
+       inkscape:transform-center-y="0.39314232"
+       transform="matrix(1.037173,0.25522046,-0.26192635,1.0768721,48.762723,17.271862)"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars5.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
+    <path
+       sodipodi:type="star"
+       style="display:inline;opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7352-5)"
+       id="path4354"
+       sodipodi:sides="5"
+       sodipodi:cx="155.12881"
+       sodipodi:cy="319.43481"
+       sodipodi:r1="14.219141"
+       sodipodi:r2="7.1095705"
+       sodipodi:arg1="1.2490458"
+       sodipodi:arg2="1.8773643"
+       inkscape:flatsided="false"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 159.6253,332.92428 -6.64207,-6.71138 -9.29416,1.6668 4.33038,-8.39092 -4.45728,-8.3242 9.3184,1.5255 6.53942,-6.81144 1.4287,9.33373 8.49886,4.1145 -8.43541,4.24306 z"
+       inkscape:transform-center-x="0.17809153"
+       inkscape:transform-center-y="0.49156804"
+       transform="matrix(0.43660807,0.18642272,-0.18825751,0.44090517,105.21743,131.36441)"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars5.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
+  </g>
+  <g
+     id="g4356"
+     inkscape:groupmode="layer"
+     inkscape:label="Layer 1 copy copy copy copy copy"
+     style="display:none"
+     sodipodi:insensitive="true">
+    <path
+       transform="matrix(0.41882666,0.17883043,-0.16291127,0.38154348,94.748885,147.1284)"
+       inkscape:transform-center-y="-0.12526294"
+       inkscape:transform-center-x="0.4379713"
+       d="m 131.14754,315.68772 -7.12877,1.29839 -2.97183,6.60858 -3.43775,-6.37864 -7.20348,-0.78422 5.00413,-5.2406 -1.48017,-7.09325 6.53047,3.13977 6.28869,-3.59966 -0.96808,7.18109 z"
+       inkscape:randomized="0"
+       inkscape:rounded="0"
+       inkscape:flatsided="false"
+       sodipodi:arg2="0.90661819"
+       sodipodi:arg1="0.27829966"
+       sodipodi:r2="5.4558201"
+       sodipodi:r1="10.91164"
+       sodipodi:cy="312.69006"
+       sodipodi:cx="120.65574"
+       sodipodi:sides="5"
+       id="path4360"
+       style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7364)"
+       sodipodi:type="star"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars6.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
+    <path
+       transform="matrix(0.40354071,0.17230363,-0.15578262,0.36484795,94.360866,158.88983)"
+       inkscape:transform-center-y="0.39036211"
+       inkscape:transform-center-x="-0.055646104"
+       d="m 113.91101,352.40904 -5.76109,-4.9263 -7.32421,1.95306 2.90492,-7.00143 -4.120772,-6.36221 7.556422,0.59917 4.77743,-5.88511 1.76521,7.37174 7.07339,2.72501 -6.46546,3.95681 z"
+       inkscape:randomized="0"
+       inkscape:rounded="0"
+       inkscape:flatsided="false"
+       sodipodi:arg2="1.7942231"
+       sodipodi:arg1="1.1659045"
+       sodipodi:r2="5.7073708"
+       sodipodi:r1="11.414742"
+       sodipodi:cy="341.91724"
+       sodipodi:cx="109.41452"
+       sodipodi:sides="5"
+       id="path4362"
+       style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7340)"
+       sodipodi:type="star"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars6.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
+    <path
+       transform="matrix(0.52110422,0.22250087,-0.20598449,0.48242232,96.532066,112.9014)"
+       inkscape:transform-center-y="0.11263714"
+       inkscape:transform-center-x="-0.48839692"
+       d="m 153.62996,349.41138 -5.77263,-2.70072 -5.49739,3.22428 0.7847,-6.32467 -4.76526,-4.23197 6.25761,-1.20814 2.55229,-5.83977 3.08271,5.57799 6.34266,0.62279 -4.35238,4.65553 z"
+       inkscape:randomized="0"
+       inkscape:rounded="0"
+       inkscape:flatsided="false"
+       sodipodi:arg2="1.5243739"
+       sodipodi:arg1="0.89605538"
+       sodipodi:r2="4.7985945"
+       sodipodi:r1="9.5971889"
+       sodipodi:cy="341.91724"
+       sodipodi:cx="147.63464"
+       sodipodi:sides="5"
+       id="path4364"
+       style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7328)"
+       sodipodi:type="star"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars6.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
+    <path
+       transform="matrix(1.3983729,0.59707667,-0.49765498,1.1655242,89.615004,-184.38931)"
+       inkscape:transform-center-y="0.62062686"
+       inkscape:transform-center-x="0.087614042"
+       d="m 131.89697,376.39028 -4.42805,-4.47425 -6.19611,1.1112 2.88692,-5.59394 -2.97152,-5.54947 6.21227,1.017 4.35961,-4.54096 0.95247,6.22249 5.6659,2.743 -5.62361,2.8287 z"
+       inkscape:randomized="0"
+       inkscape:rounded="0"
+       inkscape:flatsided="false"
+       sodipodi:arg2="1.8773643"
+       sodipodi:arg1="1.2490458"
+       sodipodi:r2="4.7397137"
+       sodipodi:r1="9.4794273"
+       sodipodi:cy="367.39731"
+       sodipodi:cx="128.89931"
+       sodipodi:sides="5"
+       id="path4366"
+       style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7316)"
+       sodipodi:type="star"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars6.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
+    <path
+       transform="matrix(0.62500005,0.26686229,-0.26686229,0.62500005,100.69332,63.39235)"
+       inkscape:transform-center-y="0.3537778"
+       inkscape:transform-center-x="-0.084541971"
+       d="m 143.13816,297.70177 -3.54706,-2.68917 -4.22615,1.39745 1.46145,-4.20445 -2.63501,-3.58748 4.45028,0.0907 2.59763,-3.61463 1.28898,4.26049 4.24043,1.35351 -3.65365,2.54246 z"
+       inkscape:randomized="0"
+       inkscape:rounded="0"
+       inkscape:flatsided="false"
+       sodipodi:arg2="1.7354672"
+       sodipodi:arg1="1.1071487"
+       sodipodi:r2="3.3514836"
+       sodipodi:r1="6.7029672"
+       sodipodi:cy="291.70645"
+       sodipodi:cx="140.1405"
+       sodipodi:sides="5"
+       id="path4368"
+       style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7304)"
+       sodipodi:type="star"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars6.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
+    <path
+       transform="matrix(0.48172288,0.20568583,-0.17143624,0.40150926,109.02051,147.34532)"
+       inkscape:transform-center-y="0.21378676"
+       inkscape:transform-center-x="0.03016378"
+       d="m 131.89697,376.39028 -4.42805,-4.47425 -6.19611,1.1112 2.88692,-5.59394 -2.97152,-5.54947 6.21227,1.017 4.35961,-4.54096 0.95247,6.22249 5.6659,2.743 -5.62361,2.8287 z"
+       inkscape:randomized="0"
+       inkscape:rounded="0"
+       inkscape:flatsided="false"
+       sodipodi:arg2="1.8773643"
+       sodipodi:arg1="1.2490458"
+       sodipodi:r2="4.7397137"
+       sodipodi:r1="9.4794273"
+       sodipodi:cy="367.39731"
+       sodipodi:cx="128.89931"
+       sodipodi:sides="5"
+       id="path4370"
+       style="opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7292)"
+       sodipodi:type="star"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars6.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
+    <path
+       transform="matrix(1.1941768,0.29385489,-0.3015759,1.2398854,42.970374,-28.672782)"
+       inkscape:transform-center-y="0.4526432"
+       inkscape:transform-center-x="-0.70007049"
+       d="m 101.99845,269.59874 -1.63593,-6.50465 -6.685697,-0.53673 6.504647,-1.63592 0.53673,-6.6857 1.63592,6.50464 6.6857,0.53673 -6.50464,1.63593 z"
+       inkscape:randomized="0"
+       inkscape:rounded="0"
+       inkscape:flatsided="false"
+       sodipodi:arg2="2.2730533"
+       sodipodi:arg1="1.4876551"
+       sodipodi:r2="1.5416249"
+       sodipodi:r1="7.7081246"
+       sodipodi:cy="261.91724"
+       sodipodi:cx="101.35832"
+       sodipodi:sides="4"
+       id="path4374"
+       style="display:inline;opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       sodipodi:type="star"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars6.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
+    <path
+       transform="matrix(0.43660807,0.18642272,-0.18825751,0.44090517,105.21743,131.36441)"
+       inkscape:transform-center-y="0.49156804"
+       inkscape:transform-center-x="0.17809153"
+       d="m 159.6253,332.92428 -6.64207,-6.71138 -9.29416,1.6668 4.33038,-8.39092 -4.45728,-8.3242 9.3184,1.5255 6.53942,-6.81144 1.4287,9.33373 8.49886,4.1145 -8.43541,4.24306 z"
+       inkscape:randomized="0"
+       inkscape:rounded="0"
+       inkscape:flatsided="false"
+       sodipodi:arg2="1.8773643"
+       sodipodi:arg1="1.2490458"
+       sodipodi:r2="7.1095705"
+       sodipodi:r1="14.219141"
+       sodipodi:cy="319.43481"
+       sodipodi:cx="155.12881"
+       sodipodi:sides="5"
+       id="path4376"
+       style="display:inline;opacity:1;fill:#ffd240;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter7352-5)"
+       sodipodi:type="star"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars6.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
+    <path
+       transform="matrix(0.51602551,0.12698003,-0.13031642,0.53577704,94.683378,143.93529)"
+       inkscape:transform-center-y="0.19560203"
+       inkscape:transform-center-x="-0.30251717"
+       d="m 101.99845,269.59874 -1.63593,-6.50465 -6.685697,-0.53673 6.504647,-1.63592 0.53673,-6.6857 1.63592,6.50464 6.6857,0.53673 -6.50464,1.63593 z"
+       inkscape:randomized="0"
+       inkscape:rounded="0"
+       inkscape:flatsided="false"
+       sodipodi:arg2="2.2730533"
+       sodipodi:arg1="1.4876551"
+       sodipodi:r2="1.5416249"
+       sodipodi:r1="7.7081246"
+       sodipodi:cy="261.91724"
+       sodipodi:cx="101.35832"
+       sodipodi:sides="4"
+       id="path4372"
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:8;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       sodipodi:type="star"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\stars6.png"
+       inkscape:export-xdpi="48.700001"
+       inkscape:export-ydpi="48.700001" />
   </g>
 </svg>
