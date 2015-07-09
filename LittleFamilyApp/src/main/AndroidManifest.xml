@@ -122,6 +122,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.finlayfamily.littlefamily.activities.HomeActivity" />
         </activity>
+        <activity
+            android:name=".activities.PersonSearchActivity"
+            android:label="@string/title_activity_person_search" >
+        </activity>
     </application>
 
 </manifest>

@@ -187,6 +187,8 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
                 } catch (Exception e) {
                     Log.e(TAG, "Error parsing gedcom for person "+personId, e);
                 }
+            } else {
+                throw new RemoteServiceSearchException("Unable to find gedcom record for person "+personId, 404);
             }
         }
         return personCache.get(personId);
@@ -226,9 +228,9 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
                     for(Link link : sr.getLinks()) {
                         if(link.getHref()!=null && link.getHref().toString().startsWith("@")) {
                             String objeid =link.getHref().toString().replaceAll("@","");
-                            try {
-                                String gedcom = getGedcomRecord(objeid, checkCache);
-                                if (!gedcom.isEmpty()) {
+                            String gedcom = getGedcomRecord(objeid, checkCache);
+                            if (!gedcom.isEmpty()) {
+                                try {
                                     SourceDescription sd = gedcomParser.parseObje(gedcom, baseUrl);
                                     if (sd != null) {
                                         List<Link> links = sd.getLinks();
@@ -240,9 +242,11 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
                                             }
                                         }
                                     }
+                                } catch (Exception e) {
+                                    Log.e(TAG, "Error parsing gedcom for OBJE " + objeid, e);
                                 }
-                            } catch (Exception e) {
-                                Log.e(TAG, "Error parsing gedcom for OBJE " + objeid, e);
+                            } else {
+                                throw new RemoteServiceSearchException("Unable to find gedcom record for media "+objeid, 404);
                             }
                         } else if (portrait==null){
                             portrait = link;
@@ -330,6 +334,8 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
                         } catch (GedcomParseException e) {
                             Log.e(TAG, "Error parsing gedcom for family " + famid, e);
                         }
+                    } else {
+                        throw new RemoteServiceSearchException("Unable to find gedcom record for family "+famid, 404);
                     }
                 }
             }
@@ -506,6 +512,8 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
                                 } catch (Exception e) {
                                     Log.e(TAG, "Error parsing gedcom for OBJE " + objeid, e);
                                 }
+                            } else {
+                                throw new RemoteServiceSearchException("Unable to find gedcom record for family "+personId, 404);
                             }
                         }
                     }

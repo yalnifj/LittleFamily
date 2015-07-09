@@ -33,8 +33,8 @@ public class DBHelper extends SQLiteOpenHelper {
 	private static final String TABLE_SYNCQ = "syncq";
 	
 	private static final String COL_ID = "id";
-	private static final String COL_NAME = "name";
-	private static final String COL_GIVEN_NAME = "givenName";
+	public static final String COL_NAME = "name";
+	public static final String COL_GIVEN_NAME = "givenName";
 	private static final String COL_FAMILY_SEARCH_ID = "familySearchId";
 	private static final String COL_PHOTO_PATH = "photopath";
 	private static final String COL_BIRTH_DATE = "birthDate";
@@ -252,6 +252,39 @@ public class DBHelper extends SQLiteOpenHelper {
 		c.close();
 
 		return person;
+	}
+
+	public List<LittlePerson> search(Map<String, String> params) {
+		SQLiteDatabase db = getReadableDatabase();
+		String[] projection = {
+				COL_GIVEN_NAME, COL_GENDER, COL_PHOTO_PATH, COL_NAME,
+				COL_AGE, COL_BIRTH_DATE, COL_BIRTH_PLACE, COL_NATIONALITY, COL_FAMILY_SEARCH_ID, COL_LAST_SYNC,
+				COL_ID, COL_ALIVE, COL_ACTIVE, COL_HAS_PARENTS, COL_HAS_CHILDREN, COL_HAS_SPOUSES
+		};
+		String selection = "";
+		String[] selectionArgs = new String[params.size()];
+		int count=0;
+		for(String key : params.keySet()) {
+			if (params.get(key)!=null) {
+				if (count > 0) selection += " AND ";
+				selection += key + " LIKE ?";
+				selectionArgs[count] = params.get(key);
+				count++;
+			}
+		}
+		String tables = TABLE_LITTLE_PERSON;
+
+		List<LittlePerson> people = new ArrayList<>();
+		LittlePerson person = null;
+		Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, COL_FAMILY_SEARCH_ID);
+		while (c.moveToNext()) {
+			person = personFromCursor(c);
+			people.add(person);
+		}
+
+		c.close();
+
+		return people;
 	}
 	
 	public List<LittlePerson> getRelativesForPerson(int id) {

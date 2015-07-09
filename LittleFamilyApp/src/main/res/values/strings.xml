@@ -55,5 +55,11 @@ Please wait...</string>
     <string name="title_activity_bubble_pop">Bubble Pop Activity</string>
     <string name="adult_auth_explanation">Please enter the password for your online family tree account in order to continue.</string>
     <string name="cancel">Cancel</string>
+    <string name="title_activity_person_search">PersonSearchActivity</string>
+    <string name="given_name">Given Name</string>
+    <string name="surname">Surname</string>
+    <string name="person_search">Person Search</string>
+    <string name="remote_tree_id">Remote Tree ID</string>
+    <string name="search">Search</string>
 
 </resources>

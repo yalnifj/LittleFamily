@@ -12,7 +12,10 @@
         android:positiveButtonText="@null" />
 
     <Preference android:title="@string/pref_title_manage_creds">
-        <intent android:action="android.intent.action.VIEW" android:targetClass="org.finlayfamily.littlefamily.activities.FSLoginActivity" />
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="org.finlayfamily.littlefamily"
+            android:targetClass="org.finlayfamily.littlefamily.activities.FSLoginActivity" />
     </Preference>
 
     <CheckBoxPreference android:title="@string/pref_title_sync_data_background" android:key="sync_background" android:defaultValue="true" />
@@ -25,4 +28,11 @@
         android:entryValues="@array/pref_sync_frequency_values"
         android:negativeButtonText="@null"
         android:positiveButtonText="@null" />
+
+    <Preference android:title="@string/pref_title_manage_people">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="org.finlayfamily.littlefamily"
+            android:targetClass="org.finlayfamily.littlefamily.activities.PersonSearchActivity" />
+    </Preference>
 </PreferenceScreen>

@@ -197,9 +197,11 @@ public class PuzzleSurfaceView extends AbstractTouchAnimatedSurfaceView {
             }
         }
 
-        float ratio = (float)bitmap.getWidth() / bitmap.getHeight();
-        if (x <= thumbnailHeight*ratio && y >= thumbnailHeight) {
-            showHint = true;
+        if (bitmap!=null) {
+            float ratio = (float) bitmap.getWidth() / bitmap.getHeight();
+            if (x <= thumbnailHeight * ratio && y >= thumbnailHeight) {
+                showHint = true;
+            }
         }
     }
 

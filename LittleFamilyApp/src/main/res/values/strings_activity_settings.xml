@@ -80,4 +80,5 @@
         <item>24</item>
         <item>48</item>
     </string-array>
+    <string name="pref_title_manage_people">Manage People</string>
 </resources>

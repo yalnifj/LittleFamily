@@ -22,8 +22,10 @@ import org.gedcomx.types.RelationshipType;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 
 /**
@@ -416,6 +418,27 @@ public class DataService implements AuthTask.Listener {
         LittlePerson person = getDBHelper().getPersonById(id);
         if (person!=null) addToSyncQ(person, QDepth);
         return person;
+    }
+
+    public LittlePerson getPersonByRemoteId(String fsid) throws Exception {
+        LittlePerson person = getDBHelper().getPersonByFamilySearchId(fsid);
+        if (person!=null) addToSyncQ(person, QDepth);
+        else {
+            fireNetworkStateChanged(DataNetworkState.REMOTE_STARTING);
+            waitForAuth();
+            Person fsPerson = remoteService.getPerson(fsid, true);
+            person = DataHelper.buildLittlePerson(fsPerson, context, remoteService, true);
+            getDBHelper().persistLittlePerson(person);
+            fireNetworkStateChanged(DataNetworkState.REMOTE_FINISHED);
+        }
+        return person;
+    }
+
+    public List<LittlePerson> searchPeople(String givenName, String surname) throws Exception {
+        Map<String, String> params = new HashMap<>();
+        if (givenName!=null && !givenName.isEmpty()) params.put(DBHelper.COL_GIVEN_NAME, givenName+"%");
+        if (surname!=null && !surname.isEmpty()) params.put(DBHelper.COL_NAME, "% "+surname+"%");
+        return getDBHelper().search(params);
     }
 
     public List<LittlePerson> getFamilyMembers(LittlePerson person) throws Exception {
