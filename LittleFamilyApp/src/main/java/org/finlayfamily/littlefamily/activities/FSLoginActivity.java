@@ -3,6 +3,7 @@ package org.finlayfamily.littlefamily.activities;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
@@ -145,7 +146,9 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
         if (response!=null && response.isSuccess()) {
             try {
                 //dataService.getDBHelper().saveProperty(DataService.SERVICE_TYPE, dataService.getRemoteService().getClass().getSimpleName());
-                PreferenceManager.getDefaultSharedPreferences(this).edit().putString(DataService.SERVICE_TYPE, dataService.getRemoteService().getClass().getSimpleName());
+                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+                editor.putString(DataService.SERVICE_TYPE, dataService.getRemoteService().getClass().getSimpleName());
+                editor.commit();
                 dataService.getDBHelper().saveProperty(DataService.SERVICE_TYPE_FAMILYSEARCH+DataService.SERVICE_TOKEN, dataService.getRemoteService().getEncodedAuthToken());
                 dataService.getDBHelper().saveProperty(DataService.SERVICE_USERNAME, mEmailView.getText().toString());
             } catch (Exception e) {

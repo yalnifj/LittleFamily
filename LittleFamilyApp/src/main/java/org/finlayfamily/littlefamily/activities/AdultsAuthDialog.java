@@ -102,6 +102,6 @@ public class AdultsAuthDialog extends DialogFragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return true;
+        return false;
     }
 }

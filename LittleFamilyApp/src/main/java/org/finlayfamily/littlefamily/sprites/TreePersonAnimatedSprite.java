@@ -479,8 +479,9 @@ public class TreePersonAnimatedSprite extends Sprite {
                     int count=1;
                     for (Bitmap button : activityButtons) {
                         if (x > bx * scale && y > by * scale
-                                && x < (bx + button.getWidth()) * scale && y < (getY() + detailHeight) * scale) {
+                                && x < (bx + button.getWidth()) * scale && y < (by + button.getHeight()) * scale) {
                             sendEvent(button, node.getPerson());
+                            break;
                         }
                         bx += button.getWidth() + 20;
                         if (count % 3 == 0) {
@@ -501,8 +502,9 @@ public class TreePersonAnimatedSprite extends Sprite {
                         int count=1;
                         for (Bitmap button : spActivityButtons) {
                             if (x > bx * scale && y > by * scale
-                                    && x < (bx + button.getWidth()) * scale && y < (getY() + detailHeight) * scale) {
+                                    && x < (bx + button.getWidth()) * scale && y < (by + button.getHeight()) * scale) {
                                 sendEvent(button, node.getSpouse());
+                                break;
                             }
                             bx += button.getWidth() + 20;
                             if (count % 3 == 0) {
