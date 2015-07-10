@@ -649,6 +649,24 @@ public class DBHelper extends SQLiteOpenHelper {
         return m;
     }
 
+	public long getMediaCount() {
+		long totalMedia = 0;
+		SQLiteDatabase db = getReadableDatabase();
+		Cursor c = db.rawQuery("select count(*) from " + TABLE_MEDIA, null);
+		while (c.moveToNext()) {
+			totalMedia = c.getLong(0);
+		}
+		c.close();
+
+		c = db.rawQuery("select count(*) from " + TABLE_LITTLE_PERSON+" where "+COL_PHOTO_PATH+" is not NULL", null);
+		while (c.moveToNext()) {
+			totalMedia += c.getLong(0);
+		}
+		c.close();
+
+		return totalMedia;
+	}
+
     public void persistTag(Tag tag) {
         SQLiteDatabase db = getWritableDatabase();
 

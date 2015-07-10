@@ -122,24 +122,34 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
         } else {
             if (parents.size() > 0 && parents.get(0) == getNextPerson()) {
                 fatherSpot.setState(1);
-                if (getNextPerson().getGender()== GenderType.Female) activity.speak(activity.getResources().getString(R.string.who_is_mother));
-                else activity.speak(activity.getResources().getString(R.string.who_is_father));
             } else {
                 fatherSpot.setState(0);
             }
             if (parents.size() > 1 && parents.get(1) == getNextPerson()) {
-                if (getNextPerson().getGender()== GenderType.Female) activity.speak(activity.getResources().getString(R.string.who_is_mother));
-                else activity.speak(activity.getResources().getString(R.string.who_is_father));
                 motherSpot.setState(1);
             } else {
                 motherSpot.setState(0);
             }
             if (children.size() > 0 && children.get(0) == getNextPerson()) {
-                activity.speak(activity.getResources().getString(R.string.who_is_child));
                 childSpot.setState(1);
             } else {
                 childSpot.setState(0);
             }
+            sayFindText();
+        }
+    }
+
+    public void sayFindText() {
+        if (parents.size() > 0 && parents.get(0) == getNextPerson()) {
+            if (getNextPerson().getGender()== GenderType.Female) activity.speak(activity.getResources().getString(R.string.who_is_mother));
+            else activity.speak(activity.getResources().getString(R.string.who_is_father));
+        }
+        if (parents.size() > 1 && parents.get(1) == getNextPerson()) {
+            if (getNextPerson().getGender()== GenderType.Female) activity.speak(activity.getResources().getString(R.string.who_is_mother));
+            else activity.speak(activity.getResources().getString(R.string.who_is_father));
+        }
+        if (children.size() > 0 && children.get(0) == getNextPerson()) {
+            activity.speak(activity.getResources().getString(R.string.who_is_child));
         }
     }
 

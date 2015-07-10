@@ -181,10 +181,12 @@ public class BubbleAnimatedBitmapSprite extends BouncingAnimatedBitmapSprite {
 							@Override
 							public void onCompletion(MediaPlayer mp) {
 								mp.release();
+                                view.sayFindText();
 							}
 						});
                 } catch (Exception e) {
                     // just let things go on
+                    view.sayFindText();
                 }
             }
         }

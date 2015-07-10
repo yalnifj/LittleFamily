@@ -70,14 +70,14 @@
             android:hint="@string/remote_tree_id"
             android:layout_weight="1" />
 
-        <Button
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/search"
             android:id="@+id/btnSearch"
-            android:hint="@string/search"
             android:layout_weight="1"
+            android:src="@android:drawable/ic_menu_search"
             android:onClick="search" />
+
     </LinearLayout>
 
     <ListView

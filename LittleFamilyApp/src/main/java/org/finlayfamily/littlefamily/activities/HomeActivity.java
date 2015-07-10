@@ -215,10 +215,34 @@ public class HomeActivity extends LittleFamilyActivity {
             homeView.addActivitySprite(childDesk);
 
             Bitmap childPaintBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_paint);
-            TouchEventGameSprite childPaint = new TouchEventGameSprite(childPaintBm, TOPIC_START_COLORING);
+            TouchStateAnimatedBitmapSprite childPaint = new TouchStateAnimatedBitmapSprite(childPaintBm, this);
             childPaint.setX(2000);
-            childPaint.setY(810);
+            childPaint.setY(803);
             childPaint.setSelectable(true);
+            List<Bitmap> painting = new ArrayList<>(15);
+            painting.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_paint1));
+            painting.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_paint2));
+            painting.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_paint3));
+            painting.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_paint4));
+            painting.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_paint5));
+            painting.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_paint6));
+            painting.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_paint7));
+            painting.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_paint8));
+            painting.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_paint9));
+            painting.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_paint10));
+            painting.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_paint11));
+            painting.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_paint12));
+            painting.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_paint13));
+            painting.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_paint14));
+            painting.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_paint15));
+            childPaint.getBitmaps().put(1, painting);
+            childPaint.setStateTransition(1, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
+            List<Bitmap> painting2 = new ArrayList<>(1);
+            painting2.add(painting.get(painting.size()-1));
+            painting2.add(painting.get(painting.size()-1));
+            childPaint.getBitmaps().put(2, painting2);
+            childPaint.setStateTransition(2, 5);
+            childPaint.setStateTransitionEvent(2, TOPIC_START_COLORING);
             homeView.addSprite(childPaint);
             homeView.addActivitySprite(childPaint);
 
@@ -366,10 +390,7 @@ public class HomeActivity extends LittleFamilyActivity {
             blockAnim.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_toys_blocks8));
             blocks.getBitmaps().put(1, blockAnim);
             blocks.setStateTransition(1, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
-            blockAnim = new ArrayList<>(1);
-            blockAnim.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_toys_blocks8));
-            blocks.getBitmaps().put(2, blockAnim);
-            blocks.setStateTransitionEvent(2, TOPIC_START_PUZZLE);
+            blocks.setStateTransitionEvent(0, TOPIC_START_PUZZLE);
             homeView.addSprite(blocks);
             homeView.addActivitySprite(blocks);
 

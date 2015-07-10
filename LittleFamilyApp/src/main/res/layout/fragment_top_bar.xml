@@ -32,6 +32,6 @@
         android:id="@+id/settingsBtn"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:src="@android:drawable/ic_lock_idle_lock"
+        android:src="@android:drawable/ic_menu_manage"
         android:onClick="onSettingsButtonPressed" />
 </RelativeLayout>

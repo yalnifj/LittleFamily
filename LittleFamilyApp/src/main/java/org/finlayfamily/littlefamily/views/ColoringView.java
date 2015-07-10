@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Created by jfinlay on 1/22/2015.
  */
-public class ColoringView extends ImageView implements ColoringImageFilterTask.Listener{
+public class ColoringView extends ImageView implements ColoringImageFilterTask.Listener, WaterColorImageView.ColorChangeListener {
     public int width;
     public  int height;
     private Bitmap originalBitmap;
@@ -35,8 +35,10 @@ public class ColoringView extends ImageView implements ColoringImageFilterTask.L
     private Paint circlePaint;
     private Path circlePath;
     private Paint       mPaint;
+    private Paint       noPaint;
     private boolean loaded;
     private boolean complete;
+    private boolean noColor = true;
 
     public ColoringView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -55,12 +57,27 @@ public class ColoringView extends ImageView implements ColoringImageFilterTask.L
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setDither(true);
-        mPaint.setAlpha(100);
-        mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
+        //mPaint.setColor(Color.RED);
+        //mPaint.setAlpha(100);
+        mPaint.setColor(Color.parseColor("#99ffffff"));
+        mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP));
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
         mPaint.setStrokeWidth(10);
+
+        noPaint = new Paint();
+        noPaint.setAntiAlias(true);
+        noPaint.setDither(true);
+        //noPaint.setColor(Color.RED);
+        noPaint.setAlpha(100);
+        //noPaint.setColor(Color.parseColor("#99ffffff"));
+        noPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
+        noPaint.setStyle(Paint.Style.STROKE);
+        noPaint.setStrokeJoin(Paint.Join.ROUND);
+        noPaint.setStrokeCap(Paint.Cap.ROUND);
+        noPaint.setStrokeWidth(10);
+
         paint2 = new Paint(Paint.DITHER_FLAG);
     }
 
@@ -75,7 +92,8 @@ public class ColoringView extends ImageView implements ColoringImageFilterTask.L
 
         mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         mCanvas = new Canvas(mBitmap);
-        mPaint.setStrokeWidth(w<h?w*0.15f:h*0.15f);
+        mPaint.setStrokeWidth(w<h?w*0.12f:h*0.12f);
+        noPaint.setStrokeWidth(w<h?w*0.12f:h*0.12f);
         Paint background = new Paint();
         background.setColor(Color.WHITE);
         mCanvas.drawRect(0,0,w,h,background);
@@ -87,18 +105,20 @@ public class ColoringView extends ImageView implements ColoringImageFilterTask.L
         int w = this.getWidth();
         int h = this.getHeight();
 
-        float ratio = (float) (originalBitmap.getWidth()) / originalBitmap.getHeight();
-        h = (int) (w / ratio);
-        Rect dst = new Rect();
-        dst.set(0,0,w,h);
-        canvas.drawBitmap(originalBitmap, null, dst, paint2);
-        if (!complete) {
-            canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
-            if (outlineBitmap != null) {
-                canvas.drawBitmap(outlineBitmap, null, dst, paint2);
-            }
+        if (originalBitmap!=null) {
+            float ratio = (float) (originalBitmap.getWidth()) / originalBitmap.getHeight();
+            h = (int) (w / ratio);
+            Rect dst = new Rect();
+            dst.set(0, 0, w, h);
+            canvas.drawBitmap(originalBitmap, null, dst, paint2);
+            if (!complete) {
+                canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
+                if (outlineBitmap != null) {
+                    canvas.drawBitmap(outlineBitmap, null, dst, paint2);
+                }
 
-            canvas.drawPath(circlePath, circlePaint);
+                canvas.drawPath(circlePath, circlePaint);
+            }
         }
     }
 
@@ -119,7 +139,8 @@ public class ColoringView extends ImageView implements ColoringImageFilterTask.L
             h = (int) (w / ratio);
             mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
             mCanvas = new Canvas(mBitmap);
-            mPaint.setStrokeWidth(w < h ? w * 0.15f : h * 0.15f);
+            mPaint.setStrokeWidth(w < h ? w * 0.12f : h * 0.12f);
+            noPaint.setStrokeWidth(w < h ? w * 0.12f : h * 0.12f);
             Paint background = new Paint();
             background.setColor(Color.WHITE);
             mCanvas.drawRect(0, 0, w, h, background);
@@ -127,6 +148,12 @@ public class ColoringView extends ImageView implements ColoringImageFilterTask.L
             ColoringImageFilterTask task = new ColoringImageFilterTask(this);
             task.execute(originalBitmap);
         }
+    }
+
+    public void setColor(int color) {
+        mPaint.setColor(color);
+        noColor = false;
+        if (color==0) noColor = true;
     }
 
     private float mX, mY;
@@ -149,10 +176,11 @@ public class ColoringView extends ImageView implements ColoringImageFilterTask.L
             mY = y;
 
             // commit the path to our offscreen
-            mCanvas.drawPath(mPath,  mPaint);
+            mCanvas.drawPath(mPath,  noPaint);
+            if (!noColor) mCanvas.drawPath(mPath,  mPaint);
 
             circlePath.reset();
-            circlePath.addCircle(mX, mY, 35, Path.Direction.CW);
+            circlePath.addCircle(mX, mY, 33, Path.Direction.CW);
         }
     }
 
@@ -161,13 +189,14 @@ public class ColoringView extends ImageView implements ColoringImageFilterTask.L
         mPath.lineTo(mX, mY);
         circlePath.reset();
         // commit the path to our offscreen
-        mCanvas.drawPath(mPath,  mPaint);
+        mCanvas.drawPath(mPath,  noPaint);
+        if (!noColor) mCanvas.drawPath(mPath,  mPaint);
         // kill this so we don't double draw
         mPath.reset();
 
         // check if scratch is complete
-        int xd = (int) mPaint.getStrokeWidth()/3;
-        int yd = (int) mPaint.getStrokeWidth()/3;
+        int xd = (int) mPaint.getStrokeWidth()/5;
+        int yd = (int) mPaint.getStrokeWidth()/5;
         int count = 0;
         int total = 0;
         for(int y=yd; y<mBitmap.getHeight(); y+=yd) {
@@ -177,7 +206,7 @@ public class ColoringView extends ImageView implements ColoringImageFilterTask.L
                 if (Color.alpha(pixel) < 200) count++;
             }
         }
-        if (count > total * 0.95) {
+        if (count >= total) {
             complete = true;
             for(ColoringCompleteListener l : listeners) {
                 l.onColoringComplete();
@@ -221,6 +250,11 @@ public class ColoringView extends ImageView implements ColoringImageFilterTask.L
     private List<ColoringCompleteListener> listeners = new ArrayList<>();
     public void registerListener(ColoringCompleteListener l) {
         listeners.add(l);
+    }
+
+    @Override
+    public void onColorChange(int color) {
+        setColor(color);
     }
 
     public interface ColoringCompleteListener {

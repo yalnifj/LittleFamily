@@ -224,80 +224,7 @@ public class DataService implements AuthTask.Listener {
                             Entry entry = remoteService.getLastChangeForPerson(person.getFamilySearchId());
                             Log.d("SyncThread", "Synchronizing person local date=" + person.getLastSync() + " remote date=" + entry);
                             if (entry == null || entry.getUpdated().after(person.getLastSync())) {
-                                Person fsPerson = remoteService.getPerson(person.getFamilySearchId(), false);
-                                LittlePerson updated = DataHelper.buildLittlePerson(fsPerson, context, remoteService, false);
-                                updated.setId(person.getId());
-                                person.setLastSync(updated.getLastSync());
-                                person.setPhotoPath(updated.getPhotoPath());
-                                person.setAge(updated.getAge());
-                                person.setBirthDate(updated.getBirthDate());
-                                person.setFamilySearchId(updated.getFamilySearchId());
-                                person.setGender(updated.getGender());
-                                person.setGivenName(updated.getGivenName());
-                                person.setName(updated.getName());
-                                getDBHelper().persistLittlePerson(person);
-
-                                List<Relationship> closeRelatives = remoteService.getCloseRelatives(person.getFamilySearchId(), false);
-                                if (closeRelatives != null) {
-                                    List<org.finlayfamily.littlefamily.data.Relationship> oldRelations = getDBHelper().getRelationshipsForPerson(person.getId());
-                                    for (Relationship r : closeRelatives) {
-                                        org.finlayfamily.littlefamily.data.RelationshipType type = org.finlayfamily.littlefamily.data.RelationshipType.PARENTCHILD;
-                                        if (r.getKnownType() == RelationshipType.Couple) {
-                                            type = org.finlayfamily.littlefamily.data.RelationshipType.SPOUSE;
-                                        }
-                                        if (!r.getPerson1().getResourceId().equals(person.getFamilySearchId())) {
-                                            org.finlayfamily.littlefamily.data.Relationship rel = syncRelationship(person, r.getPerson1().getResourceId(), type);
-                                            if (rel != null) {
-                                                oldRelations.remove(rel);
-                                            }
-                                        }
-                                        if (!r.getPerson2().getResourceId().equals(person.getFamilySearchId())) {
-                                            org.finlayfamily.littlefamily.data.Relationship rel = syncRelationship(person, r.getPerson2().getResourceId(), type);
-                                            if (rel != null) {
-                                                oldRelations.remove(rel);
-                                            }
-                                        }
-                                    }
-
-                                    for (org.finlayfamily.littlefamily.data.Relationship rel : oldRelations) {
-                                        getDBHelper().deleteRelationshipById(rel.getId());
-                                    }
-                                }
-
-                                List<SourceDescription> sds = remoteService.getPersonMemories(person.getFamilySearchId(), true);
-                                if (sds != null) {
-                                    List<Media> oldMedia = getDBHelper().getMediaForPerson(person.getId());
-                                    for (SourceDescription sd : sds) {
-                                        Media med = getDBHelper().getMediaByFamilySearchId(sd.getId());
-                                        if (med == null) {
-                                            List<Link> links = sd.getLinks();
-                                            if (links != null) {
-                                                for (Link link : links) {
-                                                    if (link.getRel() != null && link.getRel().equals("image")) {
-                                                        med = new Media();
-                                                        med.setType("photo");
-                                                        med.setFamilySearchId(sd.getId());
-                                                        String localPath = DataHelper.downloadFile(link.getHref().toString(), person.getFamilySearchId(), DataHelper.lastPath(link.getHref().toString()), remoteService, context);
-                                                        if (localPath != null) {
-                                                            med.setLocalPath(localPath);
-                                                            getDBHelper().persistMedia(med);
-                                                            Tag tag = new Tag();
-                                                            tag.setMediaId(med.getId());
-                                                            tag.setPersonId(person.getId());
-                                                            getDBHelper().persistTag(tag);
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        } else {
-                                            oldMedia.remove(med);
-                                        }
-                                    }
-
-                                    for (Media old : oldMedia) {
-                                        getDBHelper().deleteMediaById(old.getId());
-                                    }
-                                }
+                                syncPerson(person);
                             } else {
                                 person.setLastSync(new java.util.Date());
                                 getDBHelper().persistLittlePerson(person);
@@ -333,29 +260,116 @@ public class DataService implements AuthTask.Listener {
                 }
             }
         }
-
-        private org.finlayfamily.littlefamily.data.Relationship syncRelationship(LittlePerson person, String fsid, org.finlayfamily.littlefamily.data.RelationshipType type) throws Exception {
-            LittlePerson relative = getDBHelper().getPersonByFamilySearchId(fsid);
-            if (relative==null) {
-                Person fsPerson2 = remoteService.getPerson(fsid, true);
-                relative = DataHelper.buildLittlePerson(fsPerson2, context, remoteService, true);
-                getDBHelper().persistLittlePerson(relative);
-            }
-            if (relative!=null) {
-                org.finlayfamily.littlefamily.data.Relationship rel = getDBHelper().getRelationship(person.getId(), relative.getId(), type);
-                if (rel==null) {
-                    rel = new org.finlayfamily.littlefamily.data.Relationship();
-                    rel.setId1(person.getId());
-                    rel.setId2(relative.getId());
-                    rel.setType(type);
-                    getDBHelper().persistRelationship(rel);
-                }
-                return rel;
-            }
-            return null;
-        }
     }
     //--end sync thread
+
+    public void syncPerson(LittlePerson person) throws Exception {
+        Person fsPerson = remoteService.getPerson(person.getFamilySearchId(), false);
+        LittlePerson updated = DataHelper.buildLittlePerson(fsPerson, context, remoteService, false);
+        updated.setId(person.getId());
+        person.setLastSync(updated.getLastSync());
+        person.setPhotoPath(updated.getPhotoPath());
+        person.setAge(updated.getAge());
+        person.setBirthDate(updated.getBirthDate());
+        person.setFamilySearchId(updated.getFamilySearchId());
+        person.setGender(updated.getGender());
+        person.setGivenName(updated.getGivenName());
+        person.setName(updated.getName());
+        getDBHelper().persistLittlePerson(person);
+
+        try {
+            Thread.sleep(5000);  //-- don't bombard the server
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        List<Relationship> closeRelatives = remoteService.getCloseRelatives(person.getFamilySearchId(), false);
+        if (closeRelatives != null) {
+            List<org.finlayfamily.littlefamily.data.Relationship> oldRelations = getDBHelper().getRelationshipsForPerson(person.getId());
+            for (Relationship r : closeRelatives) {
+                org.finlayfamily.littlefamily.data.RelationshipType type = org.finlayfamily.littlefamily.data.RelationshipType.PARENTCHILD;
+                if (r.getKnownType() == RelationshipType.Couple) {
+                    type = org.finlayfamily.littlefamily.data.RelationshipType.SPOUSE;
+                }
+                if (!r.getPerson1().getResourceId().equals(person.getFamilySearchId())) {
+                    org.finlayfamily.littlefamily.data.Relationship rel = syncRelationship(person, r.getPerson1().getResourceId(), type);
+                    if (rel != null) {
+                        oldRelations.remove(rel);
+                    }
+                }
+                if (!r.getPerson2().getResourceId().equals(person.getFamilySearchId())) {
+                    org.finlayfamily.littlefamily.data.Relationship rel = syncRelationship(person, r.getPerson2().getResourceId(), type);
+                    if (rel != null) {
+                        oldRelations.remove(rel);
+                    }
+                }
+            }
+
+            for (org.finlayfamily.littlefamily.data.Relationship rel : oldRelations) {
+                getDBHelper().deleteRelationshipById(rel.getId());
+            }
+        }
+
+        List<SourceDescription> sds = remoteService.getPersonMemories(person.getFamilySearchId(), true);
+        if (sds != null) {
+            List<Media> oldMedia = getDBHelper().getMediaForPerson(person.getId());
+            for (SourceDescription sd : sds) {
+                Media med = getDBHelper().getMediaByFamilySearchId(sd.getId());
+                if (med == null) {
+                    List<Link> links = sd.getLinks();
+                    if (links != null) {
+                        for (Link link : links) {
+                            if (link.getRel() != null && link.getRel().equals("image")) {
+                                med = new Media();
+                                med.setType("photo");
+                                med.setFamilySearchId(sd.getId());
+                                String localPath = DataHelper.downloadFile(link.getHref().toString(), person.getFamilySearchId(), DataHelper.lastPath(link.getHref().toString()), remoteService, context);
+                                if (localPath != null) {
+                                    med.setLocalPath(localPath);
+                                    getDBHelper().persistMedia(med);
+                                    Tag tag = new Tag();
+                                    tag.setMediaId(med.getId());
+                                    tag.setPersonId(person.getId());
+                                    getDBHelper().persistTag(tag);
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    oldMedia.remove(med);
+                }
+            }
+
+            for (Media old : oldMedia) {
+                getDBHelper().deleteMediaById(old.getId());
+            }
+        }
+    }
+
+    private org.finlayfamily.littlefamily.data.Relationship syncRelationship(LittlePerson person, String fsid, org.finlayfamily.littlefamily.data.RelationshipType type) throws Exception {
+        LittlePerson relative = getDBHelper().getPersonByFamilySearchId(fsid);
+        if (relative==null) {
+            try {
+                Thread.sleep(5000);  //-- don't bombard the server
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Person fsPerson2 = remoteService.getPerson(fsid, true);
+            relative = DataHelper.buildLittlePerson(fsPerson2, context, remoteService, true);
+            getDBHelper().persistLittlePerson(relative);
+        }
+        if (relative!=null) {
+            org.finlayfamily.littlefamily.data.Relationship rel = getDBHelper().getRelationship(person.getId(), relative.getId(), type);
+            if (rel==null) {
+                rel = new org.finlayfamily.littlefamily.data.Relationship();
+                rel.setId1(person.getId());
+                rel.setId2(relative.getId());
+                rel.setType(type);
+                getDBHelper().persistRelationship(rel);
+            }
+            return rel;
+        }
+        return null;
+    }
 
     public void addToSyncQ(LittlePerson person, int depth) throws Exception {
         Calendar cal = Calendar.getInstance();

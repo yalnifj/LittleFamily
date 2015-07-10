@@ -81,4 +81,7 @@
         <item>48</item>
     </string-array>
     <string name="pref_title_manage_people">Manage People</string>
+    <string name="force_sync">Force Sync</string>
+    <string name="hide_person">Hide Person</string>
+    <string name="show_person">Show Person</string>
 </resources>

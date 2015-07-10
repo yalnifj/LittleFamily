@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/force_sync"
+        android:title="@string/force_sync"
+        android:icon="@android:drawable/ic_popup_sync" />
+    <item android:id="@+id/hide_show"
+        android:title="@string/hide_person" />
+</menu>

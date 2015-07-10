@@ -49,8 +49,6 @@ Please wait...</string>
     <string name="who_is_mother">Find the mother?</string>
     <string name="who_is_child">Find the child?</string>
 
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_my_tree">My Tree</string>
     <string name="title_activity_bubble_pop">Bubble Pop Activity</string>
     <string name="adult_auth_explanation">Please enter the password for your online family tree account in order to continue.</string>
@@ -61,5 +59,6 @@ Please wait...</string>
     <string name="person_search">Person Search</string>
     <string name="remote_tree_id">Remote Tree ID</string>
     <string name="search">Search</string>
+    <string name="low_media">There are not many pictures on your online family tree.  The game is more fun with more pictures.  Please go to your online family tree and upload more photos.</string>
 
 </resources>

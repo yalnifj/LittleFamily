@@ -1,8 +1,10 @@
 package org.finlayfamily.littlefamily.activities;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -111,6 +113,17 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
             adapter.setFamily(familyMembers);
             updateColumns();
             speak(getResources().getString(R.string.title_activity_choose_family_member));
+            try {
+                if (DataService.getInstance().getDBHelper().getMediaCount() < 3) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setMessage(R.string.low_media);
+                    builder.setPositiveButton("OK", null);
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+            } catch (Exception e) {
+                Log.e("ChooseFamilyMember", "Error checking database", e);
+            }
         }
     }
 

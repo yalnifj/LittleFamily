@@ -37,7 +37,7 @@ public class HomeView extends SpritedClippedSurfaceView {
         activitySprites = new ArrayList<>();
         random = new Random();
         timer = 0L;
-        lockBitmap = BitmapFactory.decodeResource(context.getResources(), android.R.drawable.ic_lock_idle_lock);
+        lockBitmap = BitmapFactory.decodeResource(context.getResources(), android.R.drawable.ic_menu_manage);
         lockSprite = new TouchEventGameSprite(lockBitmap, LittleFamilyActivity.TOPIC_START_SETTINGS);
     }
 
@@ -46,7 +46,7 @@ public class HomeView extends SpritedClippedSurfaceView {
         activitySprites = new ArrayList<>();
         random = new Random();
         timer = 0L;
-        lockBitmap = BitmapFactory.decodeResource(context.getResources(), android.R.drawable.ic_lock_idle_lock);
+        lockBitmap = BitmapFactory.decodeResource(context.getResources(), android.R.drawable.ic_menu_manage);
         lockSprite = new TouchEventGameSprite(lockBitmap, LittleFamilyActivity.TOPIC_START_SETTINGS);
     }
 

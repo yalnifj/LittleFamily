@@ -13,6 +13,7 @@ import org.finlayfamily.littlefamily.data.LittlePerson;
 import org.finlayfamily.littlefamily.data.Media;
 import org.finlayfamily.littlefamily.util.ImageHelper;
 import org.finlayfamily.littlefamily.views.ColoringView;
+import org.finlayfamily.littlefamily.views.WaterColorImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,7 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Memori
     private LittlePerson selectedPerson;
 
     private ColoringView layeredImage;
+    private WaterColorImageView colorPicker;
     private String imagePath;
     private Bitmap imageBitmap;
     private Media photo;
@@ -40,6 +42,9 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Memori
 
         layeredImage = (ColoringView) findViewById(R.id.layeredImage);
         layeredImage.registerListener(this);
+
+        colorPicker = (WaterColorImageView) findViewById(R.id.colorPicker);
+        colorPicker.registerListener(layeredImage);
 
         Intent intent = getIntent();
         people = (List<LittlePerson>) intent.getSerializableExtra(ChooseFamilyMember.FAMILY);
@@ -59,6 +64,7 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Memori
             people = new ArrayList<>();
             people.add(selectedPerson);
         }
+        showLoadingDialog();
         if (people.size()<2) {
             loadMoreFamilyMembers();
         } else {
@@ -73,6 +79,7 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Memori
     }
 
     public void setupCanvas() {
+        showLoadingDialog();
         layeredImage.setImageBitmap(imageBitmap);
     }
 
@@ -164,7 +171,7 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Memori
 
     @Override
     public void onColoringReady() {
-        //hideLoadingDialog();
+        hideLoadingDialog();
     }
 
     public class FamilyLoaderListener implements FamilyLoaderTask.Listener {
