@@ -271,6 +271,7 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
         water.add(BitmapFactory.decodeResource(getResources(), R.drawable.faucet4));
         faucet.getBitmaps().put(2, water);
         faucet.setStateTransition(2, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
+		faucet.getAudio().put(2, R.raw.water);
         List<Bitmap> water2 = new ArrayList<>(2);
         water2.add(BitmapFactory.decodeResource(getResources(), R.drawable.faucet5));
         water2.add(BitmapFactory.decodeResource(getResources(), R.drawable.faucet6));
@@ -304,6 +305,7 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
         squirting.add(BitmapFactory.decodeResource(getResources(), R.drawable.soap5));
         soap.getBitmaps().put(1, squirting);
         soap.setStateTransition(1, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
+		soap.getAudio().put(1, R.raw.squirt);
         List<Bitmap> squirting2 = new ArrayList<>(2);
         squirting2.add(BitmapFactory.decodeResource(getResources(), R.drawable.soap6));
         squirting2.add(BitmapFactory.decodeResource(getResources(), R.drawable.soap7));
