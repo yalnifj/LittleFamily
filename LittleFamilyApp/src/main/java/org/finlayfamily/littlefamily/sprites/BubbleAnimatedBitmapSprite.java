@@ -100,6 +100,9 @@ public class BubbleAnimatedBitmapSprite extends BouncingAnimatedBitmapSprite {
             	setRemoveMe(true);
 			} else {
 				state = 2;
+				if (person.getGivenName()!=null) {
+                    activity.speak(person.getGivenName());
+                }
 			}
         }
         if (state==2) {
@@ -116,9 +119,6 @@ public class BubbleAnimatedBitmapSprite extends BouncingAnimatedBitmapSprite {
                 slope = 0;
                 speed = 0;
                 view.nextBubble();
-                if (person.getGivenName()!=null) {
-                    activity.speak(person.getGivenName());
-                }
             }
         }
         if (stepCount > 0) {
@@ -174,6 +174,18 @@ public class BubbleAnimatedBitmapSprite extends BouncingAnimatedBitmapSprite {
                 }
             } else if (person!=null) {
                 stepCount = 10;
+				try {
+                    MediaPlayer mediaPlayer = MediaPlayer.create(activity, R.raw.nopop);
+                    mediaPlayer.start();
+                    mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+							@Override
+							public void onCompletion(MediaPlayer mp) {
+								mp.release();
+							}
+						});
+                } catch (Exception e) {
+                    // just let things go on
+                }
             }
         }
     }
