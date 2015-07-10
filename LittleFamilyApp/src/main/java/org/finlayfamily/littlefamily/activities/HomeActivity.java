@@ -108,6 +108,7 @@ public class HomeActivity extends LittleFamilyActivity {
             darker.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_cloud1e));
             cloud1.getBitmaps().put(4, darker);
             cloud1.setStateTransition(4, 20);
+			cloud1.getAudio().put(4, R.raw.rain);
             homeView.addSprite(cloud1);
 
             Bitmap cloudBm2 = BitmapFactory.decodeResource(getResources(), R.drawable.house_cloud2);
@@ -369,7 +370,6 @@ public class HomeActivity extends LittleFamilyActivity {
             blockAnim.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_toys_blocks8));
             blocks.getBitmaps().put(2, blockAnim);
             blocks.setStateTransitionEvent(2, TOPIC_START_PUZZLE);
-            blocks.setStateTransition(2, 1);
             homeView.addSprite(blocks);
             homeView.addActivitySprite(blocks);
 
