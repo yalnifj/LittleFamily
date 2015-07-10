@@ -60,7 +60,7 @@ public class ColoringView extends ImageView implements ColoringImageFilterTask.L
         //mPaint.setColor(Color.RED);
         //mPaint.setAlpha(100);
         mPaint.setColor(Color.parseColor("#99ffffff"));
-        mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP));
+        mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_ATOP));
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
@@ -180,7 +180,7 @@ public class ColoringView extends ImageView implements ColoringImageFilterTask.L
             if (!noColor) mCanvas.drawPath(mPath,  mPaint);
 
             circlePath.reset();
-            circlePath.addCircle(mX, mY, 33, Path.Direction.CW);
+            circlePath.addCircle(mX, mY, 30, Path.Direction.CW);
         }
     }
 

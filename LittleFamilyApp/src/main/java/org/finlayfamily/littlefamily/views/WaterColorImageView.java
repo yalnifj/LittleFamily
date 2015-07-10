@@ -65,57 +65,57 @@ public class WaterColorImageView extends View {
         Rect dr = new Rect();
         dr.set((int)(40*r), (int)(18*r), (int)(95*r), (int)(75*r));
         colorRects.add(dr);
-        colors.add(Color.parseColor("#aaaa0000"));
+        colors.add(Color.parseColor("#44aa0000"));
 
         Rect rr = new Rect();
         rr.set((int)(115*r), (int)(17*r), (int)(170*r), (int)(74*r));
         colorRects.add(rr);
-        colors.add(Color.parseColor("#aaff0000"));
+        colors.add(Color.parseColor("#44ff0000"));
 
         Rect o = new Rect();
         o.set((int)(185*r), (int)(16*r), (int)(240*r), (int)(73*r));
         colorRects.add(o);
-        colors.add(Color.parseColor("#aaff6600"));
+        colors.add(Color.parseColor("#44ff6600"));
 
         Rect g = new Rect();
         g.set((int) (255 * r), (int) (15 * r), (int) (310 * r), (int) (72 * r));
         colorRects.add(g);
-        colors.add(Color.parseColor("#aad4aa00"));
+        colors.add(Color.parseColor("#44d4aa00"));
 
         Rect y = new Rect();
         y.set((int) (330 * r), (int) (14 * r), (int) (385 * r), (int) (71 * r));
         colorRects.add(y);
-        colors.add(Color.parseColor("#aaffff00"));
+        colors.add(Color.parseColor("#44ffff00"));
 
         Rect gr = new Rect();
         gr.set((int) (400 * r), (int) (13 * r), (int) (455 * r), (int) (70 * r));
         colorRects.add(gr);
-        colors.add(Color.parseColor("#aa00b100"));
+        colors.add(Color.parseColor("#4400b100"));
 
         Rect dg = new Rect();
         dg.set((int) (50 * r), (int) (88 * r), (int) (105 * r), (int) (145 * r));
         colorRects.add(dg);
-        colors.add(Color.parseColor("#aa00b100"));
+        colors.add(Color.parseColor("#4400b100"));
 
         Rect b = new Rect();
         b.set((int) (120 * r), (int) (87 * r), (int) (175 * r), (int) (144 * r));
         colorRects.add(b);
-        colors.add(Color.parseColor("#aa0000ff"));
+        colors.add(Color.parseColor("#440000ff"));
 
         Rect db = new Rect();
         db.set((int) (195 * r), (int) (86 * r), (int) (250 * r), (int) (143 * r));
         colorRects.add(db);
-        colors.add(Color.parseColor("#aa00006f"));
+        colors.add(Color.parseColor("#4400006f"));
 
         Rect p = new Rect();
         p.set((int) (265 * r), (int) (85 * r), (int) (320 * r), (int) (142 * r));
         colorRects.add(p);
-        colors.add(Color.parseColor("#aa6400aa"));
+        colors.add(Color.parseColor("#446400aa"));
 
         Rect br = new Rect();
         br.set((int) (335 * r), (int) (84 * r), (int) (390 * r), (int) (141 * r));
         colorRects.add(br);
-        colors.add(Color.parseColor("#aa803300"));
+        colors.add(Color.parseColor("#44803300"));
 
         Rect wh = new Rect();
         wh.set((int) (410 * r), (int) (83 * r), (int) (465 * r), (int) (140 * r));
