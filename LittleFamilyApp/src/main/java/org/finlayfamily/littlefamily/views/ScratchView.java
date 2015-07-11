@@ -60,8 +60,6 @@ public class ScratchView extends ImageView {
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
         mPaint.setStrokeWidth(12);
-
-        mediaPlayer = MediaPlayer.create(context, R.raw.erasing);
     }
 
     @Override
@@ -131,6 +129,7 @@ public class ScratchView extends ImageView {
         mX = x;
         mY = y;
         try {
+            mediaPlayer = MediaPlayer.create(context, R.raw.erasing);
             mediaPlayer.start();
             mediaPlayer.setLooping(true);
         } catch (Exception e) {

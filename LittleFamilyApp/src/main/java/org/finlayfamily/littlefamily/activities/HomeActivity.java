@@ -238,8 +238,8 @@ public class HomeActivity extends LittleFamilyActivity {
             childDesk.setStateTransition(2, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
             childDesk.getAudio().put(2, R.raw.erasing);
             List<Bitmap> erasing3 = new ArrayList<>(2);
-            erasing3.add(erasing.get(erasing.size() - 1));
-            erasing3.add(erasing.get(erasing.size() - 1));
+            erasing3.add(erasing2.get(erasing2.size() - 1));
+            erasing3.add(erasing2.get(erasing2.size() - 1));
             childDesk.getBitmaps().put(3, erasing3);
             childDesk.setStateTransition(3, 5);
             childDesk.setStateTransitionEvent(3, TOPIC_START_SCRATCH);
