@@ -9,9 +9,12 @@ import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.media.MediaPlayer;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.ImageView;
+
+import org.finlayfamily.littlefamily.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +35,7 @@ public class ScratchView extends ImageView {
     private Path circlePath;
     private Paint mPaint;
     private boolean complete = false;
+    private MediaPlayer mediaPlayer;
 
     public ScratchView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -56,6 +60,8 @@ public class ScratchView extends ImageView {
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
         mPaint.setStrokeWidth(12);
+
+        mediaPlayer = MediaPlayer.create(context, R.raw.erasing);
     }
 
     @Override
@@ -124,6 +130,12 @@ public class ScratchView extends ImageView {
         mPath.moveTo(x, y);
         mX = x;
         mY = y;
+        try {
+            mediaPlayer.start();
+            mediaPlayer.setLooping(true);
+        } catch (Exception e) {
+            // just let things go on
+        }
     }
     private void touch_move(float x, float y) {
         float dx = Math.abs(x - mX);
@@ -148,6 +160,12 @@ public class ScratchView extends ImageView {
         mCanvas.drawPath(mPath,  mPaint);
         // kill this so we don't double draw
         mPath.reset();
+
+        try {
+            mediaPlayer.stop();
+        } catch (Exception e) {
+            // just let things go on
+        }
 
         // check if scratch is complete
         int xd = (int) mPaint.getStrokeWidth()/5;

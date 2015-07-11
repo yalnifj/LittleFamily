@@ -206,7 +206,7 @@ public class ColoringView extends ImageView implements ColoringImageFilterTask.L
                 if (Color.alpha(pixel) < 200) count++;
             }
         }
-        if (count >= total) {
+        if (count >= total * 0.98) {
             complete = true;
             for(ColoringCompleteListener l : listeners) {
                 l.onColoringComplete();
