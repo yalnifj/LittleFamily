@@ -41,20 +41,27 @@ public class HomeActivity extends LittleFamilyActivity {
         if (selectedPerson==null && people!=null && people.size()>0) {
             selectedPerson = people.get(0);
         }
-        setupHomeViewSprites();
-        System.gc();
     }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        homeView.stop();
+	
+	public void onStart() {
+		super.onStart();
+		setupHomeViewSprites();
+	}
+	
+	public void onStop() {
+		super.onStop();
+		homeView.stop();
         homeView.onDestroy();
         if (homeBackground!=null) {
             homeBackground.onDestroy();
         }
         homeBackground = null;
+		System.gc();
+	}
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     @Override

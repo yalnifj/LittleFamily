@@ -18,11 +18,15 @@ import org.finlayfamily.littlefamily.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import android.graphics.Point;
+import org.finlayfamily.littlefamily.sprites.Sprite;
+import org.finlayfamily.littlefamily.sprites.ScratchBitsSprite;
+import java.util.Random;
 
 /**
  * Created by jfinlay on 1/22/2015.
  */
-public class ScratchView extends ImageView {
+public class ScratchView extends SpritedSurfaceView {
     public int width;
     public  int height;
     private Bitmap imageBitmap;
@@ -68,7 +72,11 @@ public class ScratchView extends ImageView {
 
         if (imageBitmap!=null) {
             float ratio = (float) (imageBitmap.getWidth()) / imageBitmap.getHeight();
-            h = (int) (w / ratio);
+            if ( w < h ) {
+				h = (int) (w / ratio);
+			} else {
+				w = (int)(h * ratio);
+			}
         }
 
         mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
@@ -80,15 +88,21 @@ public class ScratchView extends ImageView {
     }
 
     @Override
-    protected void onDraw(Canvas canvas)
+    public void doDraw(Canvas canvas)
     {
-        //super.onDraw(canvas);
         int w = this.getWidth();
         int h = this.getHeight();
-
-        if (imageBitmap!=null) {
+		
+		canvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
+		
+		if (imageBitmap!=null && !imageBitmap.isRecycled()) {
             float ratio = (float) (imageBitmap.getWidth()) / imageBitmap.getHeight();
-            h = (int) (w / ratio);
+            if ( w < h ) {
+				h = (int) (w / ratio);
+			} else {
+				w = (int)(h * ratio);
+			}
+			
             Rect dst = new Rect();
             dst.set(0, 0, w, h);
             canvas.drawBitmap(imageBitmap, null, dst, null);
@@ -97,19 +111,31 @@ public class ScratchView extends ImageView {
             canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
             canvas.drawPath(circlePath, circlePaint);
         }
+		
+		synchronized (sprites) {
+            for (Sprite s : sprites) {
+                if (s.getX() + s.getWidth() >= 0 && s.getX() <= getWidth() && s.getY() + s.getHeight() >= 0 && s.getY() <= getHeight()) {
+                    s.doDraw(canvas);
+                }
+            }
+        }
     }
 
-    @Override
     public void setImageBitmap(Bitmap bm)
     {
-        super.setImageBitmap(bm);
+        //super.setImageBitmap(bm);
         this.imageBitmap = bm;
         int w = this.getWidth();
         int h = this.getHeight();
         if (w==0) w=600;
+		if (h==0) h=600;
 
         float ratio = (float) (imageBitmap.getWidth()) / imageBitmap.getHeight();
-        h = (int) (w / ratio);
+        if ( w < h ) {
+			h = (int) (w / ratio);
+		} else {
+			w = (int)(h * ratio);
+		}
 
         mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         mCanvas = new Canvas(mBitmap);
@@ -118,12 +144,13 @@ public class ScratchView extends ImageView {
         background.setColor(Color.GRAY);
         mCanvas.drawRect(0,0,w,h,background);
         complete = false;
+		synchronized(sprites) {
+			sprites.clear();
+		}
     }
 
-    private float mX, mY;
-    private static final float TOUCH_TOLERANCE = 4;
-
-    private void touch_start(float x, float y) {
+	@Override
+    public void touch_start(float x, float y) {
         mPath.reset();
         mPath.moveTo(x, y);
         mX = x;
@@ -136,23 +163,26 @@ public class ScratchView extends ImageView {
             // just let things go on
         }
     }
-    private void touch_move(float x, float y) {
-        float dx = Math.abs(x - mX);
-        float dy = Math.abs(y - mY);
-        if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
-            mPath.quadTo(mX, mY, (x + mX)/2, (y + mY)/2);
-            mX = x;
-            mY = y;
+	
+	@Override
+	public void doMove(float oldX, float oldY, float x, float y) {
+		mPath.quadTo(mX, mY, (x + mX)/2, (y + mY)/2);
+		// commit the path to our offscreen
+   		mCanvas.drawPath(mPath,  mPaint);
 
-            // commit the path to our offscreen
-            mCanvas.drawPath(mPath,  mPaint);
-
-            circlePath.reset();
-            circlePath.addCircle(mX, mY, 40, Path.Direction.CW);
-        }
+        circlePath.reset();
+        circlePath.addCircle(mX, mY, 40, Path.Direction.CW);
+			
+		ScratchBitsSprite bit = new ScratchBitsSprite();
+		bit.setX(x);
+		bit.setY(y);
+		bit.setWidth(4+random.nextInt(10));
+		bit.setHeight(4+random.nextInt(10));
+		addSprite(bit);
     }
-
-    private void touch_up() {
+	
+	@Override
+    protected void touch_up(float tx, float ty) {
         mPath.lineTo(mX, mY);
         circlePath.reset();
         // commit the path to our offscreen
@@ -178,34 +208,17 @@ public class ScratchView extends ImageView {
                 if (Color.alpha(pixel) < 200) count++;
             }
         }
-        if (count > total * 0.97) {
+        if (count > total * 0.98) {
+			Rect r = new Rect();
+			r.set(starBitmap.getWidth()/2, starBitmap.getHeight()/2,
+					getWidth()-starBitmap.getWidth()/2, mBitmap.getHeight()-starBitmap.getHeight()/2);
+			int sc = 10+random.nextInt(10);
+			addStars(r, false, sc);
             complete = true;
             for(ScratchCompleteListener l : listeners) {
                 l.onScratchComplete();
             }
         }
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        float x = event.getX();
-        float y = event.getY();
-
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                touch_start(x, y);
-                invalidate();
-                break;
-            case MotionEvent.ACTION_MOVE:
-                touch_move(x, y);
-                invalidate();
-                break;
-            case MotionEvent.ACTION_UP:
-                touch_up();
-                invalidate();
-                break;
-        }
-        return true;
     }
 
     private List<ScratchCompleteListener> listeners = new ArrayList<>();

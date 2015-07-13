@@ -15,22 +15,19 @@ import org.finlayfamily.littlefamily.sprites.TouchEventGameSprite;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import android.graphics.Rect;
 
 /**
  * Created by kids on 7/7/15.
  */
 public class HomeView extends SpritedClippedSurfaceView {
-
-    private Bitmap starBitmap;
     private Bitmap lockBitmap;
     private Sprite lockSprite;
     private long timer;
     private List<Sprite> activitySprites;
     private Random random;
     private int state = 0;
-    private int starCount = 0;
     private Sprite activeSprite = null;
-    private int starDelay = 3;
 
     public HomeView(Context context) {
         super(context);
@@ -50,14 +47,6 @@ public class HomeView extends SpritedClippedSurfaceView {
         lockSprite = new TouchEventGameSprite(lockBitmap, LittleFamilyActivity.TOPIC_START_SETTINGS);
     }
 
-    public Bitmap getStarBitmap() {
-        return starBitmap;
-    }
-
-    public void setStarBitmap(Bitmap starBitmap) {
-        this.starBitmap = starBitmap;
-    }
-
     public void addActivitySprite(Sprite s) {
         activitySprites.add(s);
     }
@@ -74,28 +63,18 @@ public class HomeView extends SpritedClippedSurfaceView {
                     activity = random.nextInt(activitySprites.size());
                 }
                 activeSprite = activitySprites.get(activity);
-                starCount = 4 + random.nextInt(2+activeSprite.getHeight()/starBitmap.getHeight());
+                int starCount = 4 + random.nextInt(2+activeSprite.getHeight()/starBitmap.getHeight());
+				Rect r = new Rect();
+				r.set((int)activeSprite.getX(), (int)activeSprite.getY(), (int)(activeSprite.getX()+activeSprite.getWidth()),
+						(int)(activeSprite.getY()+activeSprite.getHeight()));
+				addStars(r, true, starCount);
             }
             timer--;
         }
         if (state==1) {
-            if (starDelay == 0) {
-                starDelay = 4;
                 if (starCount == 0) {
                     state = 0;
-                } else {
-                    starCount--;
-                    if (activeSprite != null) {
-                        StarSprite star = new StarSprite(starBitmap, true, true);
-                        int x = (int) (activeSprite.getX() + random.nextInt(activeSprite.getWidth()));
-                        int y = (int) (activeSprite.getY() + random.nextInt(activeSprite.getHeight()));
-                        star.setX(x);
-                        star.setY(y);
-                        addSprite(star);
-                    }
                 }
-            }
-            starDelay--;
         }
     }
 

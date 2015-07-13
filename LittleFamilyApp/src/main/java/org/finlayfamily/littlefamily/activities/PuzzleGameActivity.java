@@ -18,6 +18,8 @@ import org.finlayfamily.littlefamily.views.PuzzleSurfaceView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import android.view.SurfaceHolder;
+import android.graphics.PixelFormat;
 
 public class PuzzleGameActivity extends LittleFamilyActivity implements MemoriesLoaderTask.Listener, PuzzleSurfaceView.PuzzleCompleteListener {
     private List<LittlePerson> people;
@@ -39,6 +41,10 @@ public class PuzzleGameActivity extends LittleFamilyActivity implements Memories
         puzzleSurfaceView.setGame(puzzleGame);
         puzzleSurfaceView.registerListener(this);
         puzzleSurfaceView.setAnimationDelay(66);
+		puzzleSurfaceView.setZOrderOnTop(true);    // necessary
+		SurfaceHolder sfhTrackHolder = puzzleSurfaceView.getHolder();
+		sfhTrackHolder.setFormat(PixelFormat.TRANSPARENT);
+		
 
         Intent intent = getIntent();
         people = (List<LittlePerson>) intent.getSerializableExtra(ChooseFamilyMember.FAMILY);

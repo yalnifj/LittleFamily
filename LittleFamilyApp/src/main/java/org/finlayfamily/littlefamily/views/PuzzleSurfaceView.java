@@ -20,13 +20,12 @@ import java.util.List;
  */
 public class PuzzleSurfaceView extends AbstractTouchAnimatedSurfaceView {
 
-    public static final int thumbnailHeight = 75;
+    public static final int thumbnailHeight = 100;
 
     private PuzzleGame game;
     private Bitmap bitmap;
     private Paint outlinePaint;
     private Paint shadowPaint;
-    private Paint backPaint;
 
     private int sRow;
     private int sCol;
@@ -45,11 +44,6 @@ public class PuzzleSurfaceView extends AbstractTouchAnimatedSurfaceView {
         outlinePaint.setColor(Color.WHITE);
         outlinePaint.setStyle(Paint.Style.STROKE);
         outlinePaint.setStrokeWidth(1);
-
-        backPaint = new Paint();
-        backPaint.setColor(Color.WHITE);
-        //backPaint.setAlpha(0);
-        backPaint.setStyle(Paint.Style.FILL);
 
         shadowPaint = new Paint();
         shadowPaint.setColor(Color.GRAY);
@@ -106,7 +100,7 @@ public class PuzzleSurfaceView extends AbstractTouchAnimatedSurfaceView {
 
     @Override
     public void doDraw(Canvas canvas) {
-        canvas.drawRect(0, 0, getWidth(), getHeight(), backPaint);
+		canvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
         if (bitmap!=null) {
             int width = getWidth();
             int height = getHeight() - thumbnailHeight;
@@ -168,6 +162,8 @@ public class PuzzleSurfaceView extends AbstractTouchAnimatedSurfaceView {
             float ratio = (float)bWidth / bHeight;
             dst.set(0, height, (int) (thumbnailHeight * ratio), height+thumbnailHeight);
             canvas.drawBitmap(bitmap, null, dst, null);
+			
+			canvas.drawRect(dst, outlinePaint);
 
             if (showHint) {
                 Rect dst1 = new Rect();

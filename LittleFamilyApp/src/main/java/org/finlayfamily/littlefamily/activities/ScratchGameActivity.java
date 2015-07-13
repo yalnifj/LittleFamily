@@ -18,6 +18,9 @@ import org.finlayfamily.littlefamily.views.ScratchView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import android.view.SurfaceHolder;
+import android.graphics.PixelFormat;
+import android.graphics.BitmapFactory;
 
 public class ScratchGameActivity extends LittleFamilyActivity implements MemoriesLoaderTask.Listener, ScratchView.ScratchCompleteListener {
 
@@ -40,6 +43,9 @@ public class ScratchGameActivity extends LittleFamilyActivity implements Memorie
 
         layeredImage = (ScratchView) findViewById(R.id.layeredImage);
         layeredImage.registerListener(this);
+		layeredImage.setZOrderOnTop(true);    // necessary
+		SurfaceHolder sfhTrackHolder = layeredImage.getHolder();
+		sfhTrackHolder.setFormat(PixelFormat.TRANSPARENT);
 
         Intent intent = getIntent();
         people = (List<LittlePerson>) intent.getSerializableExtra(ChooseFamilyMember.FAMILY);
@@ -53,6 +59,9 @@ public class ScratchGameActivity extends LittleFamilyActivity implements Memorie
     @Override
     protected void onStart() {
         super.onStart();
+		Bitmap starBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.star1);
+		layeredImage.setStarBitmap(starBitmap);
+		
         DataService.getInstance().registerNetworkStateListener(this);
         if (people==null) {
             people = new ArrayList<>();

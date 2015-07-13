@@ -76,6 +76,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     @Override
     protected void onStart() {
         super.onStart();
+		System.gc();
         mediaPlayer = MediaPlayer.create(this, R.raw.powerup_success);
         EventQueue.getInstance().subscribe(TOPIC_START_MATCH, this);
         EventQueue.getInstance().subscribe(TOPIC_START_COLORING, this);

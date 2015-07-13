@@ -608,7 +608,7 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
                             throw new RemoteServiceSearchException("Error getting gedcom record "+ results, 500);
                         }
                         String gedcom = results.substring(pos);
-                        Log.d(TAG, "getGedcomRecord:"+recordId+":"+gedcom);
+                        //Log.d(TAG, "getGedcomRecord:"+recordId+":"+gedcom);
                         return gedcom;
                     } else {
                         Log.e(TAG, "Error getting gedcom record "+ results);

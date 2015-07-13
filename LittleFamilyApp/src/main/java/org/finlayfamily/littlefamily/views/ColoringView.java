@@ -17,11 +17,13 @@ import org.finlayfamily.littlefamily.activities.tasks.ColoringImageFilterTask;
 
 import java.util.ArrayList;
 import java.util.List;
+import android.util.Log;
+import org.finlayfamily.littlefamily.sprites.Sprite;
 
 /**
  * Created by jfinlay on 1/22/2015.
  */
-public class ColoringView extends ImageView implements ColoringImageFilterTask.Listener, WaterColorImageView.ColorChangeListener {
+public class ColoringView extends SpritedSurfaceView implements ColoringImageFilterTask.Listener, WaterColorImageView.ColorChangeListener {
     public int width;
     public  int height;
     private Bitmap originalBitmap;
@@ -87,7 +89,11 @@ public class ColoringView extends ImageView implements ColoringImageFilterTask.L
 
         if (originalBitmap!=null) {
             float ratio = (float) (originalBitmap.getWidth()) / originalBitmap.getHeight();
-            h = (int) (w / ratio);
+            if ( w < h ) {
+				h = (int) (w / ratio);
+			} else {
+				w = (int)(h * ratio);
+			}
         }
 
         mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
@@ -100,14 +106,19 @@ public class ColoringView extends ImageView implements ColoringImageFilterTask.L
     }
 
     @Override
-    protected void onDraw(Canvas canvas)
+    public void doDraw(Canvas canvas)
     {
         int w = this.getWidth();
         int h = this.getHeight();
+		canvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
 
         if (originalBitmap!=null) {
             float ratio = (float) (originalBitmap.getWidth()) / originalBitmap.getHeight();
-            h = (int) (w / ratio);
+            if ( w < h ) {
+				h = (int) (w / ratio);
+			} else {
+				w = (int)(h * ratio);
+			}
             Rect dst = new Rect();
             dst.set(0, 0, w, h);
             canvas.drawBitmap(originalBitmap, null, dst, paint2);
@@ -118,6 +129,14 @@ public class ColoringView extends ImageView implements ColoringImageFilterTask.L
                 }
 
                 canvas.drawPath(circlePath, circlePaint);
+            }
+        }
+		
+		synchronized (sprites) {
+            for (Sprite s : sprites) {
+                if (s.getX() + s.getWidth() >= 0 && s.getX() <= getWidth() && s.getY() + s.getHeight() >= 0 && s.getY() <= getHeight()) {
+                    s.doDraw(canvas);
+                }
             }
         }
     }
@@ -133,10 +152,14 @@ public class ColoringView extends ImageView implements ColoringImageFilterTask.L
         if (bm!=null) {
             int w = this.getWidth();
             int h = this.getHeight();
-            if (w==0) w = 700;
-            if (h==0) h = 700;
+            if (w==0) w = 600;
+            if (h==0) h = 600;
             float ratio = (float) (originalBitmap.getWidth()) / originalBitmap.getHeight();
-            h = (int) (w / ratio);
+            if ( w < h ) {
+				h = (int) (w / ratio);
+			} else {
+				w = (int)(h * ratio);
+			}
             mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
             mCanvas = new Canvas(mBitmap);
             mPaint.setStrokeWidth(w < h ? w * 0.12f : h * 0.12f);
@@ -147,6 +170,10 @@ public class ColoringView extends ImageView implements ColoringImageFilterTask.L
 
             ColoringImageFilterTask task = new ColoringImageFilterTask(this);
             task.execute(originalBitmap);
+			
+			synchronized(sprites) {
+				sprites.clear();
+			}
         }
     }
 
@@ -156,35 +183,26 @@ public class ColoringView extends ImageView implements ColoringImageFilterTask.L
         if (color==0) noColor = true;
     }
 
-    private float mX, mY;
-    private static final float TOUCH_TOLERANCE = 4;
-
-    private void touch_start(float x, float y) {
-        if (!loaded) return;
+    protected void touch_start(float x, float y) {
+        super.touch_start(x,y);
+		if (!loaded) return;
         mPath.reset();
         mPath.moveTo(x, y);
-        mX = x;
-        mY = y;
     }
-    private void touch_move(float x, float y) {
-        if (!loaded) return;
-        float dx = Math.abs(x - mX);
-        float dy = Math.abs(y - mY);
-        if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
-            mPath.quadTo(mX, mY, (x + mX)/2, (y + mY)/2);
-            mX = x;
-            mY = y;
+    public void doMove(float oldX, float oldY, float x, float y) {
+        super.doMove(oldX, oldY, x,y);
+		if (!loaded) return;
+        mPath.quadTo(mX, mY, (x + mX)/2, (y + mY)/2);
+            
+        // commit the path to our offscreen
+        mCanvas.drawPath(mPath,  noPaint);
+        if (!noColor) mCanvas.drawPath(mPath,  mPaint);
 
-            // commit the path to our offscreen
-            mCanvas.drawPath(mPath,  noPaint);
-            if (!noColor) mCanvas.drawPath(mPath,  mPaint);
-
-            circlePath.reset();
-            circlePath.addCircle(mX, mY, 30, Path.Direction.CW);
-        }
+        circlePath.reset();
+        circlePath.addCircle(mX, mY, 25, Path.Direction.CW);
     }
 
-    private void touch_up() {
+    protected void touch_up(float tx, float ty) {
         if (!loaded) return;
         mPath.lineTo(mX, mY);
         circlePath.reset();
@@ -195,46 +213,30 @@ public class ColoringView extends ImageView implements ColoringImageFilterTask.L
         mPath.reset();
 
         // check if scratch is complete
-        int xd = (int) mPaint.getStrokeWidth()/5;
-        int yd = (int) mPaint.getStrokeWidth()/5;
+        int xd = (int) mPaint.getStrokeWidth()/4;
+        int yd = (int) mPaint.getStrokeWidth()/4;
         int count = 0;
         int total = 0;
         for(int y=yd; y<mBitmap.getHeight(); y+=yd) {
             for(int x=xd; x<mBitmap.getWidth(); x+=xd) {
                 total++;
                 int pixel = mBitmap.getPixel(x,y);
-                if (Color.alpha(pixel) < 200) count++;
+                if (Color.alpha(pixel) < 255) count++;
+				//Log.d(this.getClass().getSimpleName(), "alpha="+Color.alpha(pixel));
             }
         }
-        if (count >= total * 0.98) {
+		Log.d(this.getClass().getSimpleName(), "count="+count+" total="+total);
+        if (count >= (float)total * 0.97f) {
             complete = true;
+			Rect r = new Rect();
+			r.set(starBitmap.getWidth()/2, starBitmap.getHeight()/2,
+				  getWidth()-starBitmap.getWidth()/2, mBitmap.getHeight()-starBitmap.getHeight()/2);
+			int sc = 10+random.nextInt(10);
+			addStars(r, false, sc);
             for(ColoringCompleteListener l : listeners) {
                 l.onColoringComplete();
             }
         }
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (!loaded) return false;
-        float x = event.getX();
-        float y = event.getY();
-
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                touch_start(x, y);
-                invalidate();
-                break;
-            case MotionEvent.ACTION_MOVE:
-                touch_move(x, y);
-                invalidate();
-                break;
-            case MotionEvent.ACTION_UP:
-                touch_up();
-                invalidate();
-                break;
-        }
-        return true;
     }
 
     @Override

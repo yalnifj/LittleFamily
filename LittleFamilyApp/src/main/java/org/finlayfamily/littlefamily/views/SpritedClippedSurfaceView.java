@@ -12,6 +12,10 @@ import org.finlayfamily.littlefamily.sprites.Sprite;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import android.graphics.Bitmap;
+import android.graphics.Rect;
+import java.util.Random;
+import org.finlayfamily.littlefamily.sprites.StarSprite;
 
 /**
  * Created by jfinlay on 5/8/2015.
@@ -19,6 +23,7 @@ import java.util.List;
 public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView {
     protected List<Sprite> sprites;
     protected Sprite backgroundSprite;
+	protected Bitmap starBitmap;
     protected Paint basePaint;
     protected List<Sprite> selectedSprites;
 
@@ -26,6 +31,11 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
     protected int clipY;
     protected int maxWidth;
     protected int maxHeight;
+	protected int starCount = 0;
+	protected int starDelay = 3;
+	protected Rect starRect;
+	protected boolean starsInRect;
+	protected Random random;
 
     public SpritedClippedSurfaceView(Context context) {
         super(context);
@@ -34,6 +44,7 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
         basePaint = new Paint();
         basePaint.setStyle(Paint.Style.FILL);
         basePaint.setColor(Color.WHITE);
+		random = new Random();
     }
 
     public SpritedClippedSurfaceView(Context context, AttributeSet attrs) {
@@ -41,6 +52,7 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
         sprites = new ArrayList<>();
         selectedSprites = new ArrayList<>();
         basePaint = new Paint();
+		random = new Random();
     }
 
     public List<Sprite> getSprites() {
@@ -116,6 +128,46 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
                 if (s.isRemoveMe()) i.remove();
             }
         }
+		
+		if (starCount > 0) {
+			if (starDelay<=0) {
+				starDelay = 4;
+				starCount--;
+				if (starBitmap!=null && starRect != null) {
+					StarSprite star = new StarSprite(starBitmap, true, true);
+					int x=0, y=0;
+					if (starsInRect) {
+						x = (int) (starRect.left + random.nextInt(starRect.right - starRect.left));
+						y = (int) (starRect.top + random.nextInt(starRect.bottom - starRect.top));
+					} else {
+						int side = random.nextInt(4);
+						switch (side) {
+							case 0:
+								x = starRect.left + random.nextInt(starRect.right - starRect.left);
+								y = starRect.top + random.nextInt(starBitmap.getHeight());
+								break;
+							case 1:
+								x = starRect.right - random.nextInt(starBitmap.getWidth());
+								y = starRect.top + random.nextInt(starRect.bottom - starRect.top);
+								break;
+							case 2:
+								x = starRect.left + random.nextInt(starRect.right - starRect.left);
+								y = starRect.bottom - random.nextInt(starBitmap.getHeight());
+								break;
+							case 3:
+								x = starRect.left + random.nextInt(starBitmap.getWidth());
+								y = starRect.top + random.nextInt(starRect.bottom - starRect.top);
+								break;
+						}
+					}
+					star.setX(x);
+					star.setY(y);
+					addSprite(star);
+				}
+			} else {
+				starDelay--;
+			}
+		}
     }
 
     @Override
@@ -202,4 +254,18 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
             spriteList.clear();
         }
     }
+	
+	public Bitmap getStarBitmap() {
+        return starBitmap;
+    }
+
+    public void setStarBitmap(Bitmap starBitmap) {
+        this.starBitmap = starBitmap;
+    }
+	
+	public void addStars(Rect rect, boolean starsInRect, int count) {
+		starRect = rect;
+		this.starsInRect = starsInRect;
+		this.starCount = count;
+	}
 }

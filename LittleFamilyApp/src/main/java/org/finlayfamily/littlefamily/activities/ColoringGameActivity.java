@@ -18,6 +18,9 @@ import org.finlayfamily.littlefamily.views.WaterColorImageView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import android.view.SurfaceHolder;
+import android.graphics.PixelFormat;
+import android.graphics.BitmapFactory;
 
 public class ColoringGameActivity extends LittleFamilyActivity implements MemoriesLoaderTask.Listener, ColoringView.ColoringCompleteListener {
 
@@ -42,6 +45,10 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Memori
 
         layeredImage = (ColoringView) findViewById(R.id.layeredImage);
         layeredImage.registerListener(this);
+		layeredImage.setZOrderOnTop(true);    // necessary
+		SurfaceHolder sfhTrackHolder = layeredImage.getHolder();
+		sfhTrackHolder.setFormat(PixelFormat.TRANSPARENT);
+		
 
         colorPicker = (WaterColorImageView) findViewById(R.id.colorPicker);
         colorPicker.registerListener(layeredImage);
@@ -58,6 +65,8 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Memori
     @Override
     protected void onStart() {
         super.onStart();
+		Bitmap starBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.star1);
+		layeredImage.setStarBitmap(starBitmap);
         DataService.getInstance().registerNetworkStateListener(this);
         loading = true;
         if (people==null) {
@@ -164,6 +173,8 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Memori
             @Override
             public void onComplete(Integer progress) {
                 loadMoreFamilyMembers();
+				imageBitmap = null;
+				System.gc();
             }
         });
         waiter.execute(3000L);
