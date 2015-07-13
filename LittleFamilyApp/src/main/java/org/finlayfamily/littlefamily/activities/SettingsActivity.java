@@ -3,9 +3,6 @@ package org.finlayfamily.littlefamily.activities;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -13,12 +10,15 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.preference.RingtonePreference;
-import android.text.TextUtils;
+import android.speech.tts.TextToSpeech;
+import android.speech.tts.Voice;
+import android.util.Log;
 
 import org.finlayfamily.littlefamily.R;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -31,7 +31,7 @@ import java.util.List;
  * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
  * API Guide</a> for more information on developing a Settings UI.
  */
-public class SettingsActivity extends PreferenceActivity {
+public class SettingsActivity extends PreferenceActivity implements TextToSpeech.OnInitListener {
     /**
      * Determines whether to always show the simplified settings UI, where
      * settings are presented in a single list. When false, settings are shown
@@ -39,13 +39,32 @@ public class SettingsActivity extends PreferenceActivity {
      * shown on tablets.
      */
     private static final boolean ALWAYS_SIMPLE_PREFS = false;
+    protected TextToSpeech tts;
 
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
+        tts = new TextToSpeech(this, this);
+
         setupSimplePreferencesScreen();
+    }
+
+    @Override
+    public void onInit(int code) {
+        if (code == TextToSpeech.SUCCESS) {
+            tts.setLanguage(Locale.getDefault());
+            tts.setSpeechRate(0.9f);
+        } else {
+            tts = null;
+            //Toast.makeText(this, "Failed to initialize TTS engine.", Toast.LENGTH_SHORT).show();
+            Log.e("LittleFamilyActivity", "Error intializing speech");
+        }
+    }
+
+    public TextToSpeech getTts() {
+        return tts;
     }
 
     /**
@@ -63,6 +82,37 @@ public class SettingsActivity extends PreferenceActivity {
 
         // Add 'general' preferences.
         addPreferencesFromResource(R.xml.pref_general);
+        ListPreference voicePref = (ListPreference) findPreference("tts_voice");
+        if (Build.VERSION.SDK_INT > 20) {
+            Set<Voice> voices = tts.getVoices();
+            String[] voiceList = new String[voices.size()];
+            int i = 0;
+            for (Voice v : voices) {
+                voiceList[i] = v.getName();
+                i++;
+            }
+            voicePref.setEntries(voiceList);
+            voicePref.setEntryValues(voiceList);
+        } else {
+            getPreferenceScreen().removePreference(voicePref);
+        }
+
+        Preference testVoice = findPreference("tts_voice_test");
+        testVoice.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                String message = String.format(getResources().getString(R.string.name_born_in_date), "Abraham Lincoln", "Hodgenville, Kentucky", "February 12, 1809");
+                if (tts!=null) {
+                    if (Build.VERSION.SDK_INT > 20) {
+                        tts.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
+                    }
+                    else {
+                        tts.speak(message, TextToSpeech.QUEUE_FLUSH, null);
+                    }
+                }
+                return true;
+            }
+        });
 
         /*
         // Add 'notifications' preferences, and a corresponding header.
@@ -80,11 +130,11 @@ public class SettingsActivity extends PreferenceActivity {
         // Bind the summaries of EditText/List/Dialog/Ringtone preferences to
         // their values. When their values change, their summaries are updated
         // to reflect the new value, per the Android Design guidelines.
-        //bindPreferenceSummaryToValue(findPreference("example_text"));
-        //bindPreferenceSummaryToValue(findPreference("example_list"));
-        //bindPreferenceSummaryToValue(findPreference("notifications_new_message_ringtone"));
-        //bindPreferenceSummaryToValue(findPreference("sync_frequency"));
         bindPreferenceSummaryToValue(findPreference("service_type"));
+        bindPreferenceSummaryToValue(findPreference("sync_background"));
+        bindPreferenceSummaryToValue(findPreference("sync_cellular"));
+        bindPreferenceSummaryToValue(findPreference("sync_delay"));
+        bindPreferenceSummaryToValue(findPreference("tts_voice"));
     }
 
     /**
@@ -149,28 +199,6 @@ public class SettingsActivity extends PreferenceActivity {
                                 ? listPreference.getEntries()[index]
                                 : null);
 
-            } else if (preference instanceof RingtonePreference) {
-                // For ringtone preferences, look up the correct display value
-                // using RingtoneManager.
-                if (TextUtils.isEmpty(stringValue)) {
-                    // Empty values correspond to 'silent' (no ringtone).
-                    preference.setSummary(R.string.pref_ringtone_silent);
-
-                } else {
-                    Ringtone ringtone = RingtoneManager.getRingtone(
-                            preference.getContext(), Uri.parse(stringValue));
-
-                    if (ringtone == null) {
-                        // Clear the summary if there was a lookup error.
-                        preference.setSummary(null);
-                    } else {
-                        // Set the summary to reflect the new ringtone display
-                        // name.
-                        String name = ringtone.getTitle(preference.getContext());
-                        preference.setSummary(name);
-                    }
-                }
-
             } else {
                 // For all other preferences, set the summary to the value's
                 // simple string representation.
@@ -212,19 +240,53 @@ public class SettingsActivity extends PreferenceActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_general);
 
+            ListPreference voicePref = (ListPreference) findPreference("tts_voice");
+            if (Build.VERSION.SDK_INT > 20) {
+                Set<Voice> voices = ((SettingsActivity)getActivity()).getTts().getVoices();
+                String[] voiceList = new String[voices.size()];
+                int i = 0;
+                for (Voice v : voices) {
+                    voiceList[i] = v.getName();
+                    i++;
+                }
+                voicePref.setEntries(voiceList);
+                voicePref.setEntryValues(voiceList);
+            } else {
+                getPreferenceScreen().removePreference(voicePref);
+            }
+
+            Preference testVoice = findPreference("tts_voice_test");
+            testVoice.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    String message = String.format(getResources().getString(R.string.name_born_in_date), "Abraham Lincoln", "Hodgenville, Kentucky", "February 12, 1809");
+                    if (((SettingsActivity)getActivity()).getTts() != null) {
+                        if (Build.VERSION.SDK_INT > 20) {
+                            ((SettingsActivity)getActivity()).getTts().speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
+                        } else {
+                            ((SettingsActivity)getActivity()).getTts().speak(message, TextToSpeech.QUEUE_FLUSH, null);
+                        }
+                    }
+                    return true;
+                }
+            });
+
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference("example_text"));
-            bindPreferenceSummaryToValue(findPreference("example_list"));
+            bindPreferenceSummaryToValue(findPreference("service_type"));
+            bindPreferenceSummaryToValue(findPreference("sync_background"));
+            bindPreferenceSummaryToValue(findPreference("sync_cellular"));
+            bindPreferenceSummaryToValue(findPreference("sync_delay"));
+            bindPreferenceSummaryToValue(findPreference("tts_voice"));
         }
     }
 
     /**
      * This fragment shows notification preferences only. It is used when the
      * activity is showing a two-pane settings UI.
-     */
+
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class NotificationPreferenceFragment extends PreferenceFragment {
         @Override
@@ -239,11 +301,12 @@ public class SettingsActivity extends PreferenceActivity {
             bindPreferenceSummaryToValue(findPreference("notifications_new_message_ringtone"));
         }
     }
+    */
 
     /**
      * This fragment shows data and sync preferences only. It is used when the
      * activity is showing a two-pane settings UI.
-     */
+
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class DataSyncPreferenceFragment extends PreferenceFragment {
         @Override
@@ -258,4 +321,5 @@ public class SettingsActivity extends PreferenceActivity {
             bindPreferenceSummaryToValue(findPreference("sync_frequency"));
         }
     }
+    */
 }

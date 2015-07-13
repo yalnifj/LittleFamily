@@ -10,15 +10,13 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
-import android.widget.ImageView;
+import android.util.Log;
 
 import org.finlayfamily.littlefamily.activities.tasks.ColoringImageFilterTask;
+import org.finlayfamily.littlefamily.sprites.Sprite;
 
 import java.util.ArrayList;
 import java.util.List;
-import android.util.Log;
-import org.finlayfamily.littlefamily.sprites.Sprite;
 
 /**
  * Created by jfinlay on 1/22/2015.
@@ -141,7 +139,6 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
         }
     }
 
-    @Override
     public void setImageBitmap(Bitmap bm)
     {
         originalBitmap = bm;

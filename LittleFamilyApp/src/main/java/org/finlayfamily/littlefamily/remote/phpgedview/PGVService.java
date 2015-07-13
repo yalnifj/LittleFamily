@@ -56,7 +56,6 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
     private Map<String, List<SourceDescription>> memories = null;
     private Map<String, List<FamilyHolder>> families = null;
     private Map<String, String> recordCache = null;
-    private String encodedAuthToken = null;
     private int delayCount = 0;
     private String defaultPersonId;
     private GedcomParser gedcomParser;
@@ -117,7 +116,6 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
         params.putString("password",password);
         Bundle headers = new Bundle();
         headers.putString("User-Agent", "PGVAgent");
-        encodedAuthToken = createEncodedAuthToken(username, password);
 
         RemoteResult data = getRestData(METHOD_POST, action, params, headers);
         if (data!=null) {
@@ -149,11 +147,6 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
     @Override
     public String getSessionId() {
         return sessionId;
-    }
-
-    @Override
-    public String getEncodedAuthToken() {
-        return encodedAuthToken;
     }
 
     public String createEncodedAuthToken(String username, String password) {

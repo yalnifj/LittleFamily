@@ -16,6 +16,7 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.familysearch.identity.Identity;
+import org.finlayfamily.littlefamily.data.DataService;
 import org.finlayfamily.littlefamily.remote.RemoteResult;
 import org.finlayfamily.littlefamily.remote.RemoteService;
 import org.finlayfamily.littlefamily.remote.RemoteServiceBase;
@@ -59,7 +60,6 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
     private Map<String, Person> personCache;
     private Map<String, Link> linkCache;
     private Map<String, List<SourceDescription>> memories = null;
-    private String encodedAuthToken = null;
     private int delayCount = 0;
 
     private static FamilySearchService ourInstance = new FamilySearchService();
@@ -77,14 +77,13 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
 
     @Override
     public RemoteResult authenticate(String username, String password) throws RemoteServiceSearchException {
-        encodedAuthToken = createEncodedAuthToken(username, password);
+        String encodedAuthToken = createEncodedAuthToken(username, password);
 
         return authWithToken(encodedAuthToken);
     }
 
     @Override
-    public RemoteResult authWithToken(String token) throws RemoteServiceSearchException {
-        encodedAuthToken = token;
+    public RemoteResult authWithToken(String encodedAuthToken) throws RemoteServiceSearchException {
         if (encodedAuthToken==null) {
             throw new RemoteServiceSearchException("Unable to authenticate with FamilySearch", 401);
         }
@@ -116,10 +115,6 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
     @Override
     public String getSessionId() {
         return sessionId;
-    }
-    @Override
-    public String getEncodedAuthToken() {
-        return encodedAuthToken;
     }
 
     public String createEncodedAuthToken(String username, String password) {
@@ -541,9 +536,15 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
     private boolean handleStatusCodes(RemoteResult data) throws RemoteServiceSearchException {
         //-- not authenticated
         if (data.getStatusCode()==401 && sessionId!=null) {
-            RemoteResult res = authWithToken(encodedAuthToken);
-            if (res.isSuccess()) {
-                return true;
+            try {
+                String encodedAuthToken = null;
+                encodedAuthToken = DataService.getInstance().getEncryptedProperty(DataService.SERVICE_TYPE_FAMILYSEARCH + DataService.SERVICE_TOKEN);
+                RemoteResult res = authWithToken(encodedAuthToken);
+                if (res.isSuccess()) {
+                    return true;
+                }
+            } catch (Exception e) {
+                throw new RemoteServiceSearchException("Unabled to authenticate with saved token", data.getStatusCode(), e);
             }
         }
         if (data.getStatusCode()==400) {

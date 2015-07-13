@@ -96,7 +96,8 @@ public class AdultsAuthDialog extends DialogFragment {
         DataService dataService = DataService.getInstance();
         try {
             String testToken = dataService.getRemoteService().createEncodedAuthToken(dataService.getDBHelper().getProperty(DataService.SERVICE_USERNAME), password);
-            if (dataService.getRemoteService().getEncodedAuthToken().equals(testToken)) {
+            String goodToken = dataService.getEncryptedProperty(dataService.getRemoteService().getClass().getSimpleName() + DataService.SERVICE_TOKEN);
+            if (goodToken.equals(testToken)) {
                 return true;
             }
         } catch (Exception e) {

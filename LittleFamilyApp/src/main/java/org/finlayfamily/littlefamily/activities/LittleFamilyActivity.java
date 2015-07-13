@@ -2,11 +2,14 @@ package org.finlayfamily.littlefamily.activities;
 
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.Voice;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Display;
@@ -22,12 +25,13 @@ import org.finlayfamily.littlefamily.events.EventQueue;
 
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Set;
 
 /**
  * Created by kids on 4/18/15.
  */
 public class LittleFamilyActivity extends FragmentActivity implements TextToSpeech.OnInitListener, TopBarFragment.OnFragmentInteractionListener,
-        EventListener, DataNetworkStateListener {
+        EventListener, DataNetworkStateListener, SharedPreferences.OnSharedPreferenceChangeListener {
     public static final String TOPIC_START_MATCH    = "startMatch";
     public static final String TOPIC_START_SCRATCH  = "startScratch";
     public static final String TOPIC_START_COLORING = "startColoring";
@@ -143,10 +147,31 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         if (code == TextToSpeech.SUCCESS) {
             tts.setLanguage(Locale.getDefault());
             tts.setSpeechRate(0.9f);
+            setVoiceFromPreferences();
         } else {
             tts = null;
             //Toast.makeText(this, "Failed to initialize TTS engine.", Toast.LENGTH_SHORT).show();
             Log.e("LittleFamilyActivity", "Error intializing speech");
+        }
+    }
+
+    private void setVoiceFromPreferences() {
+        if (Build.VERSION.SDK_INT > 20) {
+            String voiceName = PreferenceManager.getDefaultSharedPreferences(this).getString("tts_voice", "");
+            if (!voiceName.isEmpty()) {
+                Voice voice = null;
+                Set<Voice> voices = tts.getVoices();
+                for (Voice v : voices) {
+                    if (v.getName().equals(voiceName)) {
+                        voice = v;
+                    }
+                }
+                if (voice!=null) {
+                    tts.setVoice(voice);
+                }
+            }
+
+            PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
         }
     }
 
@@ -172,6 +197,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     @Override
     protected void onDestroy() {
         if (tts!=null) {
+            PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
             tts.stop();
             tts.shutdown();
         }
@@ -340,5 +366,12 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         Intent intent = new Intent( this, BubblePopActivity.class );
         intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
         startActivity(intent);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals("tts_voice")) {
+            setVoiceFromPreferences();
+        }
     }
 }

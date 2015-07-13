@@ -27,7 +27,6 @@ public interface RemoteService {
 
     String getSessionId();
 
-    String getEncodedAuthToken();
     String createEncodedAuthToken(String username, String password);
 
     Person getCurrentPerson() throws RemoteServiceSearchException;

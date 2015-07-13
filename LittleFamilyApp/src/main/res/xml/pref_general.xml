@@ -35,4 +35,15 @@
             android:targetPackage="org.finlayfamily.littlefamily"
             android:targetClass="org.finlayfamily.littlefamily.activities.PersonSearchActivity" />
     </Preference>
+
+    <ListPreference
+        android:key="tts_voice"
+        android:title="@string/pref_title_tts_voice"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null" />
+
+    <Preference android:title="@string/pref_title_tts_voice_test"
+        android:key="tts_voice_test"
+        android:summary="@string/pref_summary_tts_voice_test"/>
+
 </PreferenceScreen>

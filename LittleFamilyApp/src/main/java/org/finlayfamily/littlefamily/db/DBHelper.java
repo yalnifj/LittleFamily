@@ -20,9 +20,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class DBHelper extends SQLiteOpenHelper {
 	private static final int DATABASE_VERSION = 1;
+	public static final String UUID_PROPERTY = "UUID";
 	private static final String DATABASE_NAME = "LittleFamily.db";
 
 	private static final String TABLE_LITTLE_PERSON = "littleperson";
@@ -103,6 +105,9 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TAGS);
         db.execSQL(CREATE_PROPERTIES);
 		db.execSQL(CREATE_SYNCQ);
+
+		//-- save a random installation ID
+		saveProperty(UUID_PROPERTY, UUID.randomUUID().toString());
 	}
 	
 	@Override

@@ -84,4 +84,7 @@
     <string name="force_sync">Force Sync</string>
     <string name="hide_person">Hide Person</string>
     <string name="show_person">Show Person</string>
+    <string name="pref_title_tts_voice">Voice</string>
+    <string name="pref_title_tts_voice_test">Hear Voice</string>
+    <string name="pref_summary_tts_voice_test">Listen to the selected voice speak some sample text.</string>
 </resources>

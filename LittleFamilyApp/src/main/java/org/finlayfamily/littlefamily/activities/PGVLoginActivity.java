@@ -198,8 +198,13 @@ public class PGVLoginActivity extends Activity implements AuthTask.Listener, Per
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
                 editor.putString(DataService.SERVICE_TYPE, dataService.getRemoteService().getClass().getSimpleName());
                 editor.commit();
-                dataService.getDBHelper().saveProperty(DataService.SERVICE_TYPE_PHPGEDVIEW+DataService.SERVICE_TOKEN, dataService.getRemoteService().getEncodedAuthToken());
-                dataService.getDBHelper().saveProperty(DataService.SERVICE_USERNAME, mEmailView.getText().toString());
+                String username = mEmailView.getText().toString();
+                mEmailView.getText().clear();
+                dataService.getDBHelper().saveProperty(DataService.SERVICE_USERNAME, username);
+                String password = mPasswordView.getText().toString();
+                mPasswordView.getText().clear();
+                String token = dataService.getRemoteService().createEncodedAuthToken(username, password);
+                dataService.saveEncryptedProperty(DataService.SERVICE_TYPE_PHPGEDVIEW + DataService.SERVICE_TOKEN, token);
             } catch (Exception e) {
                 e.printStackTrace();
             }

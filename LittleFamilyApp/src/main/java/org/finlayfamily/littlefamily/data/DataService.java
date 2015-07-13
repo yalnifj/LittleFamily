@@ -7,6 +7,7 @@ import android.util.Log;
 
 import org.finlayfamily.littlefamily.activities.tasks.AuthTask;
 import org.finlayfamily.littlefamily.db.DBHelper;
+import org.finlayfamily.littlefamily.remote.AES;
 import org.finlayfamily.littlefamily.remote.RemoteResult;
 import org.finlayfamily.littlefamily.remote.RemoteService;
 import org.finlayfamily.littlefamily.remote.RemoteServiceSearchException;
@@ -20,6 +21,9 @@ import org.gedcomx.links.Link;
 import org.gedcomx.source.SourceDescription;
 import org.gedcomx.types.RelationshipType;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -451,7 +455,7 @@ public class DataService implements AuthTask.Listener {
     public List<LittlePerson> searchPeople(String givenName, String surname) throws Exception {
         Map<String, String> params = new HashMap<>();
         if (givenName!=null && !givenName.isEmpty()) params.put(DBHelper.COL_GIVEN_NAME, givenName+"%");
-        if (surname!=null && !surname.isEmpty()) params.put(DBHelper.COL_NAME, "% "+surname+"%");
+        if (surname!=null && !surname.isEmpty()) params.put(DBHelper.COL_NAME, "% " + surname + "%");
         return getDBHelper().search(params);
     }
 
@@ -741,5 +745,22 @@ public class DataService implements AuthTask.Listener {
             }
         }
         return media;
+    }
+
+    public String getEncryptedProperty(String property) throws Exception {
+        String value = getDBHelper().getProperty(property);
+        InputStream is = new ByteArrayInputStream( value.getBytes() );
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        String uid = getDBHelper().getProperty(DBHelper.UUID_PROPERTY);
+        AES.decrypt(uid.toCharArray(), is, out);
+        return out.toString();
+    }
+
+    public void saveEncryptedProperty(String property, String value) throws Exception {
+        InputStream is = new ByteArrayInputStream( value.getBytes() );
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        String uid = getDBHelper().getProperty(DBHelper.UUID_PROPERTY);
+        AES.encrypt(128, uid.toCharArray(), is, out);
+        getDBHelper().saveProperty(property, out.toString());
     }
 }
