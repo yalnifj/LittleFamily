@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Random;
 import android.view.SurfaceHolder;
 import android.graphics.PixelFormat;
+import android.graphics.BitmapFactory;
 
 public class PuzzleGameActivity extends LittleFamilyActivity implements MemoriesLoaderTask.Listener, PuzzleSurfaceView.PuzzleCompleteListener {
     private List<LittlePerson> people;
@@ -58,6 +59,8 @@ public class PuzzleGameActivity extends LittleFamilyActivity implements Memories
     @Override
     protected void onStart() {
         super.onStart();
+		Bitmap starBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.star1);
+		puzzleSurfaceView.setStarBitmap(starBitmap);
         DataService.getInstance().registerNetworkStateListener(this);
         if (people==null) {
             people = new ArrayList<>();

@@ -29,6 +29,7 @@ public class SpritedSurfaceView extends AbstractTouchAnimatedSurfaceView {
     protected boolean multiSelect = true;
 	protected int starCount = 0;
 	protected int starDelay = 3;
+	protected int starDelayCount = 3;
 	protected Rect starRect;
 	protected boolean starsInRect;
 	protected Random random;
@@ -89,8 +90,8 @@ public class SpritedSurfaceView extends AbstractTouchAnimatedSurfaceView {
         }
 		
 		if (starCount > 0) {
-			if (starDelay<=0) {
-				starDelay = 4;
+			if (starDelayCount<=0) {
+				starDelayCount = starDelay;
 				starCount--;
 				if (starBitmap!=null && starRect != null) {
 					StarSprite star = new StarSprite(starBitmap, true, true);
@@ -124,7 +125,7 @@ public class SpritedSurfaceView extends AbstractTouchAnimatedSurfaceView {
 					addSprite(star);
 				}
 			} else {
-				starDelay--;
+				starDelayCount--;
 			}
 		}
     }

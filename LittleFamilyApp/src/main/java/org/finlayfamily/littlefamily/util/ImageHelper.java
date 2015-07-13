@@ -82,7 +82,7 @@ public class ImageHelper {
 			}
 			// If the file isn't found
 		} catch (FileNotFoundException e) {
-			Log.e("FamilyMembers", "Error loading contact image", e);
+			Log.e("ImageHelper", "Error loading contact image", e);
 		}
 		// In all cases, close the asset file descriptor
 		finally {
@@ -118,7 +118,15 @@ public class ImageHelper {
 	        if (forceSize || sourceWidth > targetWidth || sourceHeight > targetHeight) {
 	            options.inJustDecodeBounds = false;
 	            options.inSampleSize = calculateInSampleSize(options, targetWidth, targetHeight);
-	            bitmap = BitmapFactory.decodeFile(path, options);
+				try {
+	            	bitmap = BitmapFactory.decodeFile(path, options);
+				}
+				catch (OutOfMemoryError e) {
+					System.gc();
+					Log.e("ImageHelper", "Out of memory trying to load image "+path, e);
+					options.inSampleSize = options.inSampleSize*2;
+					bitmap = BitmapFactory.decodeFile(path, options);
+				}
 	        } else {
 	            bitmap = BitmapFactory.decodeFile(path);
 	        }

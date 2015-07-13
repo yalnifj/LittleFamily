@@ -14,11 +14,12 @@ import org.finlayfamily.littlefamily.games.PuzzleGame;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.finlayfamily.littlefamily.sprites.Sprite;
 
 /**
  * Created by jfinlay on 5/14/2015.
  */
-public class PuzzleSurfaceView extends AbstractTouchAnimatedSurfaceView {
+public class PuzzleSurfaceView extends SpritedSurfaceView {
 
     public static final int thumbnailHeight = 100;
 
@@ -37,6 +38,8 @@ public class PuzzleSurfaceView extends AbstractTouchAnimatedSurfaceView {
     private boolean animating = false;
     private boolean checkGame = false;
     private boolean showHint = false;
+	
+	protected int starDelay = 1;
 
     public PuzzleSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -55,6 +58,7 @@ public class PuzzleSurfaceView extends AbstractTouchAnimatedSurfaceView {
 
     @Override
     public void doStep() {
+		super.doStep();
         animating = false;
         for(int r=0; r<game.getRows(); r++) {
             for (int c = 0; c < game.getCols(); c++) {
@@ -90,6 +94,11 @@ public class PuzzleSurfaceView extends AbstractTouchAnimatedSurfaceView {
 
         if (!animating && checkGame) {
             if (game.isCompleted()) {
+				Rect r = new Rect();
+				r.set(starBitmap.getWidth()/2, starBitmap.getHeight()/2,
+					  getWidth()-starBitmap.getWidth()/2, pieceHeight*game.getRows()-starBitmap.getHeight()/2);
+				int sc = 10+random.nextInt(20);
+				addStars(r, false, sc);
                 for(PuzzleCompleteListener l : listeners) {
                     l.onPuzzleComplete();
                 }
@@ -169,6 +178,14 @@ public class PuzzleSurfaceView extends AbstractTouchAnimatedSurfaceView {
                 Rect dst1 = new Rect();
                 dst1.set(0, 0, pieceWidth*game.getCols(), pieceHeight*game.getRows());
                 canvas.drawBitmap(bitmap, null, dst1, null);
+            }
+        }
+		
+		synchronized (sprites) {
+            for (Sprite s : sprites) {
+                if (s.getX() + s.getWidth() >= 0 && s.getX() <= getWidth() && s.getY() + s.getHeight() >= 0 && s.getY() <= getHeight()) {
+                    s.doDraw(canvas);
+                }
             }
         }
     }
@@ -271,8 +288,14 @@ public class PuzzleSurfaceView extends AbstractTouchAnimatedSurfaceView {
         this.bitmap = bitmap;
         int w = bitmap.getWidth();
         int h = bitmap.getHeight();
+		
+		starCount = 0;
+		synchronized(sprites) {
+			sprites.clear();
+		}
 
         this.invalidate();
+		System.gc();
     }
     private List<PuzzleCompleteListener> listeners = new ArrayList<>();
     public void registerListener(PuzzleCompleteListener l) {
