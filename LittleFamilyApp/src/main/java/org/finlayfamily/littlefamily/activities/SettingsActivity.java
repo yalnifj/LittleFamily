@@ -135,6 +135,7 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
         bindPreferenceSummaryToValue(findPreference("sync_cellular"));
         bindPreferenceSummaryToValue(findPreference("sync_delay"));
         bindPreferenceSummaryToValue(findPreference("tts_voice"));
+        //bindPreferenceSummaryToValue(findPreference("tts_voice_test"));
     }
 
     /**
@@ -198,7 +199,6 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
                         index >= 0
                                 ? listPreference.getEntries()[index]
                                 : null);
-
             } else {
                 // For all other preferences, set the summary to the value's
                 // simple string representation.
@@ -218,15 +218,23 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
      * @see #sBindPreferenceSummaryToValueListener
      */
     private static void bindPreferenceSummaryToValue(Preference preference) {
+        if (preference==null) return;
         // Set the listener to watch for value changes.
         preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
 
         // Trigger the listener immediately with the preference's
         // current value.
-        sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
-                PreferenceManager
-                        .getDefaultSharedPreferences(preference.getContext())
-                        .getString(preference.getKey(), ""));
+        if (preference.getKey().equals("sync_background") || preference.getKey().equals("sync_cellular")) {
+            sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
+                    PreferenceManager
+                            .getDefaultSharedPreferences(preference.getContext())
+                            .getBoolean(preference.getKey(), true));
+        } else {
+            sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
+                    PreferenceManager
+                            .getDefaultSharedPreferences(preference.getContext())
+                            .getString(preference.getKey(), ""));
+        }
     }
 
     /**
