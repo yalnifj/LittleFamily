@@ -289,6 +289,7 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
         protected void entryRemoved(boolean evicted, Long key, AnimatedBitmapSprite oldValue, AnimatedBitmapSprite newValue) {
             super.entryRemoved(evicted, key, oldValue, newValue);
             oldValue.freeStates();
+            System.gc();
         }
     }
 }
