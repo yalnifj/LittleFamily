@@ -5,17 +5,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 
 import org.finlayfamily.littlefamily.activities.LittleFamilyActivity;
 import org.finlayfamily.littlefamily.sprites.Sprite;
-import org.finlayfamily.littlefamily.sprites.StarSprite;
 import org.finlayfamily.littlefamily.sprites.TouchEventGameSprite;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import android.graphics.Rect;
 
 /**
  * Created by kids on 7/7/15.
@@ -97,4 +96,5 @@ public class HomeView extends SpritedClippedSurfaceView {
             lockSprite.onRelease(x, y);
         }
     }
+
 }

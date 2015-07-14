@@ -7,14 +7,16 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.LruCache;
 import android.view.SurfaceHolder;
 
+import org.finlayfamily.littlefamily.sprites.AnimatedBitmapSprite;
 import org.finlayfamily.littlefamily.sprites.Sprite;
+import org.finlayfamily.littlefamily.sprites.StarSprite;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.finlayfamily.littlefamily.sprites.StarSprite;
 import java.util.Random;
 
 /**
@@ -33,6 +35,9 @@ public class SpritedSurfaceView extends AbstractTouchAnimatedSurfaceView {
 	protected Rect starRect;
 	protected boolean starsInRect;
 	protected Random random;
+    protected int spriteCacheSize = 3;
+    protected SpriteLruCache spriteCache;
+    protected long spriteCacheCount = 0;
 
     public SpritedSurfaceView(Context context) {
         super(context);
@@ -40,6 +45,7 @@ public class SpritedSurfaceView extends AbstractTouchAnimatedSurfaceView {
         selectedSprites = new ArrayList<>();
         basePaint = new Paint();
 		random = new Random();
+        spriteCache = new SpriteLruCache(spriteCacheSize);
     }
 
     public SpritedSurfaceView(Context context, AttributeSet attrs) {
@@ -48,6 +54,7 @@ public class SpritedSurfaceView extends AbstractTouchAnimatedSurfaceView {
         selectedSprites = new ArrayList<>();
         basePaint = new Paint();
 		random = new Random();
+        spriteCache = new SpriteLruCache(spriteCacheSize);
     }
 
     public List<Sprite> getSprites() {
@@ -177,6 +184,9 @@ public class SpritedSurfaceView extends AbstractTouchAnimatedSurfaceView {
 
         for(Sprite s : selectedSprites) {
             s.onRelease(x, y);
+            if (s instanceof AnimatedBitmapSprite) {
+                spriteCache.put(spriteCacheCount++, (AnimatedBitmapSprite)s);
+            }
         }
         selectedSprites.clear();
     }
@@ -207,4 +217,16 @@ public class SpritedSurfaceView extends AbstractTouchAnimatedSurfaceView {
 		this.starsInRect = starsInRect;
 		this.starCount = count;
 	}
+
+    public class SpriteLruCache extends LruCache<Long, AnimatedBitmapSprite> {
+        public SpriteLruCache(int maxSize) {
+            super(maxSize);
+        }
+
+        @Override
+        protected void entryRemoved(boolean evicted, Long key, AnimatedBitmapSprite oldValue, AnimatedBitmapSprite newValue) {
+            super.entryRemoved(evicted, key, oldValue, newValue);
+            oldValue.freeStates();
+        }
+    }
 }

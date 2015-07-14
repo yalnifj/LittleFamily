@@ -1,21 +1,23 @@
 package org.finlayfamily.littlefamily.views;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.LruCache;
 
+import org.finlayfamily.littlefamily.sprites.AnimatedBitmapSprite;
 import org.finlayfamily.littlefamily.sprites.Sprite;
+import org.finlayfamily.littlefamily.sprites.StarSprite;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import android.graphics.Bitmap;
-import android.graphics.Rect;
 import java.util.Random;
-import org.finlayfamily.littlefamily.sprites.StarSprite;
 
 /**
  * Created by jfinlay on 5/8/2015.
@@ -37,6 +39,9 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
 	protected Rect starRect;
 	protected boolean starsInRect;
 	protected Random random;
+    protected int spriteCacheSize = 3;
+    protected SpriteLruCache spriteCache;
+    protected long spriteCacheCount = 0;
 
     public SpritedClippedSurfaceView(Context context) {
         super(context);
@@ -46,6 +51,7 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
         basePaint.setStyle(Paint.Style.FILL);
         basePaint.setColor(Color.WHITE);
 		random = new Random();
+        spriteCache = new SpriteLruCache(spriteCacheSize);
     }
 
     public SpritedClippedSurfaceView(Context context, AttributeSet attrs) {
@@ -54,6 +60,7 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
         selectedSprites = new ArrayList<>();
         basePaint = new Paint();
 		random = new Random();
+        spriteCache = new SpriteLruCache(spriteCacheSize);
     }
 
     public List<Sprite> getSprites() {
@@ -240,7 +247,10 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
         super.touch_up(x, y);
 
         for(Sprite s : selectedSprites) {
-            s.onRelease(x+clipX, y+clipY);
+            s.onRelease(x + clipX, y + clipY);
+            if (s instanceof AnimatedBitmapSprite) {
+                spriteCache.put(spriteCacheCount++, (AnimatedBitmapSprite)s);
+            }
         }
         selectedSprites.clear();
     }
@@ -269,4 +279,16 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
 		this.starsInRect = starsInRect;
 		this.starCount = count;
 	}
+
+    public class SpriteLruCache extends LruCache<Long, AnimatedBitmapSprite> {
+        public SpriteLruCache(int maxSize) {
+            super(maxSize);
+        }
+
+        @Override
+        protected void entryRemoved(boolean evicted, Long key, AnimatedBitmapSprite oldValue, AnimatedBitmapSprite newValue) {
+            super.entryRemoved(evicted, key, oldValue, newValue);
+            oldValue.freeStates();
+        }
+    }
 }

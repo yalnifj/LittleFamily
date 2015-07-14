@@ -215,4 +215,16 @@ public class AnimatedBitmapSprite extends Sprite {
         }
         bitmaps.clear();
     }
+
+    public void freeStates() {
+        for(Integer key : bitmapIds.keySet()) {
+            List<Bitmap> bms = bitmaps.remove(key);
+            if (bms!=null) {
+                for(Bitmap b : bms) {
+                    b.recycle();
+                }
+                bms.clear();
+            }
+        }
+    }
 }
