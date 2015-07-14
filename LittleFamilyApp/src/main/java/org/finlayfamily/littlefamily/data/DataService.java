@@ -21,9 +21,6 @@ import org.gedcomx.links.Link;
 import org.gedcomx.source.SourceDescription;
 import org.gedcomx.types.RelationshipType;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -125,7 +122,7 @@ public class DataService implements AuthTask.Listener {
 	public void autoLogin()
 	{
 		try {
-		String token = getDBHelper().getTokenForSystemId(serviceType + SERVICE_TOKEN);
+		String token = getEncryptedProperty(serviceType + SERVICE_TOKEN);
         if (token != null)
 		{
 			synchronized (this)
@@ -157,6 +154,9 @@ public class DataService implements AuthTask.Listener {
     }
 
     public boolean hasData() throws Exception {
+        //-- check succesful login
+        if (remoteService.getSessionId() == null) return false;
+        //-- check for people
         LittlePerson person = getDBHelper().getFirstPerson();
         if (person!=null) return true;
         return false;
@@ -764,18 +764,15 @@ public class DataService implements AuthTask.Listener {
 
     public String getEncryptedProperty(String property) throws Exception {
         String value = getDBHelper().getProperty(property);
-        InputStream is = new ByteArrayInputStream( value.getBytes() );
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
         String uid = getDBHelper().getProperty(DBHelper.UUID_PROPERTY);
-        AES.decrypt(uid.toCharArray(), is, out);
-        return out.toString();
+        value = AES.decrypt(128, uid, value);
+        return value;
     }
 
     public void saveEncryptedProperty(String property, String value) throws Exception {
-        InputStream is = new ByteArrayInputStream( value.getBytes() );
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
         String uid = getDBHelper().getProperty(DBHelper.UUID_PROPERTY);
-        AES.encrypt(128, uid.toCharArray(), is, out);
-        getDBHelper().saveProperty(property, out.toString());
+        String encrypted = AES.encrypt(128, uid, value);
+        //String descrypted = AES.decrypt(128, uid, encrypted);
+        getDBHelper().saveProperty(property, encrypted);
     }
 }

@@ -2,12 +2,14 @@ package org.finlayfamily.littlefamily.sprites;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.media.MediaPlayer;
 
 import org.finlayfamily.littlefamily.events.EventQueue;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +22,6 @@ public class TouchStateAnimatedBitmapSprite extends AnimatedBitmapSprite {
     public static final int TRANSITION_LOOP1 = 1;
     public static final int TRANSITION_LOOP2 = 2;
     public static final int TRANSITION_LOOP3 = 3;
-
 
     protected Map<Integer, Integer> audio;
     protected Map<Integer, Integer> stateTransitions;
@@ -106,7 +107,7 @@ public class TouchStateAnimatedBitmapSprite extends AnimatedBitmapSprite {
         if (stateTransitions.containsKey(state) && stateTransitions.get(state)==loops) {
             state++;
             stateChanged = true;
-            if (state>=bitmaps.size()) {
+            if (bitmaps.get(state)==null && bitmapIds.get(state)==null) {
                 state=0;
             }
         }
@@ -148,7 +149,14 @@ public class TouchStateAnimatedBitmapSprite extends AnimatedBitmapSprite {
         super.onRelease(x, y);
         if (!stateTransitions.containsKey(state) || stateTransitions.get(state)==TRANSITION_CLICK) {
             state++;
-            if (state >= bitmaps.size()) state = 0;
+            if (state >= bitmaps.size() && bitmapIds.get(state)==null) state = 0;
+            if (bitmaps.get(state)==null && bitmapIds.get(state)!=null && resources!=null) {
+                List<Bitmap> loaded = new ArrayList<>(bitmapIds.get(state).size());
+                for (Integer rid : bitmapIds.get(state)) {
+                    loaded.add(BitmapFactory.decodeResource(getResources(), rid));
+                }
+                bitmaps.put(state, loaded);
+            }
             stateChanged = true;
         }
     }

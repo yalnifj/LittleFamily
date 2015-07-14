@@ -206,7 +206,7 @@ public class PGVLoginActivity extends Activity implements AuthTask.Listener, Per
                 String token = dataService.getRemoteService().createEncodedAuthToken(username, password);
                 dataService.saveEncryptedProperty(DataService.SERVICE_TYPE_PHPGEDVIEW + DataService.SERVICE_TOKEN, token);
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e("PGVLoginActivity", "Error saving property", e);
             }
             pd.setMessage("Loading person data from PhpGedView...");
             intent = new Intent();

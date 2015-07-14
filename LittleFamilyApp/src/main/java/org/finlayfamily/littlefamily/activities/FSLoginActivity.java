@@ -159,7 +159,7 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
                 username = null;
                 password = null;
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e("FSLoginActivity", "Error saving property", e);
             }
             pd.setMessage("Loading person data from FamilySearch...");
             intent = new Intent();

@@ -1,6 +1,8 @@
 package org.finlayfamily.littlefamily.sprites;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -16,6 +18,7 @@ import java.util.Map;
  */
 public class AnimatedBitmapSprite extends Sprite {
     protected Map<Integer, List<Bitmap>> bitmaps;
+    protected Map<Integer, List<Integer>> bitmapIds;
     protected int frame;
     protected int stepsPerFrame;
     protected int steps;
@@ -23,10 +26,12 @@ public class AnimatedBitmapSprite extends Sprite {
     protected boolean backward;
     protected Paint basePaint;
     protected boolean ignoreAlpha;
+    protected Resources resources;
 
     public AnimatedBitmapSprite() {
         super();
         this.bitmaps = new HashMap<>();
+        bitmapIds = new HashMap<>();
         frame = 0;
         stepsPerFrame = 3;
         basePaint = new Paint();
@@ -38,6 +43,7 @@ public class AnimatedBitmapSprite extends Sprite {
     public AnimatedBitmapSprite(Bitmap bitmap) {
         this();
         List<Bitmap> list = new ArrayList<>(1);
+        bitmapIds = new HashMap<>();
         list.add(bitmap);
         bitmaps.put(0, list);
         this.setWidth(bitmap.getWidth());
@@ -59,6 +65,22 @@ public class AnimatedBitmapSprite extends Sprite {
 
     public void setBitmaps(Map<Integer, List<Bitmap>> bitmaps) {
         this.bitmaps = bitmaps;
+    }
+
+    public Map<Integer, List<Integer>> getBitmapIds() {
+        return bitmapIds;
+    }
+
+    public void setBitmapIds(Map<Integer, List<Integer>> bitmapIds) {
+        this.bitmapIds = bitmapIds;
+    }
+
+    public Resources getResources() {
+        return resources;
+    }
+
+    public void setResources(Resources resources) {
+        this.resources = resources;
     }
 
     public boolean isBounce() {
@@ -95,6 +117,13 @@ public class AnimatedBitmapSprite extends Sprite {
 
     @Override
     public void doStep() {
+        if (bitmaps!=null && bitmaps.get(state)==null && bitmapIds.get(state)!=null && resources!=null) {
+            List<Bitmap> loaded = new ArrayList<>(bitmapIds.get(state).size());
+            for (Integer rid : bitmapIds.get(state)) {
+                loaded.add(BitmapFactory.decodeResource(getResources(), rid));
+            }
+            bitmaps.put(state, loaded);
+        }
         if (bitmaps!=null && bitmaps.get(state)!=null && bitmaps.get(state).size()>1 ) {
             steps++;
             if (steps >= stepsPerFrame) {
