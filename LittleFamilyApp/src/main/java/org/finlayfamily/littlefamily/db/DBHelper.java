@@ -1,26 +1,15 @@
 package org.finlayfamily.littlefamily.db;
 
+import java.util.*;
+import org.finlayfamily.littlefamily.data.*;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-
-import org.finlayfamily.littlefamily.data.LittlePerson;
-import org.finlayfamily.littlefamily.data.Media;
-import org.finlayfamily.littlefamily.data.Relationship;
-import org.finlayfamily.littlefamily.data.RelationshipType;
-import org.finlayfamily.littlefamily.data.Tag;
 import org.gedcomx.types.GenderType;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 public class DBHelper extends SQLiteOpenHelper {
 	private static final int DATABASE_VERSION = 1;
@@ -107,7 +96,15 @@ public class DBHelper extends SQLiteOpenHelper {
 		db.execSQL(CREATE_SYNCQ);
 
 		//-- save a random installation ID
-		saveProperty(UUID_PROPERTY, UUID.randomUUID().toString());
+		//saveProperty(UUID_PROPERTY, UUID.randomUUID().toString());
+		
+        ContentValues values = new ContentValues();
+        values.put("property", UUID_PROPERTY);
+        values.put("value", UUID.randomUUID().toString());
+        values.put(COL_LAST_SYNC, (new Date()).getTime());
+
+        long rowid = db.insert(TABLE_PROPERTIES, null, values);
+        Log.d("DBHelper", "saveProperty rowid " + rowid);
 	}
 	
 	@Override
@@ -775,7 +772,7 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put(COL_LAST_SYNC, (new Date()).getTime());
 
         long rowid = db.insert(TABLE_PROPERTIES, null, values);
-        Log.d("DBHelper", "saveProperty rowid " + rowid);
+        Log.d("DBHelper", "saveProperty rowid " + rowid + " "+property+"="+value);
 
     }
 

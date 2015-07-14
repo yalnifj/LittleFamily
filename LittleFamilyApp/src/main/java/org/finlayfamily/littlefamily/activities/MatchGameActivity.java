@@ -25,7 +25,7 @@ import java.util.List;
 
 public class MatchGameActivity extends LittleFamilyActivity implements AdapterView.OnItemClickListener, FamilyLoaderTask.Listener {
 
-    private static long FLIP_OVER_DELAY = 2500;
+    private static long FLIP_OVER_DELAY = 2000;
     private static long FLIP_TIME = 800;
     private MatchingGame game;
     private List<LittlePerson> people;
@@ -105,6 +105,10 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
 			if (flip1 < 0) flip1 = position;
 			else flip2 = position;
 			person.setFlipped(true);
+			//-- TODO get relationship name
+            if (name != null) {
+                speak(name);
+            }
 			flipCount++;
 			if (flipCount == 2) {
 				if (game.isMatch(flip1, flip2)) {
@@ -148,10 +152,6 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
 
         @Override
         public void run() {
-            //-- TODO get relationship name
-            if (name != null) {
-                speak(name);
-            }
             if (game.allMatched()) {
                 if (backgroundLoadIndex<people.size()) {
                     FamilyLoaderTask task = new FamilyLoaderTask(MatchGameActivity.this, MatchGameActivity.this);

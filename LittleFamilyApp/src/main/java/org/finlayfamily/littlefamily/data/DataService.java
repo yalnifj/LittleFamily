@@ -109,17 +109,7 @@ public class DataService implements AuthTask.Listener {
                         remoteService = FamilySearchService.getInstance();
                     }
                     if (remoteService.getSessionId() == null) {
-                        String token = getDBHelper().getTokenForSystemId(serviceType + SERVICE_TOKEN);
-                        if (token != null) {
-                            synchronized (this) {
-                                if (remoteService.getSessionId() == null && !authenticating) {
-                                    authenticating = true;
-                                    Log.d(this.getClass().getSimpleName(), "Launching new AuthTask for stored credentials");
-                                    AuthTask task = new AuthTask(this, remoteService);
-                                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, token);
-                                }
-                            }
-                        }
+                        autoLogin();
                     }
                 }
             } catch (Exception e) {
@@ -131,6 +121,28 @@ public class DataService implements AuthTask.Listener {
             syncer.start();
         }
     }
+	
+	public void autoLogin()
+	{
+		try {
+		String token = getDBHelper().getTokenForSystemId(serviceType + SERVICE_TOKEN);
+        if (token != null)
+		{
+			synchronized (this)
+			{
+				if (remoteService.getSessionId() == null && !authenticating)
+				{
+					authenticating = true;
+					Log.d(this.getClass().getSimpleName(), "Launching new AuthTask for stored credentials");
+					AuthTask task = new AuthTask(this, remoteService);
+					task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, token);
+				}
+			}
+		}
+		} catch(Exception e) {
+			Log.e("dataService", "Unable to authenticate", e);
+		}
+	}
 
     @Override
     public void onComplete(RemoteResult result) {
@@ -209,6 +221,9 @@ public class DataService implements AuthTask.Listener {
                     }
                 }
 
+				if (remoteService.getSessionId()==null) {
+					autoLogin();
+				}
                 waitForAuth();
 
                 ThreadPerson tp = null;
