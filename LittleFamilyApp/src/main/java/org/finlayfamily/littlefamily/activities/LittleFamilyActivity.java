@@ -110,23 +110,31 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     }
 
     public void showLoadingDialog() {
-        synchronized (dialogShown) {
-            if (!dialogShown) {
-                loadingDialog = new LoadingDialog();
-                loadingDialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Theme_AppCompat_Dialog);
-                loadingDialog.show(getFragmentManager(), "Loading");
-                dialogShown = true;
+        try {
+            synchronized (dialogShown) {
+                if (!dialogShown) {
+                    loadingDialog = new LoadingDialog();
+                    loadingDialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Theme_AppCompat_Dialog);
+                    loadingDialog.show(getFragmentManager(), "Loading");
+                    dialogShown = true;
+                }
             }
+        } catch(Exception e){
+            Log.e("LittleFamilyActivity", "Error showing loading dialog", e);
         }
     }
 
     public void hideLoadingDialog() {
-        synchronized (dialogShown) {
-            if (loadingDialog != null && loadingDialog.isVisible()) {
-                loadingDialog.dismissAllowingStateLoss();
+        try {
+            synchronized (dialogShown) {
+                if (loadingDialog != null && loadingDialog.isVisible()) {
+                    loadingDialog.dismissAllowingStateLoss();
+                }
+                dialogShown = false;
+                loadingDialog = null;
             }
-            dialogShown = false;
-            loadingDialog = null;
+        } catch(Exception e) {
+            Log.e("LittleFamilyActivity", "Error hiding loading dialog", e);
         }
     }
 
