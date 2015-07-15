@@ -105,11 +105,7 @@ public class TouchStateAnimatedBitmapSprite extends AnimatedBitmapSprite {
             loops++;
         }
         if (stateTransitions.containsKey(state) && stateTransitions.get(state)==loops) {
-            state++;
-            stateChanged = true;
-            if (bitmaps.get(state)==null && bitmapIds.get(state)==null) {
-                state=0;
-            }
+            nextState();
         }
     }
 
@@ -148,16 +144,21 @@ public class TouchStateAnimatedBitmapSprite extends AnimatedBitmapSprite {
     public void onRelease(float x, float y) {
         super.onRelease(x, y);
         if (!stateTransitions.containsKey(state) || stateTransitions.get(state)==TRANSITION_CLICK) {
-            state++;
-            if (state >= bitmaps.size() && bitmapIds.get(state)==null) state = 0;
-            if (bitmaps.get(state)==null && bitmapIds.get(state)!=null && resources!=null) {
-                List<Bitmap> loaded = new ArrayList<>(bitmapIds.get(state).size());
-                for (Integer rid : bitmapIds.get(state)) {
-                    loaded.add(BitmapFactory.decodeResource(getResources(), rid));
-                }
-                bitmaps.put(state, loaded);
-            }
-            stateChanged = true;
+            nextState();
         }
+    }
+
+    public void nextState() {
+        int nextState = state+1;
+        if (nextState >= bitmaps.size() && bitmapIds.get(nextState)==null) nextState = 0;
+        if (bitmaps.get(nextState)==null && bitmapIds.get(nextState)!=null && resources!=null) {
+            List<Bitmap> loaded = new ArrayList<>(bitmapIds.get(nextState).size());
+            for (Integer rid : bitmapIds.get(nextState)) {
+                loaded.add(BitmapFactory.decodeResource(getResources(), rid));
+            }
+            bitmaps.put(nextState, loaded);
+        }
+        state = nextState;
+        stateChanged = true;
     }
 }

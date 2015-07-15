@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.data.DataService;
+import org.finlayfamily.littlefamily.data.ErrorLogger;
 import org.finlayfamily.littlefamily.views.AnimationDrawableCallback;
 
 public class SplashActivity extends Activity {
@@ -26,6 +27,8 @@ public class SplashActivity extends Activity {
         ImageView iv = (ImageView) findViewById(R.id.animatedImage);
         plantAnimation = (AnimationDrawable) iv.getDrawable();
         plantAnimation.setCallback(new GrowCallback(plantAnimation, iv));
+
+        ErrorLogger.getInstance(this).start();
     }
 
     @Override
@@ -40,10 +43,10 @@ public class SplashActivity extends Activity {
         try {
             if (dataService.getServiceType()==null || !dataService.hasData()) {
                 Intent intent = new Intent(this, ChooseRemoteService.class);
-                startActivityForResult(intent, ChooseFamilyMember.LOGIN_REQUEST);
+                startActivity(intent);
             } else {
                 Intent intent = new Intent( this, ChooseFamilyMember.class );
-                startActivityForResult( intent, ChooseFamilyMember.LOGIN_REQUEST );
+                startActivity(intent);
             }
         } catch (Exception e) {
             Log.e("SplashActivity", "Error getting data from DataService", e);
