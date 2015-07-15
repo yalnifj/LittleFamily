@@ -413,10 +413,27 @@ public class HomeActivity extends LittleFamilyActivity {
             homeView.addActivitySprite(bubbles);
 
             Bitmap wardrobeBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_adult_wardrobe);
-            TouchEventGameSprite wardrobe = new TouchEventGameSprite(wardrobeBm, TOPIC_START_HERITAGE_CALC);
-            wardrobe.setX(1500);
+            TouchStateAnimatedBitmapSprite wardrobe = new TouchStateAnimatedBitmapSprite(wardrobeBm, this);
+            wardrobe.setX(1405);
             wardrobe.setY(700);
             wardrobe.setSelectable(true);
+            List<Integer> opening = new ArrayList<>(8);
+            opening.add(R.drawable.house_adult_wardrobe1);
+            opening.add(R.drawable.house_adult_wardrobe2);
+            opening.add(R.drawable.house_adult_wardrobe3);
+            opening.add(R.drawable.house_adult_wardrobe4);
+            opening.add(R.drawable.house_adult_wardrobe5);
+            opening.add(R.drawable.house_adult_wardrobe6);
+            opening.add(R.drawable.house_adult_wardrobe7);
+            opening.add(R.drawable.house_adult_wardrobe8);
+            wardrobe.getBitmapIds().put(1, opening);
+            wardrobe.setStateTransition(1, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
+            List<Integer> opening2 = new ArrayList<>(2);
+            opening2.add(R.drawable.house_adult_wardrobe8);
+            opening2.add(R.drawable.house_adult_wardrobe8);
+            wardrobe.getBitmapIds().put(2, opening2);
+            wardrobe.setStateTransition(2, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP3);
+            wardrobe.setStateTransitionEvent(2, TOPIC_START_HERITAGE_CALC);
             homeView.addSprite(wardrobe);
             homeView.addActivitySprite(wardrobe);
 
