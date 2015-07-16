@@ -12,6 +12,7 @@ import org.finlayfamily.littlefamily.sprites.AnimatedBitmapSprite;
 import org.finlayfamily.littlefamily.sprites.ClippedRepeatedBackgroundSprite;
 import org.finlayfamily.littlefamily.sprites.MovingAnimatedBitmapSprite;
 import org.finlayfamily.littlefamily.sprites.MovingTouchStateAnimatedBitmapSprite;
+import org.finlayfamily.littlefamily.sprites.PersonLeavesButton;
 import org.finlayfamily.littlefamily.sprites.TouchEventGameSprite;
 import org.finlayfamily.littlefamily.sprites.TouchStateAnimatedBitmapSprite;
 import org.finlayfamily.littlefamily.views.HomeView;
@@ -131,13 +132,26 @@ public class HomeActivity extends LittleFamilyActivity {
             cloud2.setWrap(true);
             homeView.addSprite(cloud2);
 
+
             Bitmap treeBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_tree1);
-            TouchEventGameSprite tree = new TouchEventGameSprite(treeBm, LittleFamilyActivity.TOPIC_START_TREE);
+            AnimatedBitmapSprite tree = new AnimatedBitmapSprite(treeBm);
             tree.setX(100);
             tree.setY(500);
-            tree.setSelectable(true);
             homeView.addSprite(tree);
-            homeView.addActivitySprite(tree);
+
+            List<Bitmap> leaves = new ArrayList<>(6);
+            leaves.add(BitmapFactory.decodeResource(getResources(), R.drawable.leaves_overlay6));
+            leaves.add(BitmapFactory.decodeResource(getResources(), R.drawable.leaves_overlay5));
+            leaves.add(BitmapFactory.decodeResource(getResources(), R.drawable.leaves_overlay4));
+            leaves.add(BitmapFactory.decodeResource(getResources(), R.drawable.leaves_overlay3));
+            leaves.add(BitmapFactory.decodeResource(getResources(), R.drawable.leaves_overlay2));
+            leaves.add(BitmapFactory.decodeResource(getResources(), R.drawable.leaves_overlay1));
+            PersonLeavesButton personLeaf = new PersonLeavesButton(TOPIC_START_TREE, people, leaves, this);
+            personLeaf.setX(440);
+            personLeaf.setY(660);
+            personLeaf.setSelectable(true);
+            homeView.addSprite(personLeaf);
+            homeView.addActivitySprite(personLeaf);
 
             Bitmap flowerBm2 = BitmapFactory.decodeResource(getResources(), R.drawable.house_flowers_a1);
             TouchStateAnimatedBitmapSprite flower1 = new TouchStateAnimatedBitmapSprite(flowerBm2, this);

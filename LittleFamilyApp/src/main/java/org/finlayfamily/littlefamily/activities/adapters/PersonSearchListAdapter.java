@@ -118,15 +118,15 @@ public class PersonSearchListAdapter extends BaseAdapter {
             String psc = "";
             if (person.isHasParents()==null) psc += "-";
             else if (person.isHasParents()) psc += "P";
-            else psc += ".";
+            else psc += "X";
 
             if (person.isHasSpouses()==null) psc += "-";
             else if (person.isHasSpouses()) psc += "S";
-            else psc += ".";
+            else psc += "X";
 
             if (person.isHasChildren()==null) psc += "-";
             else if (person.isHasChildren()) psc += "C";
-            else psc += ".";
+            else psc += "X";
             holder.psc.setText(psc);
         }
 

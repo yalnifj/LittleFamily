@@ -25,6 +25,7 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
 
     private GridView gridView;
     private FamilyMemberListAdapter adapter;
+    private ArrayList<LittlePerson> family;
     private boolean launchGame = false;
 
     private DataService dataService;
@@ -96,34 +97,29 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         launchGame = true;
         selectedPerson = (LittlePerson) gridView.getItemAtPosition(position);
-        FamilyLoaderTask task = new FamilyLoaderTask(this, this);
-		task.execute(selectedPerson);
+        Intent intent = new Intent( this, HomeActivity.class );
+        intent.putExtra(SELECTED_PERSON, selectedPerson);
+        intent.putExtra(FAMILY, family);
+        startActivity(intent);
     }
 
 
     @Override
     public void onComplete(ArrayList<LittlePerson> familyMembers) {
-        if (launchGame) {
-            launchGame = false;
-            Intent intent = new Intent( this, HomeActivity.class );
-            intent.putExtra(SELECTED_PERSON, selectedPerson);
-            intent.putExtra(FAMILY, familyMembers);
-            startActivity(intent);
-        } else {
-            adapter.setFamily(familyMembers);
-            updateColumns();
-            speak(getResources().getString(R.string.title_activity_choose_family_member));
-            try {
-                if (DataService.getInstance().getDBHelper().getMediaCount() < 3) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setMessage(R.string.low_media);
-                    builder.setPositiveButton("OK", null);
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-                }
-            } catch (Exception e) {
-                Log.e("ChooseFamilyMember", "Error checking database", e);
+        this.family = familyMembers;
+        adapter.setFamily(familyMembers);
+        updateColumns();
+        speak(getResources().getString(R.string.title_activity_choose_family_member));
+        try {
+            if (DataService.getInstance().getDBHelper().getMediaCount() < 3) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage(R.string.low_media);
+                builder.setPositiveButton("OK", null);
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
+        } catch (Exception e) {
+            Log.e("ChooseFamilyMember", "Error checking database", e);
         }
     }
 
