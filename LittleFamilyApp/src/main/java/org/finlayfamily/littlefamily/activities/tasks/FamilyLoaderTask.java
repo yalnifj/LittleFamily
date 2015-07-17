@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.finlayfamily.littlefamily.data.DataNetworkState;
+import org.finlayfamily.littlefamily.data.DataNetworkStateListener;
 import org.finlayfamily.littlefamily.data.DataService;
 import org.finlayfamily.littlefamily.data.LittlePerson;
 
@@ -13,7 +15,7 @@ import java.util.List;
 /**
  * Created by jfinlay on 1/12/2015.
  */
-public class FamilyLoaderTask extends AsyncTask<LittlePerson, Integer, ArrayList<LittlePerson>> {
+public class FamilyLoaderTask extends AsyncTask<LittlePerson, String, ArrayList<LittlePerson>> implements DataNetworkStateListener {
     private Listener listener;
     private Context context;
     private DataService dataService;
@@ -23,6 +25,7 @@ public class FamilyLoaderTask extends AsyncTask<LittlePerson, Integer, ArrayList
         this.context = context;
         dataService = DataService.getInstance();
         dataService.setContext(context);
+        dataService.registerNetworkStateListener(this);
     }
 
     @Override
@@ -45,14 +48,32 @@ public class FamilyLoaderTask extends AsyncTask<LittlePerson, Integer, ArrayList
         return familyMembers;
     }
 
+    protected void onProgressUpdate(String... progress) {
+        if (listener!=null) {
+            listener.onStatusUpdate(progress[0]);
+        }
+    }
+
+
     @Override
     protected void onPostExecute(ArrayList<LittlePerson> familyMembers) {
+        dataService.unregisterNetworkStateListener(this);
         if (listener!=null) {
             listener.onComplete(familyMembers);
         }
     }
 
+    @Override
+    public void remoteStateChanged(DataNetworkState state) {
+    }
+
+    @Override
+    public void statusUpdate(String status) {
+        publishProgress(status);
+    }
+
     public interface Listener {
         public void onComplete(ArrayList<LittlePerson> family);
+        public void onStatusUpdate(String message);
     }
 }

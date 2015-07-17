@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 
 import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.activities.LittleFamilyActivity;
@@ -52,6 +53,7 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
     private AnimatedBitmapSprite motherSpot;
     private AnimatedBitmapSprite childSpot;
     private Paint spotPaint;
+    private DisplayMetrics dm;
 
     private LittleFamilyActivity activity;
     private List<BubbleCompleteListener> listeners;
@@ -159,6 +161,8 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
 
     public void setActivity(LittleFamilyActivity activity) {
         this.activity = activity;
+        dm = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
     }
 
     public void registerListener(BubbleCompleteListener l) {
@@ -218,7 +222,6 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
     }
 
     public void createSprites() {
-
         spotBm = BitmapFactory.decodeResource(getResources(), R.drawable.bubble_spot);
         spotHBm = BitmapFactory.decodeResource(getResources(), R.drawable.bubble_spot_h);
         spotDownBm = BitmapFactory.decodeResource(getResources(), R.drawable.bubble_spot_down);
@@ -253,24 +256,24 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
 
         Bitmap sinkBm = BitmapFactory.decodeResource(getResources(), R.drawable.sink);
         AnimatedBitmapSprite sink = new AnimatedBitmapSprite(sinkBm);
-        int swidth = getWidth()-40;
+        int swidth = (int) (getWidth()-(20*dm.density));
         float r = (float) sinkBm.getWidth() / sinkBm.getHeight();
         int sheight  = (int)(swidth / r);
         sink.setWidth(swidth);
         sink.setHeight(sheight);
-        sink.setX(20);
+        sink.setX(10*dm.density);
         sink.setY(getHeight()-sheight);
         addSprite(sink);
 
         Bitmap faucet1bm = BitmapFactory.decodeResource(getResources(), R.drawable.faucet1);
         TouchStateAnimatedBitmapSprite faucet = new TouchStateAnimatedBitmapSprite(faucet1bm, activity);
         float fr = (float) faucet1bm.getWidth() / (float) faucet1bm.getHeight();
-        int fwidth = 230;
+        int fwidth = (int) (115*dm.density);
         int fheight  = (int)(fwidth / fr);
         faucet.setWidth(fwidth);
         faucet.setHeight(fheight);
         faucet.setX(sink.getX() + sink.getWidth() / 2);
-        faucet.setY(sink.getY() - fheight + 50);
+        faucet.setY(sink.getY() - fheight + (25*dm.density));
         List<Bitmap> turning = new ArrayList<>(2);
         turning.add(BitmapFactory.decodeResource(getResources(), R.drawable.faucet2));
         turning.add(faucet1bm);
@@ -295,18 +298,18 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
         faucet.setStateTransition(5, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP3);
         faucet.setStateTransitionEvent(4, TOPIC_WATER_ADDED);
         Rect touchRect = new Rect();
-        touchRect.set(85, 90, faucet1bm.getWidth()-10, (int) (faucet1bm.getHeight()*0.8f));
+        touchRect.set((int) (42*dm.density), (int) (45*dm.density), faucet1bm.getWidth()-10, (int) (faucet1bm.getHeight()*0.8f));
         faucet.setTouchRectangles(0, touchRect);
         addSprite(faucet);
 
         Bitmap soap1bm = BitmapFactory.decodeResource(getResources(), R.drawable.soap1);
         TouchStateAnimatedBitmapSprite soap = new TouchStateAnimatedBitmapSprite(soap1bm, activity);
         float pr = (float)soap1bm.getWidth() / soap1bm.getHeight();
-        int pwidth = 230;
+        int pwidth = (int) (115*dm.density);
         int pheight  = (int)(pwidth / pr);
         soap.setWidth(pwidth);
         soap.setHeight(pheight);
-        soap.setX(sink.getX() + sink.getWidth() + 20 - pwidth);
+        soap.setX(sink.getX() + sink.getWidth() + (10*dm.density) - pwidth);
         soap.setY(sink.getY() - pheight * 0.75f);
         List<Bitmap> squirting = new ArrayList<>(4);
         squirting.add(BitmapFactory.decodeResource(getResources(), R.drawable.soap2));
@@ -412,7 +415,7 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
             canvas.drawRect(0,0,getWidth(),getHeight(),basePaint);
         }
 
-        canvas.drawRect(fatherSpot.getX()+70, childSpot.getY()-10, motherSpot.getX()+motherSpot.getWidth()-70, childSpot.getY()+10, spotPaint);
+        canvas.drawRect(fatherSpot.getX()+(35*dm.density), childSpot.getY()-(5*dm.density), motherSpot.getX()+motherSpot.getWidth()-(35*dm.density), childSpot.getY()+(5*dm.density), spotPaint);
 
         synchronized (sprites) {
             for (Sprite s : sprites) {

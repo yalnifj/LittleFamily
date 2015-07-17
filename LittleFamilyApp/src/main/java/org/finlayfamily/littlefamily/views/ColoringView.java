@@ -39,6 +39,7 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
     private boolean loaded;
     private boolean complete;
     private boolean noColor = true;
+    private Paint background;
 
     public ColoringView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -79,6 +80,9 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
         noPaint.setStrokeWidth(10);
 
         paint2 = new Paint(Paint.DITHER_FLAG);
+
+        background = new Paint();
+        background.setColor(Color.WHITE);
     }
 
     @Override
@@ -97,9 +101,8 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
         mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         mCanvas = new Canvas(mBitmap);
         mPaint.setStrokeWidth(w<h?w*0.12f:h*0.12f);
-        noPaint.setStrokeWidth(w<h?w*0.12f:h*0.12f);
-        Paint background = new Paint();
-        background.setColor(Color.WHITE);
+        noPaint.setStrokeWidth(w < h ? w * 0.12f : h * 0.12f);
+
         mCanvas.drawRect(0,0,w,h,background);
     }
 
@@ -119,6 +122,7 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
 			}
             Rect dst = new Rect();
             dst.set(0, 0, w, h);
+            canvas.drawRect(0,0,w,h,background);
             canvas.drawBitmap(originalBitmap, null, dst, paint2);
             if (!complete) {
                 canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);

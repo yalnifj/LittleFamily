@@ -430,6 +430,12 @@ public class DataService implements AuthTask.Listener {
         }
     }
 
+    public void fireStatusUpdate(String status) {
+        for (DataNetworkStateListener listener : listeners) {
+            listener.statusUpdate(status);
+        }
+    }
+
     public LittlePerson getDefaultPerson() throws Exception {
         LittlePerson person = getDBHelper().getFirstPerson();
 
@@ -558,6 +564,7 @@ public class DataService implements AuthTask.Listener {
                 LittlePerson relative = getDBHelper().getPersonByFamilySearchId(r.getPerson1().getResourceId());
                 if (relative==null) {
                     Person fsPerson = remoteService.getPerson(r.getPerson1().getResourceId(), true);
+                    fireStatusUpdate("Processing "+fsPerson.getFullName());
                     relative = DataHelper.buildLittlePerson(fsPerson, context, remoteService, true);
                 }
                 if (relative!=null) {
@@ -596,6 +603,7 @@ public class DataService implements AuthTask.Listener {
                 LittlePerson relative = getDBHelper().getPersonByFamilySearchId(r.getPerson2().getResourceId());
                 if (relative==null) {
                     Person fsPerson = remoteService.getPerson(r.getPerson2().getResourceId(), true);
+                    fireStatusUpdate("Processing "+fsPerson.getFullName());
                     relative = DataHelper.buildLittlePerson(fsPerson, context, remoteService, true);
                 }
                 if (relative!=null) {

@@ -11,17 +11,17 @@ import android.util.Log;
 
 import org.finlayfamily.littlefamily.data.PuzzlePiece;
 import org.finlayfamily.littlefamily.games.PuzzleGame;
+import org.finlayfamily.littlefamily.sprites.Sprite;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.finlayfamily.littlefamily.sprites.Sprite;
 
 /**
  * Created by jfinlay on 5/14/2015.
  */
 public class PuzzleSurfaceView extends SpritedSurfaceView {
 
-    public static final int thumbnailHeight = 100;
+    private int thumbnailHeight = 100;
 
     private PuzzleGame game;
     private Bitmap bitmap;
@@ -110,6 +110,7 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
     @Override
     public void doDraw(Canvas canvas) {
 		canvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
+        thumbnailHeight = getHeight()/10;
         if (bitmap!=null) {
             int width = getWidth();
             int height = getHeight() - thumbnailHeight;
@@ -168,7 +169,7 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
             }
 
             Rect dst = new Rect();
-            float ratio = (float)bWidth / bHeight;
+            float ratio = (float)bitmap.getWidth() / bitmap.getHeight();
             dst.set(0, height, (int) (thumbnailHeight * ratio), height+thumbnailHeight);
             canvas.drawBitmap(bitmap, null, dst, null);
 			
@@ -194,6 +195,13 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
     protected void touch_start(float x, float y) {
         super.touch_start(x, y);
         selected = null;
+        if (bitmap!=null) {
+            float ratio = (float) bitmap.getWidth() / bitmap.getHeight();
+            if (x <= thumbnailHeight * ratio && y >= thumbnailHeight) {
+                showHint = true;
+                return;
+            }
+        }
         for(int r=0; r<game.getRows(); r++) {
             for (int c = 0; c < game.getCols(); c++) {
                 PuzzlePiece pp = game.getPiece(r, c);
@@ -207,13 +215,6 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
                         return;
                     }
                 }
-            }
-        }
-
-        if (bitmap!=null) {
-            float ratio = (float) bitmap.getWidth() / bitmap.getHeight();
-            if (x <= thumbnailHeight * ratio && y >= thumbnailHeight) {
-                showHint = true;
             }
         }
     }

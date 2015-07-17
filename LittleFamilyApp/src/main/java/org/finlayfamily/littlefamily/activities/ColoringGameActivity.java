@@ -2,7 +2,10 @@ package org.finlayfamily.littlefamily.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.view.SurfaceHolder;
 
 import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.activities.tasks.FamilyLoaderTask;
@@ -18,9 +21,6 @@ import org.finlayfamily.littlefamily.views.WaterColorImageView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import android.view.SurfaceHolder;
-import android.graphics.PixelFormat;
-import android.graphics.BitmapFactory;
 
 public class ColoringGameActivity extends LittleFamilyActivity implements MemoriesLoaderTask.Listener, ColoringView.ColoringCompleteListener {
 
@@ -194,6 +194,11 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Memori
 
             backgroundLoadIndex++;
             loadRandomImage();
+        }
+
+        @Override
+        public void onStatusUpdate(String message) {
+
         }
     }
 }

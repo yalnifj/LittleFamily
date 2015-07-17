@@ -123,6 +123,11 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
         }
     }
 
+    @Override
+    public void onStatusUpdate(String message) {
+
+    }
+
     private void updateColumns() {
         int width = getScreenWidth();
         int height = getScreenHeight();

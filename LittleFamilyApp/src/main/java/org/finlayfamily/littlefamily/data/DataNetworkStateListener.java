@@ -5,4 +5,5 @@ package org.finlayfamily.littlefamily.data;
  */
 public interface DataNetworkStateListener {
     public void remoteStateChanged(DataNetworkState state);
+    public void statusUpdate(String status);
 }

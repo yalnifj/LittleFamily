@@ -222,6 +222,11 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         }
     }
 
+    @Override
+    public void statusUpdate(String status) {
+
+    }
+
     public void speak(String message) {
         Log.d("LittleFamilyActivity", "Speaking: " + message);
         if (tts!=null) {

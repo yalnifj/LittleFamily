@@ -143,6 +143,11 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
         }
     }
 
+    @Override
+    public void onStatusUpdate(String message) {
+
+    }
+
     public class flipOverHandler implements Runnable {
         String name;
 

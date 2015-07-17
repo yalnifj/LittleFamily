@@ -85,14 +85,18 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
         ListPreference voicePref = (ListPreference) findPreference("tts_voice");
         if (Build.VERSION.SDK_INT > 20) {
             Set<Voice> voices = tts.getVoices();
-            String[] voiceList = new String[voices.size()];
-            int i = 0;
-            for (Voice v : voices) {
-                voiceList[i] = v.getName();
-                i++;
+            if (voices!=null) {
+                String[] voiceList = new String[voices.size()];
+                int i = 0;
+                for (Voice v : voices) {
+                    voiceList[i] = v.getName();
+                    i++;
+                }
+                voicePref.setEntries(voiceList);
+                voicePref.setEntryValues(voiceList);
+            } else {
+                getPreferenceScreen().removePreference(voicePref);
             }
-            voicePref.setEntries(voiceList);
-            voicePref.setEntryValues(voiceList);
         } else {
             getPreferenceScreen().removePreference(voicePref);
         }

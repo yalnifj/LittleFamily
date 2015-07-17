@@ -189,6 +189,11 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
         setResult(Activity.RESULT_OK, intent);
         finish();
     }
+
+    @Override
+    public void onStatusUpdate(String message) {
+        pd.setMessage(message);
+    }
 }
 
 
