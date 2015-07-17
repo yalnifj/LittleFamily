@@ -28,7 +28,8 @@ public class SplashActivity extends Activity {
         plantAnimation = (AnimationDrawable) iv.getDrawable();
         plantAnimation.setCallback(new GrowCallback(plantAnimation, iv));
 
-        ErrorLogger.getInstance(this).start();
+        ErrorLogger logger = ErrorLogger.getInstance(this);
+        if (!logger.isAlive()) logger.start();
     }
 
     @Override

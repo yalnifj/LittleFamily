@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PersonSearchActivity extends Activity implements SearchLoaderTask.Listener, ForceSynceTask.Listener {
+public class PersonSearchActivity extends Activity implements SearchLoaderTask.Listener, ForceSynceTask.Listener, AdapterView.OnItemClickListener {
 
     private EditText txtGivenName;
     private EditText txtSurname;
@@ -42,12 +42,6 @@ public class PersonSearchActivity extends Activity implements SearchLoaderTask.L
 
         adapter = new PersonSearchListAdapter(this);
         personList.setAdapter(adapter);
-        personList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                parent.showContextMenuForChild(view);
-            }
-        });
 
         registerForContextMenu(personList);
     }
@@ -117,5 +111,10 @@ public class PersonSearchActivity extends Activity implements SearchLoaderTask.L
     @Override
     public void onComplete(LittlePerson person) {
         Toast.makeText(this, person.getName()+" synced succesfully", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        parent.showContextMenuForChild(view);
     }
 }

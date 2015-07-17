@@ -99,7 +99,7 @@ public class ChooseCultureActivity extends LittleFamilyActivity implements Herit
 		
 		String relationship = "";
 		int greats = selectedPath.getTreePath().size() - 2;
-		for(int g=0; g<greats; g++) {
+		for(int g=1; g<greats; g++) {
 			relationship = relationship + getResources().getString(R.string.great)+", ";
 		}
 		if (selectedPath.getTreePath().size()>1) {

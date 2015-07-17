@@ -31,6 +31,7 @@ public class HeritageCalculatorTask extends AsyncTask<LittlePerson, Integer, Arr
 
     @Override
     protected ArrayList<HeritagePath> doInBackground(LittlePerson[] persons) {
+        long starttime = System.currentTimeMillis();
         Log.d(this.getClass().getSimpleName(), "Starting HeritageCalculatorTask.doInBackground "+persons);
 
         ArrayList<HeritagePath> returnPaths = new ArrayList<>();
@@ -88,6 +89,14 @@ public class HeritageCalculatorTask extends AsyncTask<LittlePerson, Integer, Arr
                 dataService.addToSyncQ(path.getTreePath().get(path.getTreePath().size()-1), path.getTreePath().size());
             } catch (Exception e) {
                 Log.e(this.getClass().getSimpleName(), "error", e);
+            }
+        }
+        long diff = System.currentTimeMillis() - starttime;
+        if (diff < 4000) {
+            try {
+                Thread.sleep(diff);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
         return returnPaths;

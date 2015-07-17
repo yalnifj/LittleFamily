@@ -138,12 +138,16 @@ public class PersonLeavesButton extends Sprite {
 
     @Override
     public void onDestroy() {
-        photo.recycle();
-        photo = null;
-        for(Bitmap b : bitmaps) {
-            b.recycle();
+        if (photo!=null) {
+            photo.recycle();
+            photo = null;
         }
-        bitmaps.clear();
+        if (bitmaps!=null) {
+            for (Bitmap b : bitmaps) {
+                b.recycle();
+            }
+            bitmaps.clear();
+        }
     }
 
 }

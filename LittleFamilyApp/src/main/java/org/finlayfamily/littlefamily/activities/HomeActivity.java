@@ -428,7 +428,7 @@ public class HomeActivity extends LittleFamilyActivity {
 
             Bitmap wardrobeBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_adult_wardrobe);
             TouchStateAnimatedBitmapSprite wardrobe = new TouchStateAnimatedBitmapSprite(wardrobeBm, this);
-            wardrobe.setX(1405);
+            wardrobe.setX(1495);
             wardrobe.setY(700);
             wardrobe.setSelectable(true);
             List<Integer> opening = new ArrayList<>(8);
@@ -448,6 +448,7 @@ public class HomeActivity extends LittleFamilyActivity {
             wardrobe.getBitmapIds().put(2, opening2);
             wardrobe.setStateTransition(2, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP3);
             wardrobe.setStateTransitionEvent(2, TOPIC_START_HERITAGE_CALC);
+            wardrobe.setResources(getResources());
             homeView.addSprite(wardrobe);
             homeView.addActivitySprite(wardrobe);
 

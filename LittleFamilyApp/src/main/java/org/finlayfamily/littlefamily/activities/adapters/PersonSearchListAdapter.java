@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import org.finlayfamily.littlefamily.R;
@@ -91,6 +92,14 @@ public class PersonSearchListAdapter extends BaseAdapter {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                }
+            });
+
+            final ListView parentList = (ListView) parent;
+            holder.name.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    parentList.showContextMenuForChild(v);
                 }
             });
             convertView.setTag(holder);
