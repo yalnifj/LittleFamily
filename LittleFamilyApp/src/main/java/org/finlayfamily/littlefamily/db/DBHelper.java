@@ -1,15 +1,26 @@
 package org.finlayfamily.littlefamily.db;
 
-import java.util.*;
-import org.finlayfamily.littlefamily.data.*;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import org.finlayfamily.littlefamily.data.LittlePerson;
+import org.finlayfamily.littlefamily.data.Media;
+import org.finlayfamily.littlefamily.data.Relationship;
+import org.finlayfamily.littlefamily.data.RelationshipType;
+import org.finlayfamily.littlefamily.data.Tag;
 import org.gedcomx.types.GenderType;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class DBHelper extends SQLiteOpenHelper {
 	private static final int DATABASE_VERSION = 1;
@@ -371,7 +382,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		String tables = TABLE_LITTLE_PERSON + " p join " + TABLE_RELATIONSHIP + " r on r."+COL_ID2+"=p."+COL_ID;
 
 		Map<Integer, LittlePerson> personMap = new HashMap<>();
-		Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, "p."+COL_AGE+" desc");
+		Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, "p." + COL_AGE + " desc");
 		while (c.moveToNext()) {
 			LittlePerson p = personFromCursor(c);
 			if (!personMap.containsKey(p.getId())) {
@@ -399,7 +410,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		String tables = TABLE_LITTLE_PERSON + " p join " + TABLE_RELATIONSHIP + " r on r."+COL_ID1+"=p."+COL_ID+" or r."+COL_ID2+"=p."+COL_ID;
 
 		Map<Integer, LittlePerson> personMap = new HashMap<>();
-		Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, "p."+COL_ID);
+		Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, "p." + COL_ID);
 		while (c.moveToNext()) {
 			LittlePerson p = personFromCursor(c);
 			if (p.getId()!=id) {
@@ -474,8 +485,15 @@ public class DBHelper extends SQLiteOpenHelper {
         long rowid = 0;
         if (r.getId()==0) {
             // dont allow duplicate relationships
-            if (this.getRelationship(r.getId1(), r.getId2(), r.getType()) != null)
-                return -1;
+			Relationship oldR = this.getRelationship(r.getId1(), r.getId2(), r.getType());
+            if (oldR != null) {
+				//-- check id old relationship is different
+				if (!oldR.getType().equals(r.getType()) || oldR.getId1()!=r.getId1() || oldR.getId2()!=r.getId2()) {
+					deleteRelationshipById(oldR.getId());
+				} else {
+					return -1;
+				}
+			}
             // -- add
             rowid = db.insert(TABLE_RELATIONSHIP, null, values);
             Log.d("DBHelper", "persistRelationship added relationship id " + rowid + " id1="+r.getId1()+" id2="+r.getId2()+" type="+r.getType());

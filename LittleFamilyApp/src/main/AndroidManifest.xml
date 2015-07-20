@@ -65,7 +65,9 @@
         <activity
             android:name=".activities.ColoringGameActivity"
             android:label="@string/title_activity_coloring_game"
-            android:parentActivityName=".activities.ChooseGameActivity" >
+            android:parentActivityName=".activities.ChooseGameActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.finlayfamily.littlefamily.activities.ChooseGameActivity" />
@@ -117,7 +119,9 @@
         <activity
             android:name=".activities.BubblePopActivity"
             android:label="@string/title_activity_bubble_pop"
-            android:parentActivityName=".activities.HomeActivity" >
+            android:parentActivityName=".activities.HomeActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.finlayfamily.littlefamily.activities.HomeActivity" />

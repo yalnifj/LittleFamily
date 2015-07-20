@@ -173,6 +173,11 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
 
         rootSprite = addTreeSprite(root, 20, 40, true);
         if (root.getChildren()!=null && root.getChildren().size()>0) {
+            AnimatedBitmapSprite vine = new AnimatedBitmapSprite(vineBm2);
+            vine.setX(rootSprite.getX()+leftLeaf.getWidth()-43);
+            vine.setY(rootSprite.getY() - 63);
+            treeView.addSprite(vine);
+            addDownVine(rootSprite, false);
             addChildSprites(root.getChildren(), rootSprite.getX(), rootSprite.getY()+rootSprite.getHeight()+vineBm.getHeight());
         } else if (root.getLeft()!=null && root.getLeft().getChildren()!=null && root.getLeft().getChildren().size()>0){
             treeView.getSprites().remove(rootSprite);

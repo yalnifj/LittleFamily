@@ -49,8 +49,11 @@ public class TreeLoaderTask extends AsyncTask<LittlePerson, Integer, TreeNode> {
             root.setDepth(startingDepth);
             root.setIsRoot(true);
             addSpouses(root);
-            addParents(root);
             addChildren(root, 1);
+            if (root.getChildren()!= null && root.getChildren().size()>0) {
+                maxDepth--; //-- reduce the depth if we have children
+            }
+            addParents(root);
             //-- add siblings if root node has no children
             if (root.getChildren()==null || root.getChildren().size()==0) {
                 addChildren(root.getLeft(), 1);

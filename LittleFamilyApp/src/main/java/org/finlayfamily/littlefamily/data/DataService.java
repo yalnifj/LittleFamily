@@ -309,17 +309,9 @@ public class DataService implements AuthTask.Listener {
                 if (r.getKnownType() == RelationshipType.Couple) {
                     type = org.finlayfamily.littlefamily.data.RelationshipType.SPOUSE;
                 }
-                if (!r.getPerson1().getResourceId().equals(person.getFamilySearchId())) {
-                    org.finlayfamily.littlefamily.data.Relationship rel = syncRelationship(person, r.getPerson1().getResourceId(), type);
-                    if (rel != null) {
-                        oldRelations.remove(rel);
-                    }
-                }
-                if (!r.getPerson2().getResourceId().equals(person.getFamilySearchId())) {
-                    org.finlayfamily.littlefamily.data.Relationship rel = syncRelationship(person, r.getPerson2().getResourceId(), type);
-                    if (rel != null) {
-                        oldRelations.remove(rel);
-                    }
+                org.finlayfamily.littlefamily.data.Relationship rel = syncRelationship(r.getPerson1().getResourceId(), r.getPerson2().getResourceId(), type);
+                if (rel != null) {
+                    oldRelations.remove(rel);
                 }
             }
 
@@ -364,19 +356,30 @@ public class DataService implements AuthTask.Listener {
         }
     }
 
-    private org.finlayfamily.littlefamily.data.Relationship syncRelationship(LittlePerson person, String fsid, org.finlayfamily.littlefamily.data.RelationshipType type) throws Exception {
-        LittlePerson relative = getDBHelper().getPersonByFamilySearchId(fsid);
+    private org.finlayfamily.littlefamily.data.Relationship syncRelationship(String fsid1, String fsid2, org.finlayfamily.littlefamily.data.RelationshipType type) throws Exception {
+        LittlePerson person = getDBHelper().getPersonByFamilySearchId(fsid1);
+        if (person==null) {
+            try {
+                Thread.sleep(5000);  //-- don't bombard the server
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Person fsPerson = remoteService.getPerson(fsid1, true);
+            person = DataHelper.buildLittlePerson(fsPerson, context, remoteService, true);
+            getDBHelper().persistLittlePerson(person);
+        }
+        LittlePerson relative = getDBHelper().getPersonByFamilySearchId(fsid2);
         if (relative==null) {
             try {
                 Thread.sleep(5000);  //-- don't bombard the server
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            Person fsPerson2 = remoteService.getPerson(fsid, true);
+            Person fsPerson2 = remoteService.getPerson(fsid2, true);
             relative = DataHelper.buildLittlePerson(fsPerson2, context, remoteService, true);
             getDBHelper().persistLittlePerson(relative);
         }
-        if (relative!=null) {
+        if (person !=null && relative!=null) {
             org.finlayfamily.littlefamily.data.Relationship rel = getDBHelper().getRelationship(person.getId(), relative.getId(), type);
             if (rel==null) {
                 rel = new org.finlayfamily.littlefamily.data.Relationship();
@@ -653,8 +656,8 @@ public class DataService implements AuthTask.Listener {
         if (parents==null || parents.size()==0) {
             if (person.isHasParents()==null || person.isHasParents()) {
                 fireNetworkStateChanged(DataNetworkState.REMOTE_STARTING);
-                getParentsFromRemoteService(person);
-                parents = getDBHelper().getParentsForPerson(person.getId());
+                parents = getParentsFromRemoteService(person);
+                //parents = getDBHelper().getParentsForPerson(person.getId());
                 if (parents == null) {
                     parents = new ArrayList<>();
                 }
