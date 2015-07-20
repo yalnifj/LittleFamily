@@ -5,8 +5,6 @@ import android.util.Log;
 
 import org.finlayfamily.littlefamily.remote.RemoteResult;
 import org.finlayfamily.littlefamily.remote.RemoteService;
-import org.finlayfamily.littlefamily.remote.RemoteServiceSearchException;
-import org.finlayfamily.littlefamily.remote.familysearch.FamilySearchService;
 
 /**
  * Created by jfinlay on 2/19/2015.
@@ -32,7 +30,7 @@ public class AuthTask extends AsyncTask<String, Integer, RemoteResult> {
             }
             //Person person = service.getCurrentPerson();
 
-        } catch(RemoteServiceSearchException e) {
+        } catch(Exception e) {
             Log.e(this.getClass().getSimpleName(), "error", e);
             result = new RemoteResult();
             result.setData(e.getLocalizedMessage());

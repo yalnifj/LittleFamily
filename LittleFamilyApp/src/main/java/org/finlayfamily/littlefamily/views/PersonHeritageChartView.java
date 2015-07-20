@@ -118,14 +118,20 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
     public HeritagePath getPathByCoords(float x, float y) {
         HeritagePath selectedPath = null;
         if (cultures!=null) {
-            int top = 0;
-            for (HeritagePath path : cultures) {
+            int top = this.getHeight();
+            for(int p=cultures.size()-1; p>=0; p--) {
+                HeritagePath path = cultures.get(p);
                 int height = (int)(this.getHeight()*path.getPercent());
+                if (height < 30) height = 30;
+                top = top - height;
+                if (top < 0) {
+                    height = height+top;
+                    top = 0;
+                }
                 if (y>=top && y< top+height) {
                     selectedPath = path;
                     break;
                 }
-                top += height;
             }
         }
         return selectedPath;
@@ -162,9 +168,10 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
         if (outlineBitmap!=null) {
             canvas.drawARGB(255, 255, 255, 255);
             if (cultures!=null) {
-                int top = 0;
+                int top = this.getHeight();
                 int count = 0;
-                for(HeritagePath path : cultures) {
+                for(int p=cultures.size()-1; p>=0; p--) {
+                    HeritagePath path = cultures.get(p);
                     Paint paint = new Paint();
                     paint.setStyle(Paint.Style.FILL);
                     int color2 = colors[count];
@@ -172,6 +179,12 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
                         color2 = ColorHelper.lightenColor2(color2, 0.5f);
                     }
                     int height = (int) (this.getHeight()*path.getPercent());
+                    if (height < 30) height = 30;
+                    top = top - height;
+                    if (top < 0) {
+                        height = height+top;
+                        top = 0;
+                    }
                     paint.setColor(color2);
                     canvas.drawRect(0, top, outlineBitmap.getWidth(),
                             top + height,
@@ -181,8 +194,6 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
                     if (count >= colors.length) {
                         count = 0;
                     }
-
-                    top += height;
                 }
             } else {
                 Paint paint = new Paint();
@@ -194,23 +205,29 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
             canvas.drawBitmap(outlineBitmap, 0, 0, null);
 
             if (cultures !=null) {
-                int top = 0;
-                for(HeritagePath path : cultures) {
-                    Paint p = new Paint();
-                    p.setTextSize((int)(this.getHeight()*0.05));
-                    p.setColor(Color.BLACK);
-                    p.setTextAlign(Paint.Align.LEFT);
-					p.setStrokeWidth(2);
+                int top = this.getHeight();
+                for(int p=cultures.size()-1; p>=0; p--) {
+                    HeritagePath path = cultures.get(p);
+                    Paint paint = new Paint();
+                    paint.setTextSize((int)(this.getHeight()*0.05));
+                    paint.setColor(Color.BLACK);
+                    paint.setTextAlign(Paint.Align.LEFT);
+                    paint.setStrokeWidth(2);
 					if (path==selectedPath) {
-						p.setShadowLayer(3, 3, 3, Color.GRAY);
-						p.setStrokeWidth(5);
+                        paint.setShadowLayer(3, 3, 3, Color.GRAY);
+                        paint.setStrokeWidth(5);
 					}
-                    int height = (int)(this.getHeight()*path.getPercent());
+                    int height = (int) (this.getHeight()*path.getPercent());
+                    if (height < 30) height = 30;
+                    top = top - height;
+                    if (top < 0) {
+                        height = height+top;
+                        top = 0;
+                    }
                     String text = String.format("%1$.2f%% %2$s", (path.getPercent()*100), path.getPlace());
-                    canvas.drawText(text, this.getWidth()/2 + 10, top+(height/3), p);
-                    canvas.drawLine(this.getWidth()/2.5f, top+(height/2), this.getWidth()/2, top+(height/3)+4, p);
-                    canvas.drawLine(this.getWidth()/2, top+(height/3)+4, this.getWidth(), top+(height/3)+4, p);
-                    top += height;
+                    canvas.drawText(text, this.getWidth() / 2 + 10, top + (height / 3), paint);
+                    canvas.drawLine(this.getWidth()/2.5f, top+(height/2), this.getWidth()/2, top+(height/3)+4, paint);
+                    canvas.drawLine(this.getWidth()/2, top+(height/3)+4, this.getWidth(), top+(height/3)+4, paint);
                 }
             }
         }
