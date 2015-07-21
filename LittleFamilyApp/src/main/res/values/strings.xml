@@ -60,5 +60,6 @@ Please wait...</string>
     <string name="remote_tree_id">Remote Tree ID</string>
     <string name="search">Search</string>
     <string name="low_media">There are not many pictures on your online family tree.  The game is more fun with more pictures.  Please go to your online family tree and upload more photos.</string>
+    <string name="title_activity_song">SongActivity</string>
 
 </resources>

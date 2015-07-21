@@ -2,9 +2,6 @@ package org.finlayfamily.littlefamily.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.ContextMenu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -15,7 +12,6 @@ import org.finlayfamily.littlefamily.R;
 import org.finlayfamily.littlefamily.activities.adapters.PersonSearchListAdapter;
 import org.finlayfamily.littlefamily.activities.tasks.ForceSynceTask;
 import org.finlayfamily.littlefamily.activities.tasks.SearchLoaderTask;
-import org.finlayfamily.littlefamily.data.DataService;
 import org.finlayfamily.littlefamily.data.LittlePerson;
 
 import java.util.ArrayList;
@@ -44,44 +40,6 @@ public class PersonSearchActivity extends Activity implements SearchLoaderTask.L
         personList.setAdapter(adapter);
 
         registerForContextMenu(personList);
-    }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v,
-                                    ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.person_list_context_menu, menu);
-
-        MenuItem item = menu.findItem(R.id.hide_show);
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
-        long itemID = info.position;
-        LittlePerson person = (LittlePerson) adapter.getItem((int) itemID);
-        if (person.isActive()) item.setTitle(getResources().getString(R.string.hide_person));
-        else item.setTitle(getResources().getString(R.string.show_person));
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        long itemID = info.position;
-        LittlePerson person = (LittlePerson) adapter.getItem((int) itemID);
-        switch (item.getItemId()) {
-            case R.id.force_sync:
-                ForceSynceTask task = new ForceSynceTask(PersonSearchActivity.this, PersonSearchActivity.this);
-                task.execute();
-                return true;
-            case R.id.hide_show:
-                person.setActive(!person.isActive());
-                try {
-                    DataService.getInstance().getDBHelper().persistLittlePerson(person);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return true;
-            default:
-                return super.onContextItemSelected(item);
-        }
     }
 
     public void search(View v) {

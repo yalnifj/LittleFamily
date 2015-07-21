@@ -64,10 +64,10 @@
         </activity>
         <activity
             android:name=".activities.ColoringGameActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_coloring_game"
             android:parentActivityName=".activities.ChooseGameActivity"
-            android:screenOrientation="portrait"
-            android:configChanges="orientation|keyboardHidden" >
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.finlayfamily.littlefamily.activities.ChooseGameActivity" />
@@ -118,10 +118,10 @@
         </activity>
         <activity
             android:name=".activities.BubblePopActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_bubble_pop"
             android:parentActivityName=".activities.HomeActivity"
-            android:screenOrientation="portrait"
-            android:configChanges="orientation|keyboardHidden">
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.finlayfamily.littlefamily.activities.HomeActivity" />
@@ -129,6 +129,14 @@
         <activity
             android:name=".activities.PersonSearchActivity"
             android:label="@string/title_activity_person_search" >
+        </activity>
+        <activity
+            android:name=".activities.SongActivity"
+            android:label="@string/title_activity_song"
+            android:parentActivityName=".activities.HomeActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.finlayfamily.littlefamily.activities.HomeActivity" />
         </activity>
     </application>
 
