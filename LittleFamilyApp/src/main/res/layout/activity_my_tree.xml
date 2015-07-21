@@ -4,7 +4,7 @@
     android:paddingRight="0dp"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="0dp"
-    tools:context="org.finlayfamily.littlefamily.activities.MyTreeActivity"
+    tools:context="com.yellowforktech.littlefamilytree.activities.MyTreeActivity"
     android:background="@drawable/tree_background">
 
     <FrameLayout
@@ -16,7 +16,7 @@
         android:layout_centerHorizontal="true" />
 
     <view
-        class="org.finlayfamily.littlefamily.views.TreeSpriteSurfaceView"
+        class="com.yellowforktech.littlefamilytree.views.TreeSpriteSurfaceView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/treeView"
