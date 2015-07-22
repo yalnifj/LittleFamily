@@ -14,8 +14,8 @@
     <Preference android:title="@string/pref_title_manage_creds">
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetPackage="org.finlayfamily.littlefamily"
-            android:targetClass="org.finlayfamily.littlefamily.activities.FSLoginActivity" />
+            android:targetPackage="com.yellowforktech.littlefamilytree"
+            android:targetClass="com.yellowforktech.littlefamilytree.activities.FSLoginActivity" />
     </Preference>
 
     <CheckBoxPreference android:title="@string/pref_title_sync_data_background" android:key="sync_background" android:defaultValue="true" />
@@ -32,8 +32,8 @@
     <Preference android:title="@string/pref_title_manage_people">
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetPackage="org.finlayfamily.littlefamily"
-            android:targetClass="org.finlayfamily.littlefamily.activities.PersonSearchActivity" />
+            android:targetPackage="com.yellowforktech.littlefamilytree"
+            android:targetClass="com.yellowforktech.littlefamilytree.activities.PersonSearchActivity" />
     </Preference>
 
     <ListPreference
@@ -47,5 +47,12 @@
     <Preference android:title="@string/pref_title_tts_voice_test"
         android:key="tts_voice_test"
         android:summary="@string/pref_summary_tts_voice_test"/>
+
+    <Preference android:title="@string/title_activity_parents_guide">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.yellowforktech.littlefamilytree"
+            android:targetClass="com.yellowforktech.littlefamilytree.activities.ParentsGuideActivity" />
+    </Preference>
 
 </PreferenceScreen>

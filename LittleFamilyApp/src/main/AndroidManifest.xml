@@ -134,6 +134,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.HomeActivity" />
         </activity>
+        <activity
+            android:name=".activities.ParentsGuideActivity"
+            android:label="@string/title_activity_parents_guide" >
+        </activity>
     </application>
 
 </manifest>

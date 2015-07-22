@@ -9,6 +9,9 @@ import com.yellowforktech.littlefamilytree.data.LittlePerson;
 
 public class ChooseRemoteService extends LittleFamilyActivity {
     public static final int REMOTE_SERVICE_LOGIN = 1;
+    public static final int PARENTS_GUIDE_OK = 2;
+
+    private LittlePerson currentPerson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +34,14 @@ public class ChooseRemoteService extends LittleFamilyActivity {
         switch(requestCode) {
             case (REMOTE_SERVICE_LOGIN) : {
                 if (resultCode == Activity.RESULT_OK) {
-                    LittlePerson currentPerson = (LittlePerson) data.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
-                    if (currentPerson!=null) {
-                        Intent intent = new Intent( this, ChooseFamilyMember.class );
-                        startActivity(intent);
-                    }
+                    Intent intent = new Intent( this, ParentsGuideActivity.class );
+                    startActivityForResult(intent, PARENTS_GUIDE_OK);
                 }
+                break;
+            }
+            case (PARENTS_GUIDE_OK) : {
+                Intent intent = new Intent( this, ChooseFamilyMember.class );
+                startActivity(intent);
                 break;
             }
         }

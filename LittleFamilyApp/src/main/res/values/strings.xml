@@ -61,5 +61,22 @@ Please wait...</string>
     <string name="search">Search</string>
     <string name="low_media">There are not many pictures on your online family tree.  The game is more fun with more pictures.  Please go to your online family tree and upload more photos.</string>
     <string name="title_activity_song">SongActivity</string>
+    <string name="title_activity_parents_guide">Parent\'s Guide</string>
+    <string name="title_full_tree">More Photos, More Fun!</string>
+    <string name="guide_full_photo_tree">The more information--especially photos--that you add to your online family tree, the more fun Little Family Tree will be for your child!</string>
+    <string name="title_welcome">Welcome!</string>
+    <string name="guide_welcome_text">Little Family Tree engages toddlers and pre-school children with their personal family history through photos, games, and activities designed for their level. (Most of the games are fun for the kid in all of us.)</string>
+    <string name="guide_engage_children">Playing with your child will give you the opportunity to strengthen family associations and enhance the experience through your personal memories and stories.</string>
+    <string name="title_play_together">Play Together!</string>
+    <string name="title_guide_choose_player">Choosing a Player</string>
+    <string name="guide_choosing_player">The games and activities in Little Family Tree are centered around the person who is playing.  You may choose a different person by using the back button or tapping the profile picture on the activity screens.</string>
+    <string name="title_guide_home">Home Activity</string>
+    <string name="guide_home_activity">The home is the hub of the game.  Tap around and explore to find interactive elements.  You may need to help the youngest to get started.  Return anytime by using the home button at the top of every screen.</string>
+    <string name="title_guide_follow_the_stars">Follow the Stars!</string>
+    <string name="guide_follow_stars">Special games and activities are highlighted by stars on the home screen.  Follow the stars to interact in fun and unique ways with your relatives.</string>
+    <string name="title_guide_settings">Settings</string>
+    <string name="guide_settings">Parents may alter app settings through the manage settings button found on any screen.  You must enter the password for your online tree account in order to access the settings.  This prevents children from accidentally changing the settings.</string>
+    <string name="guide_more_settings">From the settings you can manage your connection to your online family tree and change synchronization settings.  You can also choose to hide people from your online tree so that they do not show up in Little Family Tree.  You can also return to this parent\\\'s guide at anytime from the settings screen.</string>
+    <string name="ok_got_it">OK.  Got It!</string>
 
 </resources>
