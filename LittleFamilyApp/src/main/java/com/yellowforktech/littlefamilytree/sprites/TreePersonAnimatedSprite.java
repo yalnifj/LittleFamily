@@ -173,43 +173,6 @@ public class TreePersonAnimatedSprite extends Sprite {
         return node;
     }
 
-    protected String getAncestralRelationship(LittlePerson p) {
-        String rel = "";
-        for(int g=3; g<=node.getDepth(); g++) {
-            rel += "Great ";
-        }
-        if (node.getDepth()>=2) {
-            rel += "Grand ";
-        }
-        if (p.getGender()== GenderType.Female) {
-            if (node.getDepth()==0) {
-                if (node.isRoot()) {
-                    if (p==node.getPerson()) rel = "You";
-                    else rel = "Wife";
-                } else {
-                    rel = "Sister";
-                }
-            } else {
-                rel += "Mother";
-            }
-        }
-        else if (p.getGender()==GenderType.Male) {
-            if (node.getDepth()==0) {
-                if (node.isRoot()) {
-                    if (p==node.getPerson()) rel = "You";
-                    else rel = "Husband";
-                } else {
-                    rel = "Brother";
-                }
-            } else {
-                rel += "Father";
-            }
-        } else {
-            rel += "Parent";
-        }
-        return rel;
-    }
-
     public int getTreeWidth() {
         return treeWidth;
     }
@@ -231,7 +194,7 @@ public class TreePersonAnimatedSprite extends Sprite {
                     LittlePerson person = father;
                     if (person==null) person = mother;
                     try {
-                        String relationship = getAncestralRelationship(person);
+                        String relationship = node.getAncestralRelationship(person);
                         String text = "";
                         if (!relationship.equalsIgnoreCase("you")) {
                             text = String.format(activity.getResources().getString(R.string.relative_is_your),
@@ -249,7 +212,7 @@ public class TreePersonAnimatedSprite extends Sprite {
                 else {
                     state = STATE_OPEN_RIGHT;
                     try {
-                        String relationship = getAncestralRelationship(mother);
+                        String relationship = node.getAncestralRelationship(mother);
                         String text = "";
                         if (!relationship.equalsIgnoreCase("you")) {
                             text = String.format(activity.getResources().getString(R.string.relative_is_your),
@@ -370,7 +333,7 @@ public class TreePersonAnimatedSprite extends Sprite {
             String name = detailPerson.getName();
             if (name==null) name = detailPerson.getGivenName();
             canvas.drawText(name, getX() + leftLeaf.getWidth() + detailWidth/2, getY()+30, textPaint);
-            String relationship = getAncestralRelationship(detailPerson);
+            String relationship = node.getAncestralRelationship(detailPerson);
             canvas.drawText(relationship, getX() + leftLeaf.getWidth() + detailWidth / 2, getY() + 70, textPaint);
 
             float bx = getX() + leftLeaf.getWidth() + 20;
@@ -394,7 +357,7 @@ public class TreePersonAnimatedSprite extends Sprite {
             String name = detailPerson.getName();
             if (name==null) name = detailPerson.getGivenName();
             canvas.drawText(name, getX() + getWidth() + detailWidth/2, getY()+30, textPaint);
-            String relationship = getAncestralRelationship(detailPerson);
+            String relationship = node.getAncestralRelationship(detailPerson);
             canvas.drawText(relationship, getX() + getWidth() + detailWidth/2, getY()+70, textPaint);
 
             float bx = getX() + getWidth() + 20;

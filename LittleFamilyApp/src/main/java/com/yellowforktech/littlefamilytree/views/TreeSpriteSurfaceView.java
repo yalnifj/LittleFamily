@@ -1,13 +1,18 @@
 package com.yellowforktech.littlefamilytree.views;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 
+import com.yellowforktech.littlefamilytree.R;
+import com.yellowforktech.littlefamilytree.activities.MyTreeActivity;
 import com.yellowforktech.littlefamilytree.sprites.Sprite;
+import com.yellowforktech.littlefamilytree.sprites.TouchEventGameSprite;
 import com.yellowforktech.littlefamilytree.sprites.TreePersonAnimatedSprite;
 
 /**
@@ -17,6 +22,8 @@ public class TreeSpriteSurfaceView extends SpritedClippedSurfaceView {
     private ScaleGestureDetector mScaleDetector;
     protected float scale = 0.5f;
     protected boolean moved;
+
+    protected TouchEventGameSprite searchSprite;
 
     public TreeSpriteSurfaceView(Context context) {
         super(context);
@@ -49,6 +56,10 @@ public class TreeSpriteSurfaceView extends SpritedClippedSurfaceView {
                 return false;
             }
         });
+
+        Bitmap searchBm = BitmapFactory.decodeResource(context.getResources(), R.drawable.tree_search);
+        searchSprite = new TouchEventGameSprite(searchBm, MyTreeActivity.TOPIC_START_FIND_PERSON);
+        searchSprite.setIgnoreAlpha(true);
     }
 
     @Override
@@ -164,6 +175,14 @@ public class TreeSpriteSurfaceView extends SpritedClippedSurfaceView {
                     }
                 }
             }
+        }
+
+        if (searchSprite !=null) {
+            canvas.setMatrix(new Matrix());
+            canvas.translate(0,0);
+            searchSprite.setX(getWidth() - searchSprite.getWidth() * 1.5f);
+            searchSprite.setY(searchSprite.getHeight() * 2.5f);
+            searchSprite.doDraw(canvas);
         }
     }
 }

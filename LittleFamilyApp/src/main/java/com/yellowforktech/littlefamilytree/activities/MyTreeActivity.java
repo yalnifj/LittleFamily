@@ -12,6 +12,7 @@ import com.yellowforktech.littlefamilytree.data.TreeNode;
 import com.yellowforktech.littlefamilytree.events.EventListener;
 import com.yellowforktech.littlefamilytree.events.EventQueue;
 import com.yellowforktech.littlefamilytree.games.DressUpDolls;
+import com.yellowforktech.littlefamilytree.games.TreeSearchGame;
 import com.yellowforktech.littlefamilytree.sprites.AnimatedBitmapSprite;
 import com.yellowforktech.littlefamilytree.sprites.Sprite;
 import com.yellowforktech.littlefamilytree.sprites.TouchEventGameSprite;
@@ -28,6 +29,7 @@ import java.util.Map;
 
 public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTask.Listener, EventListener {
     public static final String TOPIC_NAVIGATE_UP_TREE = "navigateUpTree";
+    public static final String TOPIC_START_FIND_PERSON = "startFindPerson";
     public static final String DATA_TREE_NODE = "dataTreeNode";
     public static final int buttonSize = 100;
     private LittlePerson selectedPerson;
@@ -57,6 +59,8 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
     private Map<Integer, List<Sprite>> loadedLevels;
     private Map<Integer, List<Sprite>> levelArrows;
     private int maxLevel=2;
+
+    private TreeSearchGame treeSearchGame;
 
     public Bitmap getMatchBtn() {
         return matchBtn;
@@ -95,8 +99,11 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
         dataService.setContext(this);
 
         EventQueue.getInstance().subscribe(TOPIC_NAVIGATE_UP_TREE, this);
+        EventQueue.getInstance().subscribe(TOPIC_START_FIND_PERSON, this);
         loadedLevels = new HashMap<>();
         levelArrows = new HashMap<>();
+
+        treeSearchGame = new TreeSearchGame();
 
         setupTopBar();
     }
@@ -128,6 +135,8 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
             treeBackground.onDestroy();
         }
         treeBackground = null;
+        EventQueue.getInstance().unSubscribe(TOPIC_NAVIGATE_UP_TREE, this);
+        EventQueue.getInstance().unSubscribe(TOPIC_START_FIND_PERSON, this);
     }
 
     @Override
@@ -528,6 +537,10 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
             TreeLoaderTask task = new TreeLoaderTask(this, this, node.getDepth(), 0);
             task.execute(person);
 
+        } else if (topic.equals(TOPIC_START_FIND_PERSON)) {
+            treeSearchGame.findRandomPerson(root);
         }
     }
+
+
 }

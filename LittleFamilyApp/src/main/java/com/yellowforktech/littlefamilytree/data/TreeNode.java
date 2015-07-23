@@ -1,5 +1,7 @@
 package com.yellowforktech.littlefamilytree.data;
 
+import org.gedcomx.types.GenderType;
+
 import java.util.List;
 
 /**
@@ -92,5 +94,42 @@ public class TreeNode {
 
     public void setIsRoot(boolean isRoot) {
         this.isRoot = isRoot;
+    }
+
+    public String getAncestralRelationship(LittlePerson p) {
+        String rel = "";
+        for(int g=3; g<=this.getDepth(); g++) {
+            rel += "Great ";
+        }
+        if (this.getDepth()>=2) {
+            rel += "Grand ";
+        }
+        if (p.getGender()== GenderType.Female) {
+            if (this.getDepth()==0) {
+                if (this.isRoot()) {
+                    if (p==this.getPerson()) rel = "You";
+                    else rel = "Wife";
+                } else {
+                    rel = "Sister";
+                }
+            } else {
+                rel += "Mother";
+            }
+        }
+        else if (p.getGender()==GenderType.Male) {
+            if (this.getDepth()==0) {
+                if (this.isRoot()) {
+                    if (p==this.getPerson()) rel = "You";
+                    else rel = "Husband";
+                } else {
+                    rel = "Brother";
+                }
+            } else {
+                rel += "Father";
+            }
+        } else {
+            rel += "Parent";
+        }
+        return rel;
     }
 }
