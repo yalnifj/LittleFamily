@@ -102,6 +102,10 @@ public class TreeSpriteSurfaceView extends SpritedClippedSurfaceView {
                 sprites.remove(s);
                 sprites.add(s);
             }
+
+            if (searchSprite.inSprite(x, y)) {
+                searchSprite.onSelect(x, y);
+            }
         }
     }
 
@@ -118,7 +122,13 @@ public class TreeSpriteSurfaceView extends SpritedClippedSurfaceView {
                 if (s.getState() == TreePersonAnimatedSprite.STATE_OPEN_RIGHT)
                     s.setState(TreePersonAnimatedSprite.STATE_ANIMATING_CLOSED_RIGHT);
             }
+
+            if (searchSprite.inSprite(x, y)) {
+                searchSprite.onRelease(x, y);
+            }
         }
+
+        searchSprite.setSelected(false);
         moved = false;
     }
 
@@ -180,8 +190,8 @@ public class TreeSpriteSurfaceView extends SpritedClippedSurfaceView {
         if (searchSprite !=null) {
             canvas.setMatrix(new Matrix());
             canvas.translate(0,0);
-            searchSprite.setX(getWidth() - searchSprite.getWidth() * 1.5f);
-            searchSprite.setY(searchSprite.getHeight() * 2.5f);
+            searchSprite.setX(getWidth() - searchSprite.getWidth());
+            searchSprite.setY(10);
             searchSprite.doDraw(canvas);
         }
     }

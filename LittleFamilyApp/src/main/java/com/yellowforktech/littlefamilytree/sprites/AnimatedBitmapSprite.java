@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.Build;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,6 +28,8 @@ public class AnimatedBitmapSprite extends Sprite {
     protected Paint basePaint;
     protected boolean ignoreAlpha;
     protected Resources resources;
+    protected boolean selected;
+    protected Paint selectedPaint;
 
     public AnimatedBitmapSprite() {
         super();
@@ -38,6 +41,12 @@ public class AnimatedBitmapSprite extends Sprite {
         basePaint.setColor(Color.WHITE);
         basePaint.setStyle(Paint.Style.FILL);
         bounce = false;
+
+        selectedPaint = new Paint();
+        selectedPaint.setColor(Color.YELLOW);
+        selectedPaint.setStrokeWidth(3);
+        selectedPaint.setAlpha(150);
+        selectedPaint.setStyle(Paint.Style.STROKE);
     }
 
     public AnimatedBitmapSprite(Bitmap bitmap) {
@@ -103,6 +112,16 @@ public class AnimatedBitmapSprite extends Sprite {
         return stepsPerFrame;
     }
 
+    @Override
+    public boolean isSelected() {
+        return selected;
+    }
+
+    @Override
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
     public void setStepsPerFrame(int stepsPerFrame) {
         this.stepsPerFrame = stepsPerFrame;
     }
@@ -157,6 +176,13 @@ public class AnimatedBitmapSprite extends Sprite {
                         canvas.setMatrix(matrix);
                     }
                     canvas.drawBitmap(bitmap, null, rect, basePaint);
+                    if (selected) {
+                        if (Build.VERSION.SDK_INT > 20) {
+                            canvas.drawRoundRect(x, y, x + width, y + height, 3, 3, selectedPaint);
+                        } else {
+                            canvas.drawRect(x, y, x + width, y + height, selectedPaint);
+                        }
+                    }
                     if (matrix!=null) {
                         canvas.restore();
                     }
@@ -190,7 +216,7 @@ public class AnimatedBitmapSprite extends Sprite {
 
     @Override
     public void onSelect(float x, float y) {
-
+        selected = true;
     }
 
     @Override
@@ -200,7 +226,7 @@ public class AnimatedBitmapSprite extends Sprite {
 
     @Override
     public void onRelease(float x, float y) {
-
+        selected = false;
     }
 
     @Override

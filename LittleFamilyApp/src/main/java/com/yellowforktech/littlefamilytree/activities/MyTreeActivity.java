@@ -3,8 +3,10 @@ package com.yellowforktech.littlefamilytree.activities;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.os.Bundle;
 
+import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.tasks.TreeLoaderTask;
 import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
@@ -30,6 +32,7 @@ import java.util.Map;
 public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTask.Listener, EventListener {
     public static final String TOPIC_NAVIGATE_UP_TREE = "navigateUpTree";
     public static final String TOPIC_START_FIND_PERSON = "startFindPerson";
+    public static final String TOPIC_PERSON_SELECTED = "personSelected";
     public static final String DATA_TREE_NODE = "dataTreeNode";
     public static final int buttonSize = 100;
     private LittlePerson selectedPerson;
@@ -92,6 +95,8 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
         setContentView(com.yellowforktech.littlefamilytree.R.layout.activity_my_tree);
 
         treeView = (TreeSpriteSurfaceView) findViewById(com.yellowforktech.littlefamilytree.R.id.treeView);
+        Bitmap starBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.star1);
+        treeView.setStarBitmap(starBitmap);
 
         Intent intent = getIntent();
         selectedPerson = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
@@ -100,10 +105,11 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
 
         EventQueue.getInstance().subscribe(TOPIC_NAVIGATE_UP_TREE, this);
         EventQueue.getInstance().subscribe(TOPIC_START_FIND_PERSON, this);
+        EventQueue.getInstance().subscribe(TOPIC_PERSON_SELECTED, this);
         loadedLevels = new HashMap<>();
         levelArrows = new HashMap<>();
 
-        treeSearchGame = new TreeSearchGame();
+        treeSearchGame = new TreeSearchGame(this);
 
         setupTopBar();
     }
@@ -137,6 +143,7 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
         treeBackground = null;
         EventQueue.getInstance().unSubscribe(TOPIC_NAVIGATE_UP_TREE, this);
         EventQueue.getInstance().unSubscribe(TOPIC_START_FIND_PERSON, this);
+        EventQueue.getInstance().unSubscribe(TOPIC_PERSON_SELECTED, this);
     }
 
     @Override
@@ -538,9 +545,40 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
             task.execute(person);
 
         } else if (topic.equals(TOPIC_START_FIND_PERSON)) {
-            treeSearchGame.findRandomPerson(root);
+            if (treeSearchGame.isComplete()) {
+                treeSearchGame.findRandomPerson(root);
+            } else {
+                treeSearchGame.nextClue();
+            }
+
+            speak(treeSearchGame.getClueText());
+        } else if (topic.equals(TOPIC_PERSON_SELECTED)) {
+            if (isTreeSearchGameActive()) {
+                Map<String, Object> params = (Map<String, Object>) o;
+                if (params!=null) {
+                    TreeNode node = (TreeNode) params.get("node");
+                    boolean isSpouse = (Boolean) params.get("isSpouse");
+                    if (treeSearchGame.isMatch(node, isSpouse)) {
+                        playCompleteSound();
+                        Sprite sprite = (Sprite) params.get("sprite");
+                        Rect rect = new Rect();
+                        if ((isSpouse && node.getSpouse()!=null && node.getSpouse().getGender()==GenderType.Female)
+                                || (!isSpouse && node.getPerson().getGender()==GenderType.Female)) {
+                            rect.set((int)(sprite.getX() + sprite.getWidth()/2), (int) sprite.getY(), (int) (sprite.getX() + sprite.getWidth()), (int) (sprite.getY() + sprite.getHeight()));
+                        } else {
+                            rect.set((int) sprite.getX(), (int) sprite.getY(), (int) (sprite.getX() + sprite.getWidth()/2), (int) (sprite.getY() + sprite.getHeight()));
+                        }
+                        treeView.addStars(rect, false, 10);
+                    } else {
+                        playBuzzSound();
+                    }
+                }
+            }
         }
     }
 
-
+    public boolean isTreeSearchGameActive() {
+        if (treeSearchGame.getTargetNode()==null) return false;
+        return !treeSearchGame.isComplete();
+    }
 }

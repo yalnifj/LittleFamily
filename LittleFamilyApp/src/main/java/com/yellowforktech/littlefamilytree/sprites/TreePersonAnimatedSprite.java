@@ -24,7 +24,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Parents on 5/29/2015.
@@ -422,65 +424,86 @@ public class TreePersonAnimatedSprite extends Sprite {
     @Override
     public void onRelease(float x, float y) {
         if (!moved) {
-            if (!opened) {
-                dWidth = 0;
-                dHeight = 0;
-                if (node.getSpouse() == null) {
-                    state = STATE_ANIMATING_OPEN_LEFT;
-                } else {
-                    if (x < (getX() + leftLeaf.getWidth())*scale) {
+            if (!activity.isTreeSearchGameActive()) {
+                if (!opened) {
+                    dWidth = 0;
+                    dHeight = 0;
+                    if (node.getSpouse() == null) {
                         state = STATE_ANIMATING_OPEN_LEFT;
                     } else {
-                        state = STATE_ANIMATING_OPEN_RIGHT;
-                    }
-                }
-            } else if (state != STATE_ANIMATING_CLOSED_LEFT && state!=STATE_ANIMATING_CLOSED_RIGHT){
-                dWidth = detailWidth;
-                dHeight = detailHeight;
-                if (state==STATE_OPEN_LEFT) {
-                    float bx = getX() + leftLeaf.getWidth() + 20;
-                    float by = getY() + detailHeight - MyTreeActivity.buttonSize*2;
-                    int count=1;
-                    for (Bitmap button : activityButtons) {
-                        if (x > bx * scale && y > by * scale
-                                && x < (bx + button.getWidth()) * scale && y < (by + button.getHeight()) * scale) {
-                            sendEvent(button, node.getPerson());
-                            break;
+                        if (x < (getX() + leftLeaf.getWidth()) * scale) {
+                            state = STATE_ANIMATING_OPEN_LEFT;
+                        } else {
+                            state = STATE_ANIMATING_OPEN_RIGHT;
                         }
-                        bx += button.getWidth() + 20;
-                        if (count % 3 == 0) {
-                            by+=MyTreeActivity.buttonSize;
-                            bx = getX() + leftLeaf.getWidth() + 20;
-                        }
-                        count++;
                     }
-                    state = STATE_ANIMATING_CLOSED_LEFT;
-                } else {
-                    if (x < (getX() + leftLeaf.getWidth())*scale) {
-                        dWidth = 0;
-                        dHeight = 0;
-                        state = STATE_ANIMATING_OPEN_LEFT;
-                    } else {
-                        float bx = getX() + getWidth() + 20;
-                        float by = getY() + detailHeight - MyTreeActivity.buttonSize*2;
-                        int count=1;
-                        for (Bitmap button : spActivityButtons) {
+                } else if (state != STATE_ANIMATING_CLOSED_LEFT && state != STATE_ANIMATING_CLOSED_RIGHT) {
+                    dWidth = detailWidth;
+                    dHeight = detailHeight;
+                    if (state == STATE_OPEN_LEFT) {
+                        float bx = getX() + leftLeaf.getWidth() + 20;
+                        float by = getY() + detailHeight - MyTreeActivity.buttonSize * 2;
+                        int count = 1;
+                        for (Bitmap button : activityButtons) {
                             if (x > bx * scale && y > by * scale
                                     && x < (bx + button.getWidth()) * scale && y < (by + button.getHeight()) * scale) {
-                                sendEvent(button, node.getSpouse());
+                                sendEvent(button, node.getPerson());
                                 break;
                             }
                             bx += button.getWidth() + 20;
                             if (count % 3 == 0) {
-                                bx = getX() + getWidth() + 20;
-                                by+=MyTreeActivity.buttonSize;
+                                by += MyTreeActivity.buttonSize;
+                                bx = getX() + leftLeaf.getWidth() + 20;
                             }
                             count++;
                         }
-                        state = STATE_ANIMATING_CLOSED_RIGHT;
+                        state = STATE_ANIMATING_CLOSED_LEFT;
+                    } else {
+                        if (x < (getX() + leftLeaf.getWidth()) * scale) {
+                            dWidth = 0;
+                            dHeight = 0;
+                            state = STATE_ANIMATING_OPEN_LEFT;
+                        } else {
+                            float bx = getX() + getWidth() + 20;
+                            float by = getY() + detailHeight - MyTreeActivity.buttonSize * 2;
+                            int count = 1;
+                            for (Bitmap button : spActivityButtons) {
+                                if (x > bx * scale && y > by * scale
+                                        && x < (bx + button.getWidth()) * scale && y < (by + button.getHeight()) * scale) {
+                                    sendEvent(button, node.getSpouse());
+                                    break;
+                                }
+                                bx += button.getWidth() + 20;
+                                if (count % 3 == 0) {
+                                    bx = getX() + getWidth() + 20;
+                                    by += MyTreeActivity.buttonSize;
+                                }
+                                count++;
+                            }
+                            state = STATE_ANIMATING_CLOSED_RIGHT;
+                        }
                     }
                 }
             }
+
+            //-- fire person selected event
+            Map<String, Object> params = new HashMap<>();
+            params.put("node", getNode());
+            boolean isSpouse = false;
+            if (node.getSpouse()!=null) {
+                if (x >= (getX() + leftLeaf.getWidth()) * scale) {
+                    if (node.getSpouse().getGender()==GenderType.Female) {
+                        isSpouse = true;
+                    }
+                } else {
+                    if (node.getPerson().getGender()==GenderType.Female) {
+                        isSpouse = true;
+                    }
+                }
+            }
+            params.put("isSpouse", isSpouse);
+            params.put("sprite", this);
+            EventQueue.getInstance().publish(MyTreeActivity.TOPIC_PERSON_SELECTED, params);
         }
         selected = false;
         moved = false;

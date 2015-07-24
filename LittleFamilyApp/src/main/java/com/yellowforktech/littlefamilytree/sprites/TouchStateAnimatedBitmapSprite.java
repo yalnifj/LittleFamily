@@ -22,6 +22,7 @@ public class TouchStateAnimatedBitmapSprite extends AnimatedBitmapSprite {
     public static final int TRANSITION_LOOP1 = 1;
     public static final int TRANSITION_LOOP2 = 2;
     public static final int TRANSITION_LOOP3 = 3;
+    public static final int TRANSITION_LOOP4 = 4;
 
     protected Map<Integer, Integer> audio;
     protected Map<Integer, Integer> stateTransitions;

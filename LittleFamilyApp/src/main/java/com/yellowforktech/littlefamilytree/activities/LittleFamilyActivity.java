@@ -42,7 +42,8 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     public static final String TOPIC_START_BUBBLES = "startBubblePop";
     public static final String TOPIC_START_SETTINGS = "startSettings";
     protected TextToSpeech tts;
-    protected MediaPlayer mediaPlayer;
+    protected MediaPlayer successPlayer;
+    protected MediaPlayer buzzPlayer;
     protected TopBarFragment topBar;
     protected LittlePerson selectedPerson;
     protected LoadingDialog loadingDialog;
@@ -81,7 +82,8 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     protected void onStart() {
         super.onStart();
 		System.gc();
-        mediaPlayer = MediaPlayer.create(this, R.raw.powerup_success);
+        successPlayer = MediaPlayer.create(this, R.raw.powerup_success);
+        buzzPlayer = MediaPlayer.create(this, R.raw.beepboop);
         EventQueue.getInstance().subscribe(TOPIC_START_MATCH, this);
         EventQueue.getInstance().subscribe(TOPIC_START_COLORING, this);
         EventQueue.getInstance().subscribe(TOPIC_START_DRESSUP, this);
@@ -96,8 +98,10 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     @Override
     protected void onStop() {
         super.onStop();
-        mediaPlayer.release();
-        mediaPlayer = null;
+        successPlayer.release();
+        successPlayer = null;
+        buzzPlayer.release();
+        buzzPlayer = null;
         EventQueue.getInstance().unSubscribe(TOPIC_START_MATCH, this);
         EventQueue.getInstance().unSubscribe(TOPIC_START_COLORING, this);
         EventQueue.getInstance().unSubscribe(TOPIC_START_DRESSUP, this);
@@ -240,7 +244,11 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     }
 
     public void playCompleteSound() {
-        if (mediaPlayer!=null) mediaPlayer.start();
+        if (successPlayer !=null) successPlayer.start();
+    }
+
+    public void playBuzzSound() {
+        if (buzzPlayer !=null) buzzPlayer.start();
     }
 
     public void onHomeButtonPressed(View view) {

@@ -92,6 +92,10 @@ public class DataService implements AuthTask.Listener {
         return serviceType;
     }
 
+    public boolean isAuthenticating() {
+        return authenticating;
+    }
+
     public void setContext(Context context) {
         this.context = context;
         if (remoteService==null) {

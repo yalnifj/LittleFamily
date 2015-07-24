@@ -98,6 +98,8 @@ public class SplashActivity extends Activity implements EventListener {
 
     @Override
     public void onEvent(String topic, Object o) {
-        gotoChooseFamilyMember(null);
+        if (!dataService.isAuthenticating()) {
+            gotoChooseFamilyMember(null);
+        }
     }
 }

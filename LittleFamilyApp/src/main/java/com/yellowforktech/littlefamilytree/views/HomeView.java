@@ -90,12 +90,23 @@ public class HomeView extends SpritedClippedSurfaceView {
     }
 
     @Override
+    protected void touch_start(float x, float y) {
+        super.touch_start(x, y);
+
+        if (lockSprite.inSprite(x, y)) {
+            lockSprite.onSelect(x, y);
+        }
+    }
+
+    @Override
     protected void touch_up(float x, float y) {
         super.touch_up(x, y);
 
         if (lockSprite.inSprite(x, y)) {
             lockSprite.onRelease(x, y);
         }
+
+        lockSprite.setSelected(false);
     }
 
 }
