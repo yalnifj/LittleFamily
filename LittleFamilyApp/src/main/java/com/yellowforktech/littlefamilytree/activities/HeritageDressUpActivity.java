@@ -36,6 +36,10 @@ public class HeritageDressUpActivity extends LittleFamilyActivity implements Dre
         }
 
         dressUpView = (DressUpView) findViewById(R.id.dress_up_view);
+        dressUpView.setZOrderOnTop(true);    // necessary
+        SurfaceHolder sfhTrackHolder = dressUpView.getHolder();
+        sfhTrackHolder.setFormat(PixelFormat.TRANSPARENT);
+
         dollGrid = (GridView) findViewById(R.id.dollGrid);
         adapter = new DressUpDollsAdapter(this, person);
         dollGrid.setAdapter(adapter);
@@ -50,6 +54,8 @@ public class HeritageDressUpActivity extends LittleFamilyActivity implements Dre
         super.onStart();
         dressUpView.setDollConfig(dollConfig);
         dressUpView.addListener(this);
+        Bitmap starBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.star1);
+        dressUpView.setStarBitmap(starBitmap);
         dollGrid.setVisibility(View.INVISIBLE);
     }
 
