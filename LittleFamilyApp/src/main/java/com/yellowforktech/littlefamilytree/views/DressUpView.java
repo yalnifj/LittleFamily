@@ -5,16 +5,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
 
 import com.jabistudio.androidjhlabs.filter.util.AndroidUtils;
 import com.yellowforktech.littlefamilytree.data.DollClothing;
 import com.yellowforktech.littlefamilytree.filters.AlphaOutlineFilter;
 import com.yellowforktech.littlefamilytree.games.DollConfig;
+import com.yellowforktech.littlefamilytree.sprites.Sprite;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,12 +24,17 @@ import java.util.List;
 /**
  * Created by jfinlay on 4/17/2015.
  */
-public class DressUpView extends View {
+public class DressUpView extends SpritedSurfaceView {
     private DollConfig dollConfig;
     private Bitmap doll;
     private DollClothing[] clothing;
     private Context context;
     private List<DressedListener> listeners;
+    private Paint textPaint;
+    private DollClothing selected = null;
+    private float factor = 1;
+    private int offset = 0;
+    private boolean factored = false;
 
     public DressUpView(Context context) {
         super(context);
@@ -46,8 +51,6 @@ public class DressUpView extends View {
         return dollConfig;
     }
 
-
-    private boolean factored = false;
     public void setDollConfig(DollConfig dollConfig) {
         this.dollConfig = dollConfig;
         AlphaOutlineFilter filter = new AlphaOutlineFilter(Color.RED);
@@ -58,11 +61,11 @@ public class DressUpView extends View {
             InputStream is = context.getAssets().open(dollFilename);
             doll = BitmapFactory.decodeStream(is);
             DollClothing[] clothes = dollConfig.getClothing(context);
+            clothing = null;
             if (clothes!=null) {
                 factored = false;
-                clothing = clothes;
                 int x = 0;
-                int y = doll.getHeight();
+                int y = (int) (doll.getHeight());
                 for (int c = 0; c < clothes.length; c++) {
                     DollClothing dc = clothes[c];
                     dc.setPlaced(false);
@@ -83,7 +86,13 @@ public class DressUpView extends View {
                         Log.e("DressUpView", "Error drawing image", e);
                     }
                 }
+                clothing = clothes;
             }
+
+            textPaint = new Paint();
+            textPaint.setColor(Color.BLACK);
+            textPaint.setTextAlign(Paint.Align.CENTER);
+            textPaint.setTextSize(50);
         } catch (Exception e) {
             Log.e("DressUpView", "Error drawing image", e);
         }
@@ -91,9 +100,8 @@ public class DressUpView extends View {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-
+    public void doDraw(Canvas canvas) {
+        canvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
         boolean portrait = getWidth()<getHeight();
         if (doll!=null) {
             if (portrait) {
@@ -101,8 +109,6 @@ public class DressUpView extends View {
                 if (doll.getHeight()*factor > this.getHeight() * 0.66f) {
                     factor = (this.getHeight() * 0.66f) / doll.getHeight();
                 }
-                Rect r1 = new Rect();
-                r1.set(0, 0, doll.getWidth(), doll.getHeight());
                 Rect r2 = new Rect();
                 int w = (int)(doll.getWidth()*factor);
                 offset = 0;
@@ -110,39 +116,43 @@ public class DressUpView extends View {
                     offset = (this.getWidth() - w)/2;
                 }
                 r2.set(offset, 0, w+offset, (int)(doll.getHeight()*factor));
-                canvas.drawBitmap(doll, r1, r2, null);
+                canvas.drawBitmap(doll, null, r2, null);
+
+                canvas.drawText(dollConfig.getOriginalPlace(), getWidth()/2, r2.bottom+40, textPaint);
 
                 if (clothing!=null) {
                     for(int c=0; c<clothing.length; c++) {
                         DollClothing dc = clothing[c];
-                        if (!factored) {
-                            dc.setX((int)(dc.getX()*factor));
-                            dc.setY((int)(dc.getY()*factor));
-                            if (dc.getX()+dc.getBitmap().getWidth()*factor > getWidth()) {
-                                dc.setX(dc.getX() - getWidth());
-                                if(dc.getX() < 0 ) {
-                                    dc.setX(0);
+                        if (dc.getBitmap() != null) {
+                            if (!factored) {
+                                dc.setX((int) (dc.getX() * factor));
+                                dc.setY((int) (dc.getY() * factor));
+                                if (dc.getX() + dc.getBitmap().getWidth() * factor > getWidth()) {
+                                    dc.setX(dc.getX() - getWidth());
+                                    if (dc.getX() < 0) {
+                                        dc.setX(0);
+                                    }
+                                    dc.setY(dc.getY() + (int) (dc.getBitmap().getHeight() * factor));
                                 }
-                                dc.setY(dc.getY() + (int)(dc.getBitmap().getHeight()*factor));
+                                if (dc.getY() + dc.getBitmap().getHeight() * factor > getHeight()) {
+                                    dc.setY(getHeight() - (int) (dc.getBitmap().getHeight() * factor));
+                                }
                             }
-                            if (dc.getY()+dc.getBitmap().getHeight()*factor > getHeight()) {
-                                dc.setY(getHeight() - (int)(dc.getBitmap().getHeight()*factor));
+                            //-- draw outline of selected
+                            if (dc == selected) {
+                                Rect cr3 = new Rect();
+                                int left = (int) (dc.getSnapX() * factor) + offset;
+                                int top = (int) (dc.getSnapY() * factor);
+                                cr3.set(left, top,
+                                        (int) (left + dc.getOutline().getWidth() * factor),
+                                        (int) (top + dc.getOutline().getHeight() * factor)
+                                );
+                                canvas.drawBitmap(dc.getOutline(), null, cr3, null);
                             }
+                            Rect cr2 = new Rect();
+                            cr2.set(dc.getX(), dc.getY(), (int) (dc.getX() + dc.getBitmap().getWidth() * factor), (int) (dc.getY() + dc.getBitmap().getHeight() * factor));
+                            canvas.drawBitmap(dc.getBitmap(), null, cr2, null);
                         }
-                        //-- draw outline of selected
-                        if (dc==selected) {
-                            Rect cr3 = new Rect();
-                            int left = (int) (dc.getSnapX()*factor)+offset;
-                            int top = (int) (dc.getSnapY()*factor);
-                            cr3.set(left, top,
-                                    (int) (left + dc.getOutline().getWidth() * factor),
-                                    (int) (top + dc.getOutline().getHeight() * factor)
-                            );
-                            canvas.drawBitmap(dc.getOutline(), null, cr3, null);
-                        }
-                        Rect cr2 = new Rect();
-                        cr2.set(dc.getX(), dc.getY(), (int)(dc.getX()+dc.getBitmap().getWidth()*factor), (int)(dc.getY()+dc.getBitmap().getHeight()*factor));
-                        canvas.drawBitmap(dc.getBitmap(), null, cr2, null);
                     }
 //                    if (selected!=null) {
 //                        Paint paint = new Paint();
@@ -153,16 +163,17 @@ public class DressUpView extends View {
                 }
             }
         }
+        synchronized (sprites) {
+            for (Sprite s : sprites) {
+                if (s.getX() + s.getWidth() >= 0 && s.getX() <= getWidth() && s.getY() + s.getHeight() >= 0 && s.getY() <= getHeight()) {
+                    s.doDraw(canvas);
+                }
+            }
+        }
     }
 
-    private DollClothing selected = null;
-    private static final float TOUCH_TOLERANCE = 4;
-    private float mx;
-    private float my;
-    private float factor = 1;
-    private int offset = 0;
-
-    private void touch_start(float x, float y) {
+    protected void touch_start(float x, float y) {
+        super.touch_start(x, y);
         if (doll!=null) {
             for (int c = 0; c < clothing.length; c++) {
                 DollClothing dc = clothing[c];
@@ -170,36 +181,31 @@ public class DressUpView extends View {
                 rect.set(dc.getX(), dc.getY(), (int)(dc.getX()+dc.getBitmap().getWidth()*factor), (int)(dc.getY()+dc.getBitmap().getHeight()*factor));
                 if (rect.contains((int)x, (int)y)) {
                     selected = dc;
-                    mx = x;
-                    my = y;
                     selected.setPlaced(false);
                     break;
                 }
             }
         }
     }
-    private void touch_move(float x, float y) {
+
+    public void doMove(float oldX, float oldY, float newX, float newY) {
+        super.doMove(oldX, oldY, newX, newY);
         if (selected!=null) {
-            float dx = Math.abs(x - mx);
-            float dy = Math.abs(y - my);
-            if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
-                selected.setX((int)(selected.getX()+(x - mx)));
-                selected.setY((int)(selected.getY()+(y - my)));
-                if (selected.getX()+selected.getBitmap().getWidth()*factor > getWidth()) {
-                    selected.setX((int)(getWidth() - selected.getBitmap().getWidth()*factor));
-                }
-                if (selected.getY()+selected.getBitmap().getHeight()*factor > getHeight()) {
-                    selected.setY((int) (getHeight() - selected.getBitmap().getHeight() * factor));
-                }
-                if (selected.getX() < 0 ) selected.setX(0);
-                if (selected.getY() < 0 ) selected.setY(0);
-                mx=x;
-                my=y;
+            selected.setX((int) (selected.getX() + (newX - oldX)));
+            selected.setY((int) (selected.getY() + (newY - oldY)));
+            if (selected.getX() + selected.getBitmap().getWidth() * factor > getWidth()) {
+                selected.setX((int) (getWidth() - selected.getBitmap().getWidth() * factor));
             }
+            if (selected.getY() + selected.getBitmap().getHeight() * factor > getHeight()) {
+                selected.setY((int) (getHeight() - selected.getBitmap().getHeight() * factor));
+            }
+            if (selected.getX() < 0) selected.setX(0);
+            if (selected.getY() < 0) selected.setY(0);
         }
     }
 
-    private void touch_up() {
+    protected void touch_up(float x, float y) {
+        super.touch_up(x, y);
         int dist = getWidth()/12;
         if (selected!=null && Math.abs(selected.getX() - ((selected.getSnapX()*factor)+offset)) <= dist
                 && Math.abs(selected.getY() - (selected.getSnapY()*factor)) <= dist) {
@@ -216,34 +222,20 @@ public class DressUpView extends View {
                 }
             }
             if (complete) {
+                Rect r2 = new Rect();
+                int w = (int)(doll.getWidth()*factor);
+                offset = 0;
+                if (w < this.getWidth()) {
+                    offset = (this.getWidth() - w)/2;
+                }
+                r2.set(offset/2, 0, w+offset/2, (int)(doll.getHeight()*factor));
+                addStars(r2, true, 20);
                 for(DressedListener l : listeners) {
                     l.onDressed();
                 }
             }
         }
         selected = null;
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        float x = event.getX();
-        float y = event.getY();
-
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                touch_start(x, y);
-                invalidate();
-                break;
-            case MotionEvent.ACTION_MOVE:
-                touch_move(x, y);
-                invalidate();
-                break;
-            case MotionEvent.ACTION_UP:
-                touch_up();
-                invalidate();
-                break;
-        }
-        return true;
     }
 
     public void addListener(DressedListener l) {

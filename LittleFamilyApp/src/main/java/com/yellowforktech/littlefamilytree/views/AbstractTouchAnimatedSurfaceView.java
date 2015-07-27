@@ -98,15 +98,12 @@ public abstract class AbstractTouchAnimatedSurfaceView extends SurfaceView imple
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 touch_start(x, y);
-                invalidate();
                 break;
             case MotionEvent.ACTION_MOVE:
                 touch_move(x, y);
-                invalidate();
                 break;
             case MotionEvent.ACTION_UP:
                 touch_up(x, y);
-                invalidate();
                 break;
         }
         return true;

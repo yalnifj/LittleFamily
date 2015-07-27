@@ -568,91 +568,67 @@ public class DataService implements AuthTask.Listener {
         boolean personChanged = false;
         List<LittlePerson> family = new ArrayList<>();
         for(Relationship r : closeRelatives) {
-            if (!r.getPerson1().getResourceId().equals(person.getFamilySearchId())) {
-                LittlePerson relative = getDBHelper().getPersonByFamilySearchId(r.getPerson1().getResourceId());
-                if (relative==null) {
-                    Person fsPerson = remoteService.getPerson(r.getPerson1().getResourceId(), true);
-                    fireStatusUpdate("Processing "+fsPerson.getFullName());
-                    relative = DataHelper.buildLittlePerson(fsPerson, context, remoteService, true);
+            LittlePerson person1 = getDBHelper().getPersonByFamilySearchId(r.getPerson1().getResourceId());
+            LittlePerson person2 = getDBHelper().getPersonByFamilySearchId(r.getPerson2().getResourceId());
+
+            if (person1 == null) {
+                Person fsPerson = remoteService.getPerson(r.getPerson1().getResourceId(), true);
+                //-- check for person by alternate id
+                if (!fsPerson.getId().equals(r.getPerson1().getResourceId())) {
+                    person1 = getDBHelper().getPersonByFamilySearchId(fsPerson.getId());
                 }
-                if (relative!=null) {
-                    family.add(relative);
-                    com.yellowforktech.littlefamilytree.data.Relationship rel = new com.yellowforktech.littlefamilytree.data.Relationship();
-                    rel.setId2(person.getId());
-                    if (r.getKnownType()== RelationshipType.Couple) {
-                        rel.setType(com.yellowforktech.littlefamilytree.data.RelationshipType.SPOUSE);
-                        relative.setRelationship("spouse");
-                        relative.setHasSpouses(true);
-                        if (relative.getAge()==null && person.getAge()!=null) {
-                            relative.setAge(person.getAge());
-                        }
-                        if (person.isHasSpouses()==null || person.isHasSpouses()==false) {
-                            person.setHasSpouses(true);
-                            personChanged = true;
-                        }
-                    }
-                    else {
-                        rel.setType(com.yellowforktech.littlefamilytree.data.RelationshipType.PARENTCHILD);
-                        relative.setRelationship("parent");
-                        if (relative.getAge()==null && person.getAge()!=null) {
-                            relative.setAge(person.getAge()+25);
-                        }
-                        if(person.isHasParents()==null || person.isHasParents()==false) {
-                            person.setHasParents(true);
-                            personChanged = true;
-                        }
-                    }
-                    getDBHelper().persistLittlePerson(relative);
-                    rel.setId1(relative.getId());
-                    getDBHelper().persistRelationship(rel);
+                if (person1 == null) {
+                    fireStatusUpdate("Processing " + fsPerson.getFullName());
+                    person1 = DataHelper.buildLittlePerson(fsPerson, context, remoteService, true);
                 }
             }
-            if (!r.getPerson2().getResourceId().equals(person.getFamilySearchId())) {
-                LittlePerson relative = getDBHelper().getPersonByFamilySearchId(r.getPerson2().getResourceId());
-                if (relative==null) {
-                    Person fsPerson = remoteService.getPerson(r.getPerson2().getResourceId(), true);
-                    fireStatusUpdate("Processing "+fsPerson.getFullName());
-                    relative = DataHelper.buildLittlePerson(fsPerson, context, remoteService, true);
+
+            if (person2 == null) {
+                Person fsPerson = remoteService.getPerson(r.getPerson2().getResourceId(), true);
+                //-- check for person by alternate id
+                if (!fsPerson.getId().equals(r.getPerson2().getResourceId())) {
+                    person2 = getDBHelper().getPersonByFamilySearchId(fsPerson.getId());
                 }
-                if (relative!=null) {
-                    family.add(relative);
-                    com.yellowforktech.littlefamilytree.data.Relationship rel = new com.yellowforktech.littlefamilytree.data.Relationship();
-                    rel.setId1(person.getId());
-                    if (r.getKnownType()== RelationshipType.Couple) {
-                        rel.setType(com.yellowforktech.littlefamilytree.data.RelationshipType.SPOUSE);
-                        relative.setRelationship("spouse");
-                        relative.setHasSpouses(true);
-                        if (relative.getAge()==null && person.getAge()!=null) {
-                            relative.setAge(person.getAge());
-                        }
-                        if (person.isHasSpouses()==null || person.isHasSpouses()==false) {
-                            person.setHasSpouses(true);
-                            personChanged = true;
-                        }
-                    }
-                    else {
-                        rel.setType(com.yellowforktech.littlefamilytree.data.RelationshipType.PARENTCHILD);
-                        relative.setRelationship("child");
-                        if (relative.getAge()==null && person.getAge()!=null) {
-                            relative.setAge(person.getAge()-20);
-                        }
-                        if(relative.isHasParents()==null || relative.isHasParents()==false) {
-                            relative.setHasParents(true);
-                        }
-                        if (person.isHasChildren()==null || person.isHasChildren()==false) {
-                            person.setHasChildren(true);
-                            personChanged = true;
-                        }
-                    }
-                    getDBHelper().persistLittlePerson(relative);
-                    rel.setId2(relative.getId());
-                    getDBHelper().persistRelationship(rel);
+                if (person2 == null) {
+                    fireStatusUpdate("Processing " + fsPerson.getFullName());
+                    person2 = DataHelper.buildLittlePerson(fsPerson, context, remoteService, true);
                 }
             }
+
+            if (person1 != null && person2 != null) {
+                com.yellowforktech.littlefamilytree.data.Relationship rel = new com.yellowforktech.littlefamilytree.data.Relationship();
+                if (r.getKnownType() == RelationshipType.Couple) {
+                    rel.setType(com.yellowforktech.littlefamilytree.data.RelationshipType.SPOUSE);
+                    person1.setHasSpouses(true);
+                    if (person2.getAge() == null && person1.getAge() != null) {
+                        person2.setAge(person1.getAge());
+                    }
+                    person2.setHasSpouses(true);
+                    if (person1.getAge() == null && person2.getAge() != null) {
+                        person1.setAge(person2.getAge());
+                    }
+                } else {
+                    rel.setType(com.yellowforktech.littlefamilytree.data.RelationshipType.PARENTCHILD);
+                    person1.setHasChildren(true);
+                    if (person2.getAge() == null && person1.getAge() != null) {
+                        person2.setAge(person1.getAge() - 25);
+                    }
+                    person2.setHasParents(true);
+                    if (person1.getAge() == null && person2.getAge() != null) {
+                        person1.setAge(person2.getAge() + 25);
+                    }
+                }
+                getDBHelper().persistLittlePerson(person1);
+                getDBHelper().persistLittlePerson(person2);
+                rel.setId1(person1.getId());
+                rel.setId2(person2.getId());
+                getDBHelper().persistRelationship(rel);
+
+                if (!family.contains(person1)) family.add(person1);
+                if (!family.contains(person2)) family.add(person2);
+            }
         }
-        if (personChanged) {
-            getDBHelper().persistLittlePerson(person);
-        }
+
         return family;
     }
 

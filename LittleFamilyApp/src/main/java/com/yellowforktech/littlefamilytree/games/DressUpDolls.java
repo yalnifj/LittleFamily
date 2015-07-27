@@ -22,6 +22,7 @@ public class DressUpDolls {
         countryMappings.put("ireland", "ireland");
 		countryMappings.put("native american", "nativeamerican");
 		countryMappings.put("germany", "germany");
+        countryMappings.put("denmark", "denmark");
     }
 
     public DollConfig getDollConfig(String place, LittlePerson person) {
@@ -34,6 +35,7 @@ public class DressUpDolls {
             dc.setBoygirl("girl");
         else
             dc.setBoygirl("boy");
+        dc.setOriginalPlace(place);
 
         return dc;
     }

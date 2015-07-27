@@ -247,7 +247,6 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
         for(ColoringCompleteListener l : listeners) {
             l.onColoringReady();
         }
-        this.invalidate();
     }
 
     private List<ColoringCompleteListener> listeners = new ArrayList<>();

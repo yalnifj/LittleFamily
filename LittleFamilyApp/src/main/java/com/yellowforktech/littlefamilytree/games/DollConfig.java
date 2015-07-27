@@ -15,6 +15,7 @@ import java.util.Scanner;
 public class DollConfig implements Serializable{
     private String folderName;
     private String boygirl;
+    private String originalPlace;
     private DollClothing[] boyclothing;
     private DollClothing[] girlclothing;
 
@@ -36,6 +37,19 @@ public class DollConfig implements Serializable{
         this.boygirl = boygirl;
         boyclothing = null;
         girlclothing = null;
+    }
+
+    public String getOriginalPlace() {
+        return originalPlace;
+    }
+
+    public void setOriginalPlace(String originalPlace) {
+        String[] parts = originalPlace.split(" ");
+        this.originalPlace = "";
+        for(String w : parts) {
+            this.originalPlace += w.substring(0,1).toUpperCase()+w.substring(1)+" ";
+        }
+        this.originalPlace = this.originalPlace.trim();
     }
 
     public String getThumbnail() {
