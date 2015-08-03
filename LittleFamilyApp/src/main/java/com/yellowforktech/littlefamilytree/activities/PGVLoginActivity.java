@@ -88,6 +88,7 @@ public class PGVLoginActivity extends Activity implements AuthTask.Listener, Per
             public void onClick(View view) {
                 try {
                     String baseUrl = mPgvUrlView.getText().toString();
+                    if (!baseUrl.endsWith("/")) baseUrl += "/";
                     dataService.getDBHelper().saveProperty(DataService.SERVICE_TYPE_PHPGEDVIEW + DataService.SERVICE_BASEURL, baseUrl);
                     String defaultPersonId = mDefaultId.getText().toString();
                     if (defaultPersonId.isEmpty()) defaultPersonId = "I1";

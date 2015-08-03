@@ -5,12 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.yellowforktech.littlefamilytree.R;
-import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 
 import org.gedcomx.types.GenderType;
@@ -64,8 +62,8 @@ public class PersonSearchListAdapter extends BaseAdapter {
         TextView birth;
         TextView remoteId;
         TextView gender;
-        TextView psc;
-        CheckBox active;
+        //TextView psc;
+        //CheckBox active;
     }
 
     @Override
@@ -80,6 +78,7 @@ public class PersonSearchListAdapter extends BaseAdapter {
             holder.birth = (TextView) convertView.findViewById(R.id.lblBirth);
             holder.remoteId = (TextView) convertView.findViewById(R.id.lblRemoteId);
             holder.gender = (TextView) convertView.findViewById(R.id.lblGender);
+            /*
             holder.psc = (TextView) convertView.findViewById(R.id.lblPSC);
             holder.active = (CheckBox) convertView.findViewById(R.id.chkActive);
             holder.active.setOnClickListener(new View.OnClickListener() {
@@ -95,6 +94,7 @@ public class PersonSearchListAdapter extends BaseAdapter {
                     }
                 }
             });
+            */
 
             final ListView parentList = (ListView) parent;
             holder.name.setOnClickListener(new View.OnClickListener() {
@@ -120,11 +120,12 @@ public class PersonSearchListAdapter extends BaseAdapter {
                 holder.gender.setText("U");
             }
             holder.remoteId.setText(person.getFamilySearchId());
-            holder.active.setChecked(person.isActive());
+            //holder.active.setChecked(person.isActive());
             String birthText = "";
             if (person.getBirthDate()!=null) birthText += df.format(person.getBirthDate())+" ";
             if (person.getBirthPlace()!=null) birthText += person.getBirthPlace();
             holder.birth.setText( birthText );
+            /*
             String psc = "";
             if (person.isHasParents()==null) psc += "-";
             else if (person.isHasParents()) psc += "P";
@@ -138,6 +139,7 @@ public class PersonSearchListAdapter extends BaseAdapter {
             else if (person.isHasChildren()) psc += "C";
             else psc += "X";
             holder.psc.setText(psc);
+            */
         }
 
         return convertView;

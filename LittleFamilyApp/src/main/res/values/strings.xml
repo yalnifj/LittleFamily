@@ -79,4 +79,17 @@ Please wait...</string>
     <string name="guide_more_settings">From the settings you can manage your connection to your online family tree and change synchronization settings.  You can also choose to hide people from your online tree so that they do not show up in Little Family Tree.  You can also return to this parent\\\'s guide at anytime from the settings screen.</string>
     <string name="ok_got_it">OK.  Got It!</string>
 
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="gender">Gender</string>
+    <string name="birthDate">Birth Date</string>
+    <string name="birthPlace">Birth Place</string>
+    <string name="living">Living</string>
+    <string name="nationality">Nationality</string>
+    <string name="hasParents">Has Parents</string>
+    <string name="hasSpouses">Has Spouses</string>
+    <string name="hasChildren">Has Children</string>
+    <string name="lastSync">Last Sync</string>
+    <string name="visible">Visible</string>
+
 </resources>

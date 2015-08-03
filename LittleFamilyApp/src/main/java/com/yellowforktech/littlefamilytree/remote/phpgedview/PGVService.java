@@ -85,7 +85,7 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
     }
 
     public String getVersion() throws RemoteServiceSearchException {
-        Uri action = Uri.parse(baseUrl+"/client.php");
+        Uri action = Uri.parse(baseUrl+"client.php");
         Bundle params = new Bundle();
         params.putString("action","version");
         Bundle headers = new Bundle();
@@ -110,7 +110,7 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
 
     @Override
     public RemoteResult authenticate(String username, String password) throws RemoteServiceSearchException {
-        Uri action = Uri.parse(baseUrl+"/client.php");
+        Uri action = Uri.parse(baseUrl+"client.php");
         Bundle params = new Bundle();
         params.putString("action","connect");
         params.putString("username",username);

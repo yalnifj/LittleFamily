@@ -268,7 +268,7 @@ public class TreePersonAnimatedSprite extends Sprite {
         Rect photoRect = new Rect();
 
 
-        if (showSpouse) {
+        if (spPhoto!=null) {
             int x = (int) getX();
             int y = (int) getY();
             float ratio = ((float)spPhoto.getWidth())/spPhoto.getHeight();
