@@ -233,7 +233,6 @@
             android:id="@+id/button"
             android:layout_gravity="center_horizontal"
             android:onClick="dismiss"
-            android:theme="@style/ButtonBarButton"
             android:layout_marginTop="20dp" />
     </LinearLayout>
 </ScrollView>

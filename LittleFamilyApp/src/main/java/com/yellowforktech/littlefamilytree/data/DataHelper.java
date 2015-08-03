@@ -70,7 +70,14 @@ public class DataHelper {
     public static String lastPath(String href) {
         String[] parts = href.split("/");
         for(int i = parts.length-1; i>=0; i--) {
-            if (parts[i]!=null && !parts[i].isEmpty()) return parts[i];
+            if (parts[i]!=null && !parts[i].isEmpty()) {
+                String filePath = parts[i];
+                int pos = filePath.indexOf("?");
+                if (pos>0) {
+                    filePath = filePath.substring(0, pos-1);
+                }
+                return filePath;
+            }
         }
         return href;
     }

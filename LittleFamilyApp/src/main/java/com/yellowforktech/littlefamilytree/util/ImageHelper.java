@@ -305,7 +305,7 @@ public class ImageHelper {
             }
         }
 
-        if(!dataDir.isDirectory()) {
+        if(dataDir==null || !dataDir.isDirectory()) {
             dataDir = context.getFilesDir();
         }
 
