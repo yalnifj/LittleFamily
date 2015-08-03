@@ -38,8 +38,7 @@ public class PersonSearchActivity extends Activity implements SearchLoaderTask.L
 
         adapter = new PersonSearchListAdapter(this);
         personList.setAdapter(adapter);
-
-        registerForContextMenu(personList);
+        personList.setOnItemClickListener(this);
     }
 
     public void search(View v) {
@@ -73,6 +72,7 @@ public class PersonSearchActivity extends Activity implements SearchLoaderTask.L
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        parent.showContextMenuForChild(view);
+        LittlePerson person = (LittlePerson) personList.getItemAtPosition(position);
+
     }
 }
