@@ -233,7 +233,7 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
 
         //-- basis case
         if (node.getLeft()==null && node.getRight()==null) {
-            TreePersonAnimatedSprite sprite = new TreePersonAnimatedSprite(node, this, leftLeaf, rightLeaf);
+            TreePersonAnimatedSprite sprite = new TreePersonAnimatedSprite(node, this, leftLeaf, rightLeaf, true);
             sprite.setX(x);
             sprite.setY(y);
 
@@ -341,7 +341,7 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
         }
 
         //--child side
-        TreePersonAnimatedSprite sprite = new TreePersonAnimatedSprite(node, this, leftLeaf, rightLeaf);
+        TreePersonAnimatedSprite sprite = new TreePersonAnimatedSprite(node, this, leftLeaf, rightLeaf, node.getDepth()==0);
         sprite.setX(x - (sprite.getWidth() / 2) - (node.getLeft() != null ? 10 : 0));
         sprite.setY(cy);
         if (x+sprite.getWidth() > maxX) maxX = x+sprite.getWidth();

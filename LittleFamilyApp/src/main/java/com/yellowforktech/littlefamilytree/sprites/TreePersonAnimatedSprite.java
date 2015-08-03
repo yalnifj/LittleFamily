@@ -63,9 +63,11 @@ public class TreePersonAnimatedSprite extends Sprite {
     protected DateFormat df;
     protected List<Bitmap> activityButtons;
     protected List<Bitmap> spActivityButtons;
+	protected boolean showSpouse;
 
-    public TreePersonAnimatedSprite(TreeNode personNode, MyTreeActivity activity, Bitmap leftLeaf, Bitmap rightLeaf) {
+    public TreePersonAnimatedSprite(TreeNode personNode, MyTreeActivity activity, Bitmap leftLeaf, Bitmap rightLeaf, boolean showSpouse) {
         super();
+		this.showSpouse = showSpouse;
         this.node = personNode;
         this.activity = activity;
         this.leftLeaf = leftLeaf;
@@ -121,7 +123,7 @@ public class TreePersonAnimatedSprite extends Sprite {
         }
 
         spPhoto = null;
-        if (node.getSpouse()!=null) {
+        if (showSpouse && node.getSpouse()!=null) {
             if (node.getSpouse().getPhotoPath() != null) {
                 spPhoto = ImageHelper.loadBitmapFromFile(node.getSpouse().getPhotoPath(), ImageHelper.getOrientation(node.getSpouse().getPhotoPath()), (int) (leftLeaf.getWidth() * 0.7), (int) (height * 0.7), false);
             }
@@ -150,7 +152,7 @@ public class TreePersonAnimatedSprite extends Sprite {
             father = node.getPerson();
         }
 
-        if (node.getSpouse()!=null) {
+        if (showSpouse && node.getSpouse()!=null) {
             if (father==null) father = node.getSpouse();
             else mother = node.getSpouse();
         }
@@ -246,13 +248,13 @@ public class TreePersonAnimatedSprite extends Sprite {
 
     @Override
     public void doDraw(Canvas canvas) {
-        if (node.getPerson().getGender()==GenderType.Male || node.getSpouse()!=null) {
+        if (node.getPerson().getGender()==GenderType.Male || showSpouse) {
             Rect dst = new Rect();
             dst.set((int)getX(), (int)getY(), (int)(getX()+leftLeaf.getWidth()), (int) (getY()+leftLeaf.getHeight()));
             canvas.drawBitmap(leftLeaf, null, dst, null);
         }
 
-        if (node.getPerson().getGender()==GenderType.Female || node.getSpouse()!=null) {
+        if (node.getPerson().getGender()==GenderType.Female || showSpouse) {
             int x = (int) getX();
             int y = (int) getY();
             if (node.getSpouse()!=null) {
@@ -266,7 +268,7 @@ public class TreePersonAnimatedSprite extends Sprite {
         Rect photoRect = new Rect();
 
 
-        if (node.getSpouse()!=null) {
+        if (showSpouse) {
             int x = (int) getX();
             int y = (int) getY();
             float ratio = ((float)spPhoto.getWidth())/spPhoto.getHeight();
@@ -298,7 +300,7 @@ public class TreePersonAnimatedSprite extends Sprite {
         int x = (int) getX();
         int y = (int) getY();
         int px = x + (leftLeaf.getWidth()/2  - pw / 2);
-        if (node.getSpouse()!=null && node.getPerson().getGender()==GenderType.Female) {
+        if (showSpouse) {
             px = px + leftLeaf.getWidth();
         }
         int py = y + (height / 2 - ph / 2);
@@ -428,7 +430,7 @@ public class TreePersonAnimatedSprite extends Sprite {
                 if (!opened) {
                     dWidth = 0;
                     dHeight = 0;
-                    if (node.getSpouse() == null) {
+                    if (!showSpouse) {
                         state = STATE_ANIMATING_OPEN_LEFT;
                     } else {
                         if (x < (getX() + leftLeaf.getWidth()) * scale) {
