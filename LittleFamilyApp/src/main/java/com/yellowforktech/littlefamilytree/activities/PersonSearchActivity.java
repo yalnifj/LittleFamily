@@ -1,6 +1,7 @@
 package com.yellowforktech.littlefamilytree.activities;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -73,6 +74,8 @@ public class PersonSearchActivity extends Activity implements SearchLoaderTask.L
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         LittlePerson person = (LittlePerson) personList.getItemAtPosition(position);
-
+        PersonDetailsDialog dialog = new PersonDetailsDialog(person);
+        dialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Theme_AppCompat_Light_Dialog);
+        dialog.show(getFragmentManager(), "Perosn Details");
     }
 }
