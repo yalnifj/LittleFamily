@@ -32,7 +32,7 @@ public class TreeLoaderTask extends AsyncTask<LittlePerson, Integer, TreeNode> {
 
     @Override
     protected TreeNode doInBackground(LittlePerson[] persons) {
-        Log.d(this.getClass().getSimpleName(), "Starting TreeLoaderTask.doInBackground "+persons);
+        Log.d(this.getClass().getSimpleName(), "Starting TreeLoaderTask.doInBackground " + persons);
         TreeNode root = new TreeNode();
         LittlePerson person = persons[0];
         try {
@@ -58,49 +58,55 @@ public class TreeLoaderTask extends AsyncTask<LittlePerson, Integer, TreeNode> {
     protected void addParents(TreeNode node) throws Exception {
         if (node.getDepth() > startingDepth+maxDepth) {
             LittlePerson person = node.getPerson();
-            List<LittlePerson> parents = dataService.getParents(person);
-            if (parents!=null && parents.size()>0) {
-                node.setHasParents(true);
-            } else {
-                LittlePerson spouse = node.getSpouse();
-                if (spouse!=null) {
-                    List<LittlePerson> sparents = dataService.getParents(spouse);
-                    if (sparents != null && sparents.size() > 0) {
-                        node.setHasParents(true);
+            if (person!=null) {
+                List<LittlePerson> parents = dataService.getParents(person);
+                if (parents != null && parents.size() > 0) {
+                    node.setHasParents(true);
+                } else {
+                    LittlePerson spouse = node.getSpouse();
+                    if (spouse != null) {
+                        List<LittlePerson> sparents = dataService.getParents(spouse);
+                        if (sparents != null && sparents.size() > 0) {
+                            node.setHasParents(true);
+                        }
                     }
                 }
             }
             return;
         }
 
+        TreeNode pNode = new TreeNode();
+        pNode.setDepth(node.getDepth() + 1);
         LittlePerson person = node.getPerson();
-        List<LittlePerson> parents = dataService.getParents(person);
-        if (parents!=null && parents.size()>0) {
-            TreeNode pNode = new TreeNode();
-            pNode.setDepth(node.getDepth() + 1);
-            pNode.setPerson(parents.get(0));
-            if (parents.size()>1) {
+        if (person!=null) {
+            List<LittlePerson> parents = dataService.getParents(person);
+            if (parents != null && parents.size() > 0) pNode.setPerson(parents.get(0));
+            if (parents.size() > 1) {
                 List<LittlePerson> spList = new ArrayList<>();
                 spList.add(parents.get(1));
                 pNode.setSpouses(spList);
             }
-            addParents(pNode);
-            node.setLeft(pNode);
         }
-        LittlePerson spouse = node.getSpouse();
-        if (spouse!=null) {
-            List<LittlePerson> sparents = dataService.getParents(spouse);
-            if (sparents!=null && sparents.size()>0) {
-                TreeNode pNode = new TreeNode();
-                pNode.setDepth(node.getDepth()+1);
-                pNode.setPerson(sparents.get(0));
-                if (sparents.size()>1) {
-                    List<LittlePerson> spList = new ArrayList<>();
-                    spList.add(sparents.get(1));
-                    pNode.setSpouses(spList);
+        addParents(pNode);
+
+        node.setLeft(pNode);
+
+        if (node.getDepth()>0 || node.getSpouse()!=null) {
+            TreeNode prNode = new TreeNode();
+            prNode.setDepth(node.getDepth() + 1);
+            addParents(prNode);
+            node.setRight(prNode);
+            LittlePerson spouse = node.getSpouse();
+            if (spouse != null) {
+                List<LittlePerson> sparents = dataService.getParents(spouse);
+                if (sparents != null && sparents.size() > 0) {
+                    prNode.setPerson(sparents.get(0));
+                    if (sparents.size() > 1) {
+                        List<LittlePerson> spList = new ArrayList<>();
+                        spList.add(sparents.get(1));
+                        prNode.setSpouses(spList);
+                    }
                 }
-                addParents(pNode);
-                node.setRight(pNode);
             }
         }
     }

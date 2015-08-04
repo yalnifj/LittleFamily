@@ -66,10 +66,16 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
     private TreeSearchGame treeSearchGame;
 
     public Bitmap getMatchBtn() {
+        if (matchBtn==null || matchBtn.isRecycled()) {
+            matchBtn = ImageHelper.loadBitmapFromResource(this, com.yellowforktech.littlefamilytree.R.drawable.house_familyroom_frame, 0, buttonSize, buttonSize);
+        }
         return matchBtn;
     }
 
     public Bitmap getPuzzleBtn() {
+        if (puzzleBtn==null || puzzleBtn.isRecycled()) {
+            puzzleBtn = ImageHelper.loadBitmapFromResource(this, com.yellowforktech.littlefamilytree.R.drawable.house_toys_blocks, 0, buttonSize, buttonSize);
+        }
         return puzzleBtn;
     }
 
@@ -78,14 +84,23 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
     }
 
     public Bitmap getPaintBtn() {
+        if (paintBtn==null || paintBtn.isRecycled()) {
+            paintBtn = ImageHelper.loadBitmapFromResource(this, com.yellowforktech.littlefamilytree.R.drawable.painting, 0, buttonSize, buttonSize);
+        }
         return paintBtn;
     }
 
     public Bitmap getPencilBtn() {
+        if (pencilBtn==null || pencilBtn.isRecycled()) {
+            pencilBtn = ImageHelper.loadBitmapFromResource(this, com.yellowforktech.littlefamilytree.R.drawable.pencils, 0, buttonSize, buttonSize);
+        }
         return pencilBtn;
     }
 
     public Bitmap getBubbleBtn() {
+        if (bubbleBtn==null || bubbleBtn.isRecycled()) {
+            bubbleBtn = ImageHelper.loadBitmapFromResource(this, com.yellowforktech.littlefamilytree.R.drawable.bubble, 0, buttonSize, buttonSize);
+        }
         return bubbleBtn;
     }
 
@@ -179,14 +194,6 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
         vineH2 = BitmapFactory.decodeResource(getResources(), com.yellowforktech.littlefamilytree.R.drawable.vineh2);
         vineArrow = BitmapFactory.decodeResource(getResources(), com.yellowforktech.littlefamilytree.R.drawable.vine_arrow);
 
-        BitmapFactory.Options opts = new BitmapFactory.Options();
-
-        matchBtn = ImageHelper.loadBitmapFromResource(this, com.yellowforktech.littlefamilytree.R.drawable.house_familyroom_frame, 0, buttonSize, buttonSize);
-        puzzleBtn = ImageHelper.loadBitmapFromResource(this, com.yellowforktech.littlefamilytree.R.drawable.house_toys_blocks, 0, buttonSize, buttonSize);
-        paintBtn = ImageHelper.loadBitmapFromResource(this, com.yellowforktech.littlefamilytree.R.drawable.painting, 0, buttonSize, buttonSize);
-        pencilBtn = ImageHelper.loadBitmapFromResource(this, com.yellowforktech.littlefamilytree.R.drawable.pencils, 0, buttonSize, buttonSize);
-        bubbleBtn = ImageHelper.loadBitmapFromResource(this, com.yellowforktech.littlefamilytree.R.drawable.bubble, 0, buttonSize, buttonSize);
-
         rootSprite = addTreeSprite(root, 20, 40, true);
         if (root.getChildren()!=null && root.getChildren().size()>0) {
             AnimatedBitmapSprite vine = new AnimatedBitmapSprite(vineBm2);
@@ -233,7 +240,7 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
 
         //-- basis case
         if (node.getLeft()==null && node.getRight()==null) {
-            TreePersonAnimatedSprite sprite = new TreePersonAnimatedSprite(node, this, leftLeaf, rightLeaf, true);
+            TreePersonAnimatedSprite sprite = new TreePersonAnimatedSprite(node, this, leftLeaf, rightLeaf, node.getDepth()>0);
             sprite.setX(x);
             sprite.setY(y);
 
@@ -341,7 +348,7 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
         }
 
         //--child side
-        TreePersonAnimatedSprite sprite = new TreePersonAnimatedSprite(node, this, leftLeaf, rightLeaf, node.getDepth()==0);
+        TreePersonAnimatedSprite sprite = new TreePersonAnimatedSprite(node, this, leftLeaf, rightLeaf, node.getDepth()>0 || (node.getChildren()!=null && node.getChildren().size()>0));
         sprite.setX(x - (sprite.getWidth() / 2) - (node.getLeft() != null ? 10 : 0));
         sprite.setY(cy);
         if (x+sprite.getWidth() > maxX) maxX = x+sprite.getWidth();

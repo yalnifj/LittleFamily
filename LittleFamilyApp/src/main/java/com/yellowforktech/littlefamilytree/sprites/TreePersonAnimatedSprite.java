@@ -98,29 +98,37 @@ public class TreePersonAnimatedSprite extends Sprite {
         }
 
         photo = null;
-        if (node.getPerson().getPhotoPath() != null) {
-            photo = ImageHelper.loadBitmapFromFile(node.getPerson().getPhotoPath(), ImageHelper.getOrientation(node.getPerson().getPhotoPath()), (int) (leftLeaf.getWidth() * 0.7), (int) (height * 0.7), false);
-        }
-        if (photo==null){
-            photo = ImageHelper.loadBitmapFromResource(activity, node.getPerson().getDefaultPhotoResource(), 0, (int)(leftLeaf.getWidth()*0.7), (int) (height*0.7));
-        }
-        String place = "unknown";
-        if (node.getPerson().getBirthPlace()!=null) {
-            place = node.getPerson().getBirthPlace();
-        }
-        DollConfig dollConfig = activity.getDressUpDolls().getDollConfig(PlaceHelper.getTopPlace(place), node.getPerson());
-        String thumbnailFile = dollConfig.getThumbnail();
-        try {
-            InputStream is = activity.getAssets().open(thumbnailFile);
-            dressUpBtn = ImageHelper.loadBitmapFromStream(is, 0, MyTreeActivity.buttonSize, MyTreeActivity.buttonSize);
-            if (node.getPerson().getGender()==GenderType.Female && node.getSpouse()!=null) {
-                spActivityButtons.add(dressUpBtn);
-            } else {
-                activityButtons.add(dressUpBtn);
+        if (node.getPerson()!=null) {
+            if (node.getPerson().getPhotoPath() != null) {
+                photo = ImageHelper.loadBitmapFromFile(node.getPerson().getPhotoPath(), ImageHelper.getOrientation(node.getPerson().getPhotoPath()), (int) (leftLeaf.getWidth() * 0.7), (int) (height * 0.7), false);
             }
-            is.close();
-        } catch (IOException e) {
-            Log.e("TreePersonAnimatedSprit", "Error opening asset file", e);
+            if (photo == null) {
+                photo = ImageHelper.loadBitmapFromResource(activity, node.getPerson().getDefaultPhotoResource(), 0, (int) (leftLeaf.getWidth() * 0.7), (int) (height * 0.7));
+            }
+            String place = "unknown";
+            if (node.getPerson().getBirthPlace() != null) {
+                place = node.getPerson().getBirthPlace();
+            }
+            DollConfig dollConfig = activity.getDressUpDolls().getDollConfig(PlaceHelper.getTopPlace(place), node.getPerson());
+            String thumbnailFile = dollConfig.getThumbnail();
+            try {
+                InputStream is = activity.getAssets().open(thumbnailFile);
+                dressUpBtn = ImageHelper.loadBitmapFromStream(is, 0, MyTreeActivity.buttonSize, MyTreeActivity.buttonSize);
+                if (node.getPerson().getGender() == GenderType.Female && showSpouse) {
+                    spActivityButtons.add(dressUpBtn);
+                } else {
+                    activityButtons.add(dressUpBtn);
+                }
+                is.close();
+            } catch (IOException e) {
+                Log.e("TreePersonAnimatedSprit", "Error opening asset file", e);
+            }
+
+            if (node.getPerson().getGender()==GenderType.Female) {
+                mother = node.getPerson();
+            } else {
+                father = node.getPerson();
+            }
         }
 
         spPhoto = null;
@@ -131,8 +139,12 @@ public class TreePersonAnimatedSprite extends Sprite {
             if (spPhoto==null) {
                 spPhoto = ImageHelper.loadBitmapFromResource(activity, node.getSpouse().getDefaultPhotoResource(), 0, (int) (leftLeaf.getWidth() * 0.7), (int) (height * 0.7));
             }
-            dollConfig = activity.getDressUpDolls().getDollConfig(place, node.getSpouse());
-            thumbnailFile = dollConfig.getThumbnail();
+            String place = "unknown";
+            if (node.getSpouse().getBirthPlace() != null) {
+                place = node.getSpouse().getBirthPlace();
+            }
+            DollConfig dollConfig = activity.getDressUpDolls().getDollConfig(place, node.getSpouse());
+            String thumbnailFile = dollConfig.getThumbnail();
             try {
                 InputStream is = activity.getAssets().open(thumbnailFile);
                 spDressUpBtn = ImageHelper.loadBitmapFromStream(is, 0, MyTreeActivity.buttonSize, MyTreeActivity.buttonSize);
@@ -145,15 +157,7 @@ public class TreePersonAnimatedSprite extends Sprite {
             } catch (IOException e) {
                 Log.e("TreePersonAnimatedSprit", "Error opening asset file", e);
             }
-        }
 
-        if (node.getPerson().getGender()==GenderType.Female) {
-            mother = node.getPerson();
-        } else {
-            father = node.getPerson();
-        }
-
-        if (showSpouse && node.getSpouse()!=null) {
             if (father==null) father = node.getSpouse();
             else mother = node.getSpouse();
         }
@@ -249,32 +253,35 @@ public class TreePersonAnimatedSprite extends Sprite {
 
     @Override
     public void doDraw(Canvas canvas) {
-        if (node.getPerson().getGender()==GenderType.Male || showSpouse) {
-            Rect dst = new Rect();
-            dst.set((int)getX(), (int)getY(), (int)(getX()+leftLeaf.getWidth()), (int) (getY()+leftLeaf.getHeight()));
+        Rect dst = new Rect();
+        dst.set((int)getX(), (int)getY(), (int)(getX()+leftLeaf.getWidth()), (int) (getY()+leftLeaf.getHeight()));
+        if (showSpouse) {
             canvas.drawBitmap(leftLeaf, null, dst, null);
+        } else {
+            if (node.getPerson().getGender() == GenderType.Male) {
+                canvas.drawBitmap(leftLeaf, null, dst, null);
+            } else {
+                canvas.drawBitmap(rightLeaf, null, dst, null);
+            }
         }
 
-        if (node.getPerson().getGender()==GenderType.Female || showSpouse) {
+        if (showSpouse) {
             int x = (int) getX();
             int y = (int) getY();
-            if (node.getSpouse()!=null) {
-                x = x+leftLeaf.getWidth();
-            }
-            Rect dst = new Rect();
+            x = x+leftLeaf.getWidth();
+            dst = new Rect();
             dst.set(x, y, x+rightLeaf.getWidth(), y+rightLeaf.getHeight());
             canvas.drawBitmap(rightLeaf, null, dst, null);
         }
 
         Rect photoRect = new Rect();
 
-
-        if (spPhoto!=null) {
+        if (showSpouse && spPhoto!=null) {
             int x = (int) getX();
             int y = (int) getY();
             float ratio = ((float)spPhoto.getWidth())/spPhoto.getHeight();
-            int pw = (int) (leftLeaf.getWidth()*0.7f);
-            int ph = (int) (leftLeaf.getWidth()*0.7f);
+            int pw = (int) (leftLeaf.getWidth()*0.6f);
+            int ph = (int) (leftLeaf.getWidth()*0.6f);
             if (spPhoto.getWidth() > spPhoto.getHeight()) {
                 ph = (int) (pw / ratio);
             } else {
@@ -290,24 +297,26 @@ public class TreePersonAnimatedSprite extends Sprite {
             canvas.drawText(node.getSpouse().getGivenName(), px + pw/2, getY() + height, textPaint);
         }
 
-        float ratio = ((float)photo.getWidth())/photo.getHeight();
-        int pw = (int) (leftLeaf.getWidth()*0.7f);
-        int ph = (int) (leftLeaf.getWidth()*0.7f);
-        if (photo.getWidth() > photo.getHeight()) {
-            ph = (int) (pw / ratio);
-        } else {
-            pw = (int) (ph * ratio);
+        if (photo!=null) {
+            float ratio = ((float) photo.getWidth()) / photo.getHeight();
+            int pw = (int) (leftLeaf.getWidth() * 0.6f);
+            int ph = (int) (leftLeaf.getWidth() * 0.6f);
+            if (photo.getWidth() > photo.getHeight()) {
+                ph = (int) (pw / ratio);
+            } else {
+                pw = (int) (ph * ratio);
+            }
+            int x = (int) getX();
+            int y = (int) getY();
+            int px = x + (leftLeaf.getWidth() / 2 - pw / 2);
+            if (showSpouse && node.getPerson().getGender() == GenderType.Female) {
+                px = px + leftLeaf.getWidth();
+            }
+            int py = y + (height / 2 - ph / 2);
+            photoRect.set(px, py, px + pw, py + ph);
+            canvas.drawBitmap(photo, null, photoRect, null);
+            canvas.drawText(node.getPerson().getGivenName(), px + pw / 2, getY() + height, textPaint);
         }
-        int x = (int) getX();
-        int y = (int) getY();
-        int px = x + (leftLeaf.getWidth()/2  - pw / 2);
-        if (showSpouse) {
-            px = px + leftLeaf.getWidth();
-        }
-        int py = y + (height / 2 - ph / 2);
-        photoRect.set(px, py, px + pw, py + ph);
-        canvas.drawBitmap(photo, null, photoRect, null);
-        canvas.drawText(node.getPerson().getGivenName(), px + pw / 2, getY() + height, textPaint);
 
         if (state==STATE_ANIMATING_OPEN_LEFT || state==STATE_OPEN_LEFT || state==STATE_ANIMATING_CLOSED_LEFT) {
             if (Build.VERSION.SDK_INT > 20) {
@@ -329,53 +338,51 @@ public class TreePersonAnimatedSprite extends Sprite {
         }
 
         LittlePerson detailPerson = node.getPerson();
-        if (state==STATE_OPEN_LEFT) {
-            Bitmap duBtn = dressUpBtn;
-            if (node.getSpouse() != null && detailPerson.getGender() == GenderType.Female) {
-                detailPerson = node.getSpouse();
-                duBtn = spDressUpBtn;
-            }
-            String name = detailPerson.getName();
-            if (name==null) name = detailPerson.getGivenName();
-            canvas.drawText(name, getX() + leftLeaf.getWidth() + detailWidth/2, getY()+30, textPaint);
-            String relationship = node.getAncestralRelationship(detailPerson);
-            canvas.drawText(relationship, getX() + leftLeaf.getWidth() + detailWidth / 2, getY() + 70, textPaint);
-
-            float bx = getX() + leftLeaf.getWidth() + 20;
-            float by = getY() + detailHeight -MyTreeActivity.buttonSize*2;
-            int count=1;
-            for(Bitmap button : activityButtons) {
-                canvas.drawBitmap(button, bx, by, null);
-                bx += button.getWidth()+20;
-                if (count % 3 == 0) {
-                    bx = getX() + leftLeaf.getWidth() + 20;
-                    by+=MyTreeActivity.buttonSize;
+        if (detailPerson!=null) {
+            if (state == STATE_OPEN_LEFT) {
+                if (showSpouse && node.getSpouse() != null && detailPerson.getGender() == GenderType.Female) {
+                    detailPerson = node.getSpouse();
                 }
-                count++;
-            }
-        } else if (state==STATE_OPEN_RIGHT) {
-            Bitmap duBtn = dressUpBtn;
-            if (node.getSpouse() != null && detailPerson.getGender() != GenderType.Female) {
-                detailPerson = node.getSpouse();
-                duBtn = spDressUpBtn;
-            }
-            String name = detailPerson.getName();
-            if (name==null) name = detailPerson.getGivenName();
-            canvas.drawText(name, getX() + getWidth() + detailWidth/2, getY()+30, textPaint);
-            String relationship = node.getAncestralRelationship(detailPerson);
-            canvas.drawText(relationship, getX() + getWidth() + detailWidth/2, getY()+70, textPaint);
+                String name = detailPerson.getName();
+                if (name == null) name = detailPerson.getGivenName();
+                canvas.drawText(name, getX() + leftLeaf.getWidth() + detailWidth / 2, getY() + 30, textPaint);
+                String relationship = node.getAncestralRelationship(detailPerson);
+                canvas.drawText(relationship, getX() + leftLeaf.getWidth() + detailWidth / 2, getY() + 70, textPaint);
 
-            float bx = getX() + getWidth() + 20;
-            float by = getY() + detailHeight -MyTreeActivity.buttonSize*2;
-            int count=1;
-            for(Bitmap button : spActivityButtons) {
-                canvas.drawBitmap(button, bx, by, null);
-                bx += button.getWidth()+20;
-                if (count % 3 == 0) {
-                    bx = getX() + getWidth() + 20;
-                    by+=MyTreeActivity.buttonSize;
+                float bx = getX() + leftLeaf.getWidth() + 20;
+                float by = getY() + detailHeight - MyTreeActivity.buttonSize * 2;
+                int count = 1;
+                for (Bitmap button : activityButtons) {
+                    canvas.drawBitmap(button, bx, by, null);
+                    bx += button.getWidth() + 20;
+                    if (count % 3 == 0) {
+                        bx = getX() + leftLeaf.getWidth() + 20;
+                        by += MyTreeActivity.buttonSize;
+                    }
+                    count++;
                 }
-                count++;
+            } else if (state == STATE_OPEN_RIGHT) {
+                if (node.getSpouse() != null && detailPerson.getGender() != GenderType.Female) {
+                    detailPerson = node.getSpouse();
+                }
+                String name = detailPerson.getName();
+                if (name == null) name = detailPerson.getGivenName();
+                canvas.drawText(name, getX() + getWidth() + detailWidth / 2, getY() + 30, textPaint);
+                String relationship = node.getAncestralRelationship(detailPerson);
+                canvas.drawText(relationship, getX() + getWidth() + detailWidth / 2, getY() + 70, textPaint);
+
+                float bx = getX() + getWidth() + 20;
+                float by = getY() + detailHeight - MyTreeActivity.buttonSize * 2;
+                int count = 1;
+                for (Bitmap button : spActivityButtons) {
+                    canvas.drawBitmap(button, bx, by, null);
+                    bx += button.getWidth() + 20;
+                    if (count % 3 == 0) {
+                        bx = getX() + getWidth() + 20;
+                        by += MyTreeActivity.buttonSize;
+                    }
+                    count++;
+                }
             }
         }
     }
@@ -426,7 +433,7 @@ public class TreePersonAnimatedSprite extends Sprite {
 
     @Override
     public void onRelease(float x, float y) {
-        if (!moved) {
+        if (!moved && node.getPerson()!=null) {
             if (!activity.isTreeSearchGameActive()) {
                 if (!opened) {
                     dWidth = 0;
@@ -522,6 +529,10 @@ public class TreePersonAnimatedSprite extends Sprite {
         rightLeaf = null;
         photo.recycle();
         photo = null;
+        if (spPhoto!=null) {
+            spPhoto.recycle();
+            spPhoto = null;
+        }
     }
 
     public boolean inSprite(float tx, float ty) {
