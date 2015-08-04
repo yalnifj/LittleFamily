@@ -652,6 +652,10 @@ public class DataService implements AuthTask.Listener {
                 fireNetworkStateChanged(DataNetworkState.REMOTE_FINISHED);
             }
         } else {
+            if (person.isHasParents()==null || !person.isHasParents()) {
+                person.setHasParents(true);
+                getDBHelper().persistLittlePerson(person);
+            }
             addToSyncQ(parents, 1);
         }
         return parents;
@@ -677,6 +681,10 @@ public class DataService implements AuthTask.Listener {
                 fireNetworkStateChanged(DataNetworkState.REMOTE_FINISHED);
             }
         } else {
+            if (person.isHasChildren()==null || !person.isHasChildren()) {
+                person.setHasChildren(true);
+                getDBHelper().persistLittlePerson(person);
+            }
             addToSyncQ(children, 2);
         }
         return children;
@@ -702,6 +710,10 @@ public class DataService implements AuthTask.Listener {
                 fireNetworkStateChanged(DataNetworkState.REMOTE_FINISHED);
             }
         } else {
+            if (person.isHasSpouses()==null || !person.isHasSpouses()) {
+                person.setHasSpouses(true);
+                getDBHelper().persistLittlePerson(person);
+            }
             addToSyncQ(spouses, 1);
         }
         return spouses;

@@ -92,5 +92,6 @@ Please wait...</string>
     <string name="hasChildren">Has Children</string>
     <string name="lastSync">Last Sync</string>
     <string name="visible">Visible</string>
+    <string name="close">Close</string>
 
 </resources>

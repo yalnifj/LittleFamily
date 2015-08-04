@@ -4,13 +4,17 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.yellowforktech.littlefamilytree.data.DataNetworkState;
+import com.yellowforktech.littlefamilytree.data.DataNetworkStateListener;
 import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
+
+import java.util.List;
 
 /**
  * Created by jfinlay on 1/12/2015.
  */
-public class ForceSynceTask extends AsyncTask<LittlePerson, Integer, LittlePerson> {
+public class ForceSynceTask extends AsyncTask<LittlePerson, String, LittlePerson> implements DataNetworkStateListener {
     private Listener listener;
     private Context context;
     private DataService dataService;
@@ -31,6 +35,16 @@ public class ForceSynceTask extends AsyncTask<LittlePerson, Integer, LittlePerso
                 try {
                     person = p;
                     dataService.syncPerson(person);
+
+                    statusUpdate("Syncing parents of "+person.getName());
+                    List<LittlePerson> parents = dataService.getParents(person);
+
+                    statusUpdate("Syncing spouses of "+person.getName());
+                    List<LittlePerson> spouses = dataService.getSpouses(person);
+
+                    statusUpdate("Syncing children of "+person.getName());
+                    List<LittlePerson> children = dataService.getChildren(person);
+
                 } catch (Exception e) {
                     Log.e(this.getClass().getSimpleName(), "error", e);
                 }
@@ -42,13 +56,32 @@ public class ForceSynceTask extends AsyncTask<LittlePerson, Integer, LittlePerso
     }
 
     @Override
+    protected void onProgressUpdate(String... values) {
+        super.onProgressUpdate(values);
+        if (listener!=null) {
+            listener.onStatusUpdate(values[0]);
+        }
+    }
+
+    @Override
     protected void onPostExecute(LittlePerson person) {
         if (listener!=null) {
             listener.onComplete(person);
         }
     }
 
+    @Override
+    public void remoteStateChanged(DataNetworkState state) {
+
+    }
+
+    @Override
+    public void statusUpdate(String status) {
+        publishProgress(status);
+    }
+
     public interface Listener {
         public void onComplete(LittlePerson person);
+        public void onStatusUpdate(String message);
     }
 }

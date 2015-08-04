@@ -1,53 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="fill_parent"
+    android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:columnCount="4"
+    android:descendantFocusability="blocksDescendants"
+    android:columnCount="3"
+    android:orientation="horizontal"
     android:rowCount="2">
 
     <TextView
+        android:id="@+id/lblGender"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         android:layout_width="15dp"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="M"
-        android:id="@+id/lblGender"
-        android:layout_row="0"
         android:layout_column="0"
-        android:capitalize="characters"
+        android:layout_columnWeight="0"
         android:layout_marginRight="10dp"
-        android:layout_columnWeight="0" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Given Surname"
-            android:id="@+id/lblName"
-            android:layout_row="0"
-            android:layout_column="1"
-            android:layout_marginRight="10dp"
-            android:layout_columnWeight="10" />
-
-        <TextView
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="RemoteId"
-            android:id="@+id/lblRemoteId"
-            android:layout_row="0"
-            android:layout_column="2"
-            android:layout_marginRight="10dp"
-            android:layout_columnWeight="0" />
+        android:layout_row="0"
+        android:capitalize="characters"
+        android:text="M"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
+        android:id="@+id/lblName"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Birth date + place"
+        android:layout_column="1"
+        android:layout_columnWeight="10"
+        android:layout_marginRight="10dp"
+        android:layout_row="0"
+        android:text="Given Surname"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/lblRemoteId"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="2"
+        android:layout_columnWeight="0"
+        android:layout_marginRight="10dp"
+        android:layout_row="0"
+        android:text="RemoteId"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
         android:id="@+id/lblBirth"
-        android:layout_row="1"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_column="0"
         android:layout_columnSpan="3"
-        android:layout_columnWeight="10" />
+        android:layout_columnWeight="10"
+        android:layout_row="1"
+        android:text="Birth date + place"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </GridLayout>

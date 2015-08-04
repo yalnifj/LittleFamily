@@ -2,6 +2,7 @@ package com.yellowforktech.littlefamilytree.activities;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.speech.tts.Voice;
 import android.util.Log;
 
 import com.yellowforktech.littlefamilytree.R;
+import com.yellowforktech.littlefamilytree.data.DataService;
 
 import java.util.List;
 import java.util.Locale;
@@ -114,6 +116,42 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
                         tts.speak(message, TextToSpeech.QUEUE_FLUSH, null);
                     }
                 }
+                return true;
+            }
+        });
+
+        Preference manageCreds = findPreference("manage_creds");
+        manageCreds.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                String serviceType = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this).getString(DataService.SERVICE_TYPE, null);
+                if (serviceType.equals(DataService.SERVICE_TYPE_PHPGEDVIEW)) {
+                    Intent intent = new Intent( SettingsActivity.this, PGVLoginActivity.class );
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent( SettingsActivity.this, FSLoginActivity.class );
+                    startActivity(intent);
+                }
+                return true;
+            }
+        });
+
+        Preference managePeople = findPreference("manage_people");
+        managePeople.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent intent = new Intent( SettingsActivity.this, PersonSearchActivity.class );
+                startActivity(intent);
+                return true;
+            }
+        });
+
+        Preference parentsGuide = findPreference("parents_guide");
+        parentsGuide.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent intent = new Intent( SettingsActivity.this, ParentsGuideActivity.class );
+                startActivity(intent);
                 return true;
             }
         });
@@ -279,6 +317,42 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
                             ((SettingsActivity)getActivity()).getTts().speak(message, TextToSpeech.QUEUE_FLUSH, null);
                         }
                     }
+                    return true;
+                }
+            });
+
+            Preference manageCreds = findPreference("manage_creds");
+            manageCreds.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    String serviceType = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(DataService.SERVICE_TYPE, null);
+                    if (serviceType.equals(DataService.SERVICE_TYPE_PHPGEDVIEW)) {
+                        Intent intent = new Intent( getActivity(), PGVLoginActivity.class );
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent( getActivity(), FSLoginActivity.class );
+                        startActivity(intent);
+                    }
+                    return true;
+                }
+            });
+
+            Preference managePeople = findPreference("manage_people");
+            managePeople.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    Intent intent = new Intent( getActivity(), PersonSearchActivity.class );
+                    startActivity(intent);
+                    return true;
+                }
+            });
+
+            Preference parentsGuide = findPreference("parents_guide");
+            parentsGuide.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    Intent intent = new Intent( getActivity(), ParentsGuideActivity.class );
+                    startActivity(intent);
                     return true;
                 }
             });

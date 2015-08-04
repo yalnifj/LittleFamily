@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.media.MediaPlayer;
+import android.view.HapticFeedbackConstants;
 
 import com.yellowforktech.littlefamilytree.events.EventQueue;
 
@@ -31,6 +32,7 @@ public class TouchStateAnimatedBitmapSprite extends AnimatedBitmapSprite {
     protected boolean stateChanged;
     protected Context context;
     protected int loops;
+    protected boolean moved;
 
     public TouchStateAnimatedBitmapSprite(Context context) {
         audio = new HashMap<>();
@@ -142,11 +144,24 @@ public class TouchStateAnimatedBitmapSprite extends AnimatedBitmapSprite {
     }
 
     @Override
+    public boolean onMove(float oldX, float oldY, float newX, float newY) {
+        super.onMove(oldX, oldY, newX, newY);
+        moved = true;
+        return false;
+    }
+
+    @Override
     public void onRelease(float x, float y) {
         super.onRelease(x, y);
-        if (!stateTransitions.containsKey(state) || stateTransitions.get(state)==TRANSITION_CLICK) {
-            nextState();
+        if (!moved) {
+            if (!stateTransitions.containsKey(state) || stateTransitions.get(state) == TRANSITION_CLICK) {
+                if (surfaceView != null) {
+                    surfaceView.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY, HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
+                }
+                nextState();
+            }
         }
+        moved = false;
     }
 
     public void nextState() {

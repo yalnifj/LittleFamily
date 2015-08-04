@@ -1,6 +1,7 @@
 package com.yellowforktech.littlefamilytree.sprites;
 
 import android.graphics.Bitmap;
+import android.view.HapticFeedbackConstants;
 
 import com.yellowforktech.littlefamilytree.events.EventQueue;
 
@@ -42,6 +43,9 @@ public class TouchEventGameSprite extends AnimatedBitmapSprite {
         super.onRelease(x, y);
 
         if (!moved) {
+            if (surfaceView!=null) {
+                surfaceView.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY, HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
+            }
             EventQueue.getInstance().publish(eventTopic, this);
         }
         moved = false;

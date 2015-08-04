@@ -7,11 +7,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.adapters.PersonSearchListAdapter;
-import com.yellowforktech.littlefamilytree.activities.tasks.ForceSynceTask;
 import com.yellowforktech.littlefamilytree.activities.tasks.SearchLoaderTask;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 
@@ -19,7 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PersonSearchActivity extends Activity implements SearchLoaderTask.Listener, ForceSynceTask.Listener, AdapterView.OnItemClickListener {
+public class PersonSearchActivity extends Activity implements SearchLoaderTask.Listener, AdapterView.OnItemClickListener {
 
     private EditText txtGivenName;
     private EditText txtSurname;
@@ -67,14 +65,12 @@ public class PersonSearchActivity extends Activity implements SearchLoaderTask.L
     }
 
     @Override
-    public void onComplete(LittlePerson person) {
-        Toast.makeText(this, person.getName()+" synced succesfully", Toast.LENGTH_LONG).show();
-    }
-
-    @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         LittlePerson person = (LittlePerson) personList.getItemAtPosition(position);
-        PersonDetailsDialog dialog = new PersonDetailsDialog(person);
+        PersonDetailsDialog dialog = new PersonDetailsDialog();
+        Bundle args = new Bundle();
+        args.putSerializable(ChooseFamilyMember.SELECTED_PERSON, person);
+        dialog.setArguments(args);
         dialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Theme_AppCompat_Light_Dialog);
         dialog.show(getFragmentManager(), "Perosn Details");
     }

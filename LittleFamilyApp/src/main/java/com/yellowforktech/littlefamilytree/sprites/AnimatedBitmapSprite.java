@@ -7,7 +7,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.os.Build;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -176,6 +175,7 @@ public class AnimatedBitmapSprite extends Sprite {
                         canvas.setMatrix(matrix);
                     }
                     canvas.drawBitmap(bitmap, null, rect, basePaint);
+                    /*
                     if (selected) {
                         if (Build.VERSION.SDK_INT > 20) {
                             canvas.drawRoundRect(x, y, x + width, y + height, 3, 3, selectedPaint);
@@ -183,6 +183,7 @@ public class AnimatedBitmapSprite extends Sprite {
                             canvas.drawRect(x, y, x + width, y + height, selectedPaint);
                         }
                     }
+                    */
                     if (matrix!=null) {
                         canvas.restore();
                     }

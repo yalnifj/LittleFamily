@@ -11,6 +11,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.media.MediaPlayer;
 import android.util.AttributeSet;
+import android.view.HapticFeedbackConstants;
 
 import com.yellowforktech.littlefamilytree.sprites.ScratchBitsSprite;
 import com.yellowforktech.littlefamilytree.sprites.Sprite;
@@ -134,10 +135,10 @@ public class ScratchView extends SpritedSurfaceView {
 
         mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         mCanvas = new Canvas(mBitmap);
-        mPaint.setStrokeWidth(w<h?w*0.15f:h*0.15f);
+        mPaint.setStrokeWidth(w < h ? w * 0.15f : h * 0.15f);
         Paint background = new Paint();
         background.setColor(Color.GRAY);
-        mCanvas.drawRect(0,0,w,h,background);
+        mCanvas.drawRect(0, 0, w, h, background);
         complete = false;
 		synchronized(sprites) {
 			sprites.clear();
@@ -171,9 +172,13 @@ public class ScratchView extends SpritedSurfaceView {
 		ScratchBitsSprite bit = new ScratchBitsSprite();
 		bit.setX(x);
 		bit.setY(y);
-		bit.setWidth(4+random.nextInt(10));
-		bit.setHeight(4+random.nextInt(10));
+		bit.setWidth(4 + random.nextInt(10));
+		bit.setHeight(4 + random.nextInt(10));
 		addSprite(bit);
+
+        if (bit.getWidth()>=10) {
+            performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK, HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
+        }
     }
 	
 	@Override

@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Build;
 import android.util.Log;
+import android.view.HapticFeedbackConstants;
 
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.LittleFamilyActivity;
@@ -90,7 +91,7 @@ public class TreePersonAnimatedSprite extends Sprite {
         spActivityButtons.add(activity.getPencilBtn());
         spActivityButtons.add(activity.getBubbleBtn());
 
-        if (personNode.getSpouse()!=null) {
+        if (showSpouse) {
             this.setWidth(leftLeaf.getWidth() + rightLeaf.getWidth());
         } else {
             this.setWidth(leftLeaf.getWidth());
@@ -486,6 +487,10 @@ public class TreePersonAnimatedSprite extends Sprite {
                         }
                     }
                 }
+            }
+
+            if (surfaceView != null) {
+                surfaceView.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY, HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
             }
 
             //-- fire person selected event

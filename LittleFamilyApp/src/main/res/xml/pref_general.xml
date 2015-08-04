@@ -11,11 +11,7 @@
         android:negativeButtonText="@null"
         android:positiveButtonText="@null" />
 
-    <Preference android:title="@string/pref_title_manage_creds">
-        <intent
-            android:action="android.intent.action.VIEW"
-            android:targetPackage="com.yellowforktech.littlefamilytree"
-            android:targetClass="com.yellowforktech.littlefamilytree.activities.FSLoginActivity" />
+    <Preference android:title="@string/pref_title_manage_creds" android:key="manage_creds">
     </Preference>
 
     <CheckBoxPreference android:title="@string/pref_title_sync_data_background" android:key="sync_background" android:defaultValue="true" />
@@ -29,11 +25,7 @@
         android:negativeButtonText="@null"
         android:positiveButtonText="@null" />
 
-    <Preference android:title="@string/pref_title_manage_people">
-        <intent
-            android:action="android.intent.action.VIEW"
-            android:targetPackage="com.yellowforktech.littlefamilytree"
-            android:targetClass="com.yellowforktech.littlefamilytree.activities.PersonSearchActivity" />
+    <Preference android:title="@string/pref_title_manage_people" android:key="manage_people">
     </Preference>
 
     <ListPreference
@@ -48,11 +40,7 @@
         android:key="tts_voice_test"
         android:summary="@string/pref_summary_tts_voice_test"/>
 
-    <Preference android:title="@string/title_activity_parents_guide">
-        <intent
-            android:action="android.intent.action.VIEW"
-            android:targetPackage="com.yellowforktech.littlefamilytree"
-            android:targetClass="com.yellowforktech.littlefamilytree.activities.ParentsGuideActivity" />
+    <Preference android:title="@string/title_activity_parents_guide" android:key="parents_guide">
     </Preference>
 
 </PreferenceScreen>
