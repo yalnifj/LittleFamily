@@ -202,8 +202,9 @@ public class PGVLoginActivity extends Activity implements AuthTask.Listener, Per
             task.execute();
         }
         else {
+            pd.dismiss();
             String message = "Username and password combination failed. ";
-            if (response!=null) message = response.getData();
+            if (response!=null) message += response.getData();
             Toast.makeText(PGVLoginActivity.this, message, Toast.LENGTH_LONG).show();
             setResult( Activity.RESULT_CANCELED, null );
         }

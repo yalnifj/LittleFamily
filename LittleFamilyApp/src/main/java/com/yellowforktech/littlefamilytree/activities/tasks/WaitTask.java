@@ -20,13 +20,16 @@ public class WaitTask extends AsyncTask<Long, Integer, Integer> {
     @Override
     protected Integer doInBackground(Long... params) {
         Long waittime = params[0];
-        Long waitstep = waittime / 100;
         int c = 0;
-        for(c=0; c<100; c++) {
-            try {
-                Thread.sleep(waitstep);
-                this.publishProgress(c);
-            } catch (Exception e) { }
+        if (waittime > 0) {
+            Long waitstep = waittime / 100;
+            for (c = 0; c < 100; c++) {
+                try {
+                    Thread.sleep(waitstep);
+                    this.publishProgress(c);
+                } catch (Exception e) {
+                }
+            }
         }
         return c;
     }

@@ -154,8 +154,9 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
             task.execute();
         }
         else {
+            pd.dismiss();
             String message = "Username and password combination failed. ";
-            if (response!=null) message = response.getData();
+            if (response!=null) message += response.getData();
             Toast.makeText(FSLoginActivity.this, message, Toast.LENGTH_LONG).show();
             setResult( Activity.RESULT_CANCELED, null );
         }

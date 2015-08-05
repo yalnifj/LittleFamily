@@ -94,7 +94,7 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
         Bundle headers = new Bundle();
         headers.putString("Authorization", "Basic " + encodedAuthToken);
 
-        RemoteResult data = getRestData(METHOD_GET, action, params, headers);
+        RemoteResult data = getRestDataNoRetry(METHOD_GET, action, params, headers);
         if (data!=null) {
             if (data.isSuccess()) {
                 Serializer serializer = new Persister();

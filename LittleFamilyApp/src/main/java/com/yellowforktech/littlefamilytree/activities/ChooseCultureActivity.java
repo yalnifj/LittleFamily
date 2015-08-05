@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.tasks.HeritageCalculatorTask;
+import com.yellowforktech.littlefamilytree.activities.tasks.WaitTask;
 import com.yellowforktech.littlefamilytree.data.HeritagePath;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.games.DollConfig;
@@ -44,6 +45,7 @@ public class ChooseCultureActivity extends LittleFamilyActivity implements Herit
     private Button playButton;
     private HeritagePath selectedPath;
     private DressUpDolls dressUpDolls;
+    private long starttime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,35 +146,42 @@ public class ChooseCultureActivity extends LittleFamilyActivity implements Herit
     }
 
     @Override
-    public void onComplete(ArrayList<HeritagePath> paths)
+    public void onComplete(final ArrayList<HeritagePath> paths)
     {
-        cultures = new HashMap<String, HeritagePath>();
-		titleView.setText(R.string.choose_culture);
-		speak(getResources().getString(R.string.choose_culture));
+        WaitTask waiter = new WaitTask(new WaitTask.WaitTaskListener() {
+            @Override
+            public void onProgressUpdate(Integer progress) { }
 
-        for(HeritagePath path : paths) {
-            String place = path.getPlace();
-            if (cultures.get(place)==null) {
-                cultures.put(place, path);
-            } else {
-                Double percent = cultures.get(place).getPercent() + path.getPercent();
-                if (cultures.get(place).getTreePath().size() <= path.getTreePath().size()) {
-                    cultures.get(place).setPercent(percent);
-                } else {
-                    path.setPercent(percent);
-                    cultures.put(place, path);
+            @Override
+            public void onComplete(Integer progress) {
+                cultures = new HashMap<String, HeritagePath>();
+                titleView.setText(R.string.choose_culture);
+
+                for(HeritagePath path : paths) {
+                    String place = path.getPlace();
+                    if (cultures.get(place)==null) {
+                        cultures.put(place, path);
+                    } else {
+                        Double percent = cultures.get(place).getPercent() + path.getPercent();
+                        if (cultures.get(place).getTreePath().size() <= path.getTreePath().size()) {
+                            cultures.get(place).setPercent(percent);
+                        } else {
+                            path.setPercent(percent);
+                            cultures.put(place, path);
+                        }
+                    }
+                }
+
+                List<HeritagePath> uniquepaths = new ArrayList<>(cultures.values());
+                Collections.sort(uniquepaths);
+                chartView.setHeritageMap(uniquepaths);
+
+                if (uniquepaths.size()>0) {
+                    setSelectedPath(uniquepaths.get(0));
                 }
             }
-        }
-
-        List<HeritagePath> uniquepaths = new ArrayList<>(cultures.values());
-        Collections.sort(uniquepaths);
-        chartView.setHeritageMap(uniquepaths);
-
-        if (uniquepaths.size()>0) {
-            setSelectedPath(uniquepaths.get(0));
-        }
-        
+        });
+        waiter.execute(4000 - (System.currentTimeMillis() - starttime));
     }
 	
 	@Override
@@ -181,6 +190,7 @@ public class ChooseCultureActivity extends LittleFamilyActivity implements Herit
 
         speak(getResources().getString(R.string.calculating_heritage));
 
+        starttime = System.currentTimeMillis();
         HeritageCalculatorTask task = new HeritageCalculatorTask(this, this);
         task.execute(person);
     }

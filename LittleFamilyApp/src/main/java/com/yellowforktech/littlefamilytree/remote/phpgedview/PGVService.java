@@ -118,7 +118,7 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
         Bundle headers = new Bundle();
         headers.putString("User-Agent", "PGVAgent");
 
-        RemoteResult data = getRestData(METHOD_POST, action, params, headers);
+        RemoteResult data = getRestDataNoRetry(METHOD_POST, action, params, headers);
         if (data!=null) {
             if (data.isSuccess()) {
                 String responseBody = data.getData();

@@ -242,7 +242,10 @@ public class GedcomParser {
                     link.setRel("other");
                 }
                 mediaPath = mediaPath.replaceAll(" ", "%20");
-                URI uri = new URI(baseUrl + mediaPath);
+                if (!mediaPath.startsWith("http") && !mediaPath.startsWith("ftp:")) {
+                    mediaPath = baseUrl + mediaPath;
+                }
+                URI uri = new URI(mediaPath);
                 link.setHref(uri);
                 sd.addLink(link);
             }
