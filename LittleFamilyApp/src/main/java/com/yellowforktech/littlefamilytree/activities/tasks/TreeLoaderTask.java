@@ -94,8 +94,6 @@ public class TreeLoaderTask extends AsyncTask<LittlePerson, Integer, TreeNode> {
         if (node.getDepth()>0 || node.getSpouse()!=null) {
             TreeNode prNode = new TreeNode();
             prNode.setDepth(node.getDepth() + 1);
-            addParents(prNode);
-            node.setRight(prNode);
             LittlePerson spouse = node.getSpouse();
             if (spouse != null) {
                 List<LittlePerson> sparents = dataService.getParents(spouse);
@@ -108,6 +106,8 @@ public class TreeLoaderTask extends AsyncTask<LittlePerson, Integer, TreeNode> {
                     }
                 }
             }
+            addParents(prNode);
+            node.setRight(prNode);
         }
     }
 

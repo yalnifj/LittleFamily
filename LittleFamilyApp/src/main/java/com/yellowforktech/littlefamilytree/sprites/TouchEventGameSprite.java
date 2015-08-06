@@ -44,7 +44,7 @@ public class TouchEventGameSprite extends AnimatedBitmapSprite {
 
         if (!moved) {
             if (surfaceView!=null) {
-                surfaceView.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY, HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
+                surfaceView.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
             }
             EventQueue.getInstance().publish(eventTopic, this);
         }

@@ -43,7 +43,16 @@ public class PlaceHelper {
         int i = Arrays.binarySearch(usStates, tempPlace);
         if (i>=0) return true;
         i = Arrays.binarySearch(abbvStates, tempPlace);
-        return (i >= 0);
+        if (i>=0) return true;
+        String[] parts = tempPlace.split(" ");
+        if (parts.length==1) return false;
+        for(String p : parts) {
+            i = Arrays.binarySearch(usStates, p);
+            if (i>=0) return true;
+            i = Arrays.binarySearch(abbvStates, p);
+            if (i>=0) return true;
+        }
+        return false;
     }
 
     public static String getCountryLanguage(String country) {
@@ -58,7 +67,7 @@ public class PlaceHelper {
     public static String getTopPlace(String place) {
         if (place==null) return null;
         String[] parts = place.split("[,]+");
-        return parts[parts.length-1].trim();
+        return parts[parts.length-1].trim().replaceAll("[<>\\[\\]\\(\\)\"]+", "");
     }
 
     public static String getPlaceCountry(String p) {

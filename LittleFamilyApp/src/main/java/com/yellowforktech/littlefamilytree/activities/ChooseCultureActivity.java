@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -71,6 +72,10 @@ public class ChooseCultureActivity extends LittleFamilyActivity implements Herit
         person = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
         chartView.setPerson(person);
         chartView.addListener(this);
+
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        chartView.setDensity(dm.density);
 
         dressUpDolls = new DressUpDolls();
 

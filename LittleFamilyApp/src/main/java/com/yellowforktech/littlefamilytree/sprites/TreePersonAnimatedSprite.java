@@ -497,7 +497,7 @@ public class TreePersonAnimatedSprite extends Sprite {
             }
 
             if (surfaceView != null) {
-                surfaceView.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY, HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
+                surfaceView.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
             }
 
             //-- fire person selected event
@@ -527,8 +527,10 @@ public class TreePersonAnimatedSprite extends Sprite {
     public void onDestroy() {
         leftLeaf = null;
         rightLeaf = null;
-        photo.recycle();
-        photo = null;
+        if (photo!=null) {
+            photo.recycle();
+            photo = null;
+        }
         if (spPhoto!=null) {
             spPhoto.recycle();
             spPhoto = null;

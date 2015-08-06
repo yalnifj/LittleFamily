@@ -110,12 +110,25 @@ public class PersonDetailsDialog extends DialogFragment implements CompoundButto
 		}
 		else nationalityRow.setVisibility(View.GONE);
 
+		/*
+		MediaGridAdapter adapter = new MediaGridAdapter(getActivity());
+		try {
+			List<Media> mediaList = DataService.getInstance().getMediaForPerson(person);
+			adapter.setMediaList(mediaList);
+		} catch (Exception e) {
+			Log.e(getClass().getSimpleName(), "Error getting person media for "+person.getName(), e);
+		}
 
+		GridView mediaGrid = (GridView) view.findViewById(R.id.mediaGrid);
+		mediaGrid.setAdapter(adapter);
+		*/
 		ImageButton syncButton = (ImageButton) view.findViewById(R.id.btnSync);
 		syncButton.setOnClickListener(this);
 
+		/*
 		ImageButton captureButton = (ImageButton) view.findViewById(R.id.btnAttach);
 		captureButton.setOnClickListener(this);
+		*/
 
 		Button closeButton = (Button) view.findViewById(R.id.btnClose);
 		closeButton.setOnClickListener(this);
@@ -142,8 +155,10 @@ public class PersonDetailsDialog extends DialogFragment implements CompoundButto
 				ForceSynceTask task = new ForceSynceTask(this, this.getActivity());
 				task.execute(person);
 				break;
+			/*
 			case R.id.btnAttach:
 				break;
+			*/
 		}
 	}
 

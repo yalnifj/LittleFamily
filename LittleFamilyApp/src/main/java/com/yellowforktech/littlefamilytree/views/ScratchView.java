@@ -177,7 +177,7 @@ public class ScratchView extends SpritedSurfaceView {
 		addSprite(bit);
 
         if (bit.getWidth()>=10) {
-            performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK, HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
+            performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY, HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
         }
     }
 	

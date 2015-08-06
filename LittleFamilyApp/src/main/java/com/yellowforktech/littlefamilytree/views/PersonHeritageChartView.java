@@ -34,6 +34,7 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
     private Context context;
     private AnimationThread animationThread;
     private List<SelectedPathListener> listeners;
+    private float density;
 	
 	private HeritagePath selectedPath;
 
@@ -73,6 +74,14 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
         this.person = person;
         loadBitmap();
         cultures = null;
+    }
+
+    public float getDensity() {
+        return density;
+    }
+
+    public void setDensity(float density) {
+        this.density = density;
     }
 
     private void loadBitmap() {
@@ -180,7 +189,7 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
                         color2 = ColorHelper.lightenColor2(color2, 0.5f);
                     }
                     int height = (int) (this.getHeight()*path.getPercent());
-                    if (height < 30) height = 30;
+                    if (height < 15*density) height = (int) (15*density);
                     top = top - height;
                     if (top < 0) {
                         height = height+top;
@@ -219,7 +228,7 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
                         paint.setStrokeWidth(5);
 					}
                     int height = (int) (this.getHeight()*path.getPercent());
-                    if (height < 30) height = 30;
+                    if (height < 15*density) height = (int) (15*density);
                     top = top - height;
                     if (top < 0) {
                         height = height+top;

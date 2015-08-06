@@ -22,13 +22,16 @@
         android:layout_below="@+id/topBarFragment"
         android:layout_centerHorizontal="true" />
 
-    <GridView
-        android:layout_width="fill_parent"
-        android:layout_height="140dp"
-        android:id="@+id/dollGrid"
-        android:visibility="invisible"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:horizontalSpacing="10dp" />
+        <GridView
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/dollGrid"
+            android:visibility="invisible"
+            android:horizontalSpacing="10dp"
+            android:numColumns="5"
+            android:columnWidth="140dp"
+            android:scrollbars="horizontal"
+            android:clickable="false" />
 
 </RelativeLayout>

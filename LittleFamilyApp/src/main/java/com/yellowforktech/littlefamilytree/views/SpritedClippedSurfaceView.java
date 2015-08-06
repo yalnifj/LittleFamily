@@ -85,6 +85,7 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
         }
         synchronized (sprites) {
             sprites.add(s);
+            s.setSurfaceView(this);
         }
     }
 

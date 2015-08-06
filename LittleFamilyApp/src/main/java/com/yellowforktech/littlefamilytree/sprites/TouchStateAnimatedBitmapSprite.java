@@ -156,7 +156,7 @@ public class TouchStateAnimatedBitmapSprite extends AnimatedBitmapSprite {
         if (!moved) {
             if (!stateTransitions.containsKey(state) || stateTransitions.get(state) == TRANSITION_CLICK) {
                 if (surfaceView != null) {
-                    surfaceView.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY, HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
+                    surfaceView.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
                 }
                 nextState();
             }

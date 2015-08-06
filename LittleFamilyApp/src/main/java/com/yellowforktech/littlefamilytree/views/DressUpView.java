@@ -92,7 +92,6 @@ public class DressUpView extends SpritedSurfaceView {
             textPaint = new Paint();
             textPaint.setColor(Color.BLACK);
             textPaint.setTextAlign(Paint.Align.CENTER);
-            textPaint.setTextSize(50);
         } catch (Exception e) {
             Log.e("DressUpView", "Error drawing image", e);
         }
@@ -118,6 +117,7 @@ public class DressUpView extends SpritedSurfaceView {
                 r2.set(offset, 0, w+offset, (int)(doll.getHeight()*factor));
                 canvas.drawBitmap(doll, null, r2, null);
 
+                textPaint.setTextSize(getWidth()*0.10f);
                 canvas.drawText(dollConfig.getOriginalPlace(), getWidth()/2, r2.bottom+40, textPaint);
 
                 if (clothing!=null) {

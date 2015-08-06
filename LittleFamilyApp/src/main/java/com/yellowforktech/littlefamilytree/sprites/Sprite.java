@@ -3,7 +3,7 @@ package com.yellowforktech.littlefamilytree.sprites;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 
-import com.yellowforktech.littlefamilytree.views.SpritedSurfaceView;
+import com.yellowforktech.littlefamilytree.views.AbstractTouchAnimatedSurfaceView;
 
 /**
  * Created by jfinlay on 5/8/2015.
@@ -19,7 +19,7 @@ public abstract class Sprite {
     protected boolean removeMe;
     protected Matrix matrix;
     protected float scale;
-    protected SpritedSurfaceView surfaceView;
+    protected AbstractTouchAnimatedSurfaceView surfaceView;
 
     public Sprite() {
         x = 0;
@@ -32,11 +32,11 @@ public abstract class Sprite {
         this.scale = 1;
     }
 
-    public SpritedSurfaceView getSurfaceView() {
+    public AbstractTouchAnimatedSurfaceView getSurfaceView() {
         return surfaceView;
     }
 
-    public void setSurfaceView(SpritedSurfaceView surfaceView) {
+    public void setSurfaceView(AbstractTouchAnimatedSurfaceView surfaceView) {
         this.surfaceView = surfaceView;
     }
 
