@@ -146,6 +146,8 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Memori
                 int height = layeredImage.getHeight()/2;
                 if (width<5) width = getScreenWidth()/2;
                 if (height<5) height = getScreenHeight()/2 - 25;
+                if (width < 300) width = 300;
+                if (height < 300) height = 300;
                 if (imageBitmap!=null) {
                     imageBitmap.recycle();
                 }

@@ -249,7 +249,7 @@ public class GedcomParser {
                 link.setHref(uri);
                 sd.addLink(link);
             }
-            if ("_PRIM".equals(ps[1])) {
+            if ("_PRIM".equals(ps[1]) && !"N".equals(ps[2])) {
                 sd.setSortKey("1");
             }
         }

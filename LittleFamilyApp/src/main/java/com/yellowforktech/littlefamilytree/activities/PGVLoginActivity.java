@@ -56,8 +56,8 @@ public class PGVLoginActivity extends Activity implements AuthTask.Listener, Per
         mPgvUrlView = (EditText) findViewById(R.id.pgv_url);
         try {
             String baseUrl = dataService.getDBHelper().getProperty(DataService.SERVICE_TYPE_PHPGEDVIEW+DataService.SERVICE_BASEURL);
-            if (baseUrl==null) baseUrl = PGV_DEFAULT_URL;
-            mPgvUrlView.setText(baseUrl);
+            //if (baseUrl==null) baseUrl = PGV_DEFAULT_URL;
+            if (baseUrl==null) mPgvUrlView.setText(baseUrl);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -65,8 +65,8 @@ public class PGVLoginActivity extends Activity implements AuthTask.Listener, Per
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         try {
             String defaultUser = dataService.getDBHelper().getProperty(DataService.SERVICE_USERNAME);
-            if (defaultUser==null) defaultUser = PGV_DEFAULT_USER;
-            mEmailView.setText(defaultUser);
+            //if (defaultUser==null) defaultUser = PGV_DEFAULT_USER;
+            if (defaultUser==null) mEmailView.setText(defaultUser);
         } catch (Exception e) {
             e.printStackTrace();
         }

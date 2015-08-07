@@ -89,21 +89,23 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
-        if (originalBitmap!=null) {
-            float ratio = (float) (originalBitmap.getWidth()) / originalBitmap.getHeight();
-            if ( w < h ) {
-				h = (int) (w / ratio);
-			} else {
-				w = (int)(h * ratio);
-			}
+        if (mBitmap!=null) {
+            synchronized (mBitmap) {
+                mBitmap = null;
+            }
         }
+    }
 
+    private void createDrawingBitmap(int w, int h) {
         mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-        mCanvas = new Canvas(mBitmap);
-        mPaint.setStrokeWidth(w<h?w*0.12f:h*0.12f);
-        noPaint.setStrokeWidth(w < h ? w * 0.12f : h * 0.12f);
-
-        mCanvas.drawRect(0,0,w,h,background);
+        synchronized (mBitmap) {
+            mCanvas = new Canvas(mBitmap);
+            mPaint.setStrokeWidth(w < h ? w * 0.12f : h * 0.12f);
+            noPaint.setStrokeWidth(w < h ? w * 0.12f : h * 0.12f);
+            Paint background = new Paint();
+            background.setColor(Color.WHITE);
+            mCanvas.drawRect(0, 0, w, h, background);
+        }
     }
 
     @Override
@@ -113,24 +115,29 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
         int h = this.getHeight();
 		canvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
 
-        if (originalBitmap!=null) {
+        if (originalBitmap!=null && !originalBitmap.isRecycled()) {
             float ratio = (float) (originalBitmap.getWidth()) / originalBitmap.getHeight();
-            if ( w < h ) {
+            if ( ratio > 1 ) {
 				h = (int) (w / ratio);
 			} else {
 				w = (int)(h * ratio);
 			}
-            Rect dst = new Rect();
-            dst.set(0, 0, w, h);
-            canvas.drawRect(0,0,w,h,background);
-            canvas.drawBitmap(originalBitmap, null, dst, paint2);
-            if (!complete) {
-                canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
-                if (outlineBitmap != null) {
-                    canvas.drawBitmap(outlineBitmap, null, dst, paint2);
-                }
+            if (mBitmap==null) {
+                createDrawingBitmap(w, h);
+            }
+            synchronized (mBitmap) {
+                Rect dst = new Rect();
+                dst.set(0, 0, w, h);
+                canvas.drawRect(0, 0, w, h, background);
+                canvas.drawBitmap(originalBitmap, null, dst, paint2);
+                if (!complete) {
+                    canvas.drawBitmap(mBitmap, null, dst, mBitmapPaint);
+                    if (outlineBitmap != null) {
+                        canvas.drawBitmap(outlineBitmap, null, dst, paint2);
+                    }
 
-                canvas.drawPath(circlePath, circlePaint);
+                    canvas.drawPath(circlePath, circlePaint);
+                }
             }
         }
 		
@@ -151,23 +158,11 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
         complete = false;
 
         if (bm!=null) {
-            int w = this.getWidth();
-            int h = this.getHeight();
-            if (w==0) w = 600;
-            if (h==0) h = 600;
-            float ratio = (float) (originalBitmap.getWidth()) / originalBitmap.getHeight();
-            if ( w < h ) {
-				h = (int) (w / ratio);
-			} else {
-				w = (int)(h * ratio);
-			}
-            mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-            mCanvas = new Canvas(mBitmap);
-            mPaint.setStrokeWidth(w < h ? w * 0.12f : h * 0.12f);
-            noPaint.setStrokeWidth(w < h ? w * 0.12f : h * 0.12f);
-            Paint background = new Paint();
-            background.setColor(Color.WHITE);
-            mCanvas.drawRect(0, 0, w, h, background);
+            if (mBitmap!=null) {
+                synchronized (mBitmap) {
+                    mBitmap = null;
+                }
+            }
 
             ColoringImageFilterTask task = new ColoringImageFilterTask(this);
             task.execute(originalBitmap);
@@ -186,25 +181,27 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
 
     protected void touch_start(float x, float y) {
         super.touch_start(x,y);
-		if (!loaded) return;
+		if (!loaded || mBitmap==null) return;
         mPath.reset();
         mPath.moveTo(x, y);
     }
     public void doMove(float oldX, float oldY, float x, float y) {
-        super.doMove(oldX, oldY, x,y);
-		if (!loaded) return;
+        super.doMove(oldX, oldY, x, y);
+		if (!loaded || mBitmap==null) return;
         mPath.quadTo(mX, mY, (x + mX)/2, (y + mY)/2);
-            
-        // commit the path to our offscreen
-        mCanvas.drawPath(mPath,  noPaint);
-        if (!noColor) mCanvas.drawPath(mPath,  mPaint);
 
-        circlePath.reset();
-        circlePath.addCircle(mX, mY, 25, Path.Direction.CW);
+        synchronized (mBitmap) {
+            // commit the path to our offscreen
+            mCanvas.drawPath(mPath, noPaint);
+            if (!noColor) mCanvas.drawPath(mPath, mPaint);
+
+            circlePath.reset();
+            circlePath.addCircle(mX, mY, 25, Path.Direction.CW);
+        }
     }
 
     protected void touch_up(float tx, float ty) {
-        if (!loaded) return;
+        if (!loaded || mBitmap==null) return;
         mPath.lineTo(mX, mY);
         circlePath.reset();
         // commit the path to our offscreen
@@ -227,7 +224,7 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
             }
         }
 		Log.d(this.getClass().getSimpleName(), "count="+count+" total="+total);
-        if (count >= (float)total * 0.97f) {
+        if (count >= (float)total * 0.98f) {
             complete = true;
 			Rect r = new Rect();
 			r.set(starBitmap.getWidth()/2, starBitmap.getHeight()/2,

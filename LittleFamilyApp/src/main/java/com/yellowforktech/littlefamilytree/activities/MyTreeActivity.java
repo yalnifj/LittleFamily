@@ -242,16 +242,15 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
         if (node.getLeft()==null && node.getRight()==null) {
             TreePersonAnimatedSprite sprite = new TreePersonAnimatedSprite(node, this, leftLeaf, rightLeaf, node.getDepth()>0);
             sprite.setX(x);
+            if (node.getDepth()>0) y = y + vineArrow.getHeight();
             sprite.setY(y);
 
             if (node.isHasParents()) {
                 TouchEventGameSprite upArrow = new TouchEventGameSprite(this.vineArrow, TOPIC_NAVIGATE_UP_TREE);
                 upArrow.setX(sprite.getX() + sprite.getWidth() / 2 - upArrow.getWidth() / 2);
-                upArrow.setY(y);
+                upArrow.setY(y - vineArrow.getHeight());
                 upArrow.setData(DATA_TREE_NODE, node);
                 upArrow.setIgnoreAlpha(true);
-                y = y + upArrow.getHeight();
-                sprite.setY(y);
                 treeView.addSprite(upArrow);
                 levelArrows.get(node.getDepth()).add(upArrow);
                 loadedLevels.get(node.getDepth()).add(upArrow);

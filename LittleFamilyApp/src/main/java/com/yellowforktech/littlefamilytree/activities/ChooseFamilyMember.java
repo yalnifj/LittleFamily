@@ -131,8 +131,10 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
     private void updateColumns() {
         int width = getScreenWidth();
         int height = getScreenHeight();
-        int cols = 2;
-        while(cols < 12 && (width / cols) * Math.ceil(((double)adapter.getCount()) / cols) > height) cols++;
+        int cols = 1;
+        int maxCols = 12;
+        if (width < height) maxCols = 3;
+        while(cols < maxCols && (width / cols) * Math.ceil(((double)adapter.getCount()) / cols) > height) cols++;
         gridView.setNumColumns(cols);
     }
 

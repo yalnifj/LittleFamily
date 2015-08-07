@@ -186,7 +186,7 @@ public class ChooseCultureActivity extends LittleFamilyActivity implements Herit
                 }
             }
         });
-        waiter.execute(4000 - (System.currentTimeMillis() - starttime));
+        waiter.execute(3000 - (System.currentTimeMillis() - starttime));
     }
 	
 	@Override
