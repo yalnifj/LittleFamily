@@ -99,7 +99,11 @@ public class LittlePerson implements Serializable {
         if (births!=null) {
             Fact birth = null;
             for(Fact b : births) {
-                if (b!=null && b.getDate()!=null && (birth==null || (b.getPrimary()!=null && b.getPrimary()))) birth = b;
+                if (b!=null) {
+                    if (birth==null) birth = b;
+                    else if (b.getPrimary()!=null && b.getPrimary()) birth = b;
+                    else if (b.getDate()!=null && birth.getDate()==null) birth = b;
+                }
             }
             if (birth!=null) {
                 birthPlace = null;
