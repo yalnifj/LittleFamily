@@ -1,6 +1,9 @@
 package com.yellowforktech.littlefamilytree.data;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -49,6 +52,7 @@ public class DataService implements AuthTask.Listener {
     private Queue<ThreadPerson> syncQ;
     private boolean running = true;
     private int QDepth;
+    private Object cellLock = new Object();
 
     private SyncThread syncer;
     private boolean authenticating = false;
@@ -153,9 +157,36 @@ public class DataService implements AuthTask.Listener {
             this.notifyAll();
         }
         if (syncer==null) {
-            syncer = new SyncThread();
-            syncer.start();
+            Boolean syncBackground = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("sync_background", true);
+            if (syncBackground) {
+                syncer = new SyncThread();
+                syncer.start();
+            }
         }
+
+        PreferenceManager.getDefaultSharedPreferences(context).registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                if (key.equals("sync_background")) {
+                    if (sharedPreferences.getBoolean("sync_background", true)) {
+                        if (syncer == null || (!running && !syncer.isAlive())) {
+                            syncer = new SyncThread();
+                            syncer.start();
+                        }
+                    } else {
+                        if (syncer!=null) {
+                            running = false;
+                        }
+                    }
+                } else if (key.equals("sync_cellular")) {
+                    if (sharedPreferences.getBoolean("sync_cellular", false) || !isConnectedMobile()) {
+                        synchronized (cellLock) {
+                            cellLock.notifyAll();
+                        }
+                    }
+                }
+            }
+        });
     }
 
     public boolean hasData() throws Exception {
@@ -177,6 +208,16 @@ public class DataService implements AuthTask.Listener {
                 Log.e(this.getClass().getSimpleName(), "Error waiting for authentication", e);
             }
         }
+    }
+
+    public NetworkInfo getNetworkInfo(){
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo();
+    }
+
+    public boolean isConnectedMobile(){
+        NetworkInfo info = getNetworkInfo();
+        return (info != null && info.isConnected() && info.getType() == ConnectivityManager.TYPE_MOBILE);
     }
 
     private class ThreadPerson {
@@ -215,6 +256,19 @@ public class DataService implements AuthTask.Listener {
             }
 
             while(running) {
+                Boolean syncCell = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("sync_cellular", false);
+                while (!syncCell && isConnectedMobile()) {
+                    try {
+                        Log.d("SyncThread", "Waiting for Wifi");
+                        synchronized (cellLock) {
+                            cellLock.wait(60000); //-- check every minute for network state change
+                        }
+                        syncCell = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("sync_cellular", false);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
                 while (syncQ.size() == 0) {
                     try {
                         Log.d("SyncThread", "Waiting for Q data");
