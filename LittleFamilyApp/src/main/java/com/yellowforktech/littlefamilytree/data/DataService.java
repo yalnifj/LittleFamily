@@ -401,7 +401,9 @@ public class DataService implements AuthTask.Listener {
 
     public void addToSyncQ(LittlePerson person, int depth) throws Exception {
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.HOUR, -1);
+        String syncDelayStr = PreferenceManager.getDefaultSharedPreferences(context).getString("sync_delay", "1");
+        int syncDelay = Integer.parseInt(syncDelayStr);
+        cal.add(Calendar.HOUR, -1 * syncDelay);
         if (person.isHasParents()==null || person.getLastSync().before(cal.getTime())) {
             synchronized (syncQ) {
                 ThreadPerson tp = new ThreadPerson();

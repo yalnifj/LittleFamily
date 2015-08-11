@@ -578,26 +578,55 @@ public class HomeActivity extends LittleFamilyActivity {
 
             Bitmap pianoBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_music_piano);
             AnimatedBitmapSprite piano = new AnimatedBitmapSprite(pianoBm);
-            piano.setX(625*dm.density);
-            piano.setY(225*dm.density);
+            piano.setX(625 * dm.density);
+            piano.setY(225 * dm.density);
             homeView.addSprite(piano);
 
             Bitmap guitarBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_music_guitar);
-            AnimatedBitmapSprite guitar = new AnimatedBitmapSprite(guitarBm);
-            guitar.setX(690*dm.density);
-            guitar.setY(232*dm.density);
+            TouchStateAnimatedBitmapSprite guitar = new TouchStateAnimatedBitmapSprite(guitarBm, this);
+            guitar.setResources(getResources());
+            guitar.setX(700 * dm.density);
+            guitar.setY(242 * dm.density);
+            List<Integer> playing = new ArrayList<>(4);
+            playing.add(R.drawable.house_music_guitar1);
+            playing.add(R.drawable.house_music_guitar2);
+            playing.add(R.drawable.house_music_guitar3);
+            playing.add(R.drawable.house_music_guitar2);
+            guitar.getBitmapIds().put(1, playing);
+            guitar.setStateTransition(1, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP4);
             homeView.addSprite(guitar);
 
             Bitmap trumpetBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_music_trumpet);
-            AnimatedBitmapSprite trumpet = new AnimatedBitmapSprite(trumpetBm);
-            trumpet.setX(650*dm.density);
-            trumpet.setY(205*dm.density);
+            TouchStateAnimatedBitmapSprite trumpet = new TouchStateAnimatedBitmapSprite(trumpetBm, this);
+            trumpet.setResources(getResources());
+            trumpet.setIgnoreAlpha(true);
+            trumpet.setX(660*dm.density);
+            trumpet.setY(200*dm.density);
+            List<Integer> playingTrumptet = new ArrayList<>(4);
+            playingTrumptet.add(R.drawable.house_music_trumpet1);
+            playingTrumptet.add(R.drawable.house_music_trumpet2);
+            playingTrumptet.add(R.drawable.house_music_trumpet3);
+            playingTrumptet.add(R.drawable.house_music_trumpet2);
+            trumpet.getBitmapIds().put(1, playingTrumptet);
+            trumpet.setStateTransition(1, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP4);
             homeView.addSprite(trumpet);
 
             Bitmap drumsBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_music_drums);
-            AnimatedBitmapSprite drums = new AnimatedBitmapSprite(drumsBm);
-            drums.setX(587*dm.density);
-            drums.setY(285*dm.density);
+            TouchStateAnimatedBitmapSprite drums = new TouchStateAnimatedBitmapSprite(drumsBm, this);
+            drums.setResources(getResources());
+            drums.setX(585*dm.density);
+            drums.setY(275*dm.density);
+            List<Integer> playingDrums = new ArrayList<>(8);
+            playingDrums.add(R.drawable.house_music_drums1);
+            playingDrums.add(R.drawable.house_music_drums2);
+            playingDrums.add(R.drawable.house_music_drums3);
+            playingDrums.add(R.drawable.house_music_drums4);
+            playingDrums.add(R.drawable.house_music_drums5);
+            playingDrums.add(R.drawable.house_music_drums6);
+            playingDrums.add(R.drawable.house_music_drums7);
+            playingDrums.add(R.drawable.house_music_drums8);
+            drums.getBitmapIds().put(1, playingDrums);
+            drums.setStateTransition(1, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP2);
             homeView.addSprite(drums);
 
             homeView.setClipX((int) (400*dm.density));

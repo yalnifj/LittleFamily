@@ -60,7 +60,9 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView {
     }
 
     public void createSprites() {
-
+        synchronized (sprites) {
+            sprites.clear();
+        }
         spritesCreated = true;
     }
 

@@ -107,7 +107,7 @@ public class TouchStateAnimatedBitmapSprite extends AnimatedBitmapSprite {
         if (oldframe!=0 && frame==0) {
             loops++;
         }
-        if (stateTransitions.containsKey(state) && stateTransitions.get(state)==loops) {
+        if (stateTransitions.containsKey(state) && loops >= stateTransitions.get(state)) {
             nextState();
         }
     }
