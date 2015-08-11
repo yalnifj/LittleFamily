@@ -1,16 +1,15 @@
 package com.yellowforktech.littlefamilytree.views;
 
+import android.graphics.*;
+
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-
 import com.yellowforktech.littlefamilytree.activities.LittleFamilyActivity;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
-
+import com.yellowforktech.littlefamilytree.sprites.TouchStateAnimatedBitmapSprite;
 import java.util.List;
+import com.yellowforktech.littlefamilytree.R;
 
 /**
  * Created by kids on 6/17/15.
@@ -63,6 +62,11 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView {
         synchronized (sprites) {
             sprites.clear();
         }
+		Bitmap pianoBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_music_piano);
+		TouchStateAnimatedBitmapSprite piano = new TouchStateAnimatedBitmapSprite(pianoBm, activity);
+		piano.setX(getWidth()/2 - pianoBm.getWidth()*dm.density/2);
+		piano.setY(getHeight() - pianoBm.getHeight()*dm.density);
+		addSprite(piano);
         spritesCreated = true;
     }
 

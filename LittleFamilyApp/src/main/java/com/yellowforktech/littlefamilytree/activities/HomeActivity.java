@@ -577,10 +577,12 @@ public class HomeActivity extends LittleFamilyActivity {
             homeView.addSprite(bat);
 
             Bitmap pianoBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_music_piano);
-            AnimatedBitmapSprite piano = new AnimatedBitmapSprite(pianoBm);
+            TouchStateAnimatedBitmapSprite piano = new TouchStateAnimatedBitmapSprite(pianoBm, this);
             piano.setX(625 * dm.density);
             piano.setY(225 * dm.density);
+			piano.setStateTransitionEvent(0, TOPIC_START_SONG);
             homeView.addSprite(piano);
+			homeView.addActivitySprite(piano);
 
             Bitmap guitarBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_music_guitar);
             TouchStateAnimatedBitmapSprite guitar = new TouchStateAnimatedBitmapSprite(guitarBm, this);
