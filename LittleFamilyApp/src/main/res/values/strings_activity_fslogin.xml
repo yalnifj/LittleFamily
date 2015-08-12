@@ -11,6 +11,6 @@
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="agreements_text">By clicking the \"SIGN IN\" button, I agree to Little Family knowing my basic FamilySearch profile information and accessing data about my ancestors from FamilySearch family tree.</string>
-    <string name="agreements_text2">Little Family will use this information in accordance with their respective terms of service and privacy policies.</string>
-    <string name="privacy_text">Little Family will not distribute or share any information outside of your device except with FamilySearch.</string>
+    <string name="agreements_text2">Little Family Tree will use this information in accordance with their respective terms of service and privacy policies.</string>
+    <string name="privacy_text">Little Family Tree will not distribute or share any information outside of your device except with FamilySearch.</string>
 </resources>

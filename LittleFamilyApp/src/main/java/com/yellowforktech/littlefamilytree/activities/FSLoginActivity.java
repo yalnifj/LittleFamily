@@ -51,14 +51,14 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
         mEmailView = (AutoCompleteTextView) findViewById(com.yellowforktech.littlefamilytree.R.id.email);
         try {
             String defaultUser = dataService.getDBHelper().getProperty(DataService.SERVICE_USERNAME);
-            if (defaultUser==null) defaultUser = FS_DEFAULT_USER;
+            //if (defaultUser==null) defaultUser = FS_DEFAULT_USER;
             mEmailView.setText(defaultUser);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         mPasswordView = (EditText) findViewById(com.yellowforktech.littlefamilytree.R.id.password);
-        mPasswordView.setText(FS_DEFAULT_PASS);
+        //mPasswordView.setText(FS_DEFAULT_PASS);
 
 
         Button mEmailSignInButton = (Button) findViewById(com.yellowforktech.littlefamilytree.R.id.email_sign_in_button);
@@ -164,10 +164,14 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
 
     @Override
     public void onComplete(LittlePerson person) {
-        pd.setMessage("Loading close family members from FamilySearch...");
-        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
-        FamilyLoaderTask task = new FamilyLoaderTask(this, this);
-        task.execute(person);
+        if (person!=null) {
+            pd.setMessage("Loading close family members from FamilySearch...");
+            intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
+            FamilyLoaderTask task = new FamilyLoaderTask(this, this);
+            task.execute(person);
+        } else {
+            Toast.makeText(FSLoginActivity.this, "Error reading data from FamilySearch", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
