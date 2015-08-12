@@ -94,6 +94,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         EventQueue.getInstance().subscribe(TOPIC_START_TREE, this);
         EventQueue.getInstance().subscribe(TOPIC_START_BUBBLES, this);
         EventQueue.getInstance().subscribe(TOPIC_START_SETTINGS, this);
+        EventQueue.getInstance().subscribe(TOPIC_START_SONG, this);
     }
 
     @Override
@@ -112,6 +113,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         EventQueue.getInstance().unSubscribe(TOPIC_START_TREE, this);
         EventQueue.getInstance().unSubscribe(TOPIC_START_BUBBLES, this);
         EventQueue.getInstance().unSubscribe(TOPIC_START_SETTINGS, this);
+        EventQueue.getInstance().unSubscribe(TOPIC_START_SONG, this);
     }
 
     public void showLoadingDialog() {

@@ -580,7 +580,10 @@ public class HomeActivity extends LittleFamilyActivity {
             TouchStateAnimatedBitmapSprite piano = new TouchStateAnimatedBitmapSprite(pianoBm, this);
             piano.setX(625 * dm.density);
             piano.setY(225 * dm.density);
-			piano.setStateTransitionEvent(0, TOPIC_START_SONG);
+            List<Bitmap> state1 = new ArrayList<>(1);
+            state1.add(pianoBm);
+            piano.getBitmaps().put(1, state1);
+			piano.setStateTransitionEvent(1, TOPIC_START_SONG);
             homeView.addSprite(piano);
 			homeView.addActivitySprite(piano);
 
