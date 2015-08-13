@@ -13,7 +13,6 @@ import com.yellowforktech.littlefamilytree.remote.RemoteService;
 import com.yellowforktech.littlefamilytree.remote.RemoteServiceSearchException;
 import com.yellowforktech.littlefamilytree.remote.familysearch.FamilySearchService;
 import com.yellowforktech.littlefamilytree.remote.phpgedview.PGVService;
-import com.yellowforktech.littlefamilytree.util.PlaceHelper;
 
 import org.gedcomx.atom.Entry;
 import org.gedcomx.conclusion.Person;
@@ -196,16 +195,18 @@ public class DataService implements AuthTask.Listener {
             Log.d("SyncThread", "SyncThread started.");
             try {
                 //-- read old q from DB
-                List<Integer> ids = getDBHelper().getSyncQ();
-                if (ids!=null) {
-                    for(Integer id : ids) {
-                        if (id!=null) {
-                            LittlePerson person = getDBHelper().getPersonById(id);
-                            if (person!=null) {
-                                ThreadPerson tp = new ThreadPerson();
-                                tp.depth = 0;
-                                tp.person = person;
-                                syncQ.add(tp);
+                synchronized (syncQ) {
+                    List<Integer> ids = getDBHelper().getSyncQ();
+                    if (ids != null) {
+                        for (Integer id : ids) {
+                            if (id != null) {
+                                LittlePerson person = getDBHelper().getPersonById(id);
+                                if (person != null) {
+                                    ThreadPerson tp = new ThreadPerson();
+                                    tp.depth = 0;
+                                    tp.person = person;
+                                    syncQ.add(tp);
+                                }
                             }
                         }
                     }
@@ -264,12 +265,8 @@ public class DataService implements AuthTask.Listener {
 
                     //-- force load of family members if we haven't previously loaded them
                     //--- allows building the tree in the background
-                    if (tp.depth < 6 || tp.person.isHasParents() == null) {
-                        QDepth = tp.depth;
-                        LittlePerson defaultPerson = getDefaultPerson();
-                        String defaultPlace = PlaceHelper.getPlaceCountry(defaultPerson.getBirthPlace());
-                        String place = PlaceHelper.getPlaceCountry(tp.person.getBirthPlace());
-                        if (place!=null && place.equals(defaultPlace) && tp.person.isHasParents() == null) {
+                    if (tp.depth < 6) {
+                        if (tp.person.isHasParents() == null) {
                             List<LittlePerson> parents = getParentsFromRemoteService(tp.person);
                             for (LittlePerson p : parents) {
                                 addToSyncQ(p, tp.depth+1);
@@ -404,6 +401,13 @@ public class DataService implements AuthTask.Listener {
         String syncDelayStr = PreferenceManager.getDefaultSharedPreferences(context).getString("sync_delay", "1");
         int syncDelay = Integer.parseInt(syncDelayStr);
         cal.add(Calendar.HOUR, -1 * syncDelay);
+        if (person.isHasParents()==null) {
+            List<LittlePerson> parents = getDBHelper().getParentsForPerson(person.getId());
+            if (parents!=null && parents.size()>0) {
+                person.setHasParents(true);
+                getDBHelper().persistLittlePerson(person);
+            }
+        }
         if (person.isHasParents()==null || person.getLastSync().before(cal.getTime())) {
             synchronized (syncQ) {
                 ThreadPerson tp = new ThreadPerson();
@@ -627,8 +631,8 @@ public class DataService implements AuthTask.Listener {
                 rel.setId2(person2.getId());
                 getDBHelper().persistRelationship(rel);
 
-                if (!family.contains(person1)) family.add(person1);
-                if (!family.contains(person2)) family.add(person2);
+                if (!person.equals(person1) && !family.contains(person1)) family.add(person1);
+                if (!person.equals(person2) && !family.contains(person2)) family.add(person2);
             }
         }
 

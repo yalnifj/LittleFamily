@@ -42,6 +42,7 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
      */
     private static final boolean ALWAYS_SIMPLE_PREFS = false;
     protected TextToSpeech tts;
+    protected ListPreference voicePref;
 
 
     @Override
@@ -58,11 +59,30 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
         if (code == TextToSpeech.SUCCESS) {
             tts.setLanguage(Locale.getDefault());
             tts.setSpeechRate(0.9f);
+
+            /*
+            if (Build.VERSION.SDK_INT > 20) {
+                Set<Voice> voices = tts.getVoices();
+                String[] voiceList = new String[voices.size()];
+                int i = 0;
+                for (Voice v : voices) {
+                    voiceList[i] = v.getName();
+                    i++;
+                }
+                voicePref.setEntries(voiceList);
+                voicePref.setEntryValues(voiceList);
+            }
+            */
+
         } else {
             tts = null;
             //Toast.makeText(this, "Failed to initialize TTS engine.", Toast.LENGTH_SHORT).show();
             Log.e("LittleFamilyActivity", "Error intializing speech");
         }
+    }
+
+    public void setVoicePref(ListPreference voicePref) {
+        this.voicePref = voicePref;
     }
 
     public TextToSpeech getTts() {
@@ -290,20 +310,12 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_general);
 
-            ListPreference voicePref = (ListPreference) findPreference("tts_voice");
-            if (Build.VERSION.SDK_INT > 20) {
-                Set<Voice> voices = ((SettingsActivity)getActivity()).getTts().getVoices();
-                String[] voiceList = new String[voices.size()];
-                int i = 0;
-                for (Voice v : voices) {
-                    voiceList[i] = v.getName();
-                    i++;
-                }
-                voicePref.setEntries(voiceList);
-                voicePref.setEntryValues(voiceList);
-            } else {
-                getPreferenceScreen().removePreference(voicePref);
-            }
+            ListPreference pref = (ListPreference) findPreference("tts_voice");
+            ((SettingsActivity)getActivity()).setVoicePref(pref);
+            //if (Build.VERSION.SDK_INT > 20) {
+            //} else {
+                getPreferenceScreen().removePreference(pref);
+            //}
 
             Preference testVoice = findPreference("tts_voice_test");
             testVoice.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -367,6 +379,12 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
             bindPreferenceSummaryToValue(findPreference("sync_delay"));
             bindPreferenceSummaryToValue(findPreference("tts_voice"));
         }
+    }
+
+    @Override
+    protected boolean isValidFragment(String fragmentName) {
+        if (GeneralPreferenceFragment.class.getName().equals(fragmentName)) return true;
+        return super.isValidFragment(fragmentName);
     }
 
     /**

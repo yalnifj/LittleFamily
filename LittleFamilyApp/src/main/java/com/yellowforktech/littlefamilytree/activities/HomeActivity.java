@@ -82,7 +82,7 @@ public class HomeActivity extends LittleFamilyActivity {
             DisplayMetrics dm = new DisplayMetrics();
             getWindowManager().getDefaultDisplay().getMetrics(dm);
             int maxWidth = (int) (1280*dm.density);
-            int maxHeight = (int) (720*dm.density);
+            int maxHeight = (int) (800*dm.density);
             homeView.setMaxHeight(maxHeight);
             homeView.setMaxWidth(maxWidth);
 
@@ -90,8 +90,6 @@ public class HomeActivity extends LittleFamilyActivity {
             homeBackground = new ClippedRepeatedBackgroundSprite(backBitmap, maxWidth, maxHeight);
             homeBackground.setWidth(homeView.getWidth());
             homeBackground.setHeight(homeView.getHeight());
-            homeBackground.setClipX((int) (400*dm.density));
-            homeBackground.setClipY((int) (100*dm.density));
             homeView.setBackgroundSprite(homeBackground);
 
             Bitmap starBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.star1);
@@ -584,6 +582,7 @@ public class HomeActivity extends LittleFamilyActivity {
             state1.add(pianoBm);
             piano.getBitmaps().put(1, state1);
 			piano.setStateTransitionEvent(1, TOPIC_START_SONG);
+            piano.getAudio().put(1, R.raw.piano);
             homeView.addSprite(piano);
 			homeView.addActivitySprite(piano);
 
@@ -598,7 +597,8 @@ public class HomeActivity extends LittleFamilyActivity {
             playing.add(R.drawable.house_music_guitar3);
             playing.add(R.drawable.house_music_guitar2);
             guitar.getBitmapIds().put(1, playing);
-            guitar.setStateTransition(1, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP4);
+            guitar.setStateTransition(1, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP5);
+            guitar.getAudio().put(1, R.raw.guitar);
             homeView.addSprite(guitar);
 
             Bitmap trumpetBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_music_trumpet);
@@ -613,14 +613,15 @@ public class HomeActivity extends LittleFamilyActivity {
             playingTrumptet.add(R.drawable.house_music_trumpet3);
             playingTrumptet.add(R.drawable.house_music_trumpet2);
             trumpet.getBitmapIds().put(1, playingTrumptet);
-            trumpet.setStateTransition(1, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP4);
+            trumpet.setStateTransition(1, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP5);
+            trumpet.getAudio().put(1, R.raw.trumpet);
             homeView.addSprite(trumpet);
 
             Bitmap drumsBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_music_drums);
             TouchStateAnimatedBitmapSprite drums = new TouchStateAnimatedBitmapSprite(drumsBm, this);
             drums.setResources(getResources());
-            drums.setX(585*dm.density);
-            drums.setY(275*dm.density);
+            drums.setX(585 * dm.density);
+            drums.setY(275 * dm.density);
             List<Integer> playingDrums = new ArrayList<>(8);
             playingDrums.add(R.drawable.house_music_drums1);
             playingDrums.add(R.drawable.house_music_drums2);
@@ -631,11 +632,25 @@ public class HomeActivity extends LittleFamilyActivity {
             playingDrums.add(R.drawable.house_music_drums7);
             playingDrums.add(R.drawable.house_music_drums8);
             drums.getBitmapIds().put(1, playingDrums);
-            drums.setStateTransition(1, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP2);
+            drums.setStateTransition(1, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP3);
+            drums.getAudio().put(1, R.raw.drums);
             homeView.addSprite(drums);
 
-            homeView.setClipX((int) (400*dm.density));
-            homeView.setClipY((int) (90*dm.density));
+            int clipX = (int) (400*dm.density);
+            int clipY = (int) (90*dm.density);
+            if (maxWidth - clipX < getScreenWidth()) {
+                clipX = maxWidth - getScreenWidth();
+                if (clipX < 0) clipX = 0;
+            }
+            if (maxHeight - clipY < getScreenHeight()) {
+                clipY = maxHeight - getScreenHeight();
+                if (clipY < 0) clipY = 0;
+            }
+
+            homeBackground.setClipX(clipX);
+            homeBackground.setClipY(clipY);
+            homeView.setClipX(clipX);
+            homeView.setClipY(clipY);
         }
     }
 

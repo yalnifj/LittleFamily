@@ -3,6 +3,7 @@ package com.yellowforktech.littlefamilytree.sprites;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.media.MediaPlayer;
@@ -24,6 +25,7 @@ public class TouchStateAnimatedBitmapSprite extends AnimatedBitmapSprite {
     public static final int TRANSITION_LOOP2 = 2;
     public static final int TRANSITION_LOOP3 = 3;
     public static final int TRANSITION_LOOP4 = 4;
+    public static final int TRANSITION_LOOP5 = 5;
 
     protected Map<Integer, Integer> audio;
     protected Map<Integer, Integer> stateTransitions;
@@ -141,6 +143,22 @@ public class TouchStateAnimatedBitmapSprite extends AnimatedBitmapSprite {
             }
         }
         return false;
+    }
+
+    @Override
+    public void doDraw(Canvas canvas) {
+        super.doDraw(canvas);
+
+        /*
+        if (touchRectangles.get(state)!=null) {
+            Paint p  = new Paint();
+            p.setColor(Color.BLUE);
+            Rect rect = new Rect();
+            Rect tr = touchRectangles.get(state);
+            rect.set((int)(x+tr.left), (int)(y+tr.top), (int)(x+tr.right), (int) (y+tr.bottom));
+            canvas.drawRect(rect, p);
+        }
+        */
     }
 
     @Override

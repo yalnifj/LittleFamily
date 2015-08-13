@@ -86,18 +86,30 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
             sprites.clear();
         }
         int width = (int) (getWidth() * 0.2f);
+        if (width > 250) width = 250;
+
+        int centerX = (getWidth()/2 - width);
+        int centerY = (getHeight() /2);
 
 		Bitmap pianoBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_music_piano);
 		TouchStateAnimatedBitmapSprite piano = new TouchStateAnimatedBitmapSprite(pianoBm, activity);
-		piano.setX((getWidth()/2) - (pianoBm.getWidth()/2) - (width/2));
-		piano.setY(getHeight()/2 + width*2);
+        float r = (float) pianoBm.getWidth() / pianoBm.getHeight();
+        piano.setIgnoreAlpha(true);
+        piano.setWidth(width);
+        piano.setHeight((int) (width / r));
+		piano.setX(centerX - (piano.getWidth()/2));
+		piano.setY(centerY + width);
 		addSprite(piano);
 		
 		Bitmap guitarBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_music_guitar);
 		TouchStateAnimatedBitmapSprite guitar = new TouchStateAnimatedBitmapSprite(guitarBm, activity);
+        r = (float) guitarBm.getWidth() / guitarBm.getHeight();
+        guitar.setIgnoreAlpha(true);
+        guitar.setWidth(width);
+        guitar.setHeight((int) (width / r));
 		guitar.setResources(getResources());
-		guitar.setX(piano.getX()+piano.getWidth());
-		guitar.setY(piano.getY()-guitarBm.getHeight());
+		guitar.setX(centerX + width);
+		guitar.setY(centerY-guitar.getHeight()/2);
 		List<Integer> playing = new ArrayList<>(4);
 		playing.add(R.drawable.house_music_guitar1);
 		playing.add(R.drawable.house_music_guitar2);
@@ -109,10 +121,14 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 		
 		Bitmap trumpetBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_music_trumpet);
 		TouchStateAnimatedBitmapSprite trumpet = new TouchStateAnimatedBitmapSprite(trumpetBm, activity);
+        r = (float) trumpetBm.getWidth() / trumpetBm.getHeight();
+        trumpet.setIgnoreAlpha(true);
+        trumpet.setWidth(width);
+        trumpet.setHeight((int) (width / r));
 		trumpet.setResources(getResources());
 		trumpet.setIgnoreAlpha(true);
-		trumpet.setX(piano.getX() - trumpetBm.getWidth());
-		trumpet.setY(guitar.getY());
+		trumpet.setX((centerX - width) - trumpet.getWidth());
+		trumpet.setY(centerY - trumpet.getHeight() / 2);
 		List<Integer> playingTrumptet = new ArrayList<>(4);
 		playingTrumptet.add(R.drawable.house_music_trumpet1);
 		playingTrumptet.add(R.drawable.house_music_trumpet2);
@@ -124,9 +140,13 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 		
 		Bitmap drumsBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_music_drums);
 		TouchStateAnimatedBitmapSprite drums = new TouchStateAnimatedBitmapSprite(drumsBm, activity);
+        r = (float) drumsBm.getWidth() / drumsBm.getHeight();
+        drums.setIgnoreAlpha(true);
+        drums.setWidth(width);
+        drums.setHeight((int) (width / r));
 		drums.setResources(getResources());
-		drums.setX(piano.getX() + piano.getWidth()/2 - (drumsBm.getWidth() / 2));
-		drums.setY(piano.getY() - (width*2));
+		drums.setX(centerX - drums.getWidth()/2);
+		drums.setY((centerY - width) - drums.getHeight());
 		List<Integer> playingDrums = new ArrayList<>(8);
 		playingDrums.add(R.drawable.house_music_drums1);
 		playingDrums.add(R.drawable.house_music_drums2);

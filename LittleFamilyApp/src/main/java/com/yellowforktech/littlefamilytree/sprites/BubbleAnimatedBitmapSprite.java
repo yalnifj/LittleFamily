@@ -30,23 +30,26 @@ public class BubbleAnimatedBitmapSprite extends BouncingAnimatedBitmapSprite {
     private int stepCount = 0;
     private int sWidth;
     private int sHeight;
+    private int photoWidth;
 	
-    public BubbleAnimatedBitmapSprite(Bitmap bitmap, int maxWidth, int maxHeight, LittleFamilyActivity activity, BubbleSpriteSurfaceView view) {
+    public BubbleAnimatedBitmapSprite(Bitmap bitmap, int maxWidth, int maxHeight, LittleFamilyActivity activity, BubbleSpriteSurfaceView view, int photoWidth) {
         super(bitmap, maxWidth, maxHeight);
         setSelectable(true);
         this.activity = activity;
         setIgnoreAlpha(true);
         setStepsPerFrame(2);
         this.view = view;
+        this.photoWidth = photoWidth;
     }
 
-    public BubbleAnimatedBitmapSprite(Map<Integer, List<Bitmap>> bitmaps, int maxWidth, int maxHeight, LittleFamilyActivity activity, BubbleSpriteSurfaceView view) {
+    public BubbleAnimatedBitmapSprite(Map<Integer, List<Bitmap>> bitmaps, int maxWidth, int maxHeight, LittleFamilyActivity activity, BubbleSpriteSurfaceView view, int photoWidth) {
         super(bitmaps, maxWidth, maxHeight);
         setSelectable(true);
         this.activity = activity;
         setIgnoreAlpha(true);
         setStepsPerFrame(2);
         this.view = view;
+        this.photoWidth = photoWidth;
     }
 
     public int getMx() {
@@ -106,15 +109,14 @@ public class BubbleAnimatedBitmapSprite extends BouncingAnimatedBitmapSprite {
 			}
         }
         if (state==2) {
-            speed = (mx - x)/10;
-            slope = (my - y)/10;
-            if (speed > 10) speed=10;
-            if (speed < -10) speed=-10;
-            if (slope > 10) slope = 10;
-            if (slope < -10) slope = -10;
-            if (x > mx - 3 && x < mx +3) x = mx;
-            if (y > my - 3 && y < my +3) y = my;
-            if (x==mx && y==my) {
+            speed = (mx - (x + photo.getWidth()/2))/10;
+            slope = (my - (y + photo.getHeight()/2))/10;
+            if (speed > 15) speed=15;
+            if (speed < -15) speed=-15;
+            if (slope > 15) slope = 15;
+            if (slope < -15) slope = -15;
+            if (x + photo.getWidth()/2 > mx - 3 && x + photo.getWidth()/2 < mx +3 &&
+                    y + photo.getHeight()/2 > my - 3 && y + photo.getHeight()/2 < my +3) {
                 state = 3;
                 slope = 0;
                 speed = 0;

@@ -202,7 +202,7 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
             if (bubbleStep>=bubbleAddWait) {
                 bubbleCount--;
                 Random rand = new Random();
-                BubbleAnimatedBitmapSprite bubble = new BubbleAnimatedBitmapSprite(bubbleBm, getWidth(), getHeight(), activity, this);
+                BubbleAnimatedBitmapSprite bubble = new BubbleAnimatedBitmapSprite(bubbleBm, getWidth(), getHeight(), activity, this, (int) (fatherSpot.getWidth()*0.8));
                 bubble.getBitmaps().put(1, popping);
                 int width = (int) (bubbleBm.getWidth() * (0.5 + rand.nextFloat()));
                 bubble.setWidth(width);
@@ -226,11 +226,19 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
         spotHBm = BitmapFactory.decodeResource(getResources(), com.yellowforktech.littlefamilytree.R.drawable.bubble_spot_h);
         spotDownBm = BitmapFactory.decodeResource(getResources(), com.yellowforktech.littlefamilytree.R.drawable.bubble_spot_down);
         spotDownHBm = BitmapFactory.decodeResource(getResources(), com.yellowforktech.littlefamilytree.R.drawable.bubble_spot_down_h);
+        int spotWidth = getWidth()/5;
+        if (spotWidth < spotBm.getWidth()) spotWidth = spotBm.getWidth();
+        float spotRatio = (float)spotBm.getWidth() / spotBm.getHeight();
+        int spotHeight = (int) (spotWidth / spotRatio);
+        if (spotHeight < spotBm.getHeight()) spotHeight = spotBm.getHeight();
+
         fatherSpot = new AnimatedBitmapSprite(spotBm);
+        fatherSpot.setWidth(spotWidth);
+        fatherSpot.setHeight(spotHeight);
         List<Bitmap> highlighted = new ArrayList<>(1);
         highlighted.add(spotHBm);
         fatherSpot.getBitmaps().put(1, highlighted);
-        int fx = (int) ((getWidth()/2)-(spotBm.getWidth()*1.3f));
+        int fx = (int) ((getWidth()/2)-(spotWidth*1.3f));
         int fy = getHeight()/10;
         fatherSpot.setX(fx);
         fatherSpot.setY(fy);
@@ -238,18 +246,22 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
 
         motherSpot = new AnimatedBitmapSprite(spotBm);
         motherSpot.getBitmaps().put(1, highlighted);
-        int mx = (int) ((getWidth()/2)+(spotBm.getWidth()*0.3f));
+        motherSpot.setWidth(spotWidth);
+        motherSpot.setHeight(spotHeight);
+        int mx = (int) ((getWidth()/2)+(spotWidth*0.3f));
         int my = getHeight()/10;
         motherSpot.setX(mx);
         motherSpot.setY(my);
         addSprite(motherSpot);
 
         childSpot = new AnimatedBitmapSprite(spotDownBm);
+        childSpot.setWidth(spotWidth);
+        childSpot.setHeight(spotHeight);
         List<Bitmap> highlightedDown = new ArrayList<>(1);
         highlightedDown.add(spotDownHBm);
         childSpot.getBitmaps().put(1, highlightedDown);
-        int cx = (int) ((getWidth()/2)-(spotDownBm.getWidth()/2));
-        int cy = spotDownBm.getHeight()+getHeight()/10;
+        int cx = (int) ((getWidth()/2)-(spotWidth/2));
+        int cy = spotHeight+getHeight()/10;
         childSpot.setX(cx);
         childSpot.setY(cy);
         addSprite(childSpot);
@@ -268,12 +280,13 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
         Bitmap faucet1bm = BitmapFactory.decodeResource(getResources(), com.yellowforktech.littlefamilytree.R.drawable.faucet1);
         TouchStateAnimatedBitmapSprite faucet = new TouchStateAnimatedBitmapSprite(faucet1bm, activity);
         float fr = (float) faucet1bm.getWidth() / (float) faucet1bm.getHeight();
-        int fwidth = (int) (115*dm.density);
-        int fheight  = (int)(fwidth / fr);
+        int fheight  = (int)(getHeight()/2 - sink.getHeight()*0.75f);
+        int fwidth = (int) (fheight * fr);
+        float scale = (float) fheight / faucet1bm.getHeight();
         faucet.setWidth(fwidth);
         faucet.setHeight(fheight);
         faucet.setX(sink.getX() + sink.getWidth() / 2);
-        faucet.setY(sink.getY() - fheight + (25*dm.density));
+        faucet.setY(getHeight()/2);
         List<Bitmap> turning = new ArrayList<>(2);
         turning.add(BitmapFactory.decodeResource(getResources(), com.yellowforktech.littlefamilytree.R.drawable.faucet2));
         turning.add(faucet1bm);
@@ -298,19 +311,19 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
         faucet.setStateTransition(5, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP3);
         faucet.setStateTransitionEvent(4, TOPIC_WATER_ADDED);
         Rect touchRect = new Rect();
-        touchRect.set((int) (42*dm.density), (int) (45*dm.density), faucet1bm.getWidth()-10, (int) (faucet1bm.getHeight()*0.8f));
+        touchRect.set((int) (42*scale*dm.density), (int) (45*scale*dm.density), faucet.getWidth()-10, (int) (faucet.getHeight()*0.8f));
         faucet.setTouchRectangles(0, touchRect);
         addSprite(faucet);
 
         Bitmap soap1bm = BitmapFactory.decodeResource(getResources(), com.yellowforktech.littlefamilytree.R.drawable.soap1);
         TouchStateAnimatedBitmapSprite soap = new TouchStateAnimatedBitmapSprite(soap1bm, activity);
         float pr = (float)soap1bm.getWidth() / soap1bm.getHeight();
-        int pwidth = (int) (115*dm.density);
-        int pheight  = (int)(pwidth / pr);
+        int pheight  = (int)(faucet.getHeight()/2);
+        int pwidth = (int) (pheight * pr);
         soap.setWidth(pwidth);
         soap.setHeight(pheight);
-        soap.setX(sink.getX() + sink.getWidth() + (10*dm.density) - pwidth);
-        soap.setY(sink.getY() - pheight * 0.75f);
+        soap.setX(faucet.getX() + faucet.getWidth() / 2);
+        soap.setY(faucet.getY() + faucet.getHeight() - pheight + 5 * dm.density);
         List<Bitmap> squirting = new ArrayList<>(4);
         squirting.add(BitmapFactory.decodeResource(getResources(), com.yellowforktech.littlefamilytree.R.drawable.soap2));
         squirting.add(BitmapFactory.decodeResource(getResources(), com.yellowforktech.littlefamilytree.R.drawable.soap3));
@@ -334,14 +347,14 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
         soap.setStateTransition(4, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
         soap.setStateTransitionEvent(4, TOPIC_SOAP_ADDED);
         touchRect = new Rect();
-        touchRect.set((int) (soap1bm.getWidth()*0.5f), 0, soap1bm.getWidth(), soap1bm.getHeight());
+        touchRect.set((int) (soap.getWidth()*0.6f), 0, soap.getWidth(), soap.getHeight());
         soap.setTouchRectangles(0, touchRect);
         addSprite(soap);
 
         Random rand = new Random();
         int count = rand.nextInt(8) + 4;
         for (int b = 0; b < count; b++) {
-            BubbleAnimatedBitmapSprite bubble = new BubbleAnimatedBitmapSprite(bubbleBm, getWidth(), getHeight(), activity, this);
+            BubbleAnimatedBitmapSprite bubble = new BubbleAnimatedBitmapSprite(bubbleBm, getWidth(), getHeight(), activity, this, (int) (spotWidth*0.8));
             bubble.getBitmaps().put(1, popping);
             int width = (int) (bubbleBm.getWidth() * (0.5 + rand.nextFloat()));
             bubble.setWidth(width);
@@ -358,7 +371,7 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
 		if (random!=null) {
             count = 0;
 			for (LittlePerson person : random) {
-                BubbleAnimatedBitmapSprite bubble = new BubbleAnimatedBitmapSprite(bubbleBm, getWidth(), getHeight(), activity, this);
+                BubbleAnimatedBitmapSprite bubble = new BubbleAnimatedBitmapSprite(bubbleBm, getWidth(), getHeight(), activity, this, (int) (spotWidth*0.8));
                 bubble.getBitmaps().put(1, popping);
                 int slope = 5 - rand.nextInt(10);
                 bubble.setSlope(slope);
@@ -368,8 +381,8 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
                 bubble.setX(rand.nextInt(getWidth() - bubble.getWidth()));
                 bubble.setPerson(person);
                 if (parents.size() > 0 && parents.get(0) == person) {
-                    bubble.setMx((int) (fatherSpot.getX() + 3));
-                    bubble.setMy((int) (fatherSpot.getY() + 3));
+                    bubble.setMx((int) (fatherSpot.getX() + (fatherSpot.getWidth()-20*dm.density)/2));
+                    bubble.setMy((int) (fatherSpot.getY() + (fatherSpot.getHeight()-20*dm.density)/2));
                     if (count==0) {
                         fatherSpot.setState(1);
                         if (person.getGender()== GenderType.Female) activity.speak(activity.getResources().getString(com.yellowforktech.littlefamilytree.R.string.who_is_mother));
@@ -377,8 +390,8 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
                     }
                 }
                 if (parents.size() > 1 && parents.get(1) == person) {
-                    bubble.setMx((int) (motherSpot.getX() + 3));
-                    bubble.setMy((int) (motherSpot.getY() + 3));
+                    bubble.setMx((int) (motherSpot.getX() + (motherSpot.getWidth()-20*dm.density)/2));
+                    bubble.setMy((int) (motherSpot.getY() + (motherSpot.getHeight()-20*dm.density)/2));
                     if (count==0) {
                         motherSpot.setState(1);
                         if (person.getGender()== GenderType.Female) activity.speak(activity.getResources().getString(com.yellowforktech.littlefamilytree.R.string.who_is_mother));
@@ -386,8 +399,8 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
                     }
                 }
                 if (children.size() > 0 && children.get(0) == person) {
-                    bubble.setMx((int) (childSpot.getX() + 3));
-                    bubble.setMy((int) (childSpot.getY() + 15));
+                    bubble.setMx((int) (childSpot.getX() + (childSpot.getWidth()-20*dm.density)/2));
+                    bubble.setMy((int) (childSpot.getY() + childSpot.getHeight()/2));
                     if (count==0) {
                         childSpot.setState(1);
                         activity.speak(activity.getResources().getString(com.yellowforktech.littlefamilytree.R.string.who_is_child));
