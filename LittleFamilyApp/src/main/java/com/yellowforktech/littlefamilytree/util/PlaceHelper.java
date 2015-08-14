@@ -32,10 +32,16 @@ public class PlaceHelper {
     static {
         Arrays.sort(abbvStates);
     }
+	
+	private static String[] tribes = {
+		"cherokee", "apache", "navajo", "iriquois"
+	};
 
     public static boolean isInUS(String place) {
         String tempPlace = place.toLowerCase();
-        tempPlace = tempPlace.replaceAll("territory", "").trim();
+        tempPlace = tempPlace.replaceAll("territory", "")
+			.replaceAll("nation", "")
+			.trim();
         if (tempPlace.equals("united states")) return true;
         if (tempPlace.equals("united states of america")) return true;
         if (tempPlace.equals("us")) return true;
@@ -67,7 +73,7 @@ public class PlaceHelper {
     public static String getTopPlace(String place) {
         if (place==null) return null;
         String[] parts = place.split("[,]+");
-        return parts[parts.length-1].trim().replaceAll("[<>\\[\\]\\(\\)\"]+", "");
+        return parts[parts.length-1].trim().replaceAll("[<>\\[\\]\\(\\)\\.\"]+", "");
     }
 
     public static String getPlaceCountry(String p) {
