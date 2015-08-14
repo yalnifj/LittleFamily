@@ -100,10 +100,14 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     @Override
     protected void onStop() {
         super.onStop();
-        successPlayer.release();
-        successPlayer = null;
-        buzzPlayer.release();
-        buzzPlayer = null;
+        if (successPlayer!=null) {
+            successPlayer.release();
+            successPlayer = null;
+        }
+        if (buzzPlayer!=null) {
+            buzzPlayer.release();
+            buzzPlayer = null;
+        }
         EventQueue.getInstance().unSubscribe(TOPIC_START_MATCH, this);
         EventQueue.getInstance().unSubscribe(TOPIC_START_COLORING, this);
         EventQueue.getInstance().unSubscribe(TOPIC_START_DRESSUP, this);

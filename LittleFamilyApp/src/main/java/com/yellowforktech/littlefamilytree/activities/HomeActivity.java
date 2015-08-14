@@ -581,7 +581,7 @@ public class HomeActivity extends LittleFamilyActivity {
             List<Bitmap> state1 = new ArrayList<>(1);
             state1.add(pianoBm);
             piano.getBitmaps().put(1, state1);
-			piano.setStateTransitionEvent(1, TOPIC_START_SONG);
+			//piano.setStateTransitionEvent(1, TOPIC_START_SONG);
             piano.getAudio().put(1, R.raw.piano);
             homeView.addSprite(piano);
 			homeView.addActivitySprite(piano);
