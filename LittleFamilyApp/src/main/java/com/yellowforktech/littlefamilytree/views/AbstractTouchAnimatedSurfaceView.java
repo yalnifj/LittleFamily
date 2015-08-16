@@ -132,14 +132,16 @@ public abstract class AbstractTouchAnimatedSurfaceView extends SurfaceView imple
     public abstract void doMove(float oldX, float oldY, float newX, float newY);
 
     public void stop() {
-        animationThread.setRunning(false);
-        boolean retry = true;
-        while(retry)  {
-            try {
-                animationThread.join();
-                retry = false;
-            } catch(Exception e) {
-                Log.v("Exception Occured", e.getMessage());
+        if (animationThread!=null) {
+            animationThread.setRunning(false);
+            boolean retry = true;
+            while (retry) {
+                try {
+                    animationThread.join();
+                    retry = false;
+                } catch (Exception e) {
+                    Log.v("Exception Occured", e.getMessage());
+                }
             }
         }
     }
