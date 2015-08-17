@@ -122,8 +122,12 @@ public class DataService implements AuthTask.Listener {
             syncer.start();
         }
     }
-	
-	public void autoLogin()
+
+    public Context getContext() {
+        return context;
+    }
+
+    public void autoLogin()
 	{
 		try {
 		String token = getEncryptedProperty(serviceType + SERVICE_TOKEN);
