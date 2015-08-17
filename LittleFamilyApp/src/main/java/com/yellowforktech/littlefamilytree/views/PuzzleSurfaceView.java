@@ -111,7 +111,7 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
     public void doDraw(Canvas canvas) {
 		canvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
         thumbnailHeight = getHeight()/10;
-        if (bitmap!=null) {
+        if (bitmap!=null && !bitmap.isRecycled()) {
             int width = getWidth();
             int height = getHeight() - thumbnailHeight;
             pieceWidth = width / game.getCols();
