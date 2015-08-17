@@ -62,10 +62,12 @@ public class PedigreeHelper {
                         rel.setType(RelationshipType.PARENTCHILD);
                         dataService.getDBHelper().persistRelationship(rel);
                     }
+                    dataService.addToSyncQ(lp, ahnen/2);
+                    dataService.addToSyncQ(lp1, parent1/2);
                 }
                 if (lp!=null && lp2!=null) {
                     returnMap.put(ahnen, lp);
-                    returnMap.put(parent1, lp2);
+                    returnMap.put(parent2, lp2);
                     Relationship rel = dataService.getDBHelper()
                             .getRelationship(lp2.getId(), lp.getId(), RelationshipType.PARENTCHILD);
                     if (rel == null) {
@@ -75,6 +77,8 @@ public class PedigreeHelper {
                         rel.setType(RelationshipType.PARENTCHILD);
                         dataService.getDBHelper().persistRelationship(rel);
                     }
+                    dataService.addToSyncQ(lp, ahnen/2);
+                    dataService.addToSyncQ(lp2, parent2/2);
                 }
             }
         }
