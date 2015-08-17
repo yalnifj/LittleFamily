@@ -53,14 +53,9 @@ public class DataHelper {
     public static String downloadFile(String href, String folderName, String fileName, RemoteService service, Context context) throws RemoteServiceSearchException {
         String imagePath = null;
         try {
-            File imageFile = getImageFile(folderName,fileName, context);
-            if (imageFile!=null && imageFile.exists()) {
-                return imageFile.getAbsolutePath();
-            } else {
-                Uri uri = Uri.parse(href);
-                imagePath = service.downloadImage(uri, folderName, fileName, context);
-                return imagePath;
-            }
+            Uri uri = Uri.parse(href);
+            imagePath = service.downloadImage(uri, folderName, fileName, context);
+            return imagePath;
         } catch (MalformedURLException e) {
             Log.e("DataHelper.downloadFile", "error", e);
         }
@@ -74,7 +69,7 @@ public class DataHelper {
                 String filePath = parts[i];
                 int pos = filePath.indexOf("?");
                 if (pos>0) {
-                    filePath = filePath.substring(0, pos-1);
+                    filePath = filePath.substring(0, pos);
                 }
                 return filePath;
             }
