@@ -21,6 +21,7 @@ import org.gedcomx.links.Link;
 import org.gedcomx.source.SourceDescription;
 import org.gedcomx.types.RelationshipType;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -750,7 +751,15 @@ public class DataService implements AuthTask.Listener {
                                             med = new Media();
                                             med.setType("photo");
                                             med.setFamilySearchId(sd.getId());
-                                            String localPath = DataHelper.downloadFile(link.getHref().toString(), person.getFamilySearchId(), DataHelper.lastPath(link.getHref().toString()), remoteService, context);
+                                            String folderName = person.getFamilySearchId();
+                                            String fileName = DataHelper.lastPath(link.getHref().toString());
+                                            File localFile = DataHelper.getImageFile(folderName, fileName, context);
+                                            String localPath = null;
+                                            if (!localFile.exists()) {
+                                                localPath = DataHelper.downloadFile(link.getHref().toString(), folderName, fileName, remoteService, context);
+                                            } else {
+                                                localPath = localFile.getAbsolutePath();
+                                            }
                                             if (localPath != null) {
                                                 med.setLocalPath(localPath);
                                                 getDBHelper().persistMedia(med);
@@ -766,6 +775,8 @@ public class DataService implements AuthTask.Listener {
                                     }
                                 }
                             }
+                        } else {
+                            media.add(med);
                         }
                     }
                 }

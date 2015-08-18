@@ -570,11 +570,6 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
             throw new RemoteServiceSearchException("Not Authenticated with FamilySearch.", 0);
         }
 
-        Person person = this.getPerson(personId, checkCache);
-        if (person==null) {
-            throw new RemoteServiceSearchException("Unable to get person "+personId+" from FamilySearch", 0);
-        }
-
         if (!checkCache || memories.get(personId)==null){
             Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+personId+"/memories");
             Bundle headers = new Bundle();
