@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.media.MediaPlayer;
+import android.util.Log;
 import android.view.HapticFeedbackConstants;
 
 import com.yellowforktech.littlefamilytree.events.EventQueue;
@@ -35,6 +36,7 @@ public class TouchStateAnimatedBitmapSprite extends AnimatedBitmapSprite {
     protected Context context;
     protected int loops;
     protected boolean moved;
+    protected MediaPlayer mediaPlayer;
 
     public TouchStateAnimatedBitmapSprite(Context context) {
         audio = new HashMap<>();
@@ -88,16 +90,17 @@ public class TouchStateAnimatedBitmapSprite extends AnimatedBitmapSprite {
             stateChanged = false;
             if (audio.containsKey(state)) {
                 try {
-                    MediaPlayer mediaPlayer = MediaPlayer.create(context, audio.get(state));
-                    mediaPlayer.start();
+                    mediaPlayer = MediaPlayer.create(context, audio.get(state));
                     mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                         @Override
                         public void onCompletion(MediaPlayer mp) {
                             mp.release();
                         }
                     });
+                    mediaPlayer.start();
                 } catch (Exception e) {
                     // just let things go on
+                    Log.e(getClass().getSimpleName(), "Error playing audio", e);
                 }
             }
             if (stateTransitionEvents.containsKey(state)) {
@@ -186,11 +189,13 @@ public class TouchStateAnimatedBitmapSprite extends AnimatedBitmapSprite {
         int nextState = state+1;
         if (nextState >= bitmaps.size() && bitmapIds.get(nextState)==null) nextState = 0;
         if (bitmaps.get(nextState)==null && bitmapIds.get(nextState)!=null && resources!=null) {
-            List<Bitmap> loaded = new ArrayList<>(bitmapIds.get(nextState).size());
-            for (Integer rid : bitmapIds.get(nextState)) {
-                loaded.add(BitmapFactory.decodeResource(getResources(), rid));
+            synchronized (bitmaps) {
+                List<Bitmap> loaded = new ArrayList<>(bitmapIds.get(nextState).size());
+                for (Integer rid : bitmapIds.get(nextState)) {
+                    loaded.add(BitmapFactory.decodeResource(getResources(), rid));
+                }
+                bitmaps.put(nextState, loaded);
             }
-            bitmaps.put(nextState, loaded);
         }
         state = nextState;
         stateChanged = true;

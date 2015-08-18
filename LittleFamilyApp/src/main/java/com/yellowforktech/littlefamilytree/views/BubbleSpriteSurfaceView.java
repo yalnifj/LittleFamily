@@ -116,6 +116,22 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
     }
 
     public void nextBubble() {
+        synchronized (sprites) {
+            int firstbubble = -1;
+            //-- move popped bubbles behind unpopped bubbles
+            for(int i=0; i<sprites.size()-1; i++) {
+                Sprite s1 = sprites.get(i);
+                if (s1 instanceof BubbleAnimatedBitmapSprite) {
+                    if (firstbubble<0 && s1.getState()==0) firstbubble = i;
+
+                    if (firstbubble>=0 && s1.getState()==3 && i>firstbubble) {
+                        sprites.set(i, sprites.get(firstbubble));
+                        sprites.set(firstbubble, s1);
+                        firstbubble++;
+                    }
+                }
+            }
+        }
         popped++;
         if (popped>=random.size()) {
             for(BubbleCompleteListener l : listeners) {
@@ -381,8 +397,8 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
                 bubble.setX(rand.nextInt(getWidth() - bubble.getWidth()));
                 bubble.setPerson(person);
                 if (parents.size() > 0 && parents.get(0) == person) {
-                    bubble.setMx((int) (fatherSpot.getX() + (fatherSpot.getWidth()-20*dm.density)/2));
-                    bubble.setMy((int) (fatherSpot.getY() + (fatherSpot.getHeight()-20*dm.density)/2));
+                    bubble.setMx((int) (fatherSpot.getX() + (fatherSpot.getWidth()/2)));
+                    bubble.setMy((int) (fatherSpot.getY() + (fatherSpot.getWidth()/2)));
                     if (count==0) {
                         fatherSpot.setState(1);
                         if (person.getGender()== GenderType.Female) activity.speak(activity.getResources().getString(com.yellowforktech.littlefamilytree.R.string.who_is_mother));
@@ -390,8 +406,8 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
                     }
                 }
                 if (parents.size() > 1 && parents.get(1) == person) {
-                    bubble.setMx((int) (motherSpot.getX() + (motherSpot.getWidth()-20*dm.density)/2));
-                    bubble.setMy((int) (motherSpot.getY() + (motherSpot.getHeight()-20*dm.density)/2));
+                    bubble.setMx((int) (motherSpot.getX() + (motherSpot.getWidth()/2)));
+                    bubble.setMy((int) (motherSpot.getY() + (motherSpot.getWidth()/2)));
                     if (count==0) {
                         motherSpot.setState(1);
                         if (person.getGender()== GenderType.Female) activity.speak(activity.getResources().getString(com.yellowforktech.littlefamilytree.R.string.who_is_mother));
@@ -399,7 +415,7 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
                     }
                 }
                 if (children.size() > 0 && children.get(0) == person) {
-                    bubble.setMx((int) (childSpot.getX() + (childSpot.getWidth()-20*dm.density)/2));
+                    bubble.setMx((int) (childSpot.getX() + (childSpot.getWidth()/2)));
                     bubble.setMy((int) (childSpot.getY() + childSpot.getHeight()/2));
                     if (count==0) {
                         childSpot.setState(1);
