@@ -208,7 +208,7 @@ public class DataService implements AuthTask.Listener {
                                 LittlePerson person = getDBHelper().getPersonById(id);
                                 if (person != null) {
                                     ThreadPerson tp = new ThreadPerson();
-                                    tp.depth = 0;
+                                    tp.depth = 5;
                                     tp.person = person;
                                     syncQ.add(tp);
                                 }
@@ -568,6 +568,9 @@ public class DataService implements AuthTask.Listener {
                     person.setHasParents(false);
                 getDBHelper().persistLittlePerson(person);
             }
+        } else {
+            person.setHasParents(false);
+            getDBHelper().persistLittlePerson(person);
         }
 
         return family;
@@ -586,6 +589,9 @@ public class DataService implements AuthTask.Listener {
                     person.setHasChildren(false);
                 getDBHelper().persistLittlePerson(person);
             }
+        } else {
+            person.setHasChildren(false);
+            getDBHelper().persistLittlePerson(person);
         }
 
         return family;
@@ -604,6 +610,9 @@ public class DataService implements AuthTask.Listener {
                     person.setHasSpouses(false);
                 getDBHelper().persistLittlePerson(person);
             }
+        } else {
+            person.setHasSpouses(false);
+            getDBHelper().persistLittlePerson(person);
         }
 
         return family;
