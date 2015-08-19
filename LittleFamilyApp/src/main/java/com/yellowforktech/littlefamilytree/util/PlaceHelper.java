@@ -76,8 +76,20 @@ public class PlaceHelper {
         return parts[parts.length-1].trim().replaceAll("[<>\\[\\]\\(\\)\\.\"]+", "");
     }
 
+    public static String getTopPlace(String place, int level) {
+        if (place==null) return null;
+        String[] parts = place.split("[,]+");
+        if (parts.length>=level) {
+            return parts[parts.length - level].trim().replaceAll("[<>\\[\\]\\(\\)\\.\"]+", "");
+        }
+        return parts[parts.length - 1].trim().replaceAll("[<>\\[\\]\\(\\)\\.\"]+", "");
+    }
+
     public static String getPlaceCountry(String p) {
         String place = PlaceHelper.getTopPlace(p);
+        if (place.equals("United Kingdom")) {
+            place = getTopPlace(p, 2);
+        }
         if (place == null) place = UNKNOWN;
         if (!place.equals("United States") && PlaceHelper.isInUS(place))
             place = "United States";

@@ -74,7 +74,7 @@ public class HeritageCalculatorTask extends AsyncTask<LittlePerson, Integer, Arr
                         }
                     } else {
                         //-- if we don't know if this person has parents, then sync them to pick up the parents next time
-                        if (pathPerson.isHasParents()==null) {
+                        if (pathPerson.isHasParents()==null && path.getTreePath().size() < MAX_PATHS) {
                             dataService.addToSyncQ(pathPerson, Math.min(5, path.getTreePath().size()));
                         }
                         returnPaths.add(path);
