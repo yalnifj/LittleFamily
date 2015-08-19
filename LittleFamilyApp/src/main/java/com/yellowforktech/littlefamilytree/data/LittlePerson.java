@@ -67,9 +67,13 @@ public class LittlePerson implements Serializable {
             setGender(GenderType.Unknown);
         }
         Name name = null;
-        for(Name n : fsPerson.getNames()) {
-            if (n==null || (n.getPreferred()!=null && n.getPreferred())) {
-                name = n;
+        if (fsPerson.getNames()!=null) {
+            for (Name n : fsPerson.getNames()) {
+                if (n!=null) {
+                    if (name == null || (n.getPreferred() != null && n.getPreferred())) {
+                        name = n;
+                    }
+                }
             }
         }
         //-- get preferred given name

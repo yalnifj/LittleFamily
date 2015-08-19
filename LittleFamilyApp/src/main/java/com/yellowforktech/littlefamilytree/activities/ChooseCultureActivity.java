@@ -177,7 +177,16 @@ public class ChooseCultureActivity extends LittleFamilyActivity implements Herit
                     }
                 }
 
-                List<HeritagePath> uniquepaths = new ArrayList<>(cultures.values());
+                List<HeritagePath> uniquepaths = new ArrayList<>(cultures.size());
+                if (cultures.size() < 10 ) {
+                    uniquepaths.addAll(cultures.values());
+                } else {
+                    for (HeritagePath path : cultures.values()) {
+                        if (path.getPercent() > 0.0009) {
+                            uniquepaths.add(path);
+                        }
+                    }
+                }
                 Collections.sort(uniquepaths);
                 chartView.setHeritageMap(uniquepaths);
 

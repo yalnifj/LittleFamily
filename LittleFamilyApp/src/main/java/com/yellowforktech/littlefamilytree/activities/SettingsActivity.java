@@ -3,6 +3,7 @@ package com.yellowforktech.littlefamilytree.activities;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
@@ -198,6 +199,15 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
         bindPreferenceSummaryToValue(findPreference("sync_delay"));
         bindPreferenceSummaryToValue(findPreference("tts_voice"));
         //bindPreferenceSummaryToValue(findPreference("tts_voice_test"));
+        Preference versionPref = findPreference("version");
+        if (versionPref!=null) {
+            try {
+                String versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+                versionPref.setSummary(versionName);
+            } catch (PackageManager.NameNotFoundException e) {
+                Log.e(this.getClass().getSimpleName(), "Error getting version number", e);
+            }
+        }
     }
 
     /**
@@ -378,6 +388,16 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
             bindPreferenceSummaryToValue(findPreference("sync_cellular"));
             bindPreferenceSummaryToValue(findPreference("sync_delay"));
             bindPreferenceSummaryToValue(findPreference("tts_voice"));
+
+            Preference versionPref = findPreference("version");
+            if (versionPref!=null) {
+                try {
+                    String versionName = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
+                    versionPref.setSummary(versionName);
+                } catch (PackageManager.NameNotFoundException e) {
+                    Log.e(this.getClass().getSimpleName(), "Error getting version number", e);
+                }
+            }
         }
     }
 

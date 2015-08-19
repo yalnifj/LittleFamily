@@ -428,6 +428,51 @@ public class HomeActivity extends LittleFamilyActivity {
             homeView.addSprite(bubbles);
             homeView.addActivitySprite(bubbles);
 
+            Bitmap freezerBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_kitchen_freezer);
+            TouchStateAnimatedBitmapSprite freezer = new TouchStateAnimatedBitmapSprite(freezerBm, this);
+            freezer.setX(1043 * dm.density);
+            freezer.setY(545 * dm.density);
+            freezer.setResources(getResources());
+            List<Integer> freezeOpen = new ArrayList<>(6);
+            freezeOpen.add(R.drawable.house_kitchen_freezer1);
+            freezeOpen.add(R.drawable.house_kitchen_freezer2);
+            freezeOpen.add(R.drawable.house_kitchen_freezer3);
+            freezeOpen.add(R.drawable.house_kitchen_freezer4);
+            freezeOpen.add(R.drawable.house_kitchen_freezer5);
+            freezer.getBitmapIds().put(1, freezeOpen);
+            freezer.setStateTransition(1, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
+            List<Integer> freezeOpened = new ArrayList<>(1);
+            freezeOpened.add(R.drawable.house_kitchen_freezer6);
+            freezer.getBitmapIds().put(2, freezeOpened);
+            List<Integer> freezeClose = new ArrayList<>(freezeOpen);
+            Collections.reverse(freezeClose);
+            freezer.getBitmapIds().put(3, freezeClose);
+            freezer.setStateTransition(3, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
+            homeView.addSprite(freezer);
+
+            Bitmap fridgeBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_kitchen_fridge);
+            TouchStateAnimatedBitmapSprite fridge = new TouchStateAnimatedBitmapSprite(fridgeBm, this);
+            fridge.setX(1043 * dm.density);
+            fridge.setY(580 * dm.density);
+            fridge.setResources(getResources());
+            List<Integer> fridgeOpen = new ArrayList<>(6);
+            fridgeOpen.add(R.drawable.house_kitchen_fridge1);
+            fridgeOpen.add(R.drawable.house_kitchen_fridge2);
+            fridgeOpen.add(R.drawable.house_kitchen_fridge3);
+            fridgeOpen.add(R.drawable.house_kitchen_fridge4);
+            fridgeOpen.add(R.drawable.house_kitchen_fridge5);
+            fridge.getBitmapIds().put(1, fridgeOpen);
+            fridge.setStateTransition(1, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
+            List<Integer> fridgeOpened = new ArrayList<>(1);
+            fridgeOpened.add(R.drawable.house_kitchen_fridge6);
+            fridge.getBitmapIds().put(2, fridgeOpened);
+            List<Integer> fridgeClose = new ArrayList<>(fridgeOpen);
+            Collections.reverse(fridgeClose);
+            fridge.getBitmapIds().put(3, fridgeClose);
+            fridge.setStateTransition(3, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
+            homeView.addSprite(fridge);
+
+
             Bitmap wardrobeBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_adult_wardrobe);
             TouchStateAnimatedBitmapSprite wardrobe = new TouchStateAnimatedBitmapSprite(wardrobeBm, this);
             wardrobe.setX(747*dm.density);

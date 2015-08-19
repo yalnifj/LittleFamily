@@ -249,32 +249,44 @@ public class DataService implements AuthTask.Listener {
                         int syncDelay = Integer.parseInt(syncDelayStr);
                         cal.add(Calendar.HOUR, -1 * syncDelay);
                         LittlePerson person = tp.person;
-                        if (person.getLastSync().before(cal.getTime()) || person.isHasParents()==null) {
+                        Log.d("SyncThread", "Sync Q has "+syncQ.size()+" people in it.");
+                        if (person.getLastSync().before(cal.getTime())) {
                             Log.d("SyncThread", "Synchronizing person " + person.getId() + " " + person.getFamilySearchId() + " " + person.getName());
-                            Log.d("SyncThread", "Sync Q has "+syncQ.size()+" people in it.");
                             Entry entry = remoteService.getLastChangeForPerson(person.getFamilySearchId());
-                            Log.d("SyncThread", "Synchronizing person local date=" + person.getLastSync() + " remote date=" + entry);
+                            if (entry!=null) {
+                                Log.d("SyncThread", "Local date=" + person.getLastSync() + " remote date=" + entry.getUpdated());
+                            }
                             if (entry == null || entry.getUpdated().after(person.getLastSync())) {
                                 syncPerson(person);
                             } else {
                                 person.setLastSync(new java.util.Date());
                                 getDBHelper().persistLittlePerson(person);
                             }
+
+                            try {
+                                Thread.sleep(10000);  //-- don't bombard the server
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
-                    try {
-                        Thread.sleep(10000);  //-- don't bombard the server
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
                     }
 
                     //-- force load of family members if we haven't previously loaded them
                     //--- allows building the tree in the background
                     if (tp.depth < 6) {
                         if (tp.person.isHasParents() == null) {
-                            List<LittlePerson> parents = getParentsFromRemoteService(tp.person);
-                            for (LittlePerson p : parents) {
-                                addToSyncQ(p, tp.depth+1);
+                            List<LittlePerson> dbParents = getDBHelper().getParentsForPerson(tp.person.getId());
+                            if (dbParents==null || dbParents.size()==0) {
+                                Log.d("SyncThread", "Synchronizing parents " + tp.person.getId() + " " + tp.person.getFamilySearchId() + " " + tp.person.getName());
+                                List<LittlePerson> parents = getParentsFromRemoteService(tp.person);
+                                for (LittlePerson p : parents) {
+                                    addToSyncQ(p, tp.depth + 1);
+                                }
+                                try {
+                                    Thread.sleep(10000);  //-- don't bombard the server
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
                     }
@@ -549,6 +561,13 @@ public class DataService implements AuthTask.Listener {
         List<Relationship> closeRelatives = remoteService.getParents(person.getFamilySearchId(), true);
         if (closeRelatives!=null) {
             family = processRelatives(closeRelatives, person);
+            if (person.isHasParents()==null) {
+                if (family!=null && family.size()>0)
+                    person.setHasParents(true);
+                else
+                    person.setHasParents(false);
+                getDBHelper().persistLittlePerson(person);
+            }
         }
 
         return family;
@@ -560,6 +579,13 @@ public class DataService implements AuthTask.Listener {
         List<Relationship> closeRelatives = remoteService.getChildren(person.getFamilySearchId(), true);
         if (closeRelatives!=null) {
             family = processRelatives(closeRelatives, person);
+            if (person.isHasChildren()==null) {
+                if (family!=null && family.size()>0)
+                    person.setHasChildren(true);
+                else
+                    person.setHasChildren(false);
+                getDBHelper().persistLittlePerson(person);
+            }
         }
 
         return family;
@@ -571,6 +597,13 @@ public class DataService implements AuthTask.Listener {
         List<Relationship> closeRelatives = remoteService.getSpouses(person.getFamilySearchId(), true);
         if (closeRelatives!=null) {
             family = processRelatives(closeRelatives, person);
+            if (person.isHasSpouses()==null) {
+                if (family!=null && family.size()>0)
+                    person.setHasSpouses(true);
+                else
+                    person.setHasSpouses(false);
+                getDBHelper().persistLittlePerson(person);
+            }
         }
 
         return family;
