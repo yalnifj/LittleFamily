@@ -259,10 +259,9 @@
                 <p><a href="javascript:;" onclick="showContactForm(); return false;">Contact and Feedback Form</a></p>
             </div>
             <div class="col-lg-4 text-center">
-                <i class="fa fa-phone fa-3x wow bounceIn"></i>
-                <p>Yellow Fork Technologies LLC
+                <address>Yellow Fork Technologies LLC
                 <br />5526 W. 13400 S. #448
-                <br />Herriman, UT  84096</p>
+                <br />Herriman, UT  84096</address>
             </div>
         </div>
         <div class="row">
@@ -273,6 +272,54 @@
         </div>
     </div>
 </section>
+
+<div id="contactFormModal" class="modal fade bs-example-modal-lg" 
+    tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="contactFormModal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Contact Little Family Tree</h4>
+      </div>
+      <div class="modal-body">
+		<p>We would love to hear from you! Please submit the form below
+		  to contact us.  You will receive a copy of the message. We will 
+		  respond to the email address you provide.
+		</p>
+        <form >
+		  <div class="form-group">
+            <label for="name">Your name</label>
+            <input type="text" class="form-control" id="name" placeholder="Name">
+          </div>
+		  <div class="form-group">
+            <label for="email">Email address</label>
+            <input type="email" class="form-control" id="email" placeholder="Email">
+          </div>
+		  <div class="form-group">
+            <label for="reason">Reason for contacting us:</label>
+            <select name="reason" id="reason">
+			  <option>I need help</option>
+			  <option>I have some feedback to share</option>
+			  <option>I found a bug</option>
+			  <option>Kudos!</option>
+			  <option>Complaint</option>
+			  <option>I want to be a beta tester</option>
+			</select>
+          </div>
+		  <div class="form-group">
+            <label for="message">Message</label>
+            <textarea rows="6" name="message" id="message" placeholder="Enter your message"></textarea>
+          </div>
+		</form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="contactFormModal">Close</button>
+        <button type="button" class="btn btn-primary">Send</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -293,6 +340,10 @@
             event.preventDefault();
         });
     });
+	
+	function showContactForm() {
+	    $('#contactFormModal').modal('show')
+	}
 </script>
 </body>
 </html>
