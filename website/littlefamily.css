@@ -17,6 +17,9 @@ section {
     line-height: 48px;
     padding-top: 0px;
 }
+.navbar .selected {
+    font-weight: bold;
+}
 .header-content {
     margin-top: 50px;
     padding: 20px;
@@ -24,6 +27,8 @@ section {
 }
 .main-icon {
     margin-bottom: 20px;
+    width: 100%;
+    max-width: 400px;
 }
 .bg-dark {
     background-color: darkblue;

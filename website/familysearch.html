@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Little Family Tree - FamilySearch Integration</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+
+    <link rel="stylesheet" href="littlefamily.css">
+
+    <link rel="shortcut icon" type="image/png" href="littlefamilytree_icon_small.png" />
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        .row {
+            margin-bottom: 20px;
+        }
+        .guide-image {
+            width: 100%;
+            max-height: 300px;
+            max-width: 300px;
+        }
+        .star {
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+<nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <a class="navbar-brand page-scroll" href="index.html">
+                <img class="icon" src="home.png" border="0" height="45" />
+                <!-- Little Family Tree -->
+            </a>
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-left">
+
+                <li>
+                    <a class="page-scroll" href="index.html">Home</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="index.html#video">Video</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="parentsguide.html">Parent's Guide</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="index.html#games">Games</a>
+                </li>
+                <li>
+                    <a class="page-scroll selected" href="familysearch.html">FamilySearch</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="index.html#about">About Us</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+<div class="content-start container">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 text-center">
+            <h2 class="section-heading">FamilySearch Integration</h2>
+            <hr class="primary">
+            <p>&nbsp;</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-8 col-lg-offset-1">
+            <h3>Little Family Tree and FamilySearch</h3>
+            <p>
+                Little Family Tree downloads data from your FamilySearch Family Tree to use in its
+                <a href="index.html#games">games</a>.  It will use the people, places, and dates
+                from your family tree as well and the photos that you have attached.  Little Family
+                Tree is a read-only FamilySearch application and does not make any attempts to
+                update your FamilySearch Family Tree.
+            </p>
+            <p>
+                <a target="_blank" href="https://familysearch.org/apps/product/littlefamilytree/android">
+                    Visit Little Family Tree on the Family Search App Gallery</a>
+            </p>
+        </div>
+        <div class="col-sm-2 text-center">
+            <a target="_blank" href="https://familysearch.org/apps/product/littlefamilytree/android">
+                <img class="fsicon" src="FS-Certified.png" border="0"/>
+            </a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-8 col-lg-offset-1">
+            <h3>Connecting to FamilySearch</h3>
+            <p>
+                When you first start the application, Little Family Tree will ask you to enter your
+                FamilySearch account credentials to login.  Little Family Tree will remember your
+                credentials so that you only have to login once from each device.  They are
+                encrypted and secure.
+            </p>
+            <p>
+                After successfully logging in, Little Family Tree will begin download data and photos
+                for you and your close relatives.
+            </p>
+        </div>
+        <div class="col-sm-2 text-center">
+            <img class="guide-image" src="Screenshot_fslogin.png" border="0"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-8 col-lg-offset-1">
+            <h3>Synchronizing your Family Tree</h3>
+            <p>
+                Little Family Tree automatically synchronizes with your FamilySearch Family Tree
+                in the background while your child plays.  By default it will synchronize if you
+                are on a WiFi connection and will check for updates of peolpe you access in the game
+                once every hour.
+            </p>
+            <p>
+                Synchronization parameters can be controlled in the application settings.  In the
+                settings you can turn off background synchronization, change how often it
+                checks for changes, and control whether or not to sync over your mobile data plan.
+            </p>
+        </div>
+        <div class="col-sm-2 text-center">
+            <img class="guide-image" src="Screenshot_settings.png" border="0"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-8 col-lg-offset-1">
+            <h3>Managing People</h3>
+            <p>
+                From the settings, you can choose the "Manage People" option to see the people
+                that Little Family Tree has synchronized.  You may search by name or FamilySearch ID.
+                Click on a name in the list of results to see some of the key details of that person
+                such as name, birth, and the last time he or she was synchronized with FamilySearch.
+            </p>
+            <p>
+                From this screen you can also disable a person.  Disabling a person will hide them
+                from the games in Little Family Tree but will not change or affect that person on
+                the FamilySearch Family Tree.
+            </p>
+        </div>
+        <div class="col-sm-2 text-center">
+            <img class="guide-image" src="Screenshot_manage_people.png" border="0"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-8 col-lg-offset-1">
+            <h3>Force Sync</h3>
+            <p>
+                If you update your FamilySearch Family Tree and want to see the changes reflected
+                immediately, then you can click the synchronize button on the manage person
+                screen.  This will force Little Family Tree to download the latest information
+                from FamilySearch without waiting for the normal synchronization time to pass.
+            </p>
+        </div>
+        <div class="col-sm-2 text-center">
+            <img class="guide-image" src="Screenshot_sync_person.png" border="0"/>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<!-- Plugin JavaScript -->
+<script src="jquery.easing.min.js"></script>
+
+<script>
+    function randomNumber(max) {
+        return Math.floor((Math.random() * max));
+    }
+
+    $(document).ready(function() {
+        // jQuery for page scrolling feature - requires jQuery Easing plugin
+        $('a.page-scroll').bind('click', function(event) {
+            var $anchor = $(this);
+            $('html, body').stop().animate({
+                scrollTop: ($($anchor.attr('href')).offset().top - 50)
+            }, 1250, 'easeInOutExpo');
+            event.preventDefault();
+        });
+    });
+</script>
+</body>
+</html>

@@ -50,7 +50,9 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-left">
-
+                <li>
+                    <a class="page-scroll" href="#page-top">Home</a>
+                </li>
                 <li>
                     <a class="page-scroll" href="#video">Video</a>
                 </li>
@@ -59,6 +61,9 @@
                 </li>
                 <li>
                     <a class="page-scroll" href="#games">Games</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="familysearch.html">FamilySearch</a>
                 </li>
                 <li>
                     <a class="page-scroll" href="#about">About Us</a>
@@ -81,7 +86,7 @@
                         Little Family Tree is currently in beta.
                     </p>
                     <p>
-                        <a href="javascript:;" onclick="showContactForm(); return false;">Contact us</a>
+                        <button type="button" onclick="showContactForm(); return false;" class="btn btn-primary btn-xs">Contact Us!</button>
                         for information about participating in the beta program.
                     </p>
                     <p>
@@ -100,19 +105,25 @@
                         kid in all of us.)
                     </p>
                     <p>
-                        &nbsp;
-                    </p>
-                    <p class="text-center">
-                        <a href="">
-                            <img class="fsicon" src="FS-Certified.png" border="0"/>
-                        </a>
-                    </p>
-                    <p>
                         Personal family history information is obtained by having an adult login to an online family tree such as
                         <a href="http://www.familyearch.org">FamilySearch</a> or <a href="http://www/phpgedview.net">PhpGedView</a>.
                         An online family tree account is required to play the game but a <a href="http://www.familyearch.org">FamilySearch</a>
                         account can be obtained for free at <a href="http://www.familyearch.org">FamilySearch.org</a>.
                     </p>
+                    <p>&nbsp;</p>
+                    <div class="row">
+                        <div class="col-sm-6 text-center">
+                            <a target="_blank" href="https://familysearch.org/apps/product/littlefamilytree/android">
+                                <img class="fsicon" src="FS-Certified.png" border="0"/>
+                            </a>
+                        </div>
+                        <div class="col-sm-4 text-center">
+                            <p>&nbsp;</p>
+                            <button type="button" onclick="window.location='familysearch.html'; return false;"
+                                class="btn btn-primary">Learn more about our<br />FamilySearch
+                                integration.</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -123,14 +134,16 @@
     <a href="#page-top" class="page-scroll to-top" title="back to top"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></a>
     <div class="container">
         <div class="row">
-            <div class="col-md-6 text-center">
+            <div class="col-md-12 text-center">
                 <h2 class="section-heading">Video 1</h2>
                 <img src="growing_plant7.png" />
             </div>
+            <!--
             <div class="col-md-6 text-center">
                 <h2 class="section-heading">Video 2</h2>
                 <img src="growing_plant7.png" />
             </div>
+            -->
         </div>
     </div>
 </section>
@@ -249,14 +262,8 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 text-center">
-                <h3>Contact Us</h3>
-            </div>
-        </div>
-        <div class="row">
             <div class="col-lg-4 col-lg-offset-2 text-center">
-                <i class="fa fa-envelope-o fa-3x wow bounceIn" data-wow-delay=".1s"></i>
-                <p><a href="javascript:;" onclick="showContactForm(); return false;">Contact and Feedback Form</a></p>
+                <button type="button" onclick="showContactForm(); return false;" class="btn btn-primary">Contact Us!</button>
             </div>
             <div class="col-lg-4 text-center">
                 <address>Yellow Fork Technologies LLC
@@ -267,18 +274,23 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 text-center">
                 <p>&nbsp;</p>
+                <p>
+                    <img src="growing_plant7.png" border="0" />
+                </p>
+                <p>&nbsp;</p>
                 <p>&copy; 2015 Yellow Fork Technologies LLC</p>
+                <p>&nbsp;</p>
             </div>
         </div>
     </div>
 </section>
 
-<div id="contactFormModal" class="modal fade bs-example-modal-lg" 
+<div id="contactFormModal" class="modal fade bs-example-modal-sm"
     tabindex="-1" role="dialog">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="contactFormModal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="close" onclick="$('#contactFormModal').modal('hide'); return false;" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title">Contact Little Family Tree</h4>
       </div>
       <div class="modal-body">
@@ -287,17 +299,43 @@
 		  respond to the email address you provide.
 		</p>
         <form >
-		  <div class="form-group">
+		  <div id="nameGroup" class="form-group">
             <label for="name">Your name</label>
-            <input type="text" class="form-control" id="name" placeholder="Name">
+            <input type="text" class="form-control" id="name" placeholder="Name" onchange="validateName();" />
           </div>
-		  <div class="form-group">
+		  <div id="emailGroup" class="form-group">
             <label for="email">Email address</label>
-            <input type="email" class="form-control" id="email" placeholder="Email">
+            <input type="email" class="form-control" id="email" placeholder="Email" onchange="validateEmail();"/>
           </div>
+            <div class="form-group">
+                <label>Expertise with family history</label>
+                <br />
+                <label class="radio-inline">
+                    <input type="radio" name="fhLevel" id="fhLevel1" value="Beginner" /> Beginner
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="fhLevel" id="fhLevel2" value="Intermediate" checked="checked" /> Intermediate
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="fhLevel" id="fhLevel3" value="Expert" /> Expert
+                </label>
+            </div>
+            <div class="form-group">
+                <label>Expertise with FamilySearch</label>
+                <br />
+                <label class="radio-inline">
+                    <input type="radio" name="fsLevel" id="fsLevel1" value="Beginner"> Beginner
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="fsLevel" id="fsLevel2" value="Intermediate" checked="checked" /> Intermediate
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="fsLevel" id="fsLevel3" value="Expert" /> Expert
+                </label>
+            </div>
 		  <div class="form-group">
             <label for="reason">Reason for contacting us:</label>
-            <select name="reason" id="reason">
+            <select name="reason" class="form-control" id="reason">
 			  <option>I need help</option>
 			  <option>I have some feedback to share</option>
 			  <option>I found a bug</option>
@@ -306,20 +344,46 @@
 			  <option>I want to be a beta tester</option>
 			</select>
           </div>
-		  <div class="form-group">
+		  <div id="messageGroup" class="form-group">
             <label for="message">Message</label>
-            <textarea rows="6" name="message" id="message" placeholder="Enter your message"></textarea>
+            <textarea rows="6" class="form-control" name="message" id="message" placeholder="Enter your message"></textarea>
           </div>
+            <div id="ajaxError" class="form-group has-error bg-danger" style="display: none;">
+                There was an error.
+            </div>
 		</form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="contactFormModal">Close</button>
-        <button type="button" class="btn btn-primary">Send</button>
+        <button type="button" class="btn btn-default" onclick="$('#contactFormModal').modal('hide'); return false;">Close</button>
+        <button type="button" class="btn btn-primary" onclick="sendContactForm(); return false;">Send</button>
       </div>
     </div>
   </div>
 </div>
 
+<div id="thankYouModal" class="modal fade bs-example-modal-sm"
+     tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" onclick="$('#thankYouModal').modal('hide'); return false;" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Thank You!</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Thank you for contacting us.
+                </p>
+                <p>
+                    You will receive a copy of the message that was sent
+                    to the email address that you provided.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="$('#thankYouModal').modal('hide'); return false;">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -343,6 +407,65 @@
 	
 	function showContactForm() {
 	    $('#contactFormModal').modal('show')
+	}
+
+	function validateName() {
+	    $('#nameGroup').removeClass('has-error').removeClass('has-success');
+	    var name = $('#name').val();
+        if (name.trim()=='') {
+            $('#nameGroup').addClass('has-error');
+            return false;
+        } else {
+            $('#nameGroup').addClass('has-success');
+        }
+        return true;
+	}
+
+	function validateEmail() {
+	    $('#emailGroup').removeClass('has-error').removeClass('has-success');
+	    var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+	    var email = $('#email').val();
+        if (!re.test(email)) {
+            $('#emailGroup').addClass('has-error');
+            return false;
+        } else {
+            $('#emailGroup').addClass('has-success');
+        }
+        return true;
+	}
+
+	function validateMessage() {
+	    $('#messageGroup').removeClass('has-error').removeClass('has-success');
+	    var name = $('#message').val();
+        if (name.trim()=='') {
+            $('#messageGroup').addClass('has-error');
+            return false;
+        } else {
+            $('#messageGroup').addClass('has-success');
+        }
+        return true;
+	}
+
+	function sendContactForm() {
+	    $('#ajaxError').hide();
+        if (validateName() && validateEmail() && validateMessage()) {
+            $.post('contact.php', {
+                reason: $('#reason').val(),
+                name: $('#name').val(),
+                email: $('#email').val(),
+                fhLevel: $("input:radio[name ='fhLevel']:checked").val(),
+                fsLevel: $("input:radio[name ='fsLevel']:checked").val(),
+                message: $('#message').val()
+            }, function(data) {
+                if (data=='success') {
+                    $('#contactFormModal').modal('hide');
+                    $('#thankYouModal').modal('show');
+                } else {
+                    $('#ajaxError').html('There was an error sending your message.' + data).show();
+                }
+            });
+        }
+        return false;
 	}
 </script>
 </body>

@@ -7,8 +7,8 @@ android {
         applicationId "com.yellowforktech.littlefamilytree"
         minSdkVersion 16
         targetSdkVersion 21
-        versionName "0.91"
-        versionCode 3
+        versionName "0.92"
+        versionCode 4
     }
     buildTypes {
         release {
