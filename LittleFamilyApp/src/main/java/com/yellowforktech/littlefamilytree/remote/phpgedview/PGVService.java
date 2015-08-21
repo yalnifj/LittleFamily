@@ -613,4 +613,9 @@ public class PGVService extends RemoteServiceBase implements RemoteService {
         }
         return "";
     }
+
+    @Override
+    public String getPersonUrl(String remoteId) {
+        return baseUrl+"individual.php?pid="+remoteId;
+    }
 }

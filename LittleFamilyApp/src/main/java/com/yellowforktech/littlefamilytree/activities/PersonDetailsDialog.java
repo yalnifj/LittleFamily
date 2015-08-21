@@ -2,7 +2,9 @@ package com.yellowforktech.littlefamilytree.activities;
 
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -125,6 +127,9 @@ public class PersonDetailsDialog extends DialogFragment implements CompoundButto
 		ImageButton syncButton = (ImageButton) view.findViewById(R.id.btnSync);
 		syncButton.setOnClickListener(this);
 
+		ImageButton gotoButton = (ImageButton) view.findViewById(R.id.btnGotoUrl);
+		gotoButton.setOnClickListener(this);
+
 		/*
 		ImageButton captureButton = (ImageButton) view.findViewById(R.id.btnAttach);
 		captureButton.setOnClickListener(this);
@@ -154,6 +159,11 @@ public class PersonDetailsDialog extends DialogFragment implements CompoundButto
 				pd = ProgressDialog.show(getActivity(), "Please wait...", "Synchronizing "+person.getName(), true, false);
 				ForceSynceTask task = new ForceSynceTask(this, this.getActivity());
 				task.execute(person);
+				break;
+			case R.id.btnGotoUrl:
+				Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+						Uri.parse(DataService.getInstance().getRemoteService().getPersonUrl(person.getFamilySearchId())));
+				getActivity().startActivity(browserIntent);
 				break;
 			/*
 			case R.id.btnAttach:

@@ -716,4 +716,9 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
 
         return null;
     }
+
+    @Override
+    public String getPersonUrl(String remoteId) {
+        return "https://familysearch.org/tree/#view=ancestor&person="+remoteId;
+    }
 }

@@ -96,6 +96,104 @@ section {
     opacity: 1;
 }
 
+.outer-game-box {
+    padding: 10px 20px 10px 20px;
+    height: 160px;
+}
+
+.outer-game-box .portfolio-box {
+    height: 100%;
+}
+
+#dressup-box {
+    background-image: url("game_icons/dressup_background.png");
+}
+
+#puzzle-box {
+    background-image: url("game_icons/puzzle_background.png");
+}
+
+#watercolor-box {
+    background-image: url("game_icons/scratch_background.png");
+}
+
+#scratch-box {
+    background-image: url("game_icons/scratch_background.png");
+}
+
+#match-box {
+    background-image: url("game_icons/match_back.png");
+}
+
+#bubbles-box {
+    background-image: url("game_icons/bubble_background.png");
+}
+
+#treespy-box {
+    background-image: url("game_icons/tree_background.png");
+    background-size: cover;
+}
+
+#puzzle {
+    position: relative;
+    top: 30%;
+    width: 70px;
+}
+
+#watercolor {
+    position: relative;
+    width: 55px;
+    top: 7%;
+}
+
+#scratch {
+    position: relative;
+    width: 90px;
+    top: 15%;
+}
+
+#match {
+    position: relative;
+    width: 90px;
+    top: 20%;
+}
+
+#bubbles {
+    position: relative;
+    width: 60px;
+    top: 15%;
+    left: 5%;
+}
+
+#treespy {
+    position: relative;
+    top: 15%;
+    width: 90px;
+}
+
+.game-box {
+    font-size: 20px;
+    font-weight: 600;
+    top: 30%;
+    position: absolute;
+    padding-top: 5%;
+    margin-left: 30%;
+    margin-right: 10px;
+    width: 70%;
+    text-align: center;
+    color: #333333;
+    height: 50%;
+}
+
+.portfolio-box:hover .game-box {
+    color: #eeeeee;
+    opacity: 0.7;
+    background: rgba(240,95,64,.9);
+    -webkit-transition: all .35s;
+    -moz-transition: all .35s;
+    transition: all .35s;
+}
+
 @media(min-width:768px) {
     .portfolio-box .portfolio-box-caption .portfolio-box-caption-content .project-category {
         font-size: 16px;

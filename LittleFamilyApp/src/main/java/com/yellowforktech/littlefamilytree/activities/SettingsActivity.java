@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -177,6 +178,16 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
             }
         });
 
+        Preference website = findPreference("website");
+        website.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse("http://www.littlefamilytree.com"));
+                startActivity(intent);
+                return true;
+            }
+        });
+
         /*
         // Add 'notifications' preferences, and a corresponding header.
         PreferenceCategory fakeHeader = new PreferenceCategory(this);
@@ -332,11 +343,11 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     String message = String.format(getResources().getString(R.string.name_born_in_date), "Abraham Lincoln", "Hodgenville, Kentucky", "February 12, 1809");
-                    if (((SettingsActivity)getActivity()).getTts() != null) {
+                    if (((SettingsActivity) getActivity()).getTts() != null) {
                         if (Build.VERSION.SDK_INT > 20) {
-                            ((SettingsActivity)getActivity()).getTts().speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
+                            ((SettingsActivity) getActivity()).getTts().speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
                         } else {
-                            ((SettingsActivity)getActivity()).getTts().speak(message, TextToSpeech.QUEUE_FLUSH, null);
+                            ((SettingsActivity) getActivity()).getTts().speak(message, TextToSpeech.QUEUE_FLUSH, null);
                         }
                     }
                     return true;
@@ -374,6 +385,16 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     Intent intent = new Intent( getActivity(), ParentsGuideActivity.class );
+                    startActivity(intent);
+                    return true;
+                }
+            });
+
+            Preference website = findPreference("website");
+            website.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse("http://www.littlefamilytree.com"));
                     startActivity(intent);
                     return true;
                 }

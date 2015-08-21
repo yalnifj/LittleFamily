@@ -79,7 +79,7 @@
                             android:layout_height="wrap_content"
                             android:id="@+id/chkActive"
                             android:singleLine="true"
-                            android:layout_weight="5" />
+                             />
 
                         <ImageButton
                             android:layout_width="wrap_content"
@@ -87,8 +87,14 @@
                             android:id="@+id/btnSync"
                             android:src="@android:drawable/ic_popup_sync"
                             android:layout_marginLeft="10dp"
-                            android:layout_weight="0" />
-
+                             />
+                        <ImageButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/btnGotoUrl"
+                            android:src="@android:drawable/ic_menu_view"
+                            android:layout_marginLeft="10dp"
+                            />
                         <!--
                         <ImageButton
                             android:layout_width="wrap_content"

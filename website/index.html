@@ -160,87 +160,59 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-3 col-sm-6">
+            <div class="col-md-3 col-sm-6 outer-game-box" id="dressup-box">
                 <a href="#" class="portfolio-box">
-                    <img src="house_adult_wardrobe.png" class="img-responsive" alt="">
-                    <div class="portfolio-box-caption">
-                        <div class="portfolio-box-caption-content">
-                            <div class="project-name">
-                                Heritage Dress Up
-                            </div>
-                        </div>
+                    <img src="game_icons/house_adult_wardrobe.png" id="wardrobe" class="img-responsive" alt="">
+                    <div class="game-box">
+                        Heritage Dress Up
                     </div>
                 </a>
             </div>
-            <div class="col-md-3 col-sm-6">
+            <div class="col-md-3 col-sm-6 outer-game-box" id="puzzle-box">
                 <a href="#" class="portfolio-box">
-                    <img src="house_adult_wardrobe.png" class="img-responsive" alt="">
-                    <div class="portfolio-box-caption">
-                        <div class="portfolio-box-caption-content">
-                            <div class="project-name">
-                                Picture Puzzle
-                            </div>
-                        </div>
+                    <img src="game_icons/house_toys_blocks.png" id="puzzle" class="img-responsive" alt="">
+                    <div class="game-box">
+                        Picture Puzzle
                     </div>
                 </a>
             </div>
-            <div class="col-md-3 col-sm-6">
+            <div class="col-md-3 col-sm-6 outer-game-box" id="watercolor-box">
                 <a href="#" class="portfolio-box">
-                    <img src="house_adult_wardrobe.png" class="img-responsive" alt="">
-                    <div class="portfolio-box-caption">
-                        <div class="portfolio-box-caption-content">
-                            <div class="project-name">
-                                Water Coloring
-                            </div>
-                        </div>
+                    <img src="game_icons/house_chilldroom_paint.png" id="watercolor" class="img-responsive" alt="">
+                    <div class="game-box">
+                        Water Coloring
                     </div>
                 </a>
             </div>
-            <div class="col-md-3 col-sm-6">
+            <div class="col-md-3 col-sm-6 outer-game-box" id="match-box">
                 <a href="#" class="portfolio-box">
-                    <img src="house_adult_wardrobe.png" class="img-responsive" alt="">
-                    <div class="portfolio-box-caption">
-                        <div class="portfolio-box-caption-content">
-                            <div class="project-name">
-                                Scratch Off
-                            </div>
-                        </div>
+                    <img src="game_icons/house_familyroom_frame.png" id="match" class="img-responsive" alt="">
+                    <div class="game-box">
+                        Picture Matching
                     </div>
                 </a>
             </div>
-            <div class="col-md-3 col-sm-6">
+            <div class="col-md-3 col-sm-6 outer-game-box" id="scratch-box">
                 <a href="#" class="portfolio-box">
-                    <img src="house_adult_wardrobe.png" class="img-responsive" alt="">
-                    <div class="portfolio-box-caption">
-                        <div class="portfolio-box-caption-content">
-                            <div class="project-name">
-                                Photo Matching
-                            </div>
-                        </div>
+                    <img src="game_icons/house_chilldroom_desk.png" id="scratch" class="img-responsive" alt="">
+                    <div class="game-box">
+                        Scratch Off
                     </div>
                 </a>
             </div>
-            <div class="col-md-3 col-sm-6">
+            <div class="col-md-3 col-sm-6 outer-game-box" id="bubbles-box">
                 <a href="#" class="portfolio-box">
-                    <img src="house_adult_wardrobe.png" class="img-responsive" alt="">
-                    <div class="portfolio-box-caption">
-                        <div class="portfolio-box-caption-content">
-                            <div class="project-name">
-                                Bubbles
-                            </div>
-                        </div>
+                    <img src="game_icons/bubbles1.png" id="bubbles" class="img-responsive" alt="">
+                    <div class="game-box">
+                        Relationship Bubbles
                     </div>
                 </a>
             </div>
-            <div class="col-md-3 col-sm-6">
+            <div class="col-md-3 col-sm-6 outer-game-box" id="treespy-box">
                 <a href="#" class="portfolio-box">
-                    <img src="house_adult_wardrobe.png" class="img-responsive" alt="">
-                    <div class="portfolio-box-caption">
-                        <div class="portfolio-box-caption-content">
-                            <div class="project-name">
-                                Tree Find Game
-                            </div>
-                        </div>
+                    <img src="game_icons/tree_search.png" id="treespy" class="img-responsive" alt="">
+                    <div class="game-box">
+                        Tree, I Spy
                     </div>
                 </a>
             </div>
@@ -295,8 +267,7 @@
       </div>
       <div class="modal-body">
 		<p>We would love to hear from you! Please submit the form below
-		  to contact us.  You will receive a copy of the message. We will 
-		  respond to the email address you provide.
+		  to contact us.
 		</p>
         <form >
 		  <div id="nameGroup" class="form-group">
@@ -394,6 +365,157 @@
 <script src="jquery.easing.min.js"></script>
 
 <script>
+    function preload(imgpath) {
+        var img = new Image();
+        img.src = imgpath;
+        return img;
+    }
+
+    var wardrobe = {
+        images: [preload("game_icons/house_adult_wardrobe.png"),
+            preload("game_icons/house_adult_wardrobe1.png"),
+            preload("game_icons/house_adult_wardrobe2.png"),
+            preload("game_icons/house_adult_wardrobe3.png"),
+            preload("game_icons/house_adult_wardrobe4.png"),
+            preload("game_icons/house_adult_wardrobe5.png"),
+            preload("game_icons/house_adult_wardrobe6.png"),
+            preload("game_icons/house_adult_wardrobe7.png"),
+            preload("game_icons/house_adult_wardrobe8.png")],
+        selectedImage: 0,
+        direction: 1,
+        animating: false,
+        id: 'wardrobe'
+    };
+
+    var puzzle = {
+        images: [preload("game_icons/house_toys_blocks.png"),
+            preload("game_icons/house_toys_blocks1.png"),
+            preload("game_icons/house_toys_blocks2.png"),
+            preload("game_icons/house_toys_blocks3.png"),
+            preload("game_icons/house_toys_blocks4.png"),
+            preload("game_icons/house_toys_blocks5.png"),
+            preload("game_icons/house_toys_blocks6.png"),
+            preload("game_icons/house_toys_blocks7.png"),
+            preload("game_icons/house_toys_blocks8.png")],
+        selectedImage: 0,
+        direction: 1,
+        animating: false,
+        id: 'puzzle'
+    };
+
+    var watercolor = {
+        images: [preload("game_icons/house_chilldroom_paint.png"),
+            preload("game_icons/house_chilldroom_paint1.png"),
+            preload("game_icons/house_chilldroom_paint2.png"),
+            preload("game_icons/house_chilldroom_paint3.png"),
+            preload("game_icons/house_chilldroom_paint4.png"),
+            preload("game_icons/house_chilldroom_paint5.png"),
+            preload("game_icons/house_chilldroom_paint6.png"),
+            preload("game_icons/house_chilldroom_paint7.png"),
+            preload("game_icons/house_chilldroom_paint8.png"),
+            preload("game_icons/house_chilldroom_paint9.png"),
+            preload("game_icons/house_chilldroom_paint10.png"),
+            preload("game_icons/house_chilldroom_paint11.png"),
+            preload("game_icons/house_chilldroom_paint12.png"),
+            preload("game_icons/house_chilldroom_paint13.png"),
+            preload("game_icons/house_chilldroom_paint14.png"),
+            preload("game_icons/house_chilldroom_paint15.png")
+            ],
+        selectedImage: 0,
+        direction: 1,
+        animating: false,
+        id: 'watercolor'
+    };
+
+    var scratch = {
+        images: [preload("game_icons/house_chilldroom_desk.png"),
+            preload("game_icons/house_chilldroom_desk1.png"),
+            preload("game_icons/house_chilldroom_desk2.png"),
+            preload("game_icons/house_chilldroom_desk3.png"),
+            preload("game_icons/house_chilldroom_desk4.png"),
+            preload("game_icons/house_chilldroom_desk5.png"),
+            preload("game_icons/house_chilldroom_desk6.png"),
+            preload("game_icons/house_chilldroom_desk7.png"),
+            preload("game_icons/house_chilldroom_desk8.png"),
+            preload("game_icons/house_chilldroom_desk9.png"),
+            preload("game_icons/house_chilldroom_desk10.png"),
+            preload("game_icons/house_chilldroom_desk11.png"),
+            preload("game_icons/house_chilldroom_desk12.png"),
+            preload("game_icons/house_chilldroom_desk13.png"),
+            preload("game_icons/house_chilldroom_desk14.png"),
+            preload("game_icons/house_chilldroom_desk15.png"),
+            preload("game_icons/house_chilldroom_desk16.png"),
+            preload("game_icons/house_chilldroom_desk17.png"),
+            preload("game_icons/house_chilldroom_desk18.png"),
+            preload("game_icons/house_chilldroom_desk19.png")
+            ],
+        selectedImage: 0,
+        direction: 1,
+        animating: false,
+        id: 'scratch'
+    };
+
+    var match = {
+        images: [preload("game_icons/house_familyroom_frame.png"),
+            preload("game_icons/house_familyroom_frame1.png"),
+            preload("game_icons/house_familyroom_frame2.png"),
+            preload("game_icons/house_familyroom_frame3.png"),
+            preload("game_icons/house_familyroom_frame4.png"),
+            preload("game_icons/house_familyroom_frame5.png"),
+            preload("game_icons/house_familyroom_frame6.png"),
+            preload("game_icons/house_familyroom_frame7.png"),
+            preload("game_icons/house_familyroom_frame8.png"),
+            preload("game_icons/house_familyroom_frame9.png"),
+            preload("game_icons/house_familyroom_frame10.png"),
+            preload("game_icons/house_familyroom_frame11.png"),
+            preload("game_icons/house_familyroom_frame12.png"),
+            preload("game_icons/house_familyroom_frame13.png"),
+            preload("game_icons/house_familyroom_frame14.png"),
+            preload("game_icons/house_familyroom_frame15.png"),
+            preload("game_icons/house_familyroom_frame16.png"),
+            preload("game_icons/house_familyroom_frame17.png"),
+            preload("game_icons/house_familyroom_frame18.png"),
+            preload("game_icons/house_familyroom_frame19.png"),
+            preload("game_icons/house_familyroom_frame20.png"),
+            preload("game_icons/house_familyroom_frame21.png"),
+            preload("game_icons/house_familyroom_frame22.png"),
+            preload("game_icons/house_familyroom_frame23.png"),
+            preload("game_icons/house_familyroom_frame24.png"),
+            preload("game_icons/house_familyroom_frame25.png")
+            ],
+        selectedImage: 0,
+        direction: 1,
+        animating: false,
+        id: 'match'
+    };
+
+    var bubbles = {
+        images: [preload("game_icons/bubbles1.png"),
+            preload("game_icons/bubbles2.png"),
+            preload("game_icons/bubbles3.png"),
+            preload("game_icons/bubbles4.png"),
+            preload("game_icons/bubbles5.png"),
+            preload("game_icons/bubbles6.png"),
+            preload("game_icons/bubbles7.png"),
+            preload("game_icons/bubbles8.png")
+        ],
+        selectedImage: 0,
+        direction: 1,
+        animating: false,
+        repeating: true,
+        id: 'bubbles'
+    };
+
+    var gameAnimations = [wardrobe, puzzle, watercolor, scratch, match, bubbles];
+    var gameObjs = {
+        "dressup-box": wardrobe,
+        "puzzle-box": puzzle,
+        "watercolor-box": watercolor,
+        "scratch-box": scratch,
+        "match-box": match,
+        "bubbles-box": bubbles
+    };
+
     $(document).ready(function() {
         // jQuery for page scrolling feature - requires jQuery Easing plugin
         $('a.page-scroll').bind('click', function(event) {
@@ -403,7 +525,55 @@
             }, 1250, 'easeInOutExpo');
             event.preventDefault();
         });
+
+        $('.outer-game-box').on('mouseenter', function() {
+            var id = $(this).attr('id');
+            if (gameObjs[id]) {
+                gameObjs[id].animating = true;
+                if (!gameObjs[id].repeating)
+                    gameObjs[id].direction = 1;
+            }
+        });
+        $('.outer-game-box').on('mouseleave', function() {
+            var id = $(this).attr('id');
+            if (gameObjs[id]) {
+                if (gameObjs[id].repeating) {
+                    gameObjs[id].animating = false;
+                } else {
+                    gameObjs[id].animating = true;
+                    gameObjs[id].direction = -1;
+                }
+            }
+        });
     });
+
+    window.setInterval(function() {
+        for(var g=0; g<gameAnimations.length; g++) {
+            var animation = gameAnimations[g];
+            if (animation.animating) {
+                animation.selectedImage += animation.direction;
+                if (animation.selectedImage >= animation.images.length) {
+                    if (animation.repeating) {
+                        animation.selectedImage = animation.images.length-1;
+                        animation.direction = -1;
+                    } else {
+                        animation.selectedImage = animation.images.length-1;
+                        animation.animating = false;
+                    }
+                }
+                if (animation.selectedImage < 0) {
+                    if (animation.repeating) {
+                        animation.selectedImage = 0;
+                        animation.direction = 1;
+                    } else {
+                        animation.selectedImage = 0;
+                        animation.animating = false;
+                    }
+                }
+                $('#'+animation.id).attr('src', animation.images[animation.selectedImage].src);
+            }
+        }
+    }, 66);
 	
 	function showContactForm() {
 	    $('#contactFormModal').modal('show')

@@ -43,6 +43,10 @@
     <Preference android:title="@string/title_activity_parents_guide" android:key="parents_guide">
     </Preference>
 
+    <Preference android:title="@string/pref_title_website"
+        android:summary="@string/pref_summary_visit_web" android:key="website">
+    </Preference>
+
     <Preference android:title="@string/pref_title_version" android:key="version">
     </Preference>
 
