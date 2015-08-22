@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,9 +45,11 @@ public class LoadingDialog extends DialogFragment {
             childFragmentManager.set(this, null);
 
         } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
+            Log.e(getClass().getName(), "error closing loadingdialog", e);
+            //throw new RuntimeException(e);
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+            Log.e(getClass().getName(), "error closing loadingdialog", e);
+            //throw new RuntimeException(e);
         }
     }
 }

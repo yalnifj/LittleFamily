@@ -353,13 +353,15 @@ public class TreePersonAnimatedSprite extends Sprite {
                 float by = getY() + detailHeight - MyTreeActivity.buttonSize * 2;
                 int count = 1;
                 for (Bitmap button : activityButtons) {
-                    canvas.drawBitmap(button, bx, by, null);
-                    bx += button.getWidth() + 20;
-                    if (count % 3 == 0) {
-                        bx = getX() + leftLeaf.getWidth() + 20;
-                        by += MyTreeActivity.buttonSize;
+                    if (button!=null) {
+                        canvas.drawBitmap(button, bx, by, null);
+                        bx += button.getWidth() + 20;
+                        if (count % 3 == 0) {
+                            bx = getX() + leftLeaf.getWidth() + 20;
+                            by += MyTreeActivity.buttonSize;
+                        }
+                        count++;
                     }
-                    count++;
                 }
             } else if (state == STATE_OPEN_RIGHT) {
                 if (node.getSpouse() != null && detailPerson.getGender() != GenderType.Female) {
@@ -375,13 +377,15 @@ public class TreePersonAnimatedSprite extends Sprite {
                 float by = getY() + detailHeight - MyTreeActivity.buttonSize * 2;
                 int count = 1;
                 for (Bitmap button : spActivityButtons) {
-                    canvas.drawBitmap(button, bx, by, null);
-                    bx += button.getWidth() + 20;
-                    if (count % 3 == 0) {
-                        bx = getX() + getWidth() + 20;
-                        by += MyTreeActivity.buttonSize;
+                    if (button!=null) {
+                        canvas.drawBitmap(button, bx, by, null);
+                        bx += button.getWidth() + 20;
+                        if (count % 3 == 0) {
+                            bx = getX() + getWidth() + 20;
+                            by += MyTreeActivity.buttonSize;
+                        }
+                        count++;
                     }
-                    count++;
                 }
             }
         }

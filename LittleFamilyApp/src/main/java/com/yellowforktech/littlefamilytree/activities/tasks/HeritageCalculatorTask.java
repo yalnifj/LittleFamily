@@ -74,8 +74,8 @@ public class HeritageCalculatorTask extends AsyncTask<LittlePerson, Integer, Arr
                         }
                     } else {
                         //-- if we don't know if this person has parents, then sync them to pick up the parents next time
-                        if (pathPerson.isHasParents()==null) {
-                            dataService.addToSyncQ(pathPerson, 1);
+                        if (pathPerson.isHasParents()==null && path.getTreePath().size() < MAX_PATHS) {
+                            dataService.addToSyncQ(pathPerson, Math.min(5, path.getTreePath().size()));
                         }
                         returnPaths.add(path);
                     }
@@ -86,7 +86,8 @@ public class HeritageCalculatorTask extends AsyncTask<LittlePerson, Integer, Arr
         }
         for (HeritagePath path : returnPaths) {
             try {
-                dataService.addToSyncQ(path.getTreePath().get(path.getTreePath().size()-1), path.getTreePath().size());
+                LittlePerson lastInPath = path.getTreePath().get(path.getTreePath().size()-1);
+                dataService.addToSyncQ(lastInPath, path.getTreePath().size());
             } catch (Exception e) {
                 Log.e(this.getClass().getSimpleName(), "error", e);
             }

@@ -41,6 +41,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     public static final String TOPIC_START_HERITAGE_CALC = "startHeritageCalc";
     public static final String TOPIC_START_BUBBLES = "startBubblePop";
     public static final String TOPIC_START_SETTINGS = "startSettings";
+	public static final String TOPIC_START_SONG = "startSong";
     protected TextToSpeech tts;
     protected MediaPlayer successPlayer;
     protected MediaPlayer buzzPlayer;
@@ -93,15 +94,20 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         EventQueue.getInstance().subscribe(TOPIC_START_TREE, this);
         EventQueue.getInstance().subscribe(TOPIC_START_BUBBLES, this);
         EventQueue.getInstance().subscribe(TOPIC_START_SETTINGS, this);
+        EventQueue.getInstance().subscribe(TOPIC_START_SONG, this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        successPlayer.release();
-        successPlayer = null;
-        buzzPlayer.release();
-        buzzPlayer = null;
+        if (successPlayer!=null) {
+            successPlayer.release();
+            successPlayer = null;
+        }
+        if (buzzPlayer!=null) {
+            buzzPlayer.release();
+            buzzPlayer = null;
+        }
         EventQueue.getInstance().unSubscribe(TOPIC_START_MATCH, this);
         EventQueue.getInstance().unSubscribe(TOPIC_START_COLORING, this);
         EventQueue.getInstance().unSubscribe(TOPIC_START_DRESSUP, this);
@@ -111,6 +117,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         EventQueue.getInstance().unSubscribe(TOPIC_START_TREE, this);
         EventQueue.getInstance().unSubscribe(TOPIC_START_BUBBLES, this);
         EventQueue.getInstance().unSubscribe(TOPIC_START_SETTINGS, this);
+        EventQueue.getInstance().unSubscribe(TOPIC_START_SONG, this);
     }
 
     public void showLoadingDialog() {
@@ -310,6 +317,9 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
             case TOPIC_START_SETTINGS:
                 showAdultAuthDialog();
                 break;
+			case TOPIC_START_SONG:
+                startSongGame(person);
+                break;
         }
     }
 
@@ -385,6 +395,12 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
 
     public void startBubbleGame(LittlePerson person) {
         Intent intent = new Intent( this, BubblePopActivity.class );
+        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
+        startActivity(intent);
+    }
+	
+	public void startSongGame(LittlePerson person) {
+        Intent intent = new Intent( this, SongActivity.class );
         intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
         startActivity(intent);
     }

@@ -26,6 +26,7 @@ public class SplashActivity extends Activity implements EventListener {
 
     private SpritedSurfaceView plantView;
     private DataService dataService;
+    private boolean startingIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,9 +88,11 @@ public class SplashActivity extends Activity implements EventListener {
             if (dataService.getServiceType()==null || !dataService.hasData()) {
                 Intent intent = new Intent(this, ChooseRemoteService.class);
                 startActivity(intent);
+                startingIntent = true;
             } else {
                 Intent intent = new Intent( this, ChooseFamilyMember.class );
                 startActivity(intent);
+                startingIntent = true;
             }
         } catch (Exception e) {
             Log.e("SplashActivity", "Error getting data from DataService", e);
@@ -98,7 +101,7 @@ public class SplashActivity extends Activity implements EventListener {
 
     @Override
     public void onEvent(String topic, Object o) {
-        if (!dataService.isAuthenticating()) {
+        if (!dataService.isAuthenticating() && !startingIntent) {
             gotoChooseFamilyMember(null);
         }
     }

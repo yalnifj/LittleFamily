@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.media.MediaPlayer;
+import android.util.Log;
 
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.LittleFamilyActivity;
@@ -30,23 +31,27 @@ public class BubbleAnimatedBitmapSprite extends BouncingAnimatedBitmapSprite {
     private int stepCount = 0;
     private int sWidth;
     private int sHeight;
+    private int photoWidth;
+    protected MediaPlayer mediaPlayer;
 	
-    public BubbleAnimatedBitmapSprite(Bitmap bitmap, int maxWidth, int maxHeight, LittleFamilyActivity activity, BubbleSpriteSurfaceView view) {
+    public BubbleAnimatedBitmapSprite(Bitmap bitmap, int maxWidth, int maxHeight, LittleFamilyActivity activity, BubbleSpriteSurfaceView view, int photoWidth) {
         super(bitmap, maxWidth, maxHeight);
         setSelectable(true);
         this.activity = activity;
         setIgnoreAlpha(true);
         setStepsPerFrame(2);
         this.view = view;
+        this.photoWidth = photoWidth;
     }
 
-    public BubbleAnimatedBitmapSprite(Map<Integer, List<Bitmap>> bitmaps, int maxWidth, int maxHeight, LittleFamilyActivity activity, BubbleSpriteSurfaceView view) {
+    public BubbleAnimatedBitmapSprite(Map<Integer, List<Bitmap>> bitmaps, int maxWidth, int maxHeight, LittleFamilyActivity activity, BubbleSpriteSurfaceView view, int photoWidth) {
         super(bitmaps, maxWidth, maxHeight);
         setSelectable(true);
         this.activity = activity;
         setIgnoreAlpha(true);
         setStepsPerFrame(2);
         this.view = view;
+        this.photoWidth = photoWidth;
     }
 
     public int getMx() {
@@ -106,15 +111,14 @@ public class BubbleAnimatedBitmapSprite extends BouncingAnimatedBitmapSprite {
 			}
         }
         if (state==2) {
-            speed = (mx - x)/10;
-            slope = (my - y)/10;
-            if (speed > 10) speed=10;
-            if (speed < -10) speed=-10;
-            if (slope > 10) slope = 10;
-            if (slope < -10) slope = -10;
-            if (x > mx - 3 && x < mx +3) x = mx;
-            if (y > my - 3 && y < my +3) y = my;
-            if (x==mx && y==my) {
+            speed = (mx - (x + getWidth()/2))/10;
+            slope = (my - (y + getHeight()/2))/10;
+            if (speed > 15) speed=15;
+            if (speed < -15) speed=-15;
+            if (slope > 15) slope = 15;
+            if (slope < -15) slope = -15;
+            if (x + getWidth()/2 > mx - 3 && x + getWidth()/2 < mx +3 &&
+                    y + getHeight()/2 > my - 3 && y + getHeight()/2 < my +3) {
                 state = 3;
                 slope = 0;
                 speed = 0;
@@ -161,22 +165,22 @@ public class BubbleAnimatedBitmapSprite extends BouncingAnimatedBitmapSprite {
                 state = 1;
 
                 try {
-                    MediaPlayer mediaPlayer = MediaPlayer.create(activity, R.raw.pop);
-                    mediaPlayer.start();
+                    mediaPlayer = MediaPlayer.create(activity, R.raw.pop);
                     mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                         @Override
                         public void onCompletion(MediaPlayer mp) {
                             mp.release();
                         }
                     });
+                    mediaPlayer.start();
                 } catch (Exception e) {
                     // just let things go on
+                    Log.e(getClass().getSimpleName(), "Error playing sound", e);
                 }
             } else if (person!=null) {
                 stepCount = 10;
 				try {
-                    MediaPlayer mediaPlayer = MediaPlayer.create(activity, R.raw.nopop);
-                    mediaPlayer.start();
+                    mediaPlayer = MediaPlayer.create(activity, R.raw.nopop);
                     mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 							@Override
 							public void onCompletion(MediaPlayer mp) {
@@ -184,8 +188,10 @@ public class BubbleAnimatedBitmapSprite extends BouncingAnimatedBitmapSprite {
                                 view.sayFindText();
 							}
 						});
+                    mediaPlayer.start();
                 } catch (Exception e) {
                     // just let things go on
+                    Log.e(getClass().getSimpleName(), "Error playing sound", e);
                     view.sayFindText();
                 }
             }

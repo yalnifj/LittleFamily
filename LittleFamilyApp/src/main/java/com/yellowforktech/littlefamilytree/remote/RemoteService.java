@@ -48,4 +48,6 @@ public interface RemoteService {
     List<SourceDescription> getPersonMemories(String personId, boolean checkCache) throws RemoteServiceSearchException;
 
     String downloadImage(Uri uri, String folderName, String fileName, Context context) throws MalformedURLException, RemoteServiceSearchException;
+
+    String getPersonUrl(String remoteId);
 }

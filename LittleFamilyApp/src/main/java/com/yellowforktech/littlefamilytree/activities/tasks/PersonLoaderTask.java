@@ -32,6 +32,9 @@ public class PersonLoaderTask extends AsyncTask<Integer, Integer, LittlePerson> 
             } else {
                 person = dataService.getPersonById(id[0]);
             }
+            if (person!=null) {
+                dataService.getMediaForPerson(person);
+            }
         } catch(Exception e) {
             Log.e(this.getClass().getSimpleName(), "error", e);
         }

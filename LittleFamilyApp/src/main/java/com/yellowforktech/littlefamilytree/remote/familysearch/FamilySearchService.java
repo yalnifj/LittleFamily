@@ -3,7 +3,6 @@ package com.yellowforktech.littlefamilytree.remote.familysearch;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 
 import com.yellowforktech.littlefamilytree.data.DataService;
@@ -22,7 +21,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.familysearch.identity.Identity;
 import org.gedcomx.Gedcomx;
 import org.gedcomx.atom.Entry;
 import org.gedcomx.atom.Feed;
@@ -32,7 +30,6 @@ import org.gedcomx.links.Link;
 import org.gedcomx.rt.GedcomxSerializer;
 import org.gedcomx.source.SourceDescription;
 import org.simpleframework.xml.Serializer;
-import org.simpleframework.xml.core.Persister;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -50,8 +47,15 @@ import java.util.Map;
  */
 public class FamilySearchService extends RemoteServiceBase implements RemoteService {
     protected static final String SESSION_ID = "sessionid";
-    private static final String FS_IDENTITY_PATH = "https://sandbox.familysearch.org/identity/v2/login";
-    private static final String FS_PLATFORM_PATH = "https://sandbox.familysearch.org/platform/";
+    //private static final String FS_IDENTITY_PATH = "https://sandbox.familysearch.org/identity/v2/login";
+    //private static final String FS_IDENTITY_PATH = "https://api.familysearch.org/identity/v2/login";
+
+    //private static final String FS_PLATFORM_PATH = "https://sandbox.familysearch.org/platform/";
+    private static final String FS_PLATFORM_PATH = "https://familysearch.org/platform/";
+
+    //private static final String FS_OAUTH2_PATH = "https://sandbox.familysearch.org/cis-web/oauth2/v3/token";
+    private static final String FS_OAUTH2_PATH = "https://ident.familysearch.org/cis-web/oauth2/v3/token";
+
     private static final String FS_APP_KEY = "a0T3000000BM5hcEAD";
     private static final String TAG = FamilySearchService.class.getSimpleName();
 
@@ -78,16 +82,52 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
 
     @Override
     public RemoteResult authenticate(String username, String password) throws RemoteServiceSearchException {
-        String encodedAuthToken = createEncodedAuthToken(username, password);
+        //-- OAuth2
+        Uri action = Uri.parse(FS_OAUTH2_PATH);
+        Bundle params = new Bundle();
+        params.putString("grant_type", "password");
+        params.putString("client_id", FS_APP_KEY);
+        params.putString("username", username);
+        params.putString("password", password);
+        Bundle headers = new Bundle();
+        //headers.putString("Authorization", "Basic " + encodedAuthToken);
 
-        return authWithToken(encodedAuthToken);
+        RemoteResult data = getRestDataNoRetry(METHOD_POST, action, params, headers);
+        if (data!=null) {
+            if (data.isSuccess()) {
+                String json = data.getData();
+                int pos1 = json.indexOf("access_token");
+                if (pos1>0) {
+                    pos1 = json.indexOf(":", pos1);
+                    if (pos1>0) {
+                        int pos2 = json.indexOf("\"", pos1+2);
+                        this.sessionId = json.substring(pos1+2, pos2);
+                        Log.i(TAG, "access_token: " + sessionId);
+                    }
+                }
+            } else {
+                this.sessionId = null;
+            }
+        }
+
+        return data;
     }
 
+    @Override
+    public RemoteResult authWithToken(String token) throws RemoteServiceSearchException {
+        String[] parts = token.split(":", 2);
+        String username = parts[0];
+        String password = parts[1];
+        return authenticate(username, password);
+    }
+
+    /*
     @Override
     public RemoteResult authWithToken(String encodedAuthToken) throws RemoteServiceSearchException {
         if (encodedAuthToken==null) {
             throw new RemoteServiceSearchException("Unable to authenticate with FamilySearch", 401);
         }
+         OAuth1
         Uri action = Uri.parse(FS_IDENTITY_PATH);
         Bundle params = new Bundle();
         params.putString("key", FS_APP_KEY);
@@ -112,14 +152,19 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
 
         return data;
     }
+    */
 
     @Override
     public String getSessionId() {
         return sessionId;
     }
 
+    //public String createEncodedAuthToken(String username, String password) {
+    //    return Base64.encodeToString((username + ":" + password).getBytes(), Base64.NO_WRAP);
+    //}
+
     public String createEncodedAuthToken(String username, String password) {
-        return Base64.encodeToString((username + ":" + password).getBytes(), Base64.NO_WRAP);
+        return username+":"+password;
     }
 
     @Override
@@ -152,6 +197,8 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
                     //-- check status and retry if possible
                     if (handleStatusCodes(result)) {
                         return getCurrentPerson();
+                    } else {
+                        throw new RemoteServiceSearchException("Error reading current person: "+result.getData(), result.getStatusCode());
                     }
                 }
             }
@@ -327,18 +374,13 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
             throw new RemoteServiceSearchException("Not Authenticated with FamilySearch.", 0);
         }
 
-		Person person = this.getPerson(personId, checkCache);
-        if (person==null) {
-            throw new RemoteServiceSearchException("Unable to get person "+personId+" from FamilySearch", 0);
-        }
-
-        if (!checkCache || closeRelatives.get(person.getId())==null) {
+        if (!checkCache || closeRelatives.get(personId)==null) {
             Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons-with-relationships");
             Bundle headers = new Bundle();
             headers.putString("Authorization", "Bearer " + sessionId);
             headers.putString("Accept", "application/x-gedcomx-v1+xml");
             Bundle params = new Bundle();
-            params.putString("person", person.getId());
+            params.putString("person", personId);
 
             RemoteResult result = getRestData(METHOD_GET, uri, params, headers);
             if (result!=null) {
@@ -348,7 +390,7 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
                         Gedcomx doc = serializer.read(Gedcomx.class, result.getData());
                         if (doc.getRelationships() != null && doc.getRelationships().size() > 0) {
                             List<Relationship> relatives = new ArrayList<>(doc.getRelationships());
-                            closeRelatives.put(person.getId(), relatives);
+                            closeRelatives.put(personId, relatives);
                             Log.i(TAG, "getCloseRelatives " + doc.getRelationships().size() + ": " + personId);
                         }
                     } catch (Exception e) {
@@ -363,7 +405,7 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
             }
         }
 
-        return closeRelatives.get(person.getId());
+        return closeRelatives.get(personId);
     }
 
     public List<Relationship> getParents(String personId, boolean checkCache) throws RemoteServiceSearchException {
@@ -371,12 +413,7 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
             throw new RemoteServiceSearchException("Not Authenticated with FamilySearch.", 0);
         }
 
-        Person person = this.getPerson(personId, checkCache);
-        if (person==null) {
-            throw new RemoteServiceSearchException("Unable to get person "+personId+" from FamilySearch", 0);
-        }
-
-        Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+person.getId()+"/parent-relationships");
+        Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+personId+"/parent-relationships");
         Bundle headers = new Bundle();
         headers.putString("Authorization", "Bearer " + sessionId);
         headers.putString("Accept", "application/x-gedcomx-v1+xml");
@@ -412,12 +449,7 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
             throw new RemoteServiceSearchException("Not Authenticated with FamilySearch.", 0);
         }
 
-        Person person = this.getPerson(personId, checkCache);
-        if (person==null) {
-            throw new RemoteServiceSearchException("Unable to get person "+personId+" from FamilySearch", 0);
-        }
-
-        Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+person.getId()+"/child-relationships");
+        Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+personId+"/child-relationships");
         Bundle headers = new Bundle();
         headers.putString("Authorization", "Bearer " + sessionId);
         headers.putString("Accept", "application/x-gedcomx-v1+xml");
@@ -453,12 +485,7 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
             throw new RemoteServiceSearchException("Not Authenticated with FamilySearch.", 0);
         }
 
-        Person person = this.getPerson(personId, checkCache);
-        if (person==null) {
-            throw new RemoteServiceSearchException("Unable to get person "+personId+" from FamilySearch", 0);
-        }
-
-        Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+person.getId()+"/spouse-relationships");
+        Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+personId+"/spouse-relationships");
         Bundle headers = new Bundle();
         headers.putString("Authorization", "Bearer " + sessionId);
         headers.putString("Accept", "application/x-gedcomx-v1+xml");
@@ -489,15 +516,58 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
         return null;
     }
 
-    @Override
-    public List<SourceDescription> getPersonMemories(String personId, boolean checkCache) throws RemoteServiceSearchException {
+    public Map<Integer, Person> getPedigree(String personId) throws RemoteServiceSearchException {
         if (sessionId==null) {
             throw new RemoteServiceSearchException("Not Authenticated with FamilySearch.", 0);
         }
 
-        Person person = this.getPerson(personId, checkCache);
-        if (person==null) {
-            throw new RemoteServiceSearchException("Unable to get person "+personId+" from FamilySearch", 0);
+        Map<Integer, Person> tree = new HashMap<>();
+
+        Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/ancestry");
+        Bundle headers = new Bundle();
+        headers.putString("Authorization", "Bearer " + sessionId);
+        headers.putString("Accept", "application/x-gedcomx-v1+xml");
+        Bundle params = new Bundle();
+        params.putString("person", personId);
+        params.putString("personDetails", "");
+
+        RemoteResult result = getRestData(METHOD_GET, uri, params, headers);
+        if (result!=null) {
+            if (result.isSuccess()) {
+                Serializer serializer = GedcomxSerializer.create();
+                try {
+                    Gedcomx doc = serializer.read(Gedcomx.class, result.getData());
+                    if (doc.getPersons() != null && doc.getPersons().size() > 0) {
+                        for (Person p : doc.getPersons()) {
+                            if (!personCache.containsKey(p.getId())) {
+                                personCache.put(p.getId(), p);
+                            }
+                            String placeNumStr = p.getDisplayExtension().getAscendancyNumber();
+                            if (placeNumStr!=null) {
+                                Integer ahnen = Integer.valueOf(placeNumStr);
+                                tree.put(ahnen, p);
+                            }
+                        }
+                        Log.i(TAG, "getPerson " + doc.getPersons().size() + ": " + personId);
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "error", e);
+                }
+            } else {
+                //-- check status and retry if possible
+                if (handleStatusCodes(result)) {
+                    return getPedigree(personId);
+                }
+            }
+        }
+
+        return tree;
+    }
+
+    @Override
+    public List<SourceDescription> getPersonMemories(String personId, boolean checkCache) throws RemoteServiceSearchException {
+        if (sessionId==null) {
+            throw new RemoteServiceSearchException("Not Authenticated with FamilySearch.", 0);
         }
 
         if (!checkCache || memories.get(personId)==null){
@@ -645,5 +715,10 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
         }
 
         return null;
+    }
+
+    @Override
+    public String getPersonUrl(String remoteId) {
+        return "https://familysearch.org/tree/#view=ancestor&person="+remoteId;
     }
 }

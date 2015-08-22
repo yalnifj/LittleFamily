@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.yellowforktech.littlefamilytree.activities.tasks.AuthTask;
+import com.yellowforktech.littlefamilytree.activities.tasks.FSPedigreeTask;
 import com.yellowforktech.littlefamilytree.activities.tasks.FamilyLoaderTask;
 import com.yellowforktech.littlefamilytree.activities.tasks.PersonLoaderTask;
 import com.yellowforktech.littlefamilytree.data.DataService;
@@ -24,11 +25,14 @@ import com.yellowforktech.littlefamilytree.remote.RemoteResult;
 import com.yellowforktech.littlefamilytree.remote.familysearch.FamilySearchService;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class FSLoginActivity extends Activity implements AuthTask.Listener, PersonLoaderTask.Listener, FamilyLoaderTask.Listener {
+public class FSLoginActivity extends Activity implements AuthTask.Listener, PersonLoaderTask.Listener, FamilyLoaderTask.Listener,
+        FSPedigreeTask.Listener {
     private static final String FS_DEFAULT_USER = "tum000205905";
     private static final String FS_DEFAULT_PASS = "1234pass";
 
@@ -51,14 +55,14 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
         mEmailView = (AutoCompleteTextView) findViewById(com.yellowforktech.littlefamilytree.R.id.email);
         try {
             String defaultUser = dataService.getDBHelper().getProperty(DataService.SERVICE_USERNAME);
-            if (defaultUser==null) defaultUser = FS_DEFAULT_USER;
+            //if (defaultUser==null) defaultUser = FS_DEFAULT_USER;
             mEmailView.setText(defaultUser);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         mPasswordView = (EditText) findViewById(com.yellowforktech.littlefamilytree.R.id.password);
-        mPasswordView.setText(FS_DEFAULT_PASS);
+        //mPasswordView.setText(FS_DEFAULT_PASS);
 
 
         Button mEmailSignInButton = (Button) findViewById(com.yellowforktech.littlefamilytree.R.id.email_sign_in_button);
@@ -164,23 +168,56 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
 
     @Override
     public void onComplete(LittlePerson person) {
-        pd.setMessage("Loading close family members from FamilySearch...");
-        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
-        FamilyLoaderTask task = new FamilyLoaderTask(this, this);
-        task.execute(person);
+        if (person!=null) {
+            pd.setMessage("Loading close family members from FamilySearch...");
+            intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
+            FamilyLoaderTask task = new FamilyLoaderTask(this, this);
+            task.execute(person);
+        } else {
+            Toast.makeText(FSLoginActivity.this, "Error reading data from FamilySearch", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
     public void onComplete(ArrayList<LittlePerson> familyMembers) {
-        if (pd!=null) pd.dismiss();
         intent.putExtra(ChooseFamilyMember.FAMILY, familyMembers);
         setResult(Activity.RESULT_OK, intent);
-        finish();
+
+        LittlePerson[] people = null;
+        LittlePerson person = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
+        pd.setMessage("Loading pedigree for "+person.getName());
+        try {
+            List<LittlePerson> spouses = dataService.getSpouses(person);
+            if (spouses!=null) {
+                people = new LittlePerson[spouses.size()+1];
+                people[0] = person;
+                int i =1;
+                for(LittlePerson p : spouses) {
+                    people[i] = p;
+                    i++;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (people==null) {
+            people = new LittlePerson[1];
+            people[0] = person;
+        }
+
+        FSPedigreeTask task = new FSPedigreeTask(this);
+        task.execute(people);
     }
 
     @Override
     public void onStatusUpdate(String message) {
         pd.setMessage(message);
+    }
+
+    @Override
+    public void onComplete(Map<Integer, LittlePerson> tree) {
+        if (pd!=null) pd.dismiss();
+        finish();
     }
 }
 

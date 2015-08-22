@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Little Family Tree</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+
+    <link rel="stylesheet" href="littlefamily.css">
+
+    <link rel="shortcut icon" type="image/png" href="littlefamilytree_icon_small.png" />
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style type="text/css">
+        .beta {
+            font-weight: bold;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+<nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <a class="navbar-brand page-scroll" href="#page-top">
+                <img class="icon" src="home.png" border="0" height="45" />
+                <!-- Little Family Tree -->
+            </a>
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-left">
+                <li>
+                    <a class="page-scroll" href="#page-top">Home</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="#video">Video</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="parentsguide.html">Parent's Guide</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="#games">Games</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="familysearch.html">FamilySearch</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="#about">About Us</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+<header class="content-start" id="page-top">
+    <div class="header-content">
+        <div class="header-content-inner container-fluid">
+            <div class="row">
+                <div class="col-sm-5 text-center">
+                    <img class="main-icon" src="little_family_logo.png" border="0" />
+                    <p>&nbsp;</p>
+                    <p class="beta">
+                        Little Family Tree is currently in beta.
+                    </p>
+                    <p>
+                        <button type="button" onclick="showContactForm(); return false;" class="btn btn-primary btn-xs">Contact Us!</button>
+                        for information about participating in the beta program.
+                    </p>
+                    <p>
+                        <a href="https://play.google.com/store/apps/details?id=com.yellowforktech.littlefamilytree">
+                            <img alt="Android app on Google Play"
+                                 src="https://developer.android.com/images/brand/en_app_rgb_wo_60.png" />
+                        </a>
+                    </p>
+                </div>
+                <div class="col-sm-7">
+                    <h2 class="text-center">Introducing the youngest minds to their heritage</h2>
+                    <hr>
+                    <p>
+                        Little Family Tree engages toddlers and pre-school children with their personal heritage and family history
+                        through photos, games, and activities designed for their level. (Most of the games are fun for the
+                        kid in all of us.)
+                    </p>
+                    <p>
+                        Personal family history information is obtained by having an adult login to an online family tree such as
+                        <a href="http://www.familyearch.org">FamilySearch</a> or <a href="http://www/phpgedview.net">PhpGedView</a>.
+                        An online family tree account is required to play the game but a <a href="http://www.familyearch.org">FamilySearch</a>
+                        account can be obtained for free at <a href="http://www.familyearch.org">FamilySearch.org</a>.
+                    </p>
+                    <p>&nbsp;</p>
+                    <div class="row">
+                        <div class="col-sm-6 text-center">
+                            <a target="_blank" href="https://familysearch.org/apps/product/littlefamilytree/android">
+                                <img class="fsicon" src="FS-Certified.png" border="0"/>
+                            </a>
+                        </div>
+                        <div class="col-sm-4 text-center">
+                            <p>&nbsp;</p>
+                            <button type="button" onclick="window.location='familysearch.html'; return false;"
+                                class="btn btn-primary">Learn more about our<br />FamilySearch
+                                integration.</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<section class="bg-primary" id="video">
+    <a href="#page-top" class="page-scroll to-top" title="back to top"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></a>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <h2 class="section-heading">Video 1</h2>
+                <img src="growing_plant7.png" />
+            </div>
+            <!--
+            <div class="col-md-6 text-center">
+                <h2 class="section-heading">Video 2</h2>
+                <img src="growing_plant7.png" />
+            </div>
+            -->
+        </div>
+    </div>
+</section>
+
+<section id="games">
+    <a href="#page-top" class="page-scroll to-top" title="back to top"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></a>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 text-center">
+                <h2 class="section-heading">Games!</h2>
+                <hr class="primary">
+                <p>Learn about the different games included in Little Family Tree.<br />Read the <a href="parentsguide.html">Parent's Guide</a> for more information about how adults can make the games more fun.</p>
+                <p>&nbsp;</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3 col-sm-6 outer-game-box" id="dressup-box">
+                <a href="#" class="portfolio-box">
+                    <img src="game_icons/house_adult_wardrobe.png" id="wardrobe" class="img-responsive" alt="">
+                    <div class="game-box">
+                        Heritage Dress Up
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-3 col-sm-6 outer-game-box" id="puzzle-box">
+                <a href="#" class="portfolio-box">
+                    <img src="game_icons/house_toys_blocks.png" id="puzzle" class="img-responsive" alt="">
+                    <div class="game-box">
+                        Picture Puzzle
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-3 col-sm-6 outer-game-box" id="watercolor-box">
+                <a href="#" class="portfolio-box">
+                    <img src="game_icons/house_chilldroom_paint.png" id="watercolor" class="img-responsive" alt="">
+                    <div class="game-box">
+                        Water Coloring
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-3 col-sm-6 outer-game-box" id="match-box">
+                <a href="#" class="portfolio-box">
+                    <img src="game_icons/house_familyroom_frame.png" id="match" class="img-responsive" alt="">
+                    <div class="game-box">
+                        Picture Matching
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-3 col-sm-6 outer-game-box" id="scratch-box">
+                <a href="#" class="portfolio-box">
+                    <img src="game_icons/house_chilldroom_desk.png" id="scratch" class="img-responsive" alt="">
+                    <div class="game-box">
+                        Scratch Off
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-3 col-sm-6 outer-game-box" id="bubbles-box">
+                <a href="#" class="portfolio-box">
+                    <img src="game_icons/bubbles1.png" id="bubbles" class="img-responsive" alt="">
+                    <div class="game-box">
+                        Relationship Bubbles
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-3 col-sm-6 outer-game-box" id="treespy-box">
+                <a href="#" class="portfolio-box">
+                    <img src="game_icons/tree_search.png" id="treespy" class="img-responsive" alt="">
+                    <div class="game-box">
+                        Tree, I Spy
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="bg-info" id="about">
+    <a href="#page-top" class="page-scroll to-top" title="back to top"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></a>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 text-center">
+                <h2 class="section-heading">About Little Family Tree</h2>
+                <hr class="primary">
+                <p>Little Family Tree is a product of <a href="http://www.yellowforktech.com">Yellow Fork Technologies LLC</a></p>
+                <p>Your privacy is extremely important to us.  We promise not to share your personal information.
+                    <br /><a href="privacy.html">Read our full privacy policy.</a></p>
+                <p>&nbsp;</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-lg-offset-2 text-center">
+                <button type="button" onclick="showContactForm(); return false;" class="btn btn-primary">Contact Us!</button>
+            </div>
+            <div class="col-lg-4 text-center">
+                <address>Yellow Fork Technologies LLC
+                <br />5526 W. 13400 S. #448
+                <br />Herriman, UT  84096</address>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 text-center">
+                <p>&nbsp;</p>
+                <p>
+                    <img src="growing_plant7.png" border="0" />
+                </p>
+                <p>&nbsp;</p>
+                <p>&copy; 2015 Yellow Fork Technologies LLC</p>
+                <p>&nbsp;</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div id="contactFormModal" class="modal fade bs-example-modal-sm"
+    tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" onclick="$('#contactFormModal').modal('hide'); return false;" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Contact Little Family Tree</h4>
+      </div>
+      <div class="modal-body">
+		<p>We would love to hear from you! Please submit the form below
+		  to contact us.
+		</p>
+        <form >
+		  <div id="nameGroup" class="form-group">
+            <label for="name">Your name</label>
+            <input type="text" class="form-control" id="name" placeholder="Name" onchange="validateName();" />
+          </div>
+		  <div id="emailGroup" class="form-group">
+            <label for="email">Email address</label>
+            <input type="email" class="form-control" id="email" placeholder="Email" onchange="validateEmail();"/>
+          </div>
+            <div class="form-group">
+                <label>Expertise with family history</label>
+                <br />
+                <label class="radio-inline">
+                    <input type="radio" name="fhLevel" id="fhLevel1" value="Beginner" /> Beginner
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="fhLevel" id="fhLevel2" value="Intermediate" checked="checked" /> Intermediate
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="fhLevel" id="fhLevel3" value="Expert" /> Expert
+                </label>
+            </div>
+            <div class="form-group">
+                <label>Expertise with FamilySearch</label>
+                <br />
+                <label class="radio-inline">
+                    <input type="radio" name="fsLevel" id="fsLevel1" value="Beginner"> Beginner
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="fsLevel" id="fsLevel2" value="Intermediate" checked="checked" /> Intermediate
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="fsLevel" id="fsLevel3" value="Expert" /> Expert
+                </label>
+            </div>
+		  <div class="form-group">
+            <label for="reason">Reason for contacting us:</label>
+            <select name="reason" class="form-control" id="reason">
+			  <option>I need help</option>
+			  <option>I have some feedback to share</option>
+			  <option>I found a bug</option>
+			  <option>Kudos!</option>
+			  <option>Complaint</option>
+			  <option>I want to be a beta tester</option>
+			</select>
+          </div>
+		  <div id="messageGroup" class="form-group">
+            <label for="message">Message</label>
+            <textarea rows="6" class="form-control" name="message" id="message" placeholder="Enter your message"></textarea>
+          </div>
+            <div id="ajaxError" class="form-group has-error bg-danger" style="display: none;">
+                There was an error.
+            </div>
+		</form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" onclick="$('#contactFormModal').modal('hide'); return false;">Close</button>
+        <button type="button" class="btn btn-primary" onclick="sendContactForm(); return false;">Send</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="thankYouModal" class="modal fade bs-example-modal-sm"
+     tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" onclick="$('#thankYouModal').modal('hide'); return false;" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Thank You!</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Thank you for contacting us.
+                </p>
+                <p>
+                    You will receive a copy of the message that was sent
+                    to the email address that you provided.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="$('#thankYouModal').modal('hide'); return false;">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<!-- Plugin JavaScript -->
+<script src="jquery.easing.min.js"></script>
+
+<script>
+    function preload(imgpath) {
+        var img = new Image();
+        img.src = imgpath;
+        return img;
+    }
+
+    var wardrobe = {
+        images: [preload("game_icons/house_adult_wardrobe.png"),
+            preload("game_icons/house_adult_wardrobe1.png"),
+            preload("game_icons/house_adult_wardrobe2.png"),
+            preload("game_icons/house_adult_wardrobe3.png"),
+            preload("game_icons/house_adult_wardrobe4.png"),
+            preload("game_icons/house_adult_wardrobe5.png"),
+            preload("game_icons/house_adult_wardrobe6.png"),
+            preload("game_icons/house_adult_wardrobe7.png"),
+            preload("game_icons/house_adult_wardrobe8.png")],
+        selectedImage: 0,
+        direction: 1,
+        animating: false,
+        id: 'wardrobe'
+    };
+
+    var puzzle = {
+        images: [preload("game_icons/house_toys_blocks.png"),
+            preload("game_icons/house_toys_blocks1.png"),
+            preload("game_icons/house_toys_blocks2.png"),
+            preload("game_icons/house_toys_blocks3.png"),
+            preload("game_icons/house_toys_blocks4.png"),
+            preload("game_icons/house_toys_blocks5.png"),
+            preload("game_icons/house_toys_blocks6.png"),
+            preload("game_icons/house_toys_blocks7.png"),
+            preload("game_icons/house_toys_blocks8.png")],
+        selectedImage: 0,
+        direction: 1,
+        animating: false,
+        id: 'puzzle'
+    };
+
+    var watercolor = {
+        images: [preload("game_icons/house_chilldroom_paint.png"),
+            preload("game_icons/house_chilldroom_paint1.png"),
+            preload("game_icons/house_chilldroom_paint2.png"),
+            preload("game_icons/house_chilldroom_paint3.png"),
+            preload("game_icons/house_chilldroom_paint4.png"),
+            preload("game_icons/house_chilldroom_paint5.png"),
+            preload("game_icons/house_chilldroom_paint6.png"),
+            preload("game_icons/house_chilldroom_paint7.png"),
+            preload("game_icons/house_chilldroom_paint8.png"),
+            preload("game_icons/house_chilldroom_paint9.png"),
+            preload("game_icons/house_chilldroom_paint10.png"),
+            preload("game_icons/house_chilldroom_paint11.png"),
+            preload("game_icons/house_chilldroom_paint12.png"),
+            preload("game_icons/house_chilldroom_paint13.png"),
+            preload("game_icons/house_chilldroom_paint14.png"),
+            preload("game_icons/house_chilldroom_paint15.png")
+            ],
+        selectedImage: 0,
+        direction: 1,
+        animating: false,
+        id: 'watercolor'
+    };
+
+    var scratch = {
+        images: [preload("game_icons/house_chilldroom_desk.png"),
+            preload("game_icons/house_chilldroom_desk1.png"),
+            preload("game_icons/house_chilldroom_desk2.png"),
+            preload("game_icons/house_chilldroom_desk3.png"),
+            preload("game_icons/house_chilldroom_desk4.png"),
+            preload("game_icons/house_chilldroom_desk5.png"),
+            preload("game_icons/house_chilldroom_desk6.png"),
+            preload("game_icons/house_chilldroom_desk7.png"),
+            preload("game_icons/house_chilldroom_desk8.png"),
+            preload("game_icons/house_chilldroom_desk9.png"),
+            preload("game_icons/house_chilldroom_desk10.png"),
+            preload("game_icons/house_chilldroom_desk11.png"),
+            preload("game_icons/house_chilldroom_desk12.png"),
+            preload("game_icons/house_chilldroom_desk13.png"),
+            preload("game_icons/house_chilldroom_desk14.png"),
+            preload("game_icons/house_chilldroom_desk15.png"),
+            preload("game_icons/house_chilldroom_desk16.png"),
+            preload("game_icons/house_chilldroom_desk17.png"),
+            preload("game_icons/house_chilldroom_desk18.png"),
+            preload("game_icons/house_chilldroom_desk19.png")
+            ],
+        selectedImage: 0,
+        direction: 1,
+        animating: false,
+        id: 'scratch'
+    };
+
+    var match = {
+        images: [preload("game_icons/house_familyroom_frame.png"),
+            preload("game_icons/house_familyroom_frame1.png"),
+            preload("game_icons/house_familyroom_frame2.png"),
+            preload("game_icons/house_familyroom_frame3.png"),
+            preload("game_icons/house_familyroom_frame4.png"),
+            preload("game_icons/house_familyroom_frame5.png"),
+            preload("game_icons/house_familyroom_frame6.png"),
+            preload("game_icons/house_familyroom_frame7.png"),
+            preload("game_icons/house_familyroom_frame8.png"),
+            preload("game_icons/house_familyroom_frame9.png"),
+            preload("game_icons/house_familyroom_frame10.png"),
+            preload("game_icons/house_familyroom_frame11.png"),
+            preload("game_icons/house_familyroom_frame12.png"),
+            preload("game_icons/house_familyroom_frame13.png"),
+            preload("game_icons/house_familyroom_frame14.png"),
+            preload("game_icons/house_familyroom_frame15.png"),
+            preload("game_icons/house_familyroom_frame16.png"),
+            preload("game_icons/house_familyroom_frame17.png"),
+            preload("game_icons/house_familyroom_frame18.png"),
+            preload("game_icons/house_familyroom_frame19.png"),
+            preload("game_icons/house_familyroom_frame20.png"),
+            preload("game_icons/house_familyroom_frame21.png"),
+            preload("game_icons/house_familyroom_frame22.png"),
+            preload("game_icons/house_familyroom_frame23.png"),
+            preload("game_icons/house_familyroom_frame24.png"),
+            preload("game_icons/house_familyroom_frame25.png")
+            ],
+        selectedImage: 0,
+        direction: 1,
+        animating: false,
+        id: 'match'
+    };
+
+    var bubbles = {
+        images: [preload("game_icons/bubbles1.png"),
+            preload("game_icons/bubbles2.png"),
+            preload("game_icons/bubbles3.png"),
+            preload("game_icons/bubbles4.png"),
+            preload("game_icons/bubbles5.png"),
+            preload("game_icons/bubbles6.png"),
+            preload("game_icons/bubbles7.png"),
+            preload("game_icons/bubbles8.png")
+        ],
+        selectedImage: 0,
+        direction: 1,
+        animating: false,
+        repeating: true,
+        id: 'bubbles'
+    };
+
+    var gameAnimations = [wardrobe, puzzle, watercolor, scratch, match, bubbles];
+    var gameObjs = {
+        "dressup-box": wardrobe,
+        "puzzle-box": puzzle,
+        "watercolor-box": watercolor,
+        "scratch-box": scratch,
+        "match-box": match,
+        "bubbles-box": bubbles
+    };
+
+    $(document).ready(function() {
+        // jQuery for page scrolling feature - requires jQuery Easing plugin
+        $('a.page-scroll').bind('click', function(event) {
+            var $anchor = $(this);
+            $('html, body').stop().animate({
+                scrollTop: ($($anchor.attr('href')).offset().top - 50)
+            }, 1250, 'easeInOutExpo');
+            event.preventDefault();
+        });
+
+        $('.outer-game-box').on('mouseenter', function() {
+            var id = $(this).attr('id');
+            if (gameObjs[id]) {
+                gameObjs[id].animating = true;
+                if (!gameObjs[id].repeating)
+                    gameObjs[id].direction = 1;
+            }
+        });
+        $('.outer-game-box').on('mouseleave', function() {
+            var id = $(this).attr('id');
+            if (gameObjs[id]) {
+                if (gameObjs[id].repeating) {
+                    gameObjs[id].animating = false;
+                } else {
+                    gameObjs[id].animating = true;
+                    gameObjs[id].direction = -1;
+                }
+            }
+        });
+    });
+
+    window.setInterval(function() {
+        for(var g=0; g<gameAnimations.length; g++) {
+            var animation = gameAnimations[g];
+            if (animation.animating) {
+                animation.selectedImage += animation.direction;
+                if (animation.selectedImage >= animation.images.length) {
+                    if (animation.repeating) {
+                        animation.selectedImage = animation.images.length-1;
+                        animation.direction = -1;
+                    } else {
+                        animation.selectedImage = animation.images.length-1;
+                        animation.animating = false;
+                    }
+                }
+                if (animation.selectedImage < 0) {
+                    if (animation.repeating) {
+                        animation.selectedImage = 0;
+                        animation.direction = 1;
+                    } else {
+                        animation.selectedImage = 0;
+                        animation.animating = false;
+                    }
+                }
+                $('#'+animation.id).attr('src', animation.images[animation.selectedImage].src);
+            }
+        }
+    }, 66);
+	
+	function showContactForm() {
+	    $('#contactFormModal').modal('show')
+	}
+
+	function validateName() {
+	    $('#nameGroup').removeClass('has-error').removeClass('has-success');
+	    var name = $('#name').val();
+        if (name.trim()=='') {
+            $('#nameGroup').addClass('has-error');
+            return false;
+        } else {
+            $('#nameGroup').addClass('has-success');
+        }
+        return true;
+	}
+
+	function validateEmail() {
+	    $('#emailGroup').removeClass('has-error').removeClass('has-success');
+	    var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+	    var email = $('#email').val();
+        if (!re.test(email)) {
+            $('#emailGroup').addClass('has-error');
+            return false;
+        } else {
+            $('#emailGroup').addClass('has-success');
+        }
+        return true;
+	}
+
+	function validateMessage() {
+	    $('#messageGroup').removeClass('has-error').removeClass('has-success');
+	    var name = $('#message').val();
+        if (name.trim()=='') {
+            $('#messageGroup').addClass('has-error');
+            return false;
+        } else {
+            $('#messageGroup').addClass('has-success');
+        }
+        return true;
+	}
+
+	function sendContactForm() {
+	    $('#ajaxError').hide();
+        if (validateName() && validateEmail() && validateMessage()) {
+            $.post('contact.php', {
+                reason: $('#reason').val(),
+                name: $('#name').val(),
+                email: $('#email').val(),
+                fhLevel: $("input:radio[name ='fhLevel']:checked").val(),
+                fsLevel: $("input:radio[name ='fsLevel']:checked").val(),
+                message: $('#message').val()
+            }, function(data) {
+                if (data=='success') {
+                    $('#contactFormModal').modal('hide');
+                    $('#thankYouModal').modal('show');
+                } else {
+                    $('#ajaxError').html('There was an error sending your message.' + data).show();
+                }
+            });
+        }
+        return false;
+	}
+</script>
+</body>
+</html>

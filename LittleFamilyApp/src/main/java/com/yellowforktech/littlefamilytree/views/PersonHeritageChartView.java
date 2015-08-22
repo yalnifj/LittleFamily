@@ -72,7 +72,7 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
 
     public void setPerson(LittlePerson person) {
         this.person = person;
-        loadBitmap();
+        if (person!=null) loadBitmap();
         cultures = null;
     }
 

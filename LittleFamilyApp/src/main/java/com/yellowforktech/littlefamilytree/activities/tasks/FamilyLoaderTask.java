@@ -38,6 +38,7 @@ public class FamilyLoaderTask extends AsyncTask<LittlePerson, String, ArrayList<
                 if (people != null) {
                     for (LittlePerson p : people) {
                         familyMembers.add(p);
+                        dataService.getMediaForPerson(p);
                         dataService.addToSyncQ(p, 1);
                     }
                 }

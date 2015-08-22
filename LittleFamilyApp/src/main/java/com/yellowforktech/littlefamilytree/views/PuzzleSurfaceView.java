@@ -111,7 +111,7 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
     public void doDraw(Canvas canvas) {
 		canvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
         thumbnailHeight = getHeight()/10;
-        if (bitmap!=null) {
+        if (bitmap!=null && !bitmap.isRecycled()) {
             int width = getWidth();
             int height = getHeight() - thumbnailHeight;
             pieceWidth = width / game.getCols();
@@ -128,10 +128,21 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
                 pieceHeight = (int)(pieceWidth * ratio);
             }
 
+            int centerX = getWidth()/2;
+            int centerY = (getHeight()-thumbnailHeight)/2;
+
+            int puzzleWidth = pieceWidth*game.getCols();
+            int puzzleHeight = pieceHeight*game.getRows();
+
+            int left = centerX - (puzzleWidth/2);
+            if (left < 0) left = 0;
+            int top = centerY - (puzzleHeight /2);
+            if (top < 0) top = 0;
+
             for(int r=0; r<game.getRows(); r++) {
                 for(int c=0; c<game.getCols(); c++) {
-                    int y = r * pieceHeight;
-                    int x = c * pieceWidth;
+                    int y = top + (r * pieceHeight);
+                    int x = left + (c * pieceWidth);
 
                     PuzzlePiece pp = game.getPiece(r, c);
                     int by = pp.getRow() * bHeight;
@@ -177,7 +188,7 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
 
             if (showHint) {
                 Rect dst1 = new Rect();
-                dst1.set(0, 0, pieceWidth*game.getCols(), pieceHeight*game.getRows());
+                dst1.set(left, top, left + pieceWidth*game.getCols(), top + pieceHeight*game.getRows());
                 canvas.drawBitmap(bitmap, null, dst1, null);
             }
         }
@@ -197,7 +208,7 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
         selected = null;
         if (bitmap!=null) {
             float ratio = (float) bitmap.getWidth() / bitmap.getHeight();
-            if (x <= thumbnailHeight * ratio && y >= thumbnailHeight) {
+            if (x <= thumbnailHeight * ratio && y >= getHeight()-thumbnailHeight) {
                 showHint = true;
                 return;
             }
@@ -224,29 +235,40 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
         super.touch_up(x, y);
         showHint = false;
         if (selected!=null) {
-            int col = (int) (x / pieceWidth);
-            int row = (int) (y / pieceHeight);
+            int centerX = getWidth()/2;
+            int centerY = (getHeight()-thumbnailHeight)/2;
+
+            int puzzleWidth = pieceWidth*game.getCols();
+            int puzzleHeight = pieceHeight*game.getRows();
+
+            int left = centerX - (puzzleWidth/2);
+            if (left < 0) left = 0;
+            int top = centerY - (puzzleHeight /2);
+            if (top < 0) top = 0;
+
+            int col = (int) ((x-left) / pieceWidth);
+            int row = (int) ((y-top) / pieceHeight);
             if (col >= game.getCols()) col = game.getCols()-1;
             if (row >= game.getRows()) row = game.getRows()-1;
             PuzzlePiece pp = game.getPiece(row, col);
             if (!pp.isInPlace()) {
                 game.swap(row, col, sRow, sCol);
-                pp.setToX(sCol * pieceWidth);
-                pp.setToY(sRow * pieceHeight);
+                pp.setToX(left + (sCol * pieceWidth));
+                pp.setToY(top + (sRow * pieceHeight));
                 if (sRow==pp.getRow() && sCol==pp.getCol()) {
                     pp.setInPlace(true);
                     checkGame = true;
                 }
                 pp.setAnimating(true);
-                selected.setToX(col * pieceWidth);
-                selected.setToY(row * pieceHeight);
+                selected.setToX(left + (col * pieceWidth));
+                selected.setToY(top + (row * pieceHeight));
                 if (row==selected.getRow() && col==selected.getCol()) {
                     selected.setInPlace(true);
                     checkGame = true;
                 }
             } else {
-                selected.setToX(sCol * pieceWidth);
-                selected.setToY(sRow * pieceHeight);
+                selected.setToX(left + (sCol * pieceWidth));
+                selected.setToY(top + (sRow * pieceHeight));
             }
             selected.setSelected(false);
             selected.setAnimating(true);

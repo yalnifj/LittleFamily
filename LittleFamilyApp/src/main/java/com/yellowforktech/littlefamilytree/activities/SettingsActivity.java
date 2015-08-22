@@ -3,7 +3,9 @@ package com.yellowforktech.littlefamilytree.activities;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -42,6 +44,7 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
      */
     private static final boolean ALWAYS_SIMPLE_PREFS = false;
     protected TextToSpeech tts;
+    protected ListPreference voicePref;
 
 
     @Override
@@ -58,11 +61,30 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
         if (code == TextToSpeech.SUCCESS) {
             tts.setLanguage(Locale.getDefault());
             tts.setSpeechRate(0.9f);
+
+            /*
+            if (Build.VERSION.SDK_INT > 20) {
+                Set<Voice> voices = tts.getVoices();
+                String[] voiceList = new String[voices.size()];
+                int i = 0;
+                for (Voice v : voices) {
+                    voiceList[i] = v.getName();
+                    i++;
+                }
+                voicePref.setEntries(voiceList);
+                voicePref.setEntryValues(voiceList);
+            }
+            */
+
         } else {
             tts = null;
             //Toast.makeText(this, "Failed to initialize TTS engine.", Toast.LENGTH_SHORT).show();
             Log.e("LittleFamilyActivity", "Error intializing speech");
         }
+    }
+
+    public void setVoicePref(ListPreference voicePref) {
+        this.voicePref = voicePref;
     }
 
     public TextToSpeech getTts() {
@@ -156,6 +178,16 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
             }
         });
 
+        Preference website = findPreference("website");
+        website.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse("http://www.littlefamilytree.com"));
+                startActivity(intent);
+                return true;
+            }
+        });
+
         /*
         // Add 'notifications' preferences, and a corresponding header.
         PreferenceCategory fakeHeader = new PreferenceCategory(this);
@@ -178,6 +210,15 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
         bindPreferenceSummaryToValue(findPreference("sync_delay"));
         bindPreferenceSummaryToValue(findPreference("tts_voice"));
         //bindPreferenceSummaryToValue(findPreference("tts_voice_test"));
+        Preference versionPref = findPreference("version");
+        if (versionPref!=null) {
+            try {
+                String versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+                versionPref.setSummary(versionName);
+            } catch (PackageManager.NameNotFoundException e) {
+                Log.e(this.getClass().getSimpleName(), "Error getting version number", e);
+            }
+        }
     }
 
     /**
@@ -290,31 +331,23 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_general);
 
-            ListPreference voicePref = (ListPreference) findPreference("tts_voice");
-            if (Build.VERSION.SDK_INT > 20) {
-                Set<Voice> voices = ((SettingsActivity)getActivity()).getTts().getVoices();
-                String[] voiceList = new String[voices.size()];
-                int i = 0;
-                for (Voice v : voices) {
-                    voiceList[i] = v.getName();
-                    i++;
-                }
-                voicePref.setEntries(voiceList);
-                voicePref.setEntryValues(voiceList);
-            } else {
-                getPreferenceScreen().removePreference(voicePref);
-            }
+            ListPreference pref = (ListPreference) findPreference("tts_voice");
+            ((SettingsActivity)getActivity()).setVoicePref(pref);
+            //if (Build.VERSION.SDK_INT > 20) {
+            //} else {
+                getPreferenceScreen().removePreference(pref);
+            //}
 
             Preference testVoice = findPreference("tts_voice_test");
             testVoice.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     String message = String.format(getResources().getString(R.string.name_born_in_date), "Abraham Lincoln", "Hodgenville, Kentucky", "February 12, 1809");
-                    if (((SettingsActivity)getActivity()).getTts() != null) {
+                    if (((SettingsActivity) getActivity()).getTts() != null) {
                         if (Build.VERSION.SDK_INT > 20) {
-                            ((SettingsActivity)getActivity()).getTts().speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
+                            ((SettingsActivity) getActivity()).getTts().speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
                         } else {
-                            ((SettingsActivity)getActivity()).getTts().speak(message, TextToSpeech.QUEUE_FLUSH, null);
+                            ((SettingsActivity) getActivity()).getTts().speak(message, TextToSpeech.QUEUE_FLUSH, null);
                         }
                     }
                     return true;
@@ -357,6 +390,16 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
                 }
             });
 
+            Preference website = findPreference("website");
+            website.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse("http://www.littlefamilytree.com"));
+                    startActivity(intent);
+                    return true;
+                }
+            });
+
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
@@ -366,7 +409,23 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
             bindPreferenceSummaryToValue(findPreference("sync_cellular"));
             bindPreferenceSummaryToValue(findPreference("sync_delay"));
             bindPreferenceSummaryToValue(findPreference("tts_voice"));
+
+            Preference versionPref = findPreference("version");
+            if (versionPref!=null) {
+                try {
+                    String versionName = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
+                    versionPref.setSummary(versionName);
+                } catch (PackageManager.NameNotFoundException e) {
+                    Log.e(this.getClass().getSimpleName(), "Error getting version number", e);
+                }
+            }
         }
+    }
+
+    @Override
+    protected boolean isValidFragment(String fragmentName) {
+        if (GeneralPreferenceFragment.class.getName().equals(fragmentName)) return true;
+        return super.isValidFragment(fragmentName);
     }
 
     /**

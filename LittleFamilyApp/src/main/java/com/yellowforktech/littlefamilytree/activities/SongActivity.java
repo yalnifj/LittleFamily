@@ -1,7 +1,9 @@
 package com.yellowforktech.littlefamilytree.activities;
 
 import android.content.Intent;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.view.SurfaceHolder;
 
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.tasks.ChildrenLoaderTask;
@@ -27,6 +29,10 @@ public class SongActivity extends LittleFamilyActivity {
         setContentView(R.layout.activity_song);
 
         view = (SongSpriteSurfaceView) findViewById(R.id.view);
+        view.setActivity(this);
+        view.setZOrderOnTop(true);    // necessary
+        SurfaceHolder sfhTrackHolder = view.getHolder();
+        sfhTrackHolder.setFormat(PixelFormat.TRANSPARENT);
 
         Intent intent = getIntent();
         selectedPerson = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
@@ -64,7 +70,9 @@ public class SongActivity extends LittleFamilyActivity {
                     parents = family;
 
                     ChildrenLoaderTask ctask = new ChildrenLoaderTask(childListener, SongActivity.this);
-                    ctask.execute((LittlePerson[]) family.toArray());
+                    LittlePerson[] people = new LittlePerson[family.size()];
+                    people = family.toArray(people);
+                    ctask.execute(people);
                 }
 
                 ChildrenLoaderTask ctask2 = new ChildrenLoaderTask(new ChildrenLoaderTask.Listener() {
@@ -104,7 +112,9 @@ public class SongActivity extends LittleFamilyActivity {
             }
 
             ParentsLoaderTask gptask = new ParentsLoaderTask(grandParentListener, SongActivity.this);
-            gptask.execute((LittlePerson[]) parents.toArray());
+            LittlePerson[] people = new LittlePerson[parents.size()];
+            people = parents.toArray(people);
+            gptask.execute(people);
         }
         @Override
         public void onStatusUpdate(String message) { }

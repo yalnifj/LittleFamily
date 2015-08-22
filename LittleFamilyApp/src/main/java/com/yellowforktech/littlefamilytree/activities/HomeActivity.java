@@ -82,7 +82,7 @@ public class HomeActivity extends LittleFamilyActivity {
             DisplayMetrics dm = new DisplayMetrics();
             getWindowManager().getDefaultDisplay().getMetrics(dm);
             int maxWidth = (int) (1280*dm.density);
-            int maxHeight = (int) (720*dm.density);
+            int maxHeight = (int) (800*dm.density);
             homeView.setMaxHeight(maxHeight);
             homeView.setMaxWidth(maxWidth);
 
@@ -90,8 +90,6 @@ public class HomeActivity extends LittleFamilyActivity {
             homeBackground = new ClippedRepeatedBackgroundSprite(backBitmap, maxWidth, maxHeight);
             homeBackground.setWidth(homeView.getWidth());
             homeBackground.setHeight(homeView.getHeight());
-            homeBackground.setClipX((int) (400*dm.density));
-            homeBackground.setClipY((int) (100*dm.density));
             homeView.setBackgroundSprite(homeBackground);
 
             Bitmap starBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.star1);
@@ -430,6 +428,51 @@ public class HomeActivity extends LittleFamilyActivity {
             homeView.addSprite(bubbles);
             homeView.addActivitySprite(bubbles);
 
+            Bitmap freezerBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_kitchen_freezer);
+            TouchStateAnimatedBitmapSprite freezer = new TouchStateAnimatedBitmapSprite(freezerBm, this);
+            freezer.setX(1043 * dm.density);
+            freezer.setY(545 * dm.density);
+            freezer.setResources(getResources());
+            List<Integer> freezeOpen = new ArrayList<>(6);
+            freezeOpen.add(R.drawable.house_kitchen_freezer1);
+            freezeOpen.add(R.drawable.house_kitchen_freezer2);
+            freezeOpen.add(R.drawable.house_kitchen_freezer3);
+            freezeOpen.add(R.drawable.house_kitchen_freezer4);
+            freezeOpen.add(R.drawable.house_kitchen_freezer5);
+            freezer.getBitmapIds().put(1, freezeOpen);
+            freezer.setStateTransition(1, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
+            List<Integer> freezeOpened = new ArrayList<>(1);
+            freezeOpened.add(R.drawable.house_kitchen_freezer6);
+            freezer.getBitmapIds().put(2, freezeOpened);
+            List<Integer> freezeClose = new ArrayList<>(freezeOpen);
+            Collections.reverse(freezeClose);
+            freezer.getBitmapIds().put(3, freezeClose);
+            freezer.setStateTransition(3, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
+            homeView.addSprite(freezer);
+
+            Bitmap fridgeBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_kitchen_fridge);
+            TouchStateAnimatedBitmapSprite fridge = new TouchStateAnimatedBitmapSprite(fridgeBm, this);
+            fridge.setX(1043 * dm.density);
+            fridge.setY(580 * dm.density);
+            fridge.setResources(getResources());
+            List<Integer> fridgeOpen = new ArrayList<>(6);
+            fridgeOpen.add(R.drawable.house_kitchen_fridge1);
+            fridgeOpen.add(R.drawable.house_kitchen_fridge2);
+            fridgeOpen.add(R.drawable.house_kitchen_fridge3);
+            fridgeOpen.add(R.drawable.house_kitchen_fridge4);
+            fridgeOpen.add(R.drawable.house_kitchen_fridge5);
+            fridge.getBitmapIds().put(1, fridgeOpen);
+            fridge.setStateTransition(1, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
+            List<Integer> fridgeOpened = new ArrayList<>(1);
+            fridgeOpened.add(R.drawable.house_kitchen_fridge6);
+            fridge.getBitmapIds().put(2, fridgeOpened);
+            List<Integer> fridgeClose = new ArrayList<>(fridgeOpen);
+            Collections.reverse(fridgeClose);
+            fridge.getBitmapIds().put(3, fridgeClose);
+            fridge.setStateTransition(3, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
+            homeView.addSprite(fridge);
+
+
             Bitmap wardrobeBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_adult_wardrobe);
             TouchStateAnimatedBitmapSprite wardrobe = new TouchStateAnimatedBitmapSprite(wardrobeBm, this);
             wardrobe.setX(747*dm.density);
@@ -577,31 +620,82 @@ public class HomeActivity extends LittleFamilyActivity {
             homeView.addSprite(bat);
 
             Bitmap pianoBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_music_piano);
-            AnimatedBitmapSprite piano = new AnimatedBitmapSprite(pianoBm);
-            piano.setX(625*dm.density);
-            piano.setY(225*dm.density);
+            TouchStateAnimatedBitmapSprite piano = new TouchStateAnimatedBitmapSprite(pianoBm, this);
+            piano.setX(625 * dm.density);
+            piano.setY(225 * dm.density);
+            List<Bitmap> state1 = new ArrayList<>(1);
+            state1.add(pianoBm);
+            piano.getBitmaps().put(1, state1);
+			//piano.setStateTransitionEvent(1, TOPIC_START_SONG);
+            piano.getAudio().put(1, R.raw.piano);
             homeView.addSprite(piano);
+			homeView.addActivitySprite(piano);
 
             Bitmap guitarBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_music_guitar);
-            AnimatedBitmapSprite guitar = new AnimatedBitmapSprite(guitarBm);
-            guitar.setX(690*dm.density);
-            guitar.setY(232*dm.density);
+            TouchStateAnimatedBitmapSprite guitar = new TouchStateAnimatedBitmapSprite(guitarBm, this);
+            guitar.setResources(getResources());
+            guitar.setX(700 * dm.density);
+            guitar.setY(242 * dm.density);
+            List<Integer> playing = new ArrayList<>(4);
+            playing.add(R.drawable.house_music_guitar1);
+            playing.add(R.drawable.house_music_guitar2);
+            playing.add(R.drawable.house_music_guitar3);
+            playing.add(R.drawable.house_music_guitar2);
+            guitar.getBitmapIds().put(1, playing);
+            guitar.setStateTransition(1, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP5);
+            guitar.getAudio().put(1, R.raw.guitar);
             homeView.addSprite(guitar);
 
             Bitmap trumpetBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_music_trumpet);
-            AnimatedBitmapSprite trumpet = new AnimatedBitmapSprite(trumpetBm);
-            trumpet.setX(650*dm.density);
-            trumpet.setY(205*dm.density);
+            TouchStateAnimatedBitmapSprite trumpet = new TouchStateAnimatedBitmapSprite(trumpetBm, this);
+            trumpet.setResources(getResources());
+            trumpet.setIgnoreAlpha(true);
+            trumpet.setX(660*dm.density);
+            trumpet.setY(200*dm.density);
+            List<Integer> playingTrumptet = new ArrayList<>(4);
+            playingTrumptet.add(R.drawable.house_music_trumpet1);
+            playingTrumptet.add(R.drawable.house_music_trumpet2);
+            playingTrumptet.add(R.drawable.house_music_trumpet3);
+            playingTrumptet.add(R.drawable.house_music_trumpet2);
+            trumpet.getBitmapIds().put(1, playingTrumptet);
+            trumpet.setStateTransition(1, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP5);
+            trumpet.getAudio().put(1, R.raw.trumpet);
             homeView.addSprite(trumpet);
 
             Bitmap drumsBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_music_drums);
-            AnimatedBitmapSprite drums = new AnimatedBitmapSprite(drumsBm);
-            drums.setX(587*dm.density);
-            drums.setY(285*dm.density);
+            TouchStateAnimatedBitmapSprite drums = new TouchStateAnimatedBitmapSprite(drumsBm, this);
+            drums.setResources(getResources());
+            drums.setX(585 * dm.density);
+            drums.setY(275 * dm.density);
+            List<Integer> playingDrums = new ArrayList<>(8);
+            playingDrums.add(R.drawable.house_music_drums1);
+            playingDrums.add(R.drawable.house_music_drums2);
+            playingDrums.add(R.drawable.house_music_drums3);
+            playingDrums.add(R.drawable.house_music_drums4);
+            playingDrums.add(R.drawable.house_music_drums5);
+            playingDrums.add(R.drawable.house_music_drums6);
+            playingDrums.add(R.drawable.house_music_drums7);
+            playingDrums.add(R.drawable.house_music_drums8);
+            drums.getBitmapIds().put(1, playingDrums);
+            drums.setStateTransition(1, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP3);
+            drums.getAudio().put(1, R.raw.drums);
             homeView.addSprite(drums);
 
-            homeView.setClipX((int) (400*dm.density));
-            homeView.setClipY((int) (90*dm.density));
+            int clipX = (int) (400*dm.density);
+            int clipY = (int) (90*dm.density);
+            if (maxWidth - clipX < getScreenWidth()) {
+                clipX = maxWidth - getScreenWidth();
+                if (clipX < 0) clipX = 0;
+            }
+            if (maxHeight - clipY < getScreenHeight()) {
+                clipY = maxHeight - getScreenHeight();
+                if (clipY < 0) clipY = 0;
+            }
+
+            homeBackground.setClipX(clipX);
+            homeBackground.setClipY(clipY);
+            homeView.setClipX(clipX);
+            homeView.setClipY(clipY);
         }
     }
 

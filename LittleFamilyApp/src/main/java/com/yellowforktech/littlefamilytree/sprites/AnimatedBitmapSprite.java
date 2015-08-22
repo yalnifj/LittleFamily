@@ -164,17 +164,18 @@ public class AnimatedBitmapSprite extends Sprite {
     @Override
     public void doDraw(Canvas canvas) {
         if (bitmaps!=null) {
-            List<Bitmap> frames = bitmaps.get(state);
-            if (frames != null) {
-                if (frame >= 0 && frame < frames.size()) {
-                    Bitmap bitmap = frames.get(frame);
-                    Rect rect = new Rect();
-                    rect.set((int)(x), (int)(y), (int)((x + width)), (int)((y + height)));
-                    if (matrix!=null) {
-                        canvas.save();
-                        canvas.setMatrix(matrix);
-                    }
-                    canvas.drawBitmap(bitmap, null, rect, basePaint);
+            synchronized (bitmaps) {
+                List<Bitmap> frames = bitmaps.get(state);
+                if (frames != null) {
+                    if (frame >= 0 && frame < frames.size()) {
+                        Bitmap bitmap = frames.get(frame);
+                        Rect rect = new Rect();
+                        rect.set((int) (x), (int) (y), (int) ((x + width)), (int) ((y + height)));
+                        if (matrix != null) {
+                            canvas.save();
+                            canvas.setMatrix(matrix);
+                        }
+                        canvas.drawBitmap(bitmap, null, rect, basePaint);
                     /*
                     if (selected) {
                         if (Build.VERSION.SDK_INT > 20) {
@@ -184,8 +185,9 @@ public class AnimatedBitmapSprite extends Sprite {
                         }
                     }
                     */
-                    if (matrix!=null) {
-                        canvas.restore();
+                        if (matrix != null) {
+                            canvas.restore();
+                        }
                     }
                 }
             }
