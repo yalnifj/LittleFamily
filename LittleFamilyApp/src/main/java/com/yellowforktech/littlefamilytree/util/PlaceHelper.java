@@ -15,7 +15,8 @@ public class PlaceHelper {
             "mississippi","missouri","montana","nebraska","nevada","new hampshire","new jersey",
             "new mexico","new york","north carolina","north dakota","ohio","oklahoma","oregon",
             "pennsylvania","rhode island", "south carolina","south dakota","tennessee","texas",
-            "utah","vermont","virginia","washington","west virginia","wisconsin","wyoming"
+            "utah","vermont","virginia","washington","west virginia","wisconsin","wyoming",
+			"british colonial america", "colonial america", "british america"
     };
 
     private static String[] abbvStates = {
@@ -23,7 +24,7 @@ public class PlaceHelper {
             "ill","ind","iowa","kans","ky","la","maine","md","mass","mich","minn","miss","mo",
             "mont","nebr","nev","n.h","n.j","n.m","n.y","n.c","n.d","ohio","okla","ore",
             "pa","r.i","s.c","s.d","tenn","tex","utah","vt","va","wash","w.va","wis","wyo",
-            "al","ak","az","ar","ca","co","ct","de","fl","ga","hi","id","il","in","ia","ks","ky",
+            "al","ak","az","ar","ca","co","con","ct","de","fl","ga","hi","id","il","in","ia","ks","ky",
             "la","me","md","ma","mi","mn","ms","mo","mt","ne","nv","nh","nj","nm","ny","nc","nd",
             "oh","ok","or","pa","ri","sc","sd","tn","tx","ut","vt","va","wa","wv","wi","wy"
 
