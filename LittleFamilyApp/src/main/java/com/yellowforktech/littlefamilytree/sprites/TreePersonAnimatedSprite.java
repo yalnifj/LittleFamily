@@ -258,10 +258,12 @@ public class TreePersonAnimatedSprite extends Sprite {
         if (showSpouse) {
             canvas.drawBitmap(leftLeaf, null, dst, null);
         } else {
-            if (node.getPerson().getGender() == GenderType.Male) {
-                canvas.drawBitmap(leftLeaf, null, dst, null);
-            } else {
-                canvas.drawBitmap(rightLeaf, null, dst, null);
+            if (node.getPerson()!=null) {
+                if (node.getPerson().getGender()!=null && node.getPerson().getGender() == GenderType.Male) {
+                    canvas.drawBitmap(leftLeaf, null, dst, null);
+                } else {
+                    canvas.drawBitmap(rightLeaf, null, dst, null);
+                }
             }
         }
 

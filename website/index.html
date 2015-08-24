@@ -526,6 +526,14 @@
             event.preventDefault();
         });
 
+        $('.outer-game-box').on('click', function() {
+            var id = $(this).attr('id');
+            if (gameObjs[id]) {
+                gameObjs[id].clicked = true;
+                gameObjs[id].animating = true;
+                gameObjs[id].direction = 1;
+            }
+        });
         $('.outer-game-box').on('mouseenter', function() {
             var id = $(this).attr('id');
             if (gameObjs[id]) {
@@ -536,7 +544,7 @@
         });
         $('.outer-game-box').on('mouseleave', function() {
             var id = $(this).attr('id');
-            if (gameObjs[id]) {
+            if (gameObjs[id] && !gameObjs[id].clicked) {
                 if (gameObjs[id].repeating) {
                     gameObjs[id].animating = false;
                 } else {

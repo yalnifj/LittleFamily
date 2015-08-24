@@ -70,10 +70,8 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
                 topBar = TopBarFragment.newInstance(selectedPerson);
                 getSupportFragmentManager().beginTransaction().replace(R.id.topBarFragment, topBar).commit();
             } else {
-                Bundle args = new Bundle();
                 if (selectedPerson != null) {
-                    args.putSerializable(TopBarFragment.ARG_PERSON, selectedPerson);
-                    topBar.setArguments(args);
+                    topBar.getArguments().putSerializable(TopBarFragment.ARG_PERSON, selectedPerson);
                 }
             }
         }

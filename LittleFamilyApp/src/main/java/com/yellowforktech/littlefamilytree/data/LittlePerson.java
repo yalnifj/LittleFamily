@@ -115,7 +115,7 @@ public class LittlePerson implements Serializable {
                 birthPlace = null;
                 if (birth.getPlace()!=null) {
                     PlaceReference place = birth.getPlace();
-                    if (place.getNormalized()!=null || place.getNormalized().size()>0) {
+                    if (place.getNormalized()!=null && place.getNormalized().size()>0) {
                         birthPlace = place.getNormalized().get(0).getValue();
                         if (PlaceHelper.countPlaceLevels(birthPlace) < PlaceHelper.countPlaceLevels(birth.getPlace().getOriginal())) {
                             birthPlace = birth.getPlace().getOriginal();
