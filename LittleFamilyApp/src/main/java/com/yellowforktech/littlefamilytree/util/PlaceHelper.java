@@ -70,6 +70,11 @@ public class PlaceHelper {
         }
         return country;
     }
+    public static int countPlaceLevels(String place) {
+        if (place==null) return 0;
+        String[] parts = place.split("[,]+");
+        return parts.length;
+    }
 
     public static String getTopPlace(String place) {
         if (place==null) return null;
