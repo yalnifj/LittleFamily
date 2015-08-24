@@ -94,4 +94,6 @@ Please wait...</string>
     <string name="visible">Visible</string>
     <string name="close">Close</string>
 
+    <string name="ask_for_help">Ask an adult for help.</string>
+
 </resources>

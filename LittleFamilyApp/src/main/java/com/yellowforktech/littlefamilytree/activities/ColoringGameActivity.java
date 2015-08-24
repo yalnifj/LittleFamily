@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.view.SurfaceHolder;
+import android.view.View;
 
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.tasks.WaitTask;
@@ -45,6 +46,7 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Random
 		
 
         colorPicker = (WaterColorImageView) findViewById(R.id.colorPicker);
+        colorPicker.setActivity(this);
         colorPicker.registerListener(layeredImage);
 
         Intent intent = getIntent();
@@ -82,6 +84,15 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Random
         DataService.getInstance().unregisterNetworkStateListener(this);
     }
 
+    public void nextImage(View view) {
+        showLoadingDialog();
+        mediaChooser.loadRandomImage();
+    }
+
+    public void shareImage(View view) {
+        showAdultAuthDialog();
+    }
+
     public void setupCanvas() {
         showLoadingDialog();
         layeredImage.setImageBitmap(imageBitmap);
@@ -102,9 +113,6 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Random
 
             @Override
             public void onComplete(Integer progress) {
-                mediaChooser.loadMoreFamilyMembers();
-				imageBitmap = null;
-				System.gc();
             }
         });
         waiter.execute(3000L);

@@ -225,7 +225,7 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
         }
 		Log.d(this.getClass().getSimpleName(), "count="+count+" total="+total);
         if (count >= (float)total * 0.98f) {
-            complete = true;
+            //complete = true;
 			Rect r = new Rect();
 			r.set(starBitmap.getWidth()/2, starBitmap.getHeight()/2,
 				  getWidth()-starBitmap.getWidth()/2, mBitmap.getHeight()-starBitmap.getHeight()/2);
