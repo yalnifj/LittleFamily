@@ -161,7 +161,7 @@
         </div>
         <div class="row">
             <div class="col-md-3 col-sm-6 outer-game-box" id="dressup-box">
-                <a href="#" class="portfolio-box">
+                <a href="dressup.html" onclick="return false;" class="portfolio-box">
                     <img src="game_icons/house_adult_wardrobe.png" id="wardrobe" class="img-responsive" alt="">
                     <div class="game-box">
                         Heritage Dress Up
@@ -384,6 +384,7 @@
         selectedImage: 0,
         direction: 1,
         animating: false,
+        href: 'dressup.html',
         id: 'wardrobe'
     };
 
@@ -533,6 +534,7 @@
                 gameObjs[id].animating = true;
                 gameObjs[id].direction = 1;
             }
+            return false;
         });
         $('.outer-game-box').on('mouseenter', function() {
             var id = $(this).attr('id');
@@ -561,6 +563,10 @@
             if (animation.animating) {
                 animation.selectedImage += animation.direction;
                 if (animation.selectedImage >= animation.images.length) {
+                    if (animation.clicked && animation.href) {
+                        window.location = animation.href;
+                    }
+                    animation.clicked = false;
                     if (animation.repeating) {
                         animation.selectedImage = animation.images.length-1;
                         animation.direction = -1;

@@ -92,10 +92,10 @@ public class PlaceHelper {
 
     public static String getPlaceCountry(String p) {
         String place = PlaceHelper.getTopPlace(p);
+        if (place == null) place = UNKNOWN;
         if (place.equals("United Kingdom")) {
             place = getTopPlace(p, 2);
         }
-        if (place == null) place = UNKNOWN;
         if (!place.equals("United States") && PlaceHelper.isInUS(place))
             place = "United States";
         if (place.equals("Eng") || place.equals("Great Britain")) place = "England";

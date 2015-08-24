@@ -27,7 +27,7 @@ public class DressUpDolls {
 
     public DollConfig getDollConfig(String place, LittlePerson person) {
         String folder = null;
-        if (place!=null) countryMappings.get(place.toLowerCase());
+        if (place!=null) folder = countryMappings.get(place.toLowerCase());
         if (folder==null) folder = countryMappings.get("unknown");
 
         DollConfig dc = new DollConfig();
