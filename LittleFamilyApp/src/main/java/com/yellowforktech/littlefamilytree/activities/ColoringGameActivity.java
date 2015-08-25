@@ -7,8 +7,9 @@ import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.view.SurfaceHolder;
 import android.view.View;
-
+import android.widget.Toast;
 import com.yellowforktech.littlefamilytree.R;
+import com.yellowforktech.littlefamilytree.activities.LittleFamilyActivity;
 import com.yellowforktech.littlefamilytree.activities.tasks.WaitTask;
 import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
@@ -17,9 +18,12 @@ import com.yellowforktech.littlefamilytree.games.RandomMediaChooser;
 import com.yellowforktech.littlefamilytree.util.ImageHelper;
 import com.yellowforktech.littlefamilytree.views.ColoringView;
 import com.yellowforktech.littlefamilytree.views.WaterColorImageView;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.io.File;
+import java.io.FileOutputStream;
+import android.util.Log;
+import android.net.Uri;
 
 public class ColoringGameActivity extends LittleFamilyActivity implements RandomMediaChooser.RandomMediaListener, ColoringView.ColoringCompleteListener {
 
@@ -32,6 +36,7 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Random
     private Bitmap imageBitmap;
     private Media photo;
     private RandomMediaChooser mediaChooser;
+	private ShareAction shareAction = new ShareAction();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +95,7 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Random
     }
 
     public void shareImage(View view) {
-        showAdultAuthDialog();
+        showAdultAuthDialog(shareAction);
     }
 
     public void setupCanvas() {
@@ -148,4 +153,34 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Random
             }
         }
     }
+	
+	public class ShareAction implements AdultsAuthDialog.AuthCompleteAction {
+		public void doAction(boolean success) {
+			if (success) {
+				Bitmap sharing = layeredImage.getSharingBitmap();
+				File dir = ImageHelper.getDataFolder(ColoringGameActivity.this);
+				File file = new File(dir, "tempImage.jpg");
+				if (file.exists()) {
+					file.delete();
+				}
+				try {
+					FileOutputStream out = new FileOutputStream(file);
+					sharing.compress(Bitmap.CompressFormat.JPEG, 90, out);
+					out.flush();
+					out.close();
+				} catch (Exception e) {
+					Log.e(this.getClass().getName(), "Error sharing file", e);
+					Toast.makeText(ColoringGameActivity.this, "Unable to share image "+e, Toast.LENGTH_LONG).show();
+					return;
+				}
+				Uri screenshotUri = Uri.fromFile(file);
+				Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+				sharingIntent.setType("image/*");
+				sharingIntent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
+				startActivity(Intent.createChooser(sharingIntent, "Share image using"));
+			} else {
+				Toast.makeText(ColoringGameActivity.this, "Unable to verify password", Toast.LENGTH_LONG).show();
+			}
+		}
+	}
 }

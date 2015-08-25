@@ -51,6 +51,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     protected ArrayList<LittlePerson> people;
     protected Boolean dialogShown = false;
     protected AdultsAuthDialog adultAuthDialog;
+	protected SettingsAction settingsAction = new SettingsAction();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,10 +148,13 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         }
     }
 
-    public void showAdultAuthDialog() {
+    public void showAdultAuthDialog(AdultsAuthDialog.AuthCompleteAction action) {
         String text = getResources().getString(R.string.ask_for_help);
         speak(text);
         adultAuthDialog = new AdultsAuthDialog();
+		Bundle args = new Bundle();
+		args.putSerializable("action", action);
+		adultAuthDialog.setArguments(args);
         adultAuthDialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Theme_AppCompat_Light_Dialog);
         adultAuthDialog.show(getFragmentManager(), "Authenticate");
     }
@@ -270,18 +274,20 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     }
 
     public void onSettingsButtonPressed(View view) {
-        showAdultAuthDialog();
+        showAdultAuthDialog(settingsAction);
     }
-
-    public void adultAuthVerify() {
-        if (adultAuthDialog.authenticated()) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-        } else {
-            Toast.makeText(this, "Unable to verify password", Toast.LENGTH_LONG).show();
-        }
-        hideAdultAuthDialog();
-    }
+	
+	public class SettingsAction implements AdultsAuthDialog.AuthCompleteAction {
+		public void doAction(boolean success) {
+			if (success) {
+				Intent intent = new Intent(LittleFamilyActivity.this, SettingsActivity.class);
+				startActivity(intent);
+			} else {
+				Toast.makeText(LittleFamilyActivity.this, "Unable to verify password", Toast.LENGTH_LONG).show();
+			}
+			hideAdultAuthDialog();
+		}
+	}
 
     @Override
     public void onEvent(String topic, Object o) {
@@ -315,7 +321,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
                 startBubbleGame(person);
                 break;
             case TOPIC_START_SETTINGS:
-                showAdultAuthDialog();
+                showAdultAuthDialog(settingsAction);
                 break;
 			case TOPIC_START_SONG:
                 startSongGame(person);

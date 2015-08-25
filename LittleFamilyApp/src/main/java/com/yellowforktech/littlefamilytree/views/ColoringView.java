@@ -17,6 +17,9 @@ import com.yellowforktech.littlefamilytree.sprites.Sprite;
 
 import java.util.ArrayList;
 import java.util.List;
+import android.graphics.BitmapFactory;
+import org.finlayfamily.littlefamily.R;
+import com.yellowforktech.littlefamilytree.util.ImageHelper;
 
 /**
  * Created by jfinlay on 1/22/2015.
@@ -24,6 +27,8 @@ import java.util.List;
 public class ColoringView extends SpritedSurfaceView implements ColoringImageFilterTask.Listener, WaterColorImageView.ColorChangeListener {
     public int width;
     public  int height;
+	private Bitmap canvasBitmap;
+	private Canvas shareCanvas;
     private Bitmap originalBitmap;
     private Bitmap outlineBitmap;
     private Bitmap  mBitmap;
@@ -40,10 +45,13 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
     private boolean complete;
     private boolean noColor = true;
     private Paint background;
+	private Bitmap branding;
 
     public ColoringView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
+		
+		branding = ImageHelper.loadBitmapFromResource(context,R.drawable.little_family_logo,0,50,50);
 
         mPath = new Path();
         mBitmapPaint = new Paint(Paint.DITHER_FLAG);
@@ -95,6 +103,10 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
             }
         }
     }
+	
+	public Bitmap getSharingBitmap() {
+		return canvasBitmap;
+	}
 
     private void createDrawingBitmap(int w, int h) {
         mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
@@ -107,13 +119,26 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
             mCanvas.drawRect(0, 0, w, h, background);
         }
     }
+	
+	private void createSharingBitmap() {
+		int w = getWidth();
+		int h = getHeight();
+        canvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        synchronized (canvasBitmap) {
+            shareCanvas = new Canvas(canvasBitmap);
+        }
+    }
 
     @Override
     public void doDraw(Canvas canvas)
     {
         int w = this.getWidth();
         int h = this.getHeight();
-		canvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
+		if (shareCanvas==null) {
+			createSharingBitmap();
+		}
+		
+		shareCanvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
 
         if (originalBitmap!=null && !originalBitmap.isRecycled()) {
             float ratio = (float) (originalBitmap.getWidth()) / originalBitmap.getHeight();
@@ -128,18 +153,22 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
             synchronized (mBitmap) {
                 Rect dst = new Rect();
                 dst.set(0, 0, w, h);
-                canvas.drawRect(0, 0, w, h, background);
-                canvas.drawBitmap(originalBitmap, null, dst, paint2);
+                shareCanvas.drawRect(0, 0, w, h, background);
+                shareCanvas.drawBitmap(originalBitmap, null, dst, paint2);
                 if (!complete) {
-                    canvas.drawBitmap(mBitmap, null, dst, mBitmapPaint);
+                    shareCanvas.drawBitmap(mBitmap, null, dst, mBitmapPaint);
                     if (outlineBitmap != null) {
-                        canvas.drawBitmap(outlineBitmap, null, dst, paint2);
+                        shareCanvas.drawBitmap(outlineBitmap, null, dst, paint2);
                     }
 
-                    canvas.drawPath(circlePath, circlePaint);
+                    shareCanvas.drawPath(circlePath, circlePaint);
                 }
             }
         }
+		canvas.drawBitmap(canvasBitmap, 0, 0, null);
+		Rect dst = new Rect();
+		dst.set(0, canvasBitmap.getHeight()-branding.getHeight(), branding.getWidth(), canvasBitmap.getHeight());
+		shareCanvas.drawBitmap(branding, null, dst, null);
 		
 		synchronized (sprites) {
             for (Sprite s : sprites) {
