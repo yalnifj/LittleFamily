@@ -12,14 +12,13 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
 
+import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.tasks.ColoringImageFilterTask;
 import com.yellowforktech.littlefamilytree.sprites.Sprite;
+import com.yellowforktech.littlefamilytree.util.ImageHelper;
 
 import java.util.ArrayList;
 import java.util.List;
-import android.graphics.BitmapFactory;
-import org.finlayfamily.littlefamily.R;
-import com.yellowforktech.littlefamilytree.util.ImageHelper;
 
 /**
  * Created by jfinlay on 1/22/2015.
@@ -43,15 +42,13 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
     private Paint       noPaint;
     private boolean loaded;
     private boolean complete;
+    private boolean showOriginal = false;
     private boolean noColor = true;
     private Paint background;
-	private Bitmap branding;
 
     public ColoringView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
-		
-		branding = ImageHelper.loadBitmapFromResource(context,R.drawable.little_family_logo,0,50,50);
 
         mPath = new Path();
         mBitmapPaint = new Paint(Paint.DITHER_FLAG);
@@ -103,9 +100,40 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
             }
         }
     }
-	
+
+    /**
+     * Get a bitmap copy of the screen for sharing
+     * @return
+     */
 	public Bitmap getSharingBitmap() {
-		return canvasBitmap;
+        Bitmap copy = null;
+        synchronized (canvasBitmap) {
+            int w = this.getWidth();
+            int h = this.getHeight();
+            float ratio = (float) (originalBitmap.getWidth()) / originalBitmap.getHeight();
+            if (ratio > 1) {
+                h = (int) (w / ratio);
+            } else {
+                w = (int) (h * ratio);
+            }
+            //-- create the cropping rectangle
+            Rect src = new Rect();
+            src.set(0,0,w,h);
+
+            //-- create a copy that is the correct size
+            copy = Bitmap.createBitmap(w, h, canvasBitmap.getConfig());
+            Canvas copyCanvas = new Canvas(copy);
+
+            //-- draw the cropped bitmap onto the copy
+            copyCanvas.drawBitmap(canvasBitmap, src, src, null);
+
+            Bitmap branding = ImageHelper.loadBitmapFromResource(context, R.drawable.little_family_logo,0, (int) (w*0.25f), (int) (h*0.25f));
+            //-- add the branding mark
+            Rect dst = new Rect();
+            dst.set(0, h - branding.getHeight(), branding.getWidth(), h);
+            copyCanvas.drawBitmap(branding, null, dst, null);
+        }
+		return copy;
 	}
 
     private void createDrawingBitmap(int w, int h) {
@@ -137,38 +165,37 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
 		if (shareCanvas==null) {
 			createSharingBitmap();
 		}
-		
-		shareCanvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
+        synchronized (canvasBitmap) {
+            shareCanvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
 
-        if (originalBitmap!=null && !originalBitmap.isRecycled()) {
-            float ratio = (float) (originalBitmap.getWidth()) / originalBitmap.getHeight();
-            if ( ratio > 1 ) {
-				h = (int) (w / ratio);
-			} else {
-				w = (int)(h * ratio);
-			}
-            if (mBitmap==null) {
-                createDrawingBitmap(w, h);
-            }
-            synchronized (mBitmap) {
-                Rect dst = new Rect();
-                dst.set(0, 0, w, h);
-                shareCanvas.drawRect(0, 0, w, h, background);
-                shareCanvas.drawBitmap(originalBitmap, null, dst, paint2);
-                if (!complete) {
-                    shareCanvas.drawBitmap(mBitmap, null, dst, mBitmapPaint);
-                    if (outlineBitmap != null) {
-                        shareCanvas.drawBitmap(outlineBitmap, null, dst, paint2);
+            if (originalBitmap != null && !originalBitmap.isRecycled()) {
+                float ratio = (float) (originalBitmap.getWidth()) / originalBitmap.getHeight();
+                if (ratio > 1) {
+                    h = (int) (w / ratio);
+                } else {
+                    w = (int) (h * ratio);
+                }
+                if (mBitmap == null) {
+                    createDrawingBitmap(w, h);
+                }
+                synchronized (mBitmap) {
+                    Rect dst = new Rect();
+                    dst.set(0, 0, w, h);
+                    shareCanvas.drawRect(0, 0, w, h, background);
+                    shareCanvas.drawBitmap(originalBitmap, null, dst, paint2);
+                    if (showOriginal) {
+                        shareCanvas.drawBitmap(mBitmap, null, dst, mBitmapPaint);
+                        if (outlineBitmap != null) {
+                            shareCanvas.drawBitmap(outlineBitmap, null, dst, paint2);
+                        }
+
+                        shareCanvas.drawPath(circlePath, circlePaint);
                     }
-
-                    shareCanvas.drawPath(circlePath, circlePaint);
                 }
             }
+            canvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
+            canvas.drawBitmap(canvasBitmap, 0, 0, null);
         }
-		canvas.drawBitmap(canvasBitmap, 0, 0, null);
-		Rect dst = new Rect();
-		dst.set(0, canvasBitmap.getHeight()-branding.getHeight(), branding.getWidth(), canvasBitmap.getHeight());
-		shareCanvas.drawBitmap(branding, null, dst, null);
 		
 		synchronized (sprites) {
             for (Sprite s : sprites) {
@@ -234,34 +261,36 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
         mPath.lineTo(mX, mY);
         circlePath.reset();
         // commit the path to our offscreen
-        mCanvas.drawPath(mPath,  noPaint);
+        mCanvas.drawPath(mPath, noPaint);
         if (!noColor) mCanvas.drawPath(mPath,  mPaint);
         // kill this so we don't double draw
         mPath.reset();
 
-        // check if scratch is complete
-        int xd = (int) mPaint.getStrokeWidth()/4;
-        int yd = (int) mPaint.getStrokeWidth()/4;
-        int count = 0;
-        int total = 0;
-        for(int y=yd; y<mBitmap.getHeight(); y+=yd) {
-            for(int x=xd; x<mBitmap.getWidth(); x+=xd) {
-                total++;
-                int pixel = mBitmap.getPixel(x,y);
-                if (Color.alpha(pixel) < 255) count++;
-				//Log.d(this.getClass().getSimpleName(), "alpha="+Color.alpha(pixel));
+        if (!complete) {
+            // check if scratch is complete
+            int xd = (int) mPaint.getStrokeWidth() / 4;
+            int yd = (int) mPaint.getStrokeWidth() / 4;
+            int count = 0;
+            int total = 0;
+            for (int y = yd; y < mBitmap.getHeight(); y += yd) {
+                for (int x = xd; x < mBitmap.getWidth(); x += xd) {
+                    total++;
+                    int pixel = mBitmap.getPixel(x, y);
+                    if (Color.alpha(pixel) < 255) count++;
+                    //Log.d(this.getClass().getSimpleName(), "alpha="+Color.alpha(pixel));
+                }
             }
-        }
-		Log.d(this.getClass().getSimpleName(), "count="+count+" total="+total);
-        if (count >= (float)total * 0.98f) {
-            //complete = true;
-			Rect r = new Rect();
-			r.set(starBitmap.getWidth()/2, starBitmap.getHeight()/2,
-				  getWidth()-starBitmap.getWidth()/2, mBitmap.getHeight()-starBitmap.getHeight()/2);
-			int sc = 10+random.nextInt(10);
-			addStars(r, false, sc);
-            for(ColoringCompleteListener l : listeners) {
-                l.onColoringComplete();
+            Log.d(this.getClass().getSimpleName(), "count=" + count + " total=" + total);
+            if (count >= (float) total * 0.98f) {
+                complete = true;
+                Rect r = new Rect();
+                r.set(starBitmap.getWidth() / 2, starBitmap.getHeight() / 2,
+                        getWidth() - starBitmap.getWidth() / 2, mBitmap.getHeight() - starBitmap.getHeight() / 2);
+                int sc = 10 + random.nextInt(10);
+                addStars(r, false, sc);
+                for (ColoringCompleteListener l : listeners) {
+                    l.onColoringComplete();
+                }
             }
         }
     }
@@ -270,6 +299,7 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
     public void onComplete(Bitmap result) {
         this.outlineBitmap = result;
         loaded = true;
+        complete = false;
         for(ColoringCompleteListener l : listeners) {
             l.onColoringReady();
         }

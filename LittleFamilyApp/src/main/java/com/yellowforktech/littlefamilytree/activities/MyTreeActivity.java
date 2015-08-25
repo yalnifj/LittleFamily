@@ -33,6 +33,7 @@ import java.util.Map;
 public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTask.Listener, EventListener {
     public static final String TOPIC_NAVIGATE_UP_TREE = "navigateUpTree";
     public static final String TOPIC_START_FIND_PERSON = "startFindPerson";
+    public static final String TOPIC_NEXT_CLUE = "nextClue";
     public static final String TOPIC_PERSON_SELECTED = "personSelected";
     public static final String DATA_TREE_NODE = "dataTreeNode";
     public static final int buttonSize = 100;
@@ -123,6 +124,7 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
         EventQueue.getInstance().subscribe(TOPIC_NAVIGATE_UP_TREE, this);
         EventQueue.getInstance().subscribe(TOPIC_START_FIND_PERSON, this);
         EventQueue.getInstance().subscribe(TOPIC_PERSON_SELECTED, this);
+        EventQueue.getInstance().subscribe(TOPIC_NEXT_CLUE, this);
         loadedLevels = new HashMap<>();
         levelArrows = new HashMap<>();
 
@@ -161,6 +163,7 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
         EventQueue.getInstance().unSubscribe(TOPIC_NAVIGATE_UP_TREE, this);
         EventQueue.getInstance().unSubscribe(TOPIC_START_FIND_PERSON, this);
         EventQueue.getInstance().unSubscribe(TOPIC_PERSON_SELECTED, this);
+        EventQueue.getInstance().unSubscribe(TOPIC_NEXT_CLUE, this);
     }
 
     @Override
@@ -206,7 +209,7 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
             vine.setY(rootSprite.getY() - ((float)31.5*dm.density));
             treeView.addSprite(vine);
             addDownVine(rootSprite, false);
-            addChildSprites(root.getChildren(), rootSprite.getX(), rootSprite.getY()+rootSprite.getHeight()+vineBm.getHeight());
+            addChildSprites(root.getChildren(), rootSprite.getX(), rootSprite.getY() + rootSprite.getHeight() + vineBm.getHeight());
         } else if (root.getLeft()!=null && root.getLeft().getChildren()!=null && root.getLeft().getChildren().size()>0){
             treeView.getSprites().remove(rootSprite);
             addChildSprites(root.getLeft().getChildren(), rootSprite.getX(), rootSprite.getY());
@@ -579,12 +582,15 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
                         } else {
                             rect.set((int) sprite.getX(), (int) sprite.getY(), (int) (sprite.getX() + sprite.getWidth()/2), (int) (sprite.getY() + sprite.getHeight()));
                         }
+                        treeView.getSearchSprite().setState(0);
                         treeView.addStars(rect, false, 10);
                     } else {
                         playBuzzSound();
                     }
                 }
             }
+        } else if (topic.equals(TOPIC_NEXT_CLUE)) {
+            treeView.getSearchSprite().nextState();
         }
     }
 
