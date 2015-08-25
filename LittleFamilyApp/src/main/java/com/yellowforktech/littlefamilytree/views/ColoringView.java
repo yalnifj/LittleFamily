@@ -183,7 +183,7 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
                     dst.set(0, 0, w, h);
                     shareCanvas.drawRect(0, 0, w, h, background);
                     shareCanvas.drawBitmap(originalBitmap, null, dst, paint2);
-                    if (showOriginal) {
+                    if (!showOriginal) {
                         shareCanvas.drawBitmap(mBitmap, null, dst, mBitmapPaint);
                         if (outlineBitmap != null) {
                             shareCanvas.drawBitmap(outlineBitmap, null, dst, paint2);
