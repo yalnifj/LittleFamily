@@ -12,20 +12,29 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.data.DataService;
-
+import java.io.Serializable;
 import java.lang.reflect.Field;
 
 /**
  * Created by jfinlay on 5/27/2015.
  */
 public class AdultsAuthDialog extends DialogFragment {
-    private EditText passwordField;
+	private EditText passwordField;
+	private AuthCompleteAction action;
+	
+	@Override
+	public void setArguments(Bundle args) {
+		super.setArguments(args);
+		action = (AuthCompleteAction) args.getSerializable("action");
+	}
+	
+    
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		
         View v = inflater.inflate(R.layout.fragment_adult_auth, container, false);
         ImageView logo = (ImageView) v.findViewById(R.id.remoteLogo);
         DataService dataService = DataService.getInstance();
@@ -63,8 +72,8 @@ public class AdultsAuthDialog extends DialogFragment {
         signInBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LittleFamilyActivity activity = (LittleFamilyActivity) getActivity();
-                activity.adultAuthVerify();
+				if (action!=null)
+                	action.doAction(authenticated());
             }
         });
 
@@ -106,4 +115,8 @@ public class AdultsAuthDialog extends DialogFragment {
         }
         return false;
     }
+	
+	public interface AuthCompleteAction extends Serializable {
+		public void doAction(boolean success);
+	}
 }

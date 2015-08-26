@@ -244,6 +244,13 @@ public class DataService implements AuthTask.Listener {
                 synchronized (syncQ) {
                     List<Integer> ids = getDBHelper().getSyncQ();
                     if (ids != null) {
+                        List<Integer> toClear = null;
+                        //-- limit previous sync q to 25 on startup
+                        Log.d("SyncThread", "SyncQ has "+ids.size()+" starting ids");
+                        if (ids.size() > 25) {
+                            toClear = ids.subList(25, ids.size());
+                            ids = ids.subList(0, 25);
+                        }
                         for (Integer id : ids) {
                             if (id != null) {
                                 LittlePerson person = getDBHelper().getPersonById(id);
@@ -253,6 +260,12 @@ public class DataService implements AuthTask.Listener {
                                     tp.person = person;
                                     syncQ.add(tp);
                                 }
+                            }
+                        }
+
+                        for (Integer id : toClear) {
+                            if (id != null) {
+                                getDBHelper().removeFromSyncQ(id);
                             }
                         }
                     }
@@ -312,15 +325,19 @@ public class DataService implements AuthTask.Listener {
                             }
                             if (entry == null || entry.getUpdated().after(person.getLastSync())) {
                                 syncPerson(person);
+                                try {
+                                    Thread.sleep(10000);  //-- don't bombard the server
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
                             } else {
                                 person.setLastSync(new java.util.Date());
                                 getDBHelper().persistLittlePerson(person);
-                            }
-
-                            try {
-                                Thread.sleep(10000);  //-- don't bombard the server
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
+                                try {
+                                    Thread.sleep(2000);  //-- don't bombard the server
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
                     }

@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.tasks.TreeLoaderTask;
@@ -62,6 +63,7 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
     private Map<Integer, List<Sprite>> loadedLevels;
     private Map<Integer, List<Sprite>> levelArrows;
     private int maxLevel=2;
+	private DisplayMetrics dm;
 
     private TreeSearchGame treeSearchGame;
 
@@ -179,6 +181,9 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
         int height = getScreenHeight();
         maxX = width;
         maxY = height;
+		
+		dm = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(dm);
 
         treeBackground = new AnimatedBitmapSprite(BitmapFactory.decodeResource(getResources(), com.yellowforktech.littlefamilytree.R.drawable.tree_background));
         treeBackground.setWidth(treeView.getWidth());
@@ -194,11 +199,11 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
         vineH2 = BitmapFactory.decodeResource(getResources(), com.yellowforktech.littlefamilytree.R.drawable.vineh2);
         vineArrow = BitmapFactory.decodeResource(getResources(), com.yellowforktech.littlefamilytree.R.drawable.vine_arrow);
 
-        rootSprite = addTreeSprite(root, 20, 40, true);
+        rootSprite = addTreeSprite(root, 10*dm.density, 20*dm.density, true);
         if (root.getChildren()!=null && root.getChildren().size()>0) {
             AnimatedBitmapSprite vine = new AnimatedBitmapSprite(vineBm2);
-            vine.setX(rootSprite.getX()+leftLeaf.getWidth()-43);
-            vine.setY(rootSprite.getY() - 63);
+            vine.setX(rootSprite.getX()+leftLeaf.getWidth()-((float)21.5*dm.density));
+            vine.setY(rootSprite.getY() - ((float)31.5*dm.density));
             treeView.addSprite(vine);
             addDownVine(rootSprite, false);
             addChildSprites(root.getChildren(), rootSprite.getX(), rootSprite.getY()+rootSprite.getHeight()+vineBm.getHeight());
@@ -230,7 +235,7 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
      * @param y
      * @return
      */
-    public TreePersonAnimatedSprite addTreeSprite(TreeNode node, int x, int y, boolean leftSide) {
+    public TreePersonAnimatedSprite addTreeSprite(TreeNode node, float x, float y, boolean leftSide) {
         if (x < 0) x = 0;
         if (y < 0) y = 0;
         int treeWidth = 0;
@@ -256,8 +261,8 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
                 loadedLevels.get(node.getDepth()).add(upArrow);
             }
 
-            if (x+sprite.getWidth() > maxX) maxX = x+sprite.getWidth();
-            if (y+sprite.getHeight() > maxY) maxY = y+sprite.getHeight();
+            if (x+sprite.getWidth() > maxX) maxX = (int)x+sprite.getWidth();
+            if (y+sprite.getHeight() > maxY) maxY = (int)y+sprite.getHeight();
             sprite.setTreeWidth(sprite.getWidth());
             if(node.getDepth()>0) {
                 addDownVine(sprite, leftSide);
@@ -269,78 +274,78 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
         }
 
         //-- fathers side
-        int cy = y;
+        int cy = (int)y;
         if (node.getLeft()!=null) {
             TreePersonAnimatedSprite father = addTreeSprite(node.getLeft(), x, y, true);
             cy = (int) (father.getY() + father.getHeight()+vineBm.getHeight());
             if (node.getRight()!=null) {
-                x = x + father.getTreeWidth()+20;
+                x = x + father.getTreeWidth()+10*dm.density;
             } else {
                 x = x + father.getTreeWidth()/2;
             }
 
             if (node.getLeft().getChildren()==null) {
                 AnimatedBitmapSprite vine = new AnimatedBitmapSprite(vineH2);
-                vine.setX(father.getX() - 11 + father.getWidth() / 2);
-                vine.setY(cy - 64);
+                vine.setX(father.getX() - (5.5f*dm.density) + father.getWidth() / 2);
+                vine.setY(cy - 32*dm.density);
                 treeView.addSprite(vine);
                 loadedLevels.get(father.getNode().getDepth()).add(vine);
                 boolean flip = true;
                 int vx = (int) (vine.getX() + vine.getWidth() - 4);
-                while (vx + 45 < x) {
+                while (vx + (22.5f*dm.density) < x) {
                     Bitmap bv = vineH2;
-                    int vy = cy - 64;
+                    int vy = cy - ((int)(32*dm.density));
                     if (flip) {
                         bv = vineH1;
-                        vy = cy - 121;
+                        vy = cy - (int)(60.5f*dm.density);
                     }
                     vine = new AnimatedBitmapSprite(bv);
                     vine.setX(vx);
                     vine.setY(vy);
                     treeView.addSprite(vine);
                     loadedLevels.get(father.getNode().getDepth()).add(vine);
-                    vx = (int) (vine.getX() + vine.getWidth() - 4);
+                    vx = (int) (vine.getX() + vine.getWidth() - (2*dm.density));
                     flip = !flip;
                 }
             }
 
             treeWidth = father.getTreeWidth();
-            if (x+father.getWidth() > maxX) maxX = x+father.getTreeWidth();
-            if (y+father.getHeight() > maxY) maxY = y+father.getHeight();
+            if (x+father.getWidth() > maxX) maxX = (int)x+father.getTreeWidth();
+            if (y+father.getHeight() > maxY) maxY = (int)y+father.getHeight();
         }
 
         //-- mothers side
         if (node.getRight()!=null) {
             TreePersonAnimatedSprite mother = addTreeSprite(node.getRight(), x, y, false);
             cy = (int) (mother.getY() + mother.getHeight()+vineBm.getHeight());
-            if (x+mother.getWidth() > maxX) maxX = x+mother.getWidth();
-            if (y+mother.getHeight() > maxY) maxY = y+mother.getHeight();
+            if (x+mother.getWidth() > maxX) maxX = (int)x+mother.getWidth();
+            if (y+mother.getHeight() > maxY) maxY = (int)y+mother.getHeight();
             treeWidth = treeWidth + mother.getTreeWidth();
 
             if (node.getRight().getChildren()==null) {
                 AnimatedBitmapSprite vine = new AnimatedBitmapSprite(vineH1);
-                vine.setX(mother.getX() - 46);
-                vine.setY(cy - 121);
+                vine.setX(mother.getX() - (23*dm.density));
+                vine.setY(cy - ((int)60.5f*dm.density));
                 treeView.addSprite(vine);
                 loadedLevels.get(mother.getNode().getDepth()).add(vine);
                 boolean flip = true;
-                int vx = (int) (vine.getX() - vine.getWidth() - 8);
-                while (vx > x -45) {
+                int vx = (int) (vine.getX() - vine.getWidth() - (4*dm.density));
+                while (vx > x -(22.5*dm.density)) {
                     Bitmap bv = vineH1;
-                    int vy = cy - 80;
+                    int vy = cy - (int)(40*dm.density);
                     if (flip) {
                         bv = vineH2;
-                        vy = cy - 64;
+                        vy = cy - (int)(32*dm.density);
                     }
                     vine = new AnimatedBitmapSprite(bv);
                     vine.setX(vx);
                     vine.setY(vy);
                     if (flip) {
-                        vine.setWidth(vineH2.getWidth()+20);
+                        vine.setWidth(vineH2.getWidth()+(int)(10*dm.density));
                     }
                     treeView.addSprite(vine);
                     loadedLevels.get(mother.getNode().getDepth()).add(vine);
-                    vx = (int) (vine.getX() - vine.getWidth() - 4);
+                    vx = (int) (vine.getX() - vine.getWidth() - (2*dm.density));
                     flip = !flip;
                 }
             }
@@ -348,15 +353,15 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
 
         //--child side
         TreePersonAnimatedSprite sprite = new TreePersonAnimatedSprite(node, this, leftLeaf, rightLeaf, node.getDepth()>0 || (node.getChildren()!=null && node.getChildren().size()>0));
-        sprite.setX(x - (sprite.getWidth() / 2) - (node.getLeft() != null ? 10 : 0));
+        sprite.setX(x - (sprite.getWidth() / 2) - (node.getLeft() != null ? (5*dm.density) : 0));
         sprite.setY(cy);
-        if (x+sprite.getWidth() > maxX) maxX = x+sprite.getWidth();
+        if (x+sprite.getWidth() > maxX) maxX = (int)x+sprite.getWidth();
         if (cy+sprite.getHeight() > maxY) maxY = cy+sprite.getHeight();
 
         if (node.getDepth()>0) {
             AnimatedBitmapSprite vine = new AnimatedBitmapSprite(vineBm2);
-            vine.setX(sprite.getX()+leftLeaf.getWidth()-43);
-            vine.setY(sprite.getY() - 63);
+            vine.setX(sprite.getX()+leftLeaf.getWidth()-(21.5f*dm.density));
+            vine.setY(sprite.getY() - (31.5f*dm.density));
             treeView.addSprite(vine);
             loadedLevels.get(node.getDepth()).add(vine);
             addDownVine(sprite, leftSide);
@@ -372,10 +377,10 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
     private void addChildSprites(List<LittlePerson> children, float x, float y) {
         if (children.size()>1) {
             x = x - leftLeaf.getWidth() * children.size()/2;
-            if (x<50) x = 50;
+            if (x<(25*dm.density)) x = 25*dm.density;
         }
-        y = y - 15;
-        float vx = x+10;
+        y = y - (12.5f*dm.density);
+        float vx = x+(5*dm.density);
         List<TreePersonAnimatedSprite> childSprites = new ArrayList<>();
         for(LittlePerson child : children) {
             TreePersonAnimatedSprite childSprite = null;
@@ -384,16 +389,16 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
                 childNode.setPerson(child);
                 childNode.setDepth(0);
                 childNode.setIsRoot(false);
-                childSprite = addTreeSprite(childNode, (int)x, (int)y-60, true);
+                childSprite = addTreeSprite(childNode, (int)x, (int)y-(30*dm.density), true);
                 treeView.removeSprite(childSprite);
                 childSprites.add(childSprite);
-                x = x+childSprite.getWidth()+50;
+                x = x+childSprite.getWidth()+(25*dm.density);
             } else {
                 childSprite = rootSprite;
                 rootSprite.setX(x);
-                rootSprite.setY(y-60);
+                rootSprite.setY(y-(30*dm.density));
                 childSprites.add(rootSprite);
-                x = x+rootSprite.getWidth()+50;
+                x = x+rootSprite.getWidth()+(25*dm.density);
             }
 /*
             if (child.getGender()== GenderType.Female) {
@@ -417,16 +422,16 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
         boolean flip = true;
         while(vx < x - leftLeaf.getWidth()) {
             Bitmap bv = vineH1;
-            float vy = y-104;
+            float vy = y-(52*dm.density);
             if (flip) {
                 bv = vineH2;
-                vy = y - 48;
+                vy = y - (24*dm.density);
             }
             AnimatedBitmapSprite vine = new AnimatedBitmapSprite(bv);
             vine.setX(vx);
             vine.setY(vy);
             treeView.addSprite(vine);
-            vx = vine.getX() + vine.getWidth() - 5;
+            vx = vine.getX() + vine.getWidth() - (2.5f*dm.density);
             flip = !flip;
         }
 
@@ -440,11 +445,11 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
         if (!leftSide) vbm = vineBm3;
         AnimatedBitmapSprite vine2 = new AnimatedBitmapSprite(vbm);
         if (!leftSide) {
-            vine2.setX(sprite.getX()+leftLeaf.getWidth() - 55);
-            vine2.setY(sprite.getY() + sprite.getHeight()-55);
+            vine2.setX(sprite.getX()+leftLeaf.getWidth() - (27.5f*dm.density));
+            vine2.setY(sprite.getY() + sprite.getHeight()-(27.5f*dm.density));
         } else {
-            vine2.setX(sprite.getX()+leftLeaf.getWidth()-65);
-            vine2.setY(sprite.getY() + sprite.getHeight()-53);
+            vine2.setX(sprite.getX()+leftLeaf.getWidth()-(32.5f*dm.density));
+            vine2.setY(sprite.getY() + sprite.getHeight()-(26.5f*dm.density));
         }
         treeView.addSprite(vine2);
         loadedLevels.get(sprite.getNode().getDepth()).add(vine2);
@@ -480,15 +485,15 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
             int xdiff = 0;
             int ydiff = 0;
 
-            int x = (int) touchedArrow.getX()+30 - leftLeaf.getWidth()*2;
+            int x = (int) (touchedArrow.getX()+(15*dm.density) - leftLeaf.getWidth()*2);
             if (x < 0) {
                 xdiff = 0 - x;
                 x = 0;
             }
-            int y = (int) touchedArrow.getY()+20;
+            int y = (int) (touchedArrow.getY()+(10*dm.density));
 
             AnimatedBitmapSprite vineh = new AnimatedBitmapSprite(vineBm2);
-            vineh.setX(touchedArrow.getX() - 12 + xdiff);
+            vineh.setX(touchedArrow.getX() - (6*dm.density) + xdiff);
             vineh.setY(y);
             treeView.addSprite(vineh);
             loadedLevels.get(level).add(vineh);
@@ -498,12 +503,12 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
                 TreePersonAnimatedSprite sprite = addTreeSprite(root.getLeft(), x, y, true);
                 int cy = (int) (sprite.getY() + sprite.getHeight()+vineBm.getHeight());
                 AnimatedBitmapSprite vine = new AnimatedBitmapSprite(vineH2);
-                vine.setX(sprite.getX() - 11 + sprite.getWidth() / 2);
-                vine.setY(cy - 64);
+                vine.setX(sprite.getX() - (5.5f*dm.density) + sprite.getWidth() / 2);
+                vine.setY(cy - (32*dm.density));
                 treeView.addSprite(vine);
                 loadedLevels.get(level).add(vine);
                 xdiff = (int) (xdiff + sprite.getX()-x);
-                ydiff = (int) (sprite.getY()+sprite.getHeight()+vine.getHeight()+71 - y);
+                ydiff = (int) (sprite.getY()+sprite.getHeight()+vine.getHeight()+(35.5f*dm.density) - y);
                 x = x + sprite.getTreeWidth();
 
             } else {
@@ -513,12 +518,12 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
                 node.setRight(root.getRight());
                 TreePersonAnimatedSprite sprite = addTreeSprite(root.getRight(), x, y, false);
                 AnimatedBitmapSprite vine = new AnimatedBitmapSprite(vineH1);
-                vine.setX(sprite.getX() - 46);
+                vine.setX(sprite.getX() - (23*dm.density));
                 int cy = (int) (sprite.getY() + sprite.getHeight()+vineBm.getHeight());
-                vine.setY(cy - 114);
+                vine.setY(cy - (57*dm.density));
                 treeView.addSprite(vine);
                 loadedLevels.get(level).add(vine);
-                int ydiff2 = (int) (sprite.getY()+sprite.getHeight()+vine.getHeight()+90 - y);
+                int ydiff2 = (int) (sprite.getY()+sprite.getHeight()+vine.getHeight()+(45*dm.density) - y);
                 if (ydiff2>ydiff) ydiff = ydiff2;
             }
             if (xdiff>0 || ydiff >0) {

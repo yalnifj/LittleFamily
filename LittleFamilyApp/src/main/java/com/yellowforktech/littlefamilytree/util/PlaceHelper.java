@@ -9,7 +9,8 @@ import java.util.Locale;
 public class PlaceHelper {
     public static String UNKNOWN="Unknown";
     private static String[] usStates = {
-            "alabama", "alaska", "arizona", "arkansas", "california", "colorado", "connecticut",
+            "alabama", "alaska", "arizona", "arkansas", "british america",
+            "british colonial america", "california","colonial america", "colorado", "connecticut",
             "delaware","florida","georgia","hawaii","idaho","illinois","indiana","iowa","kansas",
             "kentucky","louisiana","maine","maryland","massachusetts","michigan","minnesota",
             "mississippi","missouri","montana","nebraska","nevada","new hampshire","new jersey",
@@ -19,14 +20,13 @@ public class PlaceHelper {
     };
 
     private static String[] abbvStates = {
-            "ala","alaska","ariz","ark","calif","colo","conn","del","fla","ga","hawaii","idaho",
-            "ill","ind","iowa","kans","ky","la","maine","md","mass","mich","minn","miss","mo",
-            "mont","nebr","nev","n.h","n.j","n.m","n.y","n.c","n.d","ohio","okla","ore",
-            "pa","r.i","s.c","s.d","tenn","tex","utah","vt","va","wash","w.va","wis","wyo",
-            "al","ak","az","ar","ca","co","ct","de","fl","ga","hi","id","il","in","ia","ks","ky",
-            "la","me","md","ma","mi","mn","ms","mo","mt","ne","nv","nh","nj","nm","ny","nc","nd",
-            "oh","ok","or","pa","ri","sc","sd","tn","tx","ut","vt","va","wa","wv","wi","wy"
-
+            "ak","al", "ala","alaska","ar","ariz","ark","az","ca","calif","co","colo","con","conn",
+            "ct","de","del","fl","fla","ga","hawaii","hi","ia","id","idaho",
+            "il","ill","in","ind","iowa","kans","ks","ky","la","ma","maine","md","me","mass","mi",
+            "mich","minn","miss","mn","mo","ms","mt","mont","n.h","n.j","n.m","n.y","n.c","n.d",
+            "ne","nebr","nev","nc","nd","nh","nj","nm","nv","ny","oh","ohio","ok","okla","or","ore",
+            "pa","penn","r.i","ri","s.c","s.d","sc","sd","tenn","tn","tex","tx","ut","utah","vt",
+            "va","wa","wash","w.va","wi","wis","wv","wy","wyo"
             };
 
     static {
@@ -69,6 +69,11 @@ public class PlaceHelper {
         }
         return country;
     }
+    public static int countPlaceLevels(String place) {
+        if (place==null) return 0;
+        String[] parts = place.split("[,]+");
+        return parts.length;
+    }
 
     public static String getTopPlace(String place) {
         if (place==null) return null;
@@ -87,12 +92,13 @@ public class PlaceHelper {
 
     public static String getPlaceCountry(String p) {
         String place = PlaceHelper.getTopPlace(p);
+        if (place == null) place = UNKNOWN;
         if (place.equals("United Kingdom")) {
             place = getTopPlace(p, 2);
         }
-        if (place == null) place = UNKNOWN;
         if (!place.equals("United States") && PlaceHelper.isInUS(place))
             place = "United States";
+        if (place.equals("Eng") || place.equals("Great Britain")) place = "England";
         return place;
     }
 }

@@ -90,21 +90,22 @@ public class TreeSpriteSurfaceView extends SpritedClippedSurfaceView {
         mX = x;
         mY = y;
 
-        synchronized (sprites) {
-            for (Sprite s : sprites) {
-                if (s.inSprite(x + clipX*scale, y + clipY*scale)) {
-                    selectedSprites.add(s);
-                    s.onSelect(x + clipX*scale, y + clipY*scale);
+        if (searchSprite.inSprite(x, y)) {
+            searchSprite.onSelect(x, y);
+        }
+        else {
+            synchronized (sprites) {
+                for (Sprite s : sprites) {
+                    if (s.inSprite(x + clipX * scale, y + clipY * scale)) {
+                        selectedSprites.add(s);
+                        s.onSelect(x + clipX * scale, y + clipY * scale);
+                    }
                 }
-            }
-            //-- keep selected sprite on top
-            for (Sprite s : selectedSprites) {
-                sprites.remove(s);
-                sprites.add(s);
-            }
-
-            if (searchSprite.inSprite(x, y)) {
-                searchSprite.onSelect(x, y);
+                //-- keep selected sprite on top
+                for (Sprite s : selectedSprites) {
+                    sprites.remove(s);
+                    sprites.add(s);
+                }
             }
         }
     }

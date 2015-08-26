@@ -1,5 +1,7 @@
 package com.yellowforktech.littlefamilytree.data;
 
+import com.yellowforktech.littlefamilytree.util.PlaceHelper;
+
 import org.gedcomx.conclusion.Fact;
 import org.gedcomx.conclusion.Name;
 import org.gedcomx.conclusion.NameForm;
@@ -113,10 +115,13 @@ public class LittlePerson implements Serializable {
                 birthPlace = null;
                 if (birth.getPlace()!=null) {
                     PlaceReference place = birth.getPlace();
-                    if (place.getNormalized()==null || place.getNormalized().size()==0) {
-                        birthPlace = birth.getPlace().getOriginal();
-                    } else {
+                    if (place.getNormalized()!=null && place.getNormalized().size()>0) {
                         birthPlace = place.getNormalized().get(0).getValue();
+                        if (PlaceHelper.countPlaceLevels(birthPlace) < PlaceHelper.countPlaceLevels(birth.getPlace().getOriginal())) {
+                            birthPlace = birth.getPlace().getOriginal();
+                        }
+                    } else {
+                        birthPlace = birth.getPlace().getOriginal();
                     }
                 }
                 if (birth.getDate()!=null) {

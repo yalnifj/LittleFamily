@@ -182,7 +182,7 @@ public class ChooseCultureActivity extends LittleFamilyActivity implements Herit
                     uniquepaths.addAll(cultures.values());
                 } else {
                     for (HeritagePath path : cultures.values()) {
-                        if (path.getPercent() > 0.0009) {
+                        if (path.getPercent() > 0.0005) {
                             uniquepaths.add(path);
                         }
                     }
