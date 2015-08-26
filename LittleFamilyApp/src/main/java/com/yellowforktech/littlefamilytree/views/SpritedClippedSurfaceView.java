@@ -217,21 +217,37 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
             }
         }
         if (!selectedMoved) {
-            backgroundSprite.onMove(oldX, oldY, newX, newY);
+            float bNewX = newX;
+            float bNewY = newY;
+            if (maxWidth <= getWidth()) {
+                bNewX = oldX;
+            }
+            if (maxHeight <= getHeight()) {
+                bNewY = oldY;
+            }
+            backgroundSprite.onMove(oldX, oldY, bNewX, bNewY);
             clipX -= (newX-oldX);
             clipY -= (newY-oldY);
 
-            if (clipX < 0) clipX = 0;
-            else if (clipX + getWidth() > maxWidth) clipX = maxWidth - getWidth();
+            if (maxWidth <= getWidth()) {
+                clipX = 0;
+            } else {
+                if (clipX < 0) clipX = 0;
+                else if (clipX + getWidth() > maxWidth) clipX = maxWidth - getWidth();
+            }
 
-            if (clipY < 0) clipY = 0;
-            else if (clipY + getHeight() > maxHeight) clipY = maxHeight - getHeight();
+            if (maxHeight <= getHeight()) {
+                clipY = 0;
+            } else {
+                if (clipY < 0) clipY = 0;
+                else if (clipY + getHeight() > maxHeight) clipY = maxHeight - getHeight();
+            }
         }
     }
 
     @Override
-    protected void touch_start(float x, float y) {
-        super.touch_start(x, y);
+    protected void touch_start(float x, float y){
+            super.touch_start(x, y);
 
         synchronized (sprites) {
             for (Sprite s : sprites) {
