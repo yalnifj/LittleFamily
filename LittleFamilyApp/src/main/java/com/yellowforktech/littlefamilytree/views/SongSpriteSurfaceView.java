@@ -206,7 +206,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 
     @Override
     public void doMove(float oldX, float oldY, float newX, float newY) {
-        super.doMove(oldX, oldY+clipY, newX, newY+clipY);
+        //super.doMove(oldX, oldY+clipY, newX, newY+clipY);
 
         boolean selectedMoved = false;
         if (selectedSprites.size() > 0) {
