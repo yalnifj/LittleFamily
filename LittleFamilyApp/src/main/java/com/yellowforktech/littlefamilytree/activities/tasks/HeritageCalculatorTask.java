@@ -87,7 +87,9 @@ public class HeritageCalculatorTask extends AsyncTask<LittlePerson, Integer, Arr
         for (HeritagePath path : returnPaths) {
             try {
                 LittlePerson lastInPath = path.getTreePath().get(path.getTreePath().size()-1);
-                dataService.addToSyncQ(lastInPath, path.getTreePath().size());
+                if (lastInPath.isHasParents()==null && path.getTreePath().size()< 13) {
+                    dataService.addToSyncQ(lastInPath, path.getTreePath().size());
+                }
             } catch (Exception e) {
                 Log.e(this.getClass().getSimpleName(), "error", e);
             }

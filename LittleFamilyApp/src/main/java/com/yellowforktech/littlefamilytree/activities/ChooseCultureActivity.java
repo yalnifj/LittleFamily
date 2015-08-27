@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.tasks.HeritageCalculatorTask;
 import com.yellowforktech.littlefamilytree.activities.tasks.WaitTask;
+import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.HeritagePath;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.games.DollConfig;
@@ -181,9 +182,17 @@ public class ChooseCultureActivity extends LittleFamilyActivity implements Herit
                 if (cultures.size() < 10 ) {
                     uniquepaths.addAll(cultures.values());
                 } else {
+                    int count = 0;
                     for (HeritagePath path : cultures.values()) {
-                        if (path.getPercent() > 0.0005) {
+                        if (count<12 && path.getPercent() > 0.0009) {
                             uniquepaths.add(path);
+                            LittlePerson lastInPath = path.getTreePath().get(path.getTreePath().size()-1);
+                            try {
+                                DataService.getInstance().addToSyncQ(lastInPath, path.getTreePath().size());
+                            } catch (Exception e) {
+                                Log.e(this.getClass().getName(), "Error adding person to sync Q " + lastInPath, e);
+                            }
+                            count++;
                         }
                     }
                 }

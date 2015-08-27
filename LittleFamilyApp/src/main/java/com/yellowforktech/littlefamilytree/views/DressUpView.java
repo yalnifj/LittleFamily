@@ -175,7 +175,7 @@ public class DressUpView extends SpritedSurfaceView {
     protected void touch_start(float x, float y) {
         super.touch_start(x, y);
         if (doll!=null) {
-            for (int c = 0; c < clothing.length; c++) {
+            for (int c = clothing.length-1; c >=0; c--) {
                 DollClothing dc = clothing[c];
                 Rect rect = new Rect();
                 rect.set(dc.getX(), dc.getY(), (int)(dc.getX()+dc.getBitmap().getWidth()*factor), (int)(dc.getY()+dc.getBitmap().getHeight()*factor));

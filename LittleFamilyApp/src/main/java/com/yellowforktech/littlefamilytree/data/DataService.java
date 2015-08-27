@@ -336,7 +336,7 @@ public class DataService implements AuthTask.Listener {
                                 person.setLastSync(new java.util.Date());
                                 getDBHelper().persistLittlePerson(person);
                                 try {
-                                    Thread.sleep(2000);  //-- don't bombard the server
+                                    Thread.sleep(3000);  //-- don't bombard the server
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }

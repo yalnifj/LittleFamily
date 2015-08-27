@@ -24,9 +24,12 @@ public class DraggablePersonSprite extends TouchEventGameSprite {
 
     @Override
     public boolean onMove(float oldX, float oldY, float newX, float newY) {
-        super.onMove(oldX, oldY, newX, newY);
+        float xdiff = newX-oldX;
+        if (!moved && Math.abs(xdiff) < 10) {
+            return false;
+        }
 
-        x += (newX - oldX);
+        x += xdiff;
         if (x<0) x = 0;
         if (x + width > maxWidth) x = maxWidth - width;
 
@@ -34,6 +37,7 @@ public class DraggablePersonSprite extends TouchEventGameSprite {
         if (y<0) y = 0;
         if (y +height > maxHeight) y = maxHeight - height;
 
+        moved = true;
         return true;
     }
 
