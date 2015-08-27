@@ -12,6 +12,7 @@ import com.yellowforktech.littlefamilytree.activities.LittleFamilyActivity;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.events.EventListener;
 import com.yellowforktech.littlefamilytree.events.EventQueue;
+import com.yellowforktech.littlefamilytree.sprites.DraggablePersonSprite;
 import com.yellowforktech.littlefamilytree.sprites.Sprite;
 import com.yellowforktech.littlefamilytree.sprites.TouchEventGameSprite;
 import com.yellowforktech.littlefamilytree.sprites.TouchStateAnimatedBitmapSprite;
@@ -28,8 +29,11 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
     private List<LittlePerson> family;
     private DisplayMetrics dm;
     private boolean spritesCreated = false;
+    private List<DraggablePersonSprite> peopleSprites;
 
     private LittleFamilyActivity activity;
+    private float clipY = 0;
+    private int maxHeight;
 
     public SongSpriteSurfaceView(Context context) {
         super(context);
@@ -43,6 +47,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 
     public void setup() {
         multiSelect = false;
+        peopleSprites = new ArrayList<>();
     }
 
     @Override
@@ -85,7 +90,8 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
         synchronized (sprites) {
             sprites.clear();
         }
-        int width = (int) (getWidth() * 0.2f);
+        maxHeight = this.getHeight();
+        int width = (int) (getWidth() * 0.17f);
         if (width > 250) width = 250;
 
         int centerX = (getWidth()/2 - width);
@@ -161,7 +167,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 		addSprite(drums);
 
         if (family!=null) {
-            float x = getWidth() * 0.8f;
+            float x = getWidth() * 0.82f;
             float y = 10*dm.density;
             for (LittlePerson person : family) {
                 Bitmap photo = null;
@@ -171,16 +177,53 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
                 if (photo == null) {
                     photo = ImageHelper.loadBitmapFromResource(activity, person.getDefaultPhotoResource(), 0, width, width);
                 }
-                TouchEventGameSprite sprite = new TouchEventGameSprite(photo, TOPIC_PERSON_TOUCHED);
+                DraggablePersonSprite sprite = new DraggablePersonSprite(photo, person, getWidth(), maxHeight, TOPIC_PERSON_TOUCHED);
                 sprite.setX(x);
                 sprite.setY(y);
                 sprite.setData("person", person);
-                addSprite(sprite);
+                peopleSprites.add(sprite);
                 y = y + sprite.getHeight() + (10 * dm.density);
+                if (y > maxHeight) maxHeight = (int) y;
             }
         }
 		
         spritesCreated = true;
+    }
+
+    @Override
+    protected void touch_start(float x, float y) {
+        super.touch_start(x, y+clipY);
+
+        for(int i=peopleSprites.size()-1; i>=0; i--) {
+            Sprite s = peopleSprites.get(i);
+            if (s.inSprite(x, y+clipY)) {
+                selectedSprites.add(s);
+                s.onSelect(x, y+clipY);
+                if (!multiSelect) break;
+            }
+        }
+    }
+
+    @Override
+    public void doMove(float oldX, float oldY, float newX, float newY) {
+        super.doMove(oldX, oldY+clipY, newX, newY+clipY);
+
+        boolean selectedMoved = false;
+        if (selectedSprites.size() > 0) {
+            for (Sprite s : selectedSprites) {
+                selectedMoved |= s.onMove(oldX, oldY+clipY, newX, newY+clipY);
+            }
+        }
+        if (!selectedMoved) {
+            clipY -= (newY-oldY);
+            if (maxHeight <= getHeight()) {
+                clipY = 0;
+            } else {
+                if (clipY < 0) clipY = 0;
+                else if (clipY + getHeight() > maxHeight) clipY = maxHeight - getHeight();
+            }
+        }
+
     }
 
     @Override
@@ -192,6 +235,13 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
         synchronized (sprites) {
             for (Sprite s : sprites) {
                 if (s.getX() + s.getWidth() >= 0 && s.getX() <= getWidth() && s.getY() + s.getHeight() >= 0 && s.getY() <= getHeight()) {
+                    s.doDraw(canvas);
+                }
+            }
+
+            canvas.translate(0, -clipY);
+            for (Sprite s : peopleSprites) {
+                if (s.getX() + s.getWidth() >= 0 && s.getX() <= getWidth() && s.getY() + s.getHeight() >= clipY && s.getY() <= getHeight() + clipY) {
                     s.doDraw(canvas);
                 }
             }

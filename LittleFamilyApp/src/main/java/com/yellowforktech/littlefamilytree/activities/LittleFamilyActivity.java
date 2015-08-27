@@ -152,9 +152,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         String text = getResources().getString(R.string.ask_for_help);
         speak(text);
         adultAuthDialog = new AdultsAuthDialog();
-		Bundle args = new Bundle();
-		args.putSerializable("action", action);
-		adultAuthDialog.setArguments(args);
+        adultAuthDialog.setAction(action);
         adultAuthDialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Theme_AppCompat_Light_Dialog);
         adultAuthDialog.show(getFragmentManager(), "Authenticate");
     }

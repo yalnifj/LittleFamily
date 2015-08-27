@@ -401,6 +401,7 @@
         selectedImage: 0,
         direction: 1,
         animating: false,
+        href: 'puzzle.html',
         id: 'puzzle'
     };
 
@@ -425,6 +426,7 @@
         selectedImage: 0,
         direction: 1,
         animating: false,
+        href: 'watercolor.html',
         id: 'watercolor'
     };
 
@@ -453,6 +455,7 @@
         selectedImage: 0,
         direction: 1,
         animating: false,
+        href: 'scratch.html',
         id: 'scratch'
     };
 
@@ -487,6 +490,7 @@
         selectedImage: 0,
         direction: 1,
         animating: false,
+        href: 'matching.html',
         id: 'match'
     };
 
@@ -504,17 +508,45 @@
         direction: 1,
         animating: false,
         repeating: true,
+        href: 'bubbles.html',
         id: 'bubbles'
     };
 
-    var gameAnimations = [wardrobe, puzzle, watercolor, scratch, match, bubbles];
+    var treespy = {
+        images: [preload("game_icons/tree_search.png"),
+            preload("game_icons/tree_search1.png"),
+            preload("game_icons/tree_search2.png"),
+            preload("game_icons/tree_search3.png"),
+            preload("game_icons/tree_search4.png"),
+            preload("game_icons/tree_search5.png"),
+            preload("game_icons/tree_search6.png"),
+            preload("game_icons/tree_search7.png"),
+            preload("game_icons/tree_search.png"),
+            preload("game_icons/tree_search1.png"),
+            preload("game_icons/tree_search2.png"),
+            preload("game_icons/tree_search3.png"),
+            preload("game_icons/tree_search4.png"),
+            preload("game_icons/tree_search5.png"),
+            preload("game_icons/tree_search6.png"),
+            preload("game_icons/tree_search7.png"),
+            preload("game_icons/tree_search8.png")
+        ],
+        selectedImage: 0,
+        direction: 1,
+        animating: false,
+        href: 'tree.html',
+        id: 'treespy'
+    };
+
+    var gameAnimations = [wardrobe, puzzle, watercolor, scratch, match, bubbles, treespy];
     var gameObjs = {
         "dressup-box": wardrobe,
         "puzzle-box": puzzle,
         "watercolor-box": watercolor,
         "scratch-box": scratch,
         "match-box": match,
-        "bubbles-box": bubbles
+        "bubbles-box": bubbles,
+        "treespy-box": treespy
     };
 
     $(document).ready(function() {

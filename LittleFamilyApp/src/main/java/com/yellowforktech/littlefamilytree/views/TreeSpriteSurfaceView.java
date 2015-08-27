@@ -12,8 +12,11 @@ import android.view.ScaleGestureDetector;
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.MyTreeActivity;
 import com.yellowforktech.littlefamilytree.sprites.Sprite;
-import com.yellowforktech.littlefamilytree.sprites.TouchEventGameSprite;
+import com.yellowforktech.littlefamilytree.sprites.TouchStateAnimatedBitmapSprite;
 import com.yellowforktech.littlefamilytree.sprites.TreePersonAnimatedSprite;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Parents on 6/4/2015.
@@ -23,7 +26,7 @@ public class TreeSpriteSurfaceView extends SpritedClippedSurfaceView {
     protected float scale = 0.5f;
     protected boolean moved;
 
-    protected TouchEventGameSprite searchSprite;
+    protected TouchStateAnimatedBitmapSprite searchSprite;
 
     public TreeSpriteSurfaceView(Context context) {
         super(context);
@@ -33,6 +36,10 @@ public class TreeSpriteSurfaceView extends SpritedClippedSurfaceView {
     public TreeSpriteSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setupScaleGestureDetector();
+    }
+
+    public TouchStateAnimatedBitmapSprite getSearchSprite() {
+        return searchSprite;
     }
 
     private void setupScaleGestureDetector() {
@@ -58,7 +65,27 @@ public class TreeSpriteSurfaceView extends SpritedClippedSurfaceView {
         });
 
         Bitmap searchBm = BitmapFactory.decodeResource(context.getResources(), R.drawable.tree_search);
-        searchSprite = new TouchEventGameSprite(searchBm, MyTreeActivity.TOPIC_START_FIND_PERSON);
+        searchSprite = new TouchStateAnimatedBitmapSprite(searchBm, context);
+        searchSprite.setResources(context.getResources());
+        searchSprite.setWidth((int) (searchBm.getWidth() * 0.75f));
+        searchSprite.setHeight((int) (searchBm.getHeight() * 0.75f));
+        List<Integer> searching = new ArrayList<>(8);
+        searching.add(R.drawable.tree_search1);
+        searching.add(R.drawable.tree_search2);
+        searching.add(R.drawable.tree_search3);
+        searching.add(R.drawable.tree_search4);
+        searching.add(R.drawable.tree_search5);
+        searching.add(R.drawable.tree_search6);
+        searching.add(R.drawable.tree_search7);
+        searching.add(R.drawable.tree_search8);
+        searchSprite.getBitmapIds().put(1, searching);
+        searchSprite.setStateTransition(1, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
+        List<Integer> searching2 = new ArrayList<>(1);
+        searching2.add(R.drawable.tree_search8);
+        searchSprite.getBitmapIds().put(2, searching2);
+        searchSprite.setStateTransition(2, TouchStateAnimatedBitmapSprite.TRANSITION_CLICK);
+        searchSprite.setStateTransitionEvent(2, MyTreeActivity.TOPIC_START_FIND_PERSON);
+        searchSprite.setStateTransitionEvent(0, MyTreeActivity.TOPIC_NEXT_CLUE);
         searchSprite.setIgnoreAlpha(true);
     }
 
@@ -153,6 +180,12 @@ public class TreeSpriteSurfaceView extends SpritedClippedSurfaceView {
             if (clipY < 0) clipY = 0;
             if (clipY + getHeight() > maxHeight*scale) clipY = (int) (maxHeight*scale - getHeight());
         }
+    }
+
+    @Override
+    public void doStep() {
+        super.doStep();
+        searchSprite.doStep();
     }
 
     @Override

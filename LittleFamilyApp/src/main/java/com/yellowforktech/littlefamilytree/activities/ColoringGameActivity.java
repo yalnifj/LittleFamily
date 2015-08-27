@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.Toast;
+
 import com.yellowforktech.littlefamilytree.R;
-import com.yellowforktech.littlefamilytree.activities.LittleFamilyActivity;
 import com.yellowforktech.littlefamilytree.activities.tasks.WaitTask;
 import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
@@ -18,12 +20,11 @@ import com.yellowforktech.littlefamilytree.games.RandomMediaChooser;
 import com.yellowforktech.littlefamilytree.util.ImageHelper;
 import com.yellowforktech.littlefamilytree.views.ColoringView;
 import com.yellowforktech.littlefamilytree.views.WaterColorImageView;
-import java.util.ArrayList;
-import java.util.List;
+
 import java.io.File;
 import java.io.FileOutputStream;
-import android.util.Log;
-import android.net.Uri;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ColoringGameActivity extends LittleFamilyActivity implements RandomMediaChooser.RandomMediaListener, ColoringView.ColoringCompleteListener {
 
@@ -181,6 +182,7 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Random
 			} else {
 				Toast.makeText(ColoringGameActivity.this, "Unable to verify password", Toast.LENGTH_LONG).show();
 			}
+            hideAdultAuthDialog();
 		}
 	}
 }

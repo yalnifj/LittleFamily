@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="clue_find_by_name">I spy with my little eye, someone named, %1$s</string>
-    <string name="clue_find_by_relationship">I spy with my little eye, someone who is your, %1$s</string>
-    <string name="clue_find_by_gender">I spy with my little eye, someone who is a, %1$s</string>
+    <string name="clue_find_by_name">I spy in your family tree, someone named, %1$s</string>
+    <string name="clue_find_by_relationship">I spy in your family tree, someone who is your, %1$s</string>
+    <string name="clue_find_by_gender">I spy in your family tree, someone who is a, %1$s</string>
     <string name="boy">boy</string>
     <string name="girl">girl</string>
 </resources>

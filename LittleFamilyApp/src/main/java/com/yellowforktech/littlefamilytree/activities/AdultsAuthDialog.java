@@ -12,8 +12,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.data.DataService;
+
 import java.io.Serializable;
 import java.lang.reflect.Field;
 
@@ -23,14 +25,15 @@ import java.lang.reflect.Field;
 public class AdultsAuthDialog extends DialogFragment {
 	private EditText passwordField;
 	private AuthCompleteAction action;
-	
-	@Override
-	public void setArguments(Bundle args) {
-		super.setArguments(args);
-		action = (AuthCompleteAction) args.getSerializable("action");
-	}
-	
-    
+
+    public AuthCompleteAction getAction() {
+        return action;
+    }
+
+    public void setAction(AuthCompleteAction action) {
+        this.action = action;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

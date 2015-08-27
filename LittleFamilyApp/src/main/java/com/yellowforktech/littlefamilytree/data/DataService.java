@@ -263,9 +263,11 @@ public class DataService implements AuthTask.Listener {
                             }
                         }
 
-                        for (Integer id : toClear) {
-                            if (id != null) {
-                                getDBHelper().removeFromSyncQ(id);
+                        if (toClear!=null) {
+                            for (Integer id : toClear) {
+                                if (id != null) {
+                                    getDBHelper().removeFromSyncQ(id);
+                                }
                             }
                         }
                     }
