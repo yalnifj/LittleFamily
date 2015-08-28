@@ -20,6 +20,7 @@ import com.yellowforktech.littlefamilytree.util.ImageHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.yellowforktech.littlefamilytree.sprites.AnimatedBitmapSprite;
 
 /**
  * Created by kids on 6/17/15.
@@ -35,6 +36,11 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
     private float clipY = 0;
     private int maxHeight;
     private Bitmap stage;
+	
+	private AnimatedBitmapSprite selPerson1;
+	private AnimatedBitmapSprite selPerson2;
+	private AnimatedBitmapSprite selPerson3;
+	private AnimatedBitmapSprite selPerson4;
 
     public SongSpriteSurfaceView(Context context) {
         super(context);
@@ -177,8 +183,28 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
         gPiano.setResources(getResources());
         addSprite(gPiano);
 
-        //Bitmap man = ImageHelper.loadBitmapFromResource(activity, R.drawable.piano, 0, (int)(width*1.7), (int)(width*1.7));
-
+        Bitmap man = ImageHelper.loadBitmapFromResource(activity, R.drawable.man_silhouette, 0, width, width);
+		selPerson1 = new AnimatedBitmapSprite(man);
+		selPerson1.setX(width*2);
+		selPerson1.setY(stage.getHeight()/2 - width);
+		addSprite(selPerson1);
+		
+		Bitmap woman = ImageHelper.loadBitmapFromResource(activity, R.drawable.woman_silhouette, 0, width, width);
+		selPerson2 = new AnimatedBitmapSprite(woman);
+		selPerson2.setX(selPerson1.getX()+width);
+		selPerson2.setY(selPerson1.getY());
+		addSprite(selPerson2);
+		
+		selPerson3 = new AnimatedBitmapSprite(man);
+		selPerson3.setX(selPerson2.getX()+width);
+		selPerson3.setY(selPerson2.getY());
+		addSprite(selPerson3);
+		
+		selPerson4 = new AnimatedBitmapSprite(woman);
+		selPerson4.setX(selPerson3.getX()+width);
+		selPerson4.setY(selPerson3.getY());
+		addSprite(selPerson4);
+		
         if (family!=null) {
             float x = getWidth() * 0.82f;
             float y = 10*dm.density;

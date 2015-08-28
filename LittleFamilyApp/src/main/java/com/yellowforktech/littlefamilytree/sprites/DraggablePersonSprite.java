@@ -13,6 +13,7 @@ public class DraggablePersonSprite extends TouchEventGameSprite {
     protected float sy;
     protected int maxWidth;
     protected int maxHeight;
+	protected boolean moving;
 
     public DraggablePersonSprite(Bitmap bitmap, LittlePerson person, int maxWidth, int maxHeight, String eventTopic) {
         super(bitmap, eventTopic);
@@ -21,6 +22,29 @@ public class DraggablePersonSprite extends TouchEventGameSprite {
         this.maxHeight = maxHeight;
         this.maxWidth = maxWidth;
     }
+
+	@Override
+	public void doStep()
+	{
+		super.doStep();
+		if (moving) {
+			if (x > sx - 3 && x < sx+3 && y>sy-3 && y<sy+3) {
+				this.x = sx;
+				this.y = sy;
+				moving=false;
+			} else {
+				float dx = (sx - x)/5;
+				if (dx < 0 && dx > -2) dx = -2;
+				if (dx > 0 && dx < 2) dx = 2;
+				float dy = (sy - y)/5;
+				if (dy < 0 && dy > -2) dy = -2;
+				if (dy > 0 && dy < 2) dy = 2;
+				x=x+dx;
+				y=y+dy;
+			}
+			
+		}
+	}
 
     @Override
     public boolean onMove(float oldX, float oldY, float newX, float newY) {
@@ -51,8 +75,7 @@ public class DraggablePersonSprite extends TouchEventGameSprite {
     @Override
     public void onRelease(float x, float y) {
         if (moved) {
-            this.x = sx; //-- TODO animate
-            this.y = sy;
+			moving = true;
         }
         super.onRelease(x, y);
     }
