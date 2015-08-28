@@ -42,6 +42,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     public static final String TOPIC_START_BUBBLES = "startBubblePop";
     public static final String TOPIC_START_SETTINGS = "startSettings";
 	public static final String TOPIC_START_SONG = "startSong";
+    public static final String TOPIC_START_FLYING = "startFlying";
     protected TextToSpeech tts;
     protected MediaPlayer successPlayer;
     protected MediaPlayer buzzPlayer;
@@ -94,6 +95,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         EventQueue.getInstance().subscribe(TOPIC_START_BUBBLES, this);
         EventQueue.getInstance().subscribe(TOPIC_START_SETTINGS, this);
         EventQueue.getInstance().subscribe(TOPIC_START_SONG, this);
+        EventQueue.getInstance().subscribe(TOPIC_START_FLYING, this);
     }
 
     @Override
@@ -117,6 +119,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         EventQueue.getInstance().unSubscribe(TOPIC_START_BUBBLES, this);
         EventQueue.getInstance().unSubscribe(TOPIC_START_SETTINGS, this);
         EventQueue.getInstance().unSubscribe(TOPIC_START_SONG, this);
+        EventQueue.getInstance().unSubscribe(TOPIC_START_FLYING, this);
     }
 
     public void showLoadingDialog() {
@@ -324,6 +327,9 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
 			case TOPIC_START_SONG:
                 startSongGame(person);
                 break;
+            case TOPIC_START_FLYING:
+                startFlyingGame(person);
+                break;
         }
     }
 
@@ -405,6 +411,12 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
 	
 	public void startSongGame(LittlePerson person) {
         Intent intent = new Intent( this, SongActivity.class );
+        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
+        startActivity(intent);
+    }
+
+    public void startFlyingGame(LittlePerson person) {
+        Intent intent = new Intent( this, FlyingActivity.class );
         intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
         startActivity(intent);
     }

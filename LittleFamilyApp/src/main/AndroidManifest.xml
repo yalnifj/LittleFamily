@@ -56,7 +56,7 @@
             android:parentActivityName=".activities.ChooseGameActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.ChooseGameActivity" />
+                android:value="com.yellowforktech.littlefamilytree.activities.ChooseGameActivity" />
         </activity>
         <activity
             android:name=".activities.ColoringGameActivity"
@@ -66,7 +66,7 @@
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.ChooseGameActivity" />
+                android:value="com.yellowforktech.littlefamilytree.activities.ChooseGameActivity" />
         </activity>
         <activity
             android:name=".activities.HeritageDressUpActivity"
@@ -74,7 +74,7 @@
             android:parentActivityName=".activities.ChooseCultureActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.ChooseCultureActivity" />
+                android:value="com.yellowforktech.littlefamilytree.activities.ChooseCultureActivity" />
         </activity>
         <activity
             android:name=".activities.ChooseCultureActivity"
@@ -82,7 +82,7 @@
             android:parentActivityName=".activities.ChooseGameActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.ChooseGameActivity" />
+                android:value="com.yellowforktech.littlefamilytree.activities.ChooseGameActivity" />
         </activity>
         <activity
             android:name=".activities.ChooseRemoteService"
@@ -98,7 +98,7 @@
             android:parentActivityName=".activities.ChooseGameActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.ChooseGameActivity" />
+                android:value="com.yellowforktech.littlefamilytree.activities.ChooseGameActivity" />
         </activity>
         <activity
             android:name=".activities.HomeActivity"
@@ -110,7 +110,7 @@
             android:parentActivityName=".activities.HomeActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.HomeActivity" />
+                android:value="com.yellowforktech.littlefamilytree.activities.HomeActivity" />
         </activity>
         <activity
             android:name=".activities.BubblePopActivity"
@@ -120,7 +120,7 @@
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.HomeActivity" />
+                android:value="com.yellowforktech.littlefamilytree.activities.HomeActivity" />
         </activity>
         <activity
             android:name=".activities.PersonSearchActivity"
@@ -132,11 +132,15 @@
             android:parentActivityName=".activities.HomeActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.HomeActivity" />
+                android:value="com.yellowforktech.littlefamilytree.activities.HomeActivity" />
         </activity>
         <activity
             android:name=".activities.ParentsGuideActivity"
             android:label="@string/title_activity_parents_guide" >
+        </activity>
+        <activity
+            android:name=".activities.FlyingActivity"
+            android:label="@string/title_activity_flying" >
         </activity>
     </application>
 

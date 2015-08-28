@@ -34,6 +34,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
     private LittleFamilyActivity activity;
     private float clipY = 0;
     private int maxHeight;
+    private Bitmap stage;
 
     public SongSpriteSurfaceView(Context context) {
         super(context);
@@ -90,9 +91,12 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
         synchronized (sprites) {
             sprites.clear();
         }
+
         maxHeight = this.getHeight();
         int width = (int) (getWidth() * 0.17f);
         if (width > 250) width = 250;
+
+        stage = ImageHelper.loadBitmapFromResource(context, R.drawable.stage, 0, getWidth()-width, getHeight());
 
         int centerX = (getWidth()/2 - width);
         int centerY = (getHeight() /2);
@@ -151,7 +155,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
         drums.setWidth(width);
         drums.setHeight((int) (width / r));
 		drums.setResources(getResources());
-		drums.setX(centerX - drums.getWidth()/2);
+		drums.setX(centerX - drums.getWidth() / 2);
 		drums.setY((centerY - width) - drums.getHeight());
 		List<Integer> playingDrums = new ArrayList<>(8);
 		playingDrums.add(R.drawable.house_music_drums1);
@@ -165,6 +169,15 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 		drums.getBitmapIds().put(1, playingDrums);
 		drums.setStateTransition(1, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
 		addSprite(drums);
+
+        Bitmap gPianoBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.piano, 0, (int)(width*1.7), (int)(width*1.7));
+        TouchStateAnimatedBitmapSprite gPiano = new TouchStateAnimatedBitmapSprite(gPianoBm, activity);
+        gPiano.setX(getWidth() - (10*dm.density + width + gPianoBm.getWidth()));
+        gPiano.setY(stage.getHeight() - (20 * dm.density + gPianoBm.getHeight()));
+        gPiano.setResources(getResources());
+        addSprite(gPiano);
+
+        //Bitmap man = ImageHelper.loadBitmapFromResource(activity, R.drawable.piano, 0, (int)(width*1.7), (int)(width*1.7));
 
         if (family!=null) {
             float x = getWidth() * 0.82f;
@@ -233,6 +246,8 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
             createSprites();
         }
         synchronized (sprites) {
+            canvas.drawBitmap(stage, 0, 5, null);
+
             for (Sprite s : sprites) {
                 if (s.getX() + s.getWidth() >= 0 && s.getX() <= getWidth() && s.getY() + s.getHeight() >= 0 && s.getY() <= getHeight()) {
                     s.doDraw(canvas);

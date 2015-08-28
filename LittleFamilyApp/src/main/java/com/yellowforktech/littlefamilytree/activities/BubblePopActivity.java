@@ -43,12 +43,26 @@ public class BubblePopActivity extends LittleFamilyActivity implements ParentsLo
         DataService.getInstance().registerNetworkStateListener(this);
         ParentsLoaderTask loader = new ParentsLoaderTask(this, this);
         loader.execute(que.peek());
+        bubbleView.resume();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         DataService.getInstance().unregisterNetworkStateListener(this);
+        bubbleView.stop();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        bubbleView.pause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        bubbleView.resume();
     }
 
     @Override

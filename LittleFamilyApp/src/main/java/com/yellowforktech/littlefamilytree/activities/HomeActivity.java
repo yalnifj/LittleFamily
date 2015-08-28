@@ -10,6 +10,7 @@ import android.util.DisplayMetrics;
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.sprites.AnimatedBitmapSprite;
+import com.yellowforktech.littlefamilytree.sprites.BirdSprite;
 import com.yellowforktech.littlefamilytree.sprites.ClippedRepeatedBackgroundSprite;
 import com.yellowforktech.littlefamilytree.sprites.MovingAnimatedBitmapSprite;
 import com.yellowforktech.littlefamilytree.sprites.MovingTouchStateAnimatedBitmapSprite;
@@ -137,8 +138,8 @@ public class HomeActivity extends LittleFamilyActivity {
 
             Bitmap treeBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_tree1);
             AnimatedBitmapSprite tree = new AnimatedBitmapSprite(treeBm);
-            tree.setX(50*dm.density);
-            tree.setY(250*dm.density);
+            tree.setX(50 * dm.density);
+            tree.setY(250 * dm.density);
             homeView.addSprite(tree);
 
             List<Bitmap> leaves = new ArrayList<>(6);
@@ -149,11 +150,20 @@ public class HomeActivity extends LittleFamilyActivity {
             leaves.add(BitmapFactory.decodeResource(getResources(), R.drawable.leaves_overlay2));
             leaves.add(BitmapFactory.decodeResource(getResources(), R.drawable.leaves_overlay1));
             PersonLeavesButton personLeaf = new PersonLeavesButton(TOPIC_START_TREE, people, leaves, this);
-            personLeaf.setX(220*dm.density);
-            personLeaf.setY(330*dm.density);
+            personLeaf.setX(220 * dm.density);
+            personLeaf.setY(330 * dm.density);
             personLeaf.setSelectable(true);
             homeView.addSprite(personLeaf);
             homeView.addActivitySprite(personLeaf);
+
+            Bitmap birdBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_tree_bird);
+            BirdSprite birdSprite = new BirdSprite(birdBm, this, TOPIC_START_FLYING);
+            birdSprite.setX(100 * dm.density);
+            birdSprite.setY(330 * dm.density);
+            birdSprite.setResources(this.getResources());
+            birdSprite.setSelectable(true);
+            homeView.addSprite(birdSprite);
+            homeView.addActivitySprite(birdSprite);
 
             Bitmap flowerBm2 = BitmapFactory.decodeResource(getResources(), R.drawable.house_flowers_a1);
             TouchStateAnimatedBitmapSprite flower1 = new TouchStateAnimatedBitmapSprite(flowerBm2, this);

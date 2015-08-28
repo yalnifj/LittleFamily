@@ -68,6 +68,20 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
         setup();
     }
 
+    @Override
+    public void pause() {
+        super.pause();
+        EventQueue.getInstance().unSubscribe(TOPIC_SOAP_ADDED, this);
+        EventQueue.getInstance().unSubscribe(TOPIC_WATER_ADDED, this);
+    }
+
+    @Override
+    public void resume() {
+        super.resume();
+        EventQueue.getInstance().subscribe(TOPIC_SOAP_ADDED, this);
+        EventQueue.getInstance().subscribe(TOPIC_WATER_ADDED, this);
+    }
+
     public void setup() {
         listeners = new ArrayList<>(1);
         bubbleBm = BitmapFactory.decodeResource(context.getResources(), com.yellowforktech.littlefamilytree.R.drawable.bubble);
@@ -78,8 +92,6 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
         popping.add(BitmapFactory.decodeResource(context.getResources(), com.yellowforktech.littlefamilytree.R.drawable.bubble_pop3));
         popping.add(BitmapFactory.decodeResource(context.getResources(), com.yellowforktech.littlefamilytree.R.drawable.bubble_pop4));
         popping.add(BitmapFactory.decodeResource(context.getResources(), com.yellowforktech.littlefamilytree.R.drawable.bubble_pop5));
-        EventQueue.getInstance().subscribe(TOPIC_SOAP_ADDED, this);
-        EventQueue.getInstance().subscribe(TOPIC_WATER_ADDED, this);
         hasSoap = false;
         addBubbles = false;
         multiSelect = false;

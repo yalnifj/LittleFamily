@@ -95,5 +95,6 @@ Please wait...</string>
     <string name="close">Close</string>
 
     <string name="ask_for_help">Ask an adult for help.</string>
+    <string name="title_activity_flying">Flying Activity</string>
 
 </resources>
