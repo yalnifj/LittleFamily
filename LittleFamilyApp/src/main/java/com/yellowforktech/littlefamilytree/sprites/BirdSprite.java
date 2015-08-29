@@ -3,6 +3,8 @@ package com.yellowforktech.littlefamilytree.sprites;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.media.MediaPlayer;
+import android.util.Log;
 
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.events.EventQueue;
@@ -22,6 +24,7 @@ public class BirdSprite extends AnimatedBitmapSprite {
     protected Random random;
     private boolean moved = false;
     private String eventTopic;
+    private MediaPlayer tweet;
 
     public BirdSprite(Bitmap bitmap, Context context, String eventTopic) {
         super(bitmap);
@@ -46,6 +49,8 @@ public class BirdSprite extends AnimatedBitmapSprite {
         state2.add(R.drawable.house_tree_bird7);
         bitmapIds.put(2, state2);
 
+        tweet = new MediaPlayer();
+
         random = new Random();
         delay = random.nextInt(80);
     }
@@ -60,6 +65,22 @@ public class BirdSprite extends AnimatedBitmapSprite {
         } else {
             if (state==0) {
                 state = 1+random.nextInt(2);
+
+                if (state==2) {
+                    try {
+                        tweet = MediaPlayer.create(context, R.raw.bird);
+                        tweet.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                            @Override
+                            public void onCompletion(MediaPlayer mp) {
+                                mp.release();
+                            }
+                        });
+                        tweet.start();
+                    } catch (Exception e) {
+                        // just let things go on
+                        Log.e(getClass().getSimpleName(), "Error playing audio", e);
+                    }
+                }
 
                 isFlipped = random.nextBoolean();
 
