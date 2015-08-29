@@ -23,6 +23,28 @@ public class DraggablePersonSprite extends TouchEventGameSprite {
         this.maxWidth = maxWidth;
     }
 
+	public void setMaxWidth(int maxWidth)
+	{
+		this.maxWidth = maxWidth;
+	}
+
+	public int getMaxWidth()
+	{
+		return maxWidth;
+	}
+
+	public void setMaxHeight(int maxHeight)
+	{
+		this.maxHeight = maxHeight;
+	}
+
+	public int getMaxHeight()
+	{
+		return maxHeight;
+	}
+	
+	
+
 	@Override
 	public void doStep()
 	{
