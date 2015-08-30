@@ -1,18 +1,24 @@
 package com.yellowforktech.littlefamilytree.views;
 
-import com.yellowforktech.littlefamilytree.sprites.*;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.LittleFamilyActivity;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.events.EventListener;
 import com.yellowforktech.littlefamilytree.events.EventQueue;
+import com.yellowforktech.littlefamilytree.sprites.AnimatedBitmapSprite;
+import com.yellowforktech.littlefamilytree.sprites.DraggablePersonSprite;
+import com.yellowforktech.littlefamilytree.sprites.Sprite;
+import com.yellowforktech.littlefamilytree.sprites.TouchEventGameSprite;
+import com.yellowforktech.littlefamilytree.sprites.TouchStateAnimatedBitmapSprite;
 import com.yellowforktech.littlefamilytree.util.ImageHelper;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -36,6 +42,14 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 	private AnimatedBitmapSprite selPerson2;
 	private AnimatedBitmapSprite selPerson3;
 	private AnimatedBitmapSprite selPerson4;
+
+    private Rect dropRect;
+    private int nextSpot = 0;
+    private boolean dropReady = false;
+    private int manWidth = 0;
+    private int manHeight = 0;
+    private int womanWidth = 0;
+    private int womanHeight = 0;
 
     public SongSpriteSurfaceView(Context context) {
         super(context);
@@ -85,6 +99,28 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 
     @Override
     public void doStep() {
+        if (selPerson1!=null) {
+            if (dropReady) {
+                selPerson1.setWidth((int) (manWidth + 10 * dm.density));
+                selPerson1.setHeight((int) (manHeight + 10 * dm.density));
+                selPerson3.setWidth((int) (manWidth + 10 * dm.density));
+                selPerson3.setHeight((int) (manHeight + 10 * dm.density));
+                selPerson2.setWidth((int) (womanWidth + 10 * dm.density));
+                selPerson2.setHeight((int) (womanHeight + 10 * dm.density));
+                selPerson4.setWidth((int) (womanWidth + 10 * dm.density));
+                selPerson4.setHeight((int) (womanHeight + 10 * dm.density));
+            } else {
+                selPerson1.setWidth((int) (manWidth));
+                selPerson1.setHeight((int) (manHeight));
+                selPerson3.setWidth((int) (manWidth));
+                selPerson3.setHeight((int) (manHeight));
+                selPerson2.setWidth((int) (womanWidth));
+                selPerson2.setHeight((int) (womanHeight));
+                selPerson4.setWidth((int) (womanWidth));
+                selPerson4.setHeight((int) (womanHeight));
+            }
+        }
+
         super.doStep();
 		
 		Iterator<DraggablePersonSprite> i = peopleSprites.iterator();
@@ -180,29 +216,35 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 		addSprite(drums);
 		*/
 
+        manWidth = stage.getWidth()/6;
+        womanWidth = (int) (manWidth + 4 * dm.density);
         Bitmap gPianoBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.piano, 0, (int)(width*1.7), (int)(width*1.7));
         TouchStateAnimatedBitmapSprite gPiano = new TouchStateAnimatedBitmapSprite(gPianoBm, activity);
-        gPiano.setX(getWidth() - (10*dm.density + width + gPianoBm.getWidth()));
+        gPiano.setX(getWidth() - (10 * dm.density + width + gPianoBm.getWidth()));
         gPiano.setY(stage.getHeight() - (20 * dm.density + gPianoBm.getHeight()));
         gPiano.setResources(getResources());
         addSprite(gPiano);
 
         Bitmap man = ImageHelper.loadBitmapFromResource(activity, R.drawable.man_silhouette, 0, 
-				(int)(width-23*dm.density), (int)(width-23-dm.density));
+				manWidth, manWidth);
 		selPerson1 = new AnimatedBitmapSprite(man);
 		selPerson1.setX(width);
-		selPerson1.setY(stage.getHeight()/2 - width/2);
+        selPerson1.setY(stage.getHeight() / 2 - width / 2);
 		addSprite(selPerson1);
-		
-		Bitmap woman = ImageHelper.loadBitmapFromResource(activity, R.drawable.woman_silhouette, 0, 
-				 (int)(width-12*dm.density), (int)(width-12*dm.density));
+        manWidth = selPerson1.getWidth();
+        manHeight = selPerson1.getHeight();
+
+        Bitmap woman = ImageHelper.loadBitmapFromResource(activity, R.drawable.woman_silhouette, 0,
+				 womanWidth, womanWidth);
 		selPerson2 = new AnimatedBitmapSprite(woman);
-		selPerson2.setX(selPerson1.getX()+selPerson1.getWidth());
-		selPerson2.setY(selPerson1.getY());
+		selPerson2.setX(selPerson1.getX() + selPerson1.getWidth());
+        selPerson2.setY(selPerson1.getY());
 		addSprite(selPerson2);
+        womanWidth = selPerson2.getWidth();
+        womanHeight = selPerson2.getHeight();
 		
 		selPerson3 = new AnimatedBitmapSprite(man);
-		selPerson3.setX(selPerson2.getX()+selPerson2.getWidth());
+		selPerson3.setX(selPerson2.getX() + selPerson2.getWidth());
 		selPerson3.setY(selPerson2.getY());
 		addSprite(selPerson3);
 		
@@ -210,6 +252,9 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 		selPerson4.setX(selPerson3.getX()+selPerson3.getWidth());
 		selPerson4.setY(selPerson3.getY());
 		addSprite(selPerson4);
+
+        dropRect = new Rect();
+        dropRect.set((int)selPerson1.getX(), (int)selPerson1.getY()-50, (int)selPerson4.getX()+selPerson4.getWidth(), (int)selPerson4.getY()+50);
 		
         if (family!=null) {
             float x = getWidth() * 0.82f;
@@ -260,7 +305,13 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
         boolean selectedMoved = false;
         if (selectedSprites.size() > 0) {
             for (Sprite s : selectedSprites) {
-                selectedMoved |= s.onMove(oldX, oldY+clipY, newX, newY+clipY);
+                boolean moved = s.onMove(oldX, oldY+clipY, newX, newY+clipY);
+                selectedMoved |= moved;
+                dropReady = false;
+                if (moved && s instanceof DraggablePersonSprite && dropRect.contains((int)s.getX(), (int)s.getY())) {
+                    DraggablePersonSprite ds = (DraggablePersonSprite) s;
+                    dropReady = true;
+                }
             }
         }
         if (!selectedMoved) {
@@ -273,6 +324,13 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
             }
         }
 
+    }
+
+    @Override
+    protected void touch_up(float x, float y) {
+        super.touch_up(x, y);
+
+        dropReady = false;
     }
 
     @Override

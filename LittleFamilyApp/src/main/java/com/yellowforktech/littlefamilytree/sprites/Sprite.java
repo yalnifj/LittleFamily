@@ -20,6 +20,7 @@ public abstract class Sprite {
     protected Matrix matrix;
     protected float scale;
     protected AbstractTouchAnimatedSurfaceView surfaceView;
+    protected boolean visible = true;
 
     public Sprite() {
         x = 0;
@@ -118,6 +119,14 @@ public abstract class Sprite {
 
     public void setScale(float scale) {
         this.scale = scale;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 
     public abstract void doStep();

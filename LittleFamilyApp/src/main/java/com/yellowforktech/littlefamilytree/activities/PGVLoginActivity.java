@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.tasks.AuthTask;
-import com.yellowforktech.littlefamilytree.activities.tasks.FamilyLoaderTask;
+import com.yellowforktech.littlefamilytree.activities.tasks.InitialDataLoaderTask;
 import com.yellowforktech.littlefamilytree.activities.tasks.PersonLoaderTask;
 import com.yellowforktech.littlefamilytree.activities.tasks.PgvVersionTask;
 import com.yellowforktech.littlefamilytree.data.DataService;
@@ -30,7 +30,7 @@ import java.util.ArrayList;
 /**
  * A login screen that offers login via email/password.
  */
-public class PGVLoginActivity extends Activity implements AuthTask.Listener, PersonLoaderTask.Listener, FamilyLoaderTask.Listener, PgvVersionTask.Listener {
+public class PGVLoginActivity extends Activity implements AuthTask.Listener, PersonLoaderTask.Listener, InitialDataLoaderTask.Listener, PgvVersionTask.Listener {
     private static final String PGV_DEFAULT_URL = "http://www.finlayfamily.org/genealogy/";
     private static final String PGV_DEFAULT_USER = "john";
     private static final String PGV_DEFAULT_PASS = "";
@@ -214,12 +214,13 @@ public class PGVLoginActivity extends Activity implements AuthTask.Listener, Per
     public void onComplete(LittlePerson person) {
         pd.setMessage("Loading close family members from PhpGedView...");
         intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
-        FamilyLoaderTask task = new FamilyLoaderTask(this, this);
+        InitialDataLoaderTask task = new InitialDataLoaderTask(this, this);
         task.execute(person);
     }
 
     @Override
     public void onComplete(ArrayList<LittlePerson> familyMembers) {
+        dataService.resumeSync();
         if (pd!=null) pd.dismiss();
         intent.putExtra(ChooseFamilyMember.FAMILY, familyMembers);
         setResult(Activity.RESULT_OK, intent);

@@ -57,6 +57,8 @@ public class DataService implements AuthTask.Listener {
     private SyncThread syncer;
     private boolean authenticating = false;
     private String serviceType = null;
+    private Object pauseLock = new Object();
+    private boolean syncPaused = false;
 
     private List<DataNetworkStateListener> listeners;
     private DataNetworkState currentState = DataNetworkState.REMOTE_FINISHED;
@@ -100,6 +102,19 @@ public class DataService implements AuthTask.Listener {
         return authenticating;
     }
 
+    public void pauseSync() {
+        synchronized (pauseLock) {
+            syncPaused = true;
+        }
+    }
+
+    public void resumeSync() {
+        synchronized (pauseLock) {
+            syncPaused = false;
+            pauseLock.notifyAll();
+        }
+    }
+
     public void setContext(Context context) {
         this.context = context;
         if (remoteService==null) {
@@ -121,6 +136,9 @@ public class DataService implements AuthTask.Listener {
             } catch (Exception e) {
                 Log.e("DataService", "Error checking authentication", e);
             }
+        }
+        if (remoteService==null || remoteService.getSessionId() == null) {
+            syncPaused = true;
         }
         if (syncer==null) {
             syncer = new SyncThread();
@@ -166,6 +184,11 @@ public class DataService implements AuthTask.Listener {
                 syncer = new SyncThread();
                 syncer.start();
             }
+        }
+        if (this.remoteService==null || remoteService.getSessionId() == null) {
+            syncPaused = true;
+        } else {
+            syncPaused = false;
         }
 
         PreferenceManager.getDefaultSharedPreferences(context).registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
@@ -290,6 +313,18 @@ public class DataService implements AuthTask.Listener {
                     }
                 }
 
+                while(syncPaused) {
+                    try {
+                        Log.d("SyncThread", "Sync paused");
+                        synchronized (pauseLock) {
+                            pauseLock.wait(8000);
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                Log.d("SyncThread", "Sync resumed");
+
                 while (syncQ.size() == 0) {
                     try {
                         Log.d("SyncThread", "Waiting for Q data");
@@ -336,7 +371,7 @@ public class DataService implements AuthTask.Listener {
                                 person.setLastSync(new java.util.Date());
                                 getDBHelper().persistLittlePerson(person);
                                 try {
-                                    Thread.sleep(3000);  //-- don't bombard the server
+                                    Thread.sleep(5000);  //-- don't bombard the server
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }

@@ -192,6 +192,7 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
         synchronized (sprites) {
             for (Sprite s : sprites) {
                 if (s.getX() + s.getWidth() >= clipX && s.getX() <= getWidth() + clipX && s.getY() + s.getHeight() >= clipY && s.getY() <= getHeight() + clipY) {
+                    s.setVisible(true);
                     Matrix m = s.getMatrix();
                     Matrix old = null;
                     if (m != null) {
@@ -203,6 +204,8 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
                     if (m != null) {
                         m.set(old);
                     }
+                } else {
+                    s.setVisible(false);
                 }
             }
         }

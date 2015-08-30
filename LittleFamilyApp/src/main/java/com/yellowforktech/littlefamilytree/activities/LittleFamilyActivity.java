@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.yellowforktech.littlefamilytree.R;
+import com.yellowforktech.littlefamilytree.activities.tasks.WaitTask;
 import com.yellowforktech.littlefamilytree.data.DataNetworkState;
 import com.yellowforktech.littlefamilytree.data.DataNetworkStateListener;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
@@ -123,6 +124,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     }
 
     public void showLoadingDialog() {
+        hideDialog = false;
         try {
             synchronized (dialogShown) {
                 if (!dialogShown) {
@@ -137,18 +139,32 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         }
     }
 
+    public boolean hideDialog = true;
     public void hideLoadingDialog() {
-        try {
-            synchronized (dialogShown) {
-                if (loadingDialog != null && loadingDialog.isVisible()) {
-                    loadingDialog.dismissAllowingStateLoss();
-                }
-                dialogShown = false;
-                loadingDialog = null;
+        hideDialog = true;
+        WaitTask waiter = new WaitTask(new WaitTask.WaitTaskListener() {
+            @Override
+            public void onProgressUpdate(Integer progress) {
             }
-        } catch(Exception e) {
-            Log.e("LittleFamilyActivity", "Error hiding loading dialog", e);
-        }
+
+            @Override
+            public void onComplete(Integer progress) {
+                if (hideDialog) {
+                    try {
+                        synchronized (dialogShown) {
+                            if (loadingDialog != null && loadingDialog.isVisible()) {
+                                loadingDialog.dismissAllowingStateLoss();
+                            }
+                            dialogShown = false;
+                            loadingDialog = null;
+                        }
+                    } catch (Exception e) {
+                        Log.e("LittleFamilyActivity", "Error hiding loading dialog", e);
+                    }
+                }
+            }
+        });
+        waiter.execute(1000L);
     }
 
     public void showAdultAuthDialog(AdultsAuthDialog.AuthCompleteAction action) {

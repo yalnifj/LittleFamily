@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.yellowforktech.littlefamilytree" >
 
-    <uses-sdk android:minSdkVersion="16" />
+    <uses-sdk android:minSdkVersion="15" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -129,7 +129,8 @@
         <activity
             android:name=".activities.SongActivity"
             android:label="@string/title_activity_song"
-            android:parentActivityName=".activities.HomeActivity" >
+            android:parentActivityName=".activities.HomeActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.yellowforktech.littlefamilytree.activities.HomeActivity" />

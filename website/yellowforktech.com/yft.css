@@ -1,0 +1,205 @@
+.content-start {
+    display: block;
+    margin-top: 100px;
+    min-height: 500px;
+}
+section {
+    margin-top: 50px;
+    min-height: 500px;
+}
+.navbar-toggle {
+    float: left;
+}
+.navbar .icon {
+    float: left;
+}
+.navbar-brand {
+    line-height: 48px;
+    padding-top: 0px;
+}
+.navbar .selected {
+    font-weight: bold;
+}
+.header-content {
+    margin-top: 50px;
+    padding: 20px;
+    margin-bottom: 50px;
+}
+.main-icon {
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 400px;
+}
+.bg-dark {
+    background-color: darkblue;
+}
+.to-top {
+    float: right;
+    margin: 25px;
+    font-size: 40px;
+    font-weight: normal;
+    z-index: 100;
+    position: relative;
+}
+
+.bg-primary .to-top {
+    color: white;
+}
+
+.portfolio-box {
+    display: block;
+    position: relative;
+    margin: 0 auto;
+    max-width: 650px;
+}
+
+.portfolio-box .portfolio-box-caption {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    color: #fff;
+    opacity: 0;
+    background: rgba(240,95,64,.9);
+    -webkit-transition: all .35s;
+    -moz-transition: all .35s;
+    transition: all .35s;
+}
+
+.portfolio-box .portfolio-box-caption .portfolio-box-caption-content {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    text-align: center;
+    transform: translateY(-50%);
+}
+
+.portfolio-box .portfolio-box-caption .portfolio-box-caption-content .project-category,
+.portfolio-box .portfolio-box-caption .portfolio-box-caption-content .project-name {
+    padding: 0 15px;
+    font-family: 'Open Sans','Helvetica Neue',Arial,sans-serif;
+}
+
+.portfolio-box .portfolio-box-caption .portfolio-box-caption-content .project-category {
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.portfolio-box .portfolio-box-caption .portfolio-box-caption-content .project-name {
+    font-size: 18px;
+}
+
+.portfolio-box:hover .portfolio-box-caption {
+    opacity: 1;
+}
+
+.outer-game-box {
+    padding: 10px 20px 10px 20px;
+    height: 160px;
+}
+
+.outer-game-box .portfolio-box {
+    height: 100%;
+}
+
+#dressup-box {
+    background-image: url("game_icons/dressup_background.png");
+}
+
+#puzzle-box {
+    background-image: url("game_icons/puzzle_background.png");
+}
+
+#watercolor-box {
+    background-image: url("game_icons/scratch_background.png");
+}
+
+#scratch-box {
+    background-image: url("game_icons/scratch_background.png");
+}
+
+#match-box {
+    background-image: url("game_icons/match_back.png");
+}
+
+#bubbles-box {
+    background-image: url("game_icons/bubble_background.png");
+}
+
+#treespy-box {
+    background-image: url("game_icons/tree_background.png");
+    background-size: cover;
+}
+
+#puzzle {
+    position: relative;
+    top: 30%;
+    width: 70px;
+}
+
+#watercolor {
+    position: relative;
+    width: 55px;
+    top: 7%;
+}
+
+#scratch {
+    position: relative;
+    width: 90px;
+    top: 15%;
+}
+
+#match {
+    position: relative;
+    width: 90px;
+    top: 20%;
+}
+
+#bubbles {
+    position: relative;
+    width: 60px;
+    top: 15%;
+    left: 5%;
+}
+
+#treespy {
+    position: relative;
+    top: 15%;
+    width: 90px;
+}
+
+.game-box {
+    font-size: 20px;
+    font-weight: 600;
+    top: 30%;
+    position: absolute;
+    padding-top: 5%;
+    margin-left: 30%;
+    margin-right: 10px;
+    width: 70%;
+    text-align: center;
+    color: #333333;
+    height: 50%;
+}
+
+.portfolio-box:hover .game-box {
+    color: #eeeeee;
+    opacity: 0.7;
+    background: rgba(240,95,64,.9);
+    -webkit-transition: all .35s;
+    -moz-transition: all .35s;
+    transition: all .35s;
+}
+
+@media(min-width:768px) {
+    .portfolio-box .portfolio-box-caption .portfolio-box-caption-content .project-category {
+        font-size: 16px;
+    }
+
+    .portfolio-box .portfolio-box-caption .portfolio-box-caption-content .project-name {
+        font-size: 22px;
+    }
+}

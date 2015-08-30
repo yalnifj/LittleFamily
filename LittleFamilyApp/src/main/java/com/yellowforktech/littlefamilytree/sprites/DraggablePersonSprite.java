@@ -14,6 +14,7 @@ public class DraggablePersonSprite extends TouchEventGameSprite {
     protected int maxWidth;
     protected int maxHeight;
 	protected boolean moving;
+    protected Sprite target;
 
     public DraggablePersonSprite(Bitmap bitmap, LittlePerson person, int maxWidth, int maxHeight, String eventTopic) {
         super(bitmap, eventTopic);
@@ -42,10 +43,23 @@ public class DraggablePersonSprite extends TouchEventGameSprite {
 	{
 		return maxHeight;
 	}
-	
-	
 
-	@Override
+    public Sprite getTarget() {
+        return target;
+    }
+
+    public void setTarget(Sprite target) {
+        this.target = target;
+        if (target!=null) {
+            moving = true;
+            sx = target.getX();
+            sy = target.getY();
+        } else {
+            moving = false;
+        }
+    }
+
+    @Override
 	public void doStep()
 	{
 		super.doStep();

@@ -15,12 +15,12 @@ import java.util.List;
 /**
  * Created by jfinlay on 1/12/2015.
  */
-public class FamilyLoaderTask extends AsyncTask<LittlePerson, String, ArrayList<LittlePerson>> implements DataNetworkStateListener {
+public class InitialDataLoaderTask extends AsyncTask<LittlePerson, String, ArrayList<LittlePerson>> implements DataNetworkStateListener {
     private Listener listener;
     private Context context;
     private DataService dataService;
 
-    public FamilyLoaderTask(Listener listener, Context context) {
+    public InitialDataLoaderTask(Listener listener, Context context) {
         this.listener = listener;
         this.context = context;
         dataService = DataService.getInstance();
@@ -30,18 +30,38 @@ public class FamilyLoaderTask extends AsyncTask<LittlePerson, String, ArrayList<
 
     @Override
     protected ArrayList<LittlePerson> doInBackground(LittlePerson[] persons) {
-        Log.d(this.getClass().getSimpleName(), "Starting FamilyLoaderTask.doInBackground "+persons);
+        Log.d(this.getClass().getSimpleName(), "Starting InitialDataLoaderTask.doInBackground "+persons);
         ArrayList<LittlePerson> familyMembers = new ArrayList<>();
         for (LittlePerson person : persons) {
             try {
                 List<LittlePerson> people = dataService.getFamilyMembers(person);
                 if (people != null) {
-                    for (LittlePerson p : people) {
-                        familyMembers.add(p);
-                        //dataService.getMediaForPerson(p);
-                        dataService.addToSyncQ(p, 1);
+                    familyMembers.addAll(people);
+                }
+            } catch (Exception e) {
+                Log.e(this.getClass().getSimpleName(), "error", e);
+            }
+        }
+
+        //-- grandparents
+        List<LittlePerson> grandParents = new ArrayList<>();
+        for(LittlePerson p : familyMembers) {
+            try {
+                List<LittlePerson> parents = dataService.getParents(p);
+                for(LittlePerson parent : parents) {
+                    if (!familyMembers.contains(parent)) {
+                        grandParents.add(parent);
                     }
                 }
+            } catch (Exception e) {
+                Log.e(this.getClass().getSimpleName(), "error", e);
+            }
+        }
+
+        //-- great grandparents
+        for(LittlePerson p : grandParents) {
+            try {
+                List<LittlePerson> parents = dataService.getParents(p);
             } catch (Exception e) {
                 Log.e(this.getClass().getSimpleName(), "error", e);
             }
@@ -55,10 +75,8 @@ public class FamilyLoaderTask extends AsyncTask<LittlePerson, String, ArrayList<
         }
     }
 
-
     @Override
     protected void onPostExecute(ArrayList<LittlePerson> familyMembers) {
-        dataService.unregisterNetworkStateListener(this);
         if (listener!=null) {
             listener.onComplete(familyMembers);
         }

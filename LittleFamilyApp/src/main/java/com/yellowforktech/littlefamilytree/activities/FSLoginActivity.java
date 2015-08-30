@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import com.yellowforktech.littlefamilytree.activities.tasks.AuthTask;
 import com.yellowforktech.littlefamilytree.activities.tasks.FSPedigreeTask;
-import com.yellowforktech.littlefamilytree.activities.tasks.FamilyLoaderTask;
+import com.yellowforktech.littlefamilytree.activities.tasks.InitialDataLoaderTask;
 import com.yellowforktech.littlefamilytree.activities.tasks.PersonLoaderTask;
 import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
@@ -25,13 +25,12 @@ import com.yellowforktech.littlefamilytree.remote.RemoteResult;
 import com.yellowforktech.littlefamilytree.remote.familysearch.FamilySearchService;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class FSLoginActivity extends Activity implements AuthTask.Listener, PersonLoaderTask.Listener, FamilyLoaderTask.Listener,
+public class FSLoginActivity extends Activity implements AuthTask.Listener, PersonLoaderTask.Listener, InitialDataLoaderTask.Listener,
         FSPedigreeTask.Listener {
     private static final String FS_DEFAULT_USER = "tum000205905";
     private static final String FS_DEFAULT_PASS = "1234pass";
@@ -171,7 +170,7 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
         if (person!=null) {
             pd.setMessage("Loading close family members from FamilySearch...");
             intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
-            FamilyLoaderTask task = new FamilyLoaderTask(this, this);
+            InitialDataLoaderTask task = new InitialDataLoaderTask(this, this);
             task.execute(person);
         } else {
             Toast.makeText(FSLoginActivity.this, "Error reading data from FamilySearch", Toast.LENGTH_LONG).show();
@@ -183,9 +182,10 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
         intent.putExtra(ChooseFamilyMember.FAMILY, familyMembers);
         setResult(Activity.RESULT_OK, intent);
 
+        /*
         LittlePerson[] people = null;
         LittlePerson person = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
-        pd.setMessage("Loading pedigree for "+person.getName());
+        pd.setMessage("Loading spouses for "+person.getName());
         try {
             List<LittlePerson> spouses = dataService.getSpouses(person);
             if (spouses!=null) {
@@ -207,6 +207,10 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
 
         FSPedigreeTask task = new FSPedigreeTask(this);
         task.execute(people);
+        */
+        dataService.resumeSync();
+        if (pd!=null) pd.dismiss();
+        finish();
     }
 
     @Override

@@ -66,7 +66,7 @@ public class BirdSprite extends AnimatedBitmapSprite {
             if (state==0) {
                 state = 1+random.nextInt(2);
 
-                if (state==2) {
+                if (state==2 && visible) {
                     try {
                         tweet = MediaPlayer.create(context, R.raw.bird);
                         tweet.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {

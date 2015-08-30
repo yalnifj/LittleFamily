@@ -80,7 +80,7 @@ public class MatchGameListAdapter extends BaseAdapter {
         }
 
         GridView grid = (GridView) parent;
-        int width = grid.getColumnWidth();
+        int width = parent.getWidth()/grid.getNumColumns();
         int height = width;
         int rows = getCount() / grid.getNumColumns();
         if (rows * (height+12) > grid.getHeight()) {
