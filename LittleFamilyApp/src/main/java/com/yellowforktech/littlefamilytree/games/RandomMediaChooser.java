@@ -7,6 +7,7 @@ import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.data.Media;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -34,6 +35,19 @@ public class RandomMediaChooser implements MemoriesLoaderTask.Listener {
 
         usedPhotos = new ArrayList<>(10);
         noPhotos = new ArrayList<>();
+
+        Iterator<LittlePerson> iterator = this.people.iterator();
+        while(iterator.hasNext()) {
+            LittlePerson person = iterator.next();
+            if (person.isHasMedia()!=null && person.isHasMedia()==false) {
+                noPhotos.add(person);
+                iterator.remove();
+            }
+        }
+
+        if (this.people.size()<3) {
+            loadMoreFamilyMembers();
+        }
     }
 
     public int getMaxTries() {
@@ -81,9 +95,15 @@ public class RandomMediaChooser implements MemoriesLoaderTask.Listener {
         if (backgroundLoadIndex < maxTries) {
             FamilyLoaderTask task = new FamilyLoaderTask(new FamilyLoaderListener(), activity);
             if (selectedPerson==null) {
-                selectedPerson = people.get(0);
+                if (people.size()>0) {
+                    selectedPerson = people.get(0);
+                } else {
+                    selectedPerson = noPhotos.get(0);
+                }
             }
-            task.execute(selectedPerson);
+            if (selectedPerson!=null) {
+                task.execute(selectedPerson);
+            }
         } else {
             loadRandomImage();
         }

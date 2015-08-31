@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class DBHelper extends SQLiteOpenHelper {
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 	public static final String UUID_PROPERTY = "UUID";
 	private static final String DATABASE_NAME = "LittleFamily.db";
 
@@ -61,12 +61,14 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String COL_HAS_PARENTS = "hasParents";
 	private static final String COL_HAS_CHILDREN = "hasChildren";
 	private static final String COL_HAS_SPOUSES = "hasSpouses";
+	private static final String COL_HAS_MEDIA = "hasMedia";
 	
 	private static final String CREATE_LITTLE_PERSON = "create table "+TABLE_LITTLE_PERSON+" ( " +
 			" "+COL_ID+" integer primary key, "+COL_GIVEN_NAME+" text, "+COL_NAME+" text, " +
 			" "+COL_FAMILY_SEARCH_ID+" text, "+COL_PHOTO_PATH+" text, "+COL_BIRTH_DATE+" integer, " + COL_BIRTH_PLACE+" text, "+
 			" "+COL_NATIONALITY+" text, "+COL_AGE+" integer, "+COL_GENDER+" char, "+COL_ALIVE+" char, "+
-            " "+COL_HAS_PARENTS+" char, "+COL_HAS_CHILDREN+" char, "+COL_HAS_SPOUSES+" char, "+COL_ACTIVE+" char, "+COL_LAST_SYNC+" INTEGER );";
+            " "+COL_HAS_PARENTS+" char, "+COL_HAS_CHILDREN+" char, "+COL_HAS_SPOUSES+" char, "+COL_HAS_MEDIA+" char, "+
+			" "+COL_ACTIVE+" char, "+COL_LAST_SYNC+" INTEGER );";
 
 	private static final String CREATE_RELATIONSHIP = "create table " + TABLE_RELATIONSHIP + " ( "
             +COL_ID +" integer primary key, "
@@ -121,7 +123,12 @@ public class DBHelper extends SQLiteOpenHelper {
 	
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		//-- still on version 1.0, no need to upgrade
+		if (oldVersion!=newVersion) {
+			if (newVersion == 2) {
+				String sql = "update table " + TABLE_LITTLE_PERSON + " add column " + COL_HAS_MEDIA + " char default null";
+				db.execSQL(sql);
+			}
+		}
 	}
 
     public Long dateToLong(Date date) {
@@ -169,6 +176,7 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put(COL_HAS_PARENTS, getYorNorNullForBoolean(person.isHasParents()));
 		values.put(COL_HAS_CHILDREN, getYorNorNullForBoolean(person.isHasChildren()));
 		values.put(COL_HAS_SPOUSES, getYorNorNullForBoolean(person.isHasSpouses()));
+		values.put(COL_HAS_MEDIA, getYorNorNullForBoolean(person.isHasMedia()));
 		
 		// -- add
 		if (person.getId() == 0) {
@@ -196,7 +204,8 @@ public class DBHelper extends SQLiteOpenHelper {
 		String[] projection = {
 			COL_GIVEN_NAME, COL_GENDER, COL_PHOTO_PATH, COL_NAME,
 			COL_AGE, COL_BIRTH_DATE, COL_BIRTH_PLACE, COL_NATIONALITY, COL_FAMILY_SEARCH_ID,
-			COL_ID, COL_LAST_SYNC, COL_ALIVE, COL_ACTIVE, COL_HAS_PARENTS, COL_HAS_CHILDREN, COL_HAS_SPOUSES
+			COL_ID, COL_LAST_SYNC, COL_ALIVE, COL_ACTIVE, COL_HAS_PARENTS, COL_HAS_CHILDREN,
+			COL_HAS_SPOUSES, COL_HAS_MEDIA
 		};
 		String selection = COL_ID + " LIKE ?";
 		String[] selectionArgs = { String.valueOf(id) };
@@ -251,7 +260,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		String[] projection = {
 			COL_GIVEN_NAME, COL_GENDER, COL_PHOTO_PATH, COL_NAME,
 			COL_AGE, COL_BIRTH_DATE, COL_BIRTH_PLACE, COL_NATIONALITY, COL_FAMILY_SEARCH_ID, COL_LAST_SYNC,
-			COL_ID, COL_ALIVE, COL_ACTIVE, COL_HAS_PARENTS, COL_HAS_CHILDREN, COL_HAS_SPOUSES
+			COL_ID, COL_ALIVE, COL_ACTIVE, COL_HAS_PARENTS, COL_HAS_CHILDREN, COL_HAS_SPOUSES, COL_HAS_MEDIA
 		};
 		String selection = COL_FAMILY_SEARCH_ID + " LIKE ?";
 		String[] selectionArgs = { fsid };
@@ -273,7 +282,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		String[] projection = {
 				COL_GIVEN_NAME, COL_GENDER, COL_PHOTO_PATH, COL_NAME,
 				COL_AGE, COL_BIRTH_DATE, COL_BIRTH_PLACE, COL_NATIONALITY, COL_FAMILY_SEARCH_ID, COL_LAST_SYNC,
-				COL_ID, COL_ALIVE, COL_ACTIVE, COL_HAS_PARENTS, COL_HAS_CHILDREN, COL_HAS_SPOUSES
+				COL_ID, COL_ALIVE, COL_ACTIVE, COL_HAS_PARENTS, COL_HAS_CHILDREN, COL_HAS_SPOUSES, COL_HAS_MEDIA
 		};
 		String selection = "";
 		String[] selectionArgs = new String[params.size()];
@@ -311,7 +320,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		String[] projection = {
 			COL_GIVEN_NAME, COL_GENDER, COL_PHOTO_PATH, COL_NAME,
 			COL_AGE, COL_BIRTH_DATE, COL_BIRTH_PLACE, COL_NATIONALITY, COL_FAMILY_SEARCH_ID, COL_LAST_SYNC,
-			"p."+COL_ID, COL_ALIVE, COL_ACTIVE, "r."+COL_TYPE, COL_HAS_PARENTS, COL_HAS_CHILDREN, COL_HAS_SPOUSES
+			"p."+COL_ID, COL_ALIVE, COL_ACTIVE, "r."+COL_TYPE, COL_HAS_PARENTS, COL_HAS_CHILDREN, COL_HAS_SPOUSES, COL_HAS_MEDIA
 		};
 		String selection = "(r."+COL_ID1 + " LIKE ? or r."+COL_ID2+" LIKE ?) and p.active='Y'";
 
@@ -349,7 +358,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String[] projection = {
                 COL_GIVEN_NAME, COL_GENDER, COL_PHOTO_PATH, COL_NAME,
                 COL_AGE, COL_BIRTH_DATE, COL_BIRTH_PLACE, COL_NATIONALITY, COL_FAMILY_SEARCH_ID, COL_LAST_SYNC,
-                "p."+COL_ID, COL_ALIVE, COL_ACTIVE, COL_HAS_PARENTS, COL_HAS_CHILDREN, COL_HAS_SPOUSES
+                "p."+COL_ID, COL_ALIVE, COL_ACTIVE, COL_HAS_PARENTS, COL_HAS_CHILDREN, COL_HAS_SPOUSES, COL_HAS_MEDIA
         };
         String selection = "r."+COL_ID2+" LIKE ? and r."+COL_TYPE+"=? and p.active='Y'";
 
@@ -375,7 +384,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		String[] projection = {
 				COL_GIVEN_NAME, COL_GENDER, COL_PHOTO_PATH, COL_NAME,
 				COL_AGE, COL_BIRTH_DATE, COL_BIRTH_PLACE, COL_NATIONALITY, COL_FAMILY_SEARCH_ID, COL_LAST_SYNC,
-				"p."+COL_ID, COL_ALIVE, COL_ACTIVE, COL_HAS_PARENTS, COL_HAS_CHILDREN, COL_HAS_SPOUSES
+				"p."+COL_ID, COL_ALIVE, COL_ACTIVE, COL_HAS_PARENTS, COL_HAS_CHILDREN, COL_HAS_SPOUSES, COL_HAS_MEDIA
 		};
 		String selection = "r."+COL_ID1+" LIKE ? and r."+COL_TYPE+"=? and p.active='Y'";
 
@@ -403,7 +412,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		String[] projection = {
 				COL_GIVEN_NAME, COL_GENDER, COL_PHOTO_PATH, COL_NAME,
 				COL_AGE, COL_BIRTH_DATE, COL_BIRTH_PLACE, COL_NATIONALITY, COL_FAMILY_SEARCH_ID, COL_LAST_SYNC,
-				"p."+COL_ID, COL_ALIVE, COL_ACTIVE, COL_HAS_PARENTS, COL_HAS_CHILDREN, COL_HAS_SPOUSES
+				"p."+COL_ID, COL_ALIVE, COL_ACTIVE, COL_HAS_PARENTS, COL_HAS_CHILDREN, COL_HAS_SPOUSES, COL_HAS_MEDIA
 		};
 		String selection = "(r."+COL_ID1+" LIKE ? or r."+COL_ID2+" LIKE ?) and r."+COL_TYPE+"=? and p.active='Y'";
 
@@ -471,6 +480,10 @@ public class DBHelper extends SQLiteOpenHelper {
 		if (hasSpousesStr.equals("Y")) person.setHasSpouses(true);
 		else if (hasSpousesStr.equals("N")) person.setHasSpouses(false);
 		else person.setHasSpouses(null);
+		String hasMediaStr = c.getString(c.getColumnIndexOrThrow(COL_HAS_MEDIA));
+		if (hasMediaStr.equals("Y")) person.setHasMedia(true);
+		else if (hasMediaStr.equals("N")) person.setHasMedia(false);
+		else person.setHasMedia(null);
 
 		return person;
 	}

@@ -449,6 +449,7 @@ public class DataService implements AuthTask.Listener {
         }
 
         List<SourceDescription> sds = remoteService.getPersonMemories(person.getFamilySearchId(), true);
+        boolean foundMedia = false;
         if (sds != null) {
             List<Media> oldMedia = getDBHelper().getMediaForPerson(person.getId());
             for (SourceDescription sd : sds) {
@@ -463,6 +464,7 @@ public class DataService implements AuthTask.Listener {
                                 med.setFamilySearchId(sd.getId());
                                 String localPath = DataHelper.downloadFile(link.getHref().toString(), person.getFamilySearchId(), DataHelper.lastPath(link.getHref().toString()), remoteService, context);
                                 if (localPath != null) {
+                                    foundMedia = true;
                                     med.setLocalPath(localPath);
                                     getDBHelper().persistMedia(med);
                                     Tag tag = new Tag();
@@ -474,12 +476,25 @@ public class DataService implements AuthTask.Listener {
                         }
                     }
                 } else {
+                    foundMedia = true;
                     oldMedia.remove(med);
                 }
             }
 
             for (Media old : oldMedia) {
                 getDBHelper().deleteMediaById(old.getId());
+            }
+
+            if (foundMedia) {
+                if (person.isHasMedia() == null || person.isHasMedia() == false) {
+                    person.setHasMedia(true);
+                    getDBHelper().persistLittlePerson(person);
+                }
+            } else {
+                if (person.isHasMedia() == null || person.isHasMedia() == true) {
+                    person.setHasMedia(false);
+                    getDBHelper().persistLittlePerson(person);
+                }
             }
         }
     }
@@ -883,56 +898,66 @@ public class DataService implements AuthTask.Listener {
 
     public List<Media> getMediaForPerson(LittlePerson person) throws Exception {
         List<Media> media = getDBHelper().getMediaForPerson(person.getId());
-        if (media==null || media.size()==0) {
-            media = new ArrayList<>();
-            try {
-                fireNetworkStateChanged(DataNetworkState.REMOTE_STARTING);
-                waitForAuth();
-                List<SourceDescription> sds = remoteService.getPersonMemories(person.getFamilySearchId(), true);
-                if (sds!=null) {
-                    for (SourceDescription sd : sds) {
-                        Media med = getDBHelper().getMediaByFamilySearchId(sd.getId());
-                        if (med == null) {
-                            List<Link> links = sd.getLinks();
-                            if (links != null) {
-                                for (Link link : links) {
-                                    try {
-                                        if (link.getRel() != null && link.getRel().equals("image")) {
-                                            med = new Media();
-                                            med.setType("photo");
-                                            med.setFamilySearchId(sd.getId());
-                                            String folderName = person.getFamilySearchId();
-                                            String fileName = DataHelper.lastPath(link.getHref().toString());
-                                            File localFile = DataHelper.getImageFile(folderName, fileName, context);
-                                            String localPath = null;
-                                            if (!localFile.exists()) {
-                                                localPath = DataHelper.downloadFile(link.getHref().toString(), folderName, fileName, remoteService, context);
-                                            } else {
-                                                localPath = localFile.getAbsolutePath();
+        if (person.isHasMedia()==null) {
+            if (media == null || media.size() == 0) {
+                media = new ArrayList<>();
+                try {
+                    boolean mediaFound = false;
+                    fireNetworkStateChanged(DataNetworkState.REMOTE_STARTING);
+                    waitForAuth();
+                    List<SourceDescription> sds = remoteService.getPersonMemories(person.getFamilySearchId(), true);
+                    if (sds != null) {
+                        for (SourceDescription sd : sds) {
+                            Media med = getDBHelper().getMediaByFamilySearchId(sd.getId());
+                            if (med == null) {
+                                List<Link> links = sd.getLinks();
+                                if (links != null) {
+                                    for (Link link : links) {
+                                        try {
+                                            if (link.getRel() != null && link.getRel().equals("image")) {
+                                                med = new Media();
+                                                med.setType("photo");
+                                                med.setFamilySearchId(sd.getId());
+                                                String folderName = person.getFamilySearchId();
+                                                String fileName = DataHelper.lastPath(link.getHref().toString());
+                                                File localFile = DataHelper.getImageFile(folderName, fileName, context);
+                                                String localPath = null;
+                                                if (!localFile.exists()) {
+                                                    localPath = DataHelper.downloadFile(link.getHref().toString(), folderName, fileName, remoteService, context);
+                                                } else {
+                                                    localPath = localFile.getAbsolutePath();
+                                                }
+                                                if (localPath != null) {
+                                                    mediaFound = true;
+                                                    med.setLocalPath(localPath);
+                                                    getDBHelper().persistMedia(med);
+                                                    media.add(med);
+                                                    Tag tag = new Tag();
+                                                    tag.setMediaId(med.getId());
+                                                    tag.setPersonId(person.getId());
+                                                    getDBHelper().persistTag(tag);
+                                                }
                                             }
-                                            if (localPath != null) {
-                                                med.setLocalPath(localPath);
-                                                getDBHelper().persistMedia(med);
-                                                media.add(med);
-                                                Tag tag = new Tag();
-                                                tag.setMediaId(med.getId());
-                                                tag.setPersonId(person.getId());
-                                                getDBHelper().persistTag(tag);
-                                            }
+                                        } catch (Exception e) {
+                                            Log.e(this.getClass().getSimpleName(), "Error loading image ", e);
                                         }
-                                    } catch(Exception e) {
-                                        Log.e(this.getClass().getSimpleName(), "Error loading image ", e);
                                     }
                                 }
+                            } else {
+                                media.add(med);
                             }
-                        } else {
-                            media.add(med);
                         }
                     }
+                    if (mediaFound) {
+                        person.setHasMedia(true);
+                    } else {
+                        person.setHasMedia(false);
+                    }
+                    getDBHelper().persistLittlePerson(person);
+                    fireNetworkStateChanged(DataNetworkState.REMOTE_FINISHED);
+                } catch (RemoteServiceSearchException e) {
+                    Log.e(this.getClass().getSimpleName(), "error", e);
                 }
-                fireNetworkStateChanged(DataNetworkState.REMOTE_FINISHED);
-            } catch(RemoteServiceSearchException e) {
-                Log.e(this.getClass().getSimpleName(), "error", e);
             }
         }
         return media;

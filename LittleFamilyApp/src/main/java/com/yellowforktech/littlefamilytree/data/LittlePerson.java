@@ -37,6 +37,7 @@ public class LittlePerson implements Serializable {
     private Boolean hasParents;
     private Boolean hasChildren;
     private Boolean hasSpouses;
+    private Boolean hasMedia;
 
     @Override
     public String toString() {
@@ -325,6 +326,14 @@ public class LittlePerson implements Serializable {
 
     public void setHasSpouses(Boolean hasSpouses) {
         this.hasSpouses = hasSpouses;
+    }
+
+    public Boolean isHasMedia() {
+        return hasMedia;
+    }
+
+    public void setHasMedia(Boolean hasMedia) {
+        this.hasMedia = hasMedia;
     }
 
     @Override
