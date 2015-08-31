@@ -125,7 +125,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		if (oldVersion!=newVersion) {
 			if (newVersion == 2) {
-				String sql = "update table " + TABLE_LITTLE_PERSON + " add column " + COL_HAS_MEDIA + " char default null";
+				String sql = "alter table " + TABLE_LITTLE_PERSON + " add column " + COL_HAS_MEDIA + " char default ''";
 				db.execSQL(sql);
 			}
 		}
@@ -481,8 +481,8 @@ public class DBHelper extends SQLiteOpenHelper {
 		else if (hasSpousesStr.equals("N")) person.setHasSpouses(false);
 		else person.setHasSpouses(null);
 		String hasMediaStr = c.getString(c.getColumnIndexOrThrow(COL_HAS_MEDIA));
-		if (hasMediaStr.equals("Y")) person.setHasMedia(true);
-		else if (hasMediaStr.equals("N")) person.setHasMedia(false);
+		if (hasMediaStr!=null && hasMediaStr.equals("Y")) person.setHasMedia(true);
+		else if (hasMediaStr!=null && hasMediaStr.equals("N")) person.setHasMedia(false);
 		else person.setHasMedia(null);
 
 		return person;
