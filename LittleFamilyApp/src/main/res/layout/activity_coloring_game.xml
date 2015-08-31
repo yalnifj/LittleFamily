@@ -42,7 +42,8 @@
                 android:src="@android:drawable/ic_media_next"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:onClick="nextImage" />
+                android:onClick="nextImage"
+                style="@android:style/Widget.Holo.Button" />
 
             <ImageButton
                 android:id="@+id/shareBtn"
@@ -50,7 +51,8 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:onClick="shareImage"
-                android:visibility="visible"/>
+                android:visibility="visible"
+                style="@android:style/Widget.Holo.Button" />
         </LinearLayout>
     </LinearLayout>
 

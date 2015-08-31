@@ -17,6 +17,8 @@ public class DraggablePersonSprite extends TouchEventGameSprite {
     protected Sprite target;
 	protected int sw;
 	protected int sh;
+	protected int thresholdX = 1;
+	protected int thresholdY = 1;
 
     public DraggablePersonSprite(Bitmap bitmap, LittlePerson person, int maxWidth, int maxHeight, String eventTopic) {
         super(bitmap, eventTopic);
@@ -46,7 +48,23 @@ public class DraggablePersonSprite extends TouchEventGameSprite {
 		return maxHeight;
 	}
 
-    public Sprite getTarget() {
+	public int getThresholdX() {
+		return thresholdX;
+	}
+
+	public void setThresholdX(int thresholdX) {
+		this.thresholdX = thresholdX;
+	}
+
+	public int getThresholdY() {
+		return thresholdY;
+	}
+
+	public void setThresholdY(int thresholdY) {
+		this.thresholdY = thresholdY;
+	}
+
+	public Sprite getTarget() {
         return target;
     }
 
@@ -54,18 +72,37 @@ public class DraggablePersonSprite extends TouchEventGameSprite {
         this.target = target;
     }
 
+	public void setTargetX(int x) {
+		sx = x;
+	}
+
+	public void setTargetY(int y) {
+		sy = y;
+	}
+
+	public void setTargetWidth(int w) {
+		this.sw = w;
+	}
+
+	public void setTargetHeight(int h) {
+		float r = height/width;
+		this.sh = h;
+		this.sw = (int) (h / r);
+	}
+
     @Override
 	public void doStep()
 	{
 		super.doStep();
 		if (moving) {
+			/*
 			if (target!=null) {
 				sx = target.getX();
 				sy = target.getY();
 				float r = height/width;
 				sw = (int)((target.getHeight()-5)/r);
 				sh = (target.getHeight()-5);
-			}
+			}*/
 			if (x > sx - 3 && x < sx+3 && y>sy-3 && y<sy+3) {
 				this.x = sx;
 				this.y = sy;
@@ -101,7 +138,8 @@ public class DraggablePersonSprite extends TouchEventGameSprite {
     @Override
     public boolean onMove(float oldX, float oldY, float newX, float newY) {
         float xdiff = newX-oldX;
-        if (!moved && Math.abs(xdiff) < 10) {
+		float ydiff = newY-oldY;
+        if (!moved && (Math.abs(xdiff) < thresholdX || Math.abs(ydiff) < thresholdY)) {
             return false;
         }
 
@@ -109,7 +147,7 @@ public class DraggablePersonSprite extends TouchEventGameSprite {
         if (x<0) x = 0;
         if (x + width > maxWidth) x = maxWidth - width;
 
-        y += (newY - oldY);
+        y += ydiff;
         if (y<0) y = 0;
         if (y +height > maxHeight) y = maxHeight - height;
 

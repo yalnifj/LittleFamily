@@ -12,6 +12,7 @@ import android.graphics.Rect;
 import android.media.MediaPlayer;
 import android.util.AttributeSet;
 import android.view.HapticFeedbackConstants;
+import android.view.SurfaceHolder;
 
 import com.yellowforktech.littlefamilytree.sprites.ScratchBitsSprite;
 import com.yellowforktech.littlefamilytree.sprites.Sprite;
@@ -60,6 +61,22 @@ public class ScratchView extends SpritedSurfaceView {
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
         mPaint.setStrokeWidth(12);
+    }
+
+    @Override
+    public void pause() {
+        super.pause();
+        if (mediaPlayer!=null && mediaPlayer.isPlaying()) {
+            mediaPlayer.stop();
+        }
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        super.surfaceDestroyed(holder);
+        if (mediaPlayer!=null && mediaPlayer.isPlaying()) {
+            mediaPlayer.stop();
+        }
     }
 
     @Override

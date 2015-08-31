@@ -25,6 +25,7 @@ public class BirdSprite extends AnimatedBitmapSprite {
     private boolean moved = false;
     private String eventTopic;
     private MediaPlayer tweet;
+    private boolean stateChanged = false;
 
     public BirdSprite(Bitmap bitmap, Context context, String eventTopic) {
         super(bitmap);
@@ -64,23 +65,7 @@ public class BirdSprite extends AnimatedBitmapSprite {
             delay--;
         } else {
             if (state==0) {
-                state = 1+random.nextInt(2);
-
-                if (state==2 && visible) {
-                    try {
-                        tweet = MediaPlayer.create(context, R.raw.bird);
-                        tweet.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                            @Override
-                            public void onCompletion(MediaPlayer mp) {
-                                mp.release();
-                            }
-                        });
-                        tweet.start();
-                    } catch (Exception e) {
-                        // just let things go on
-                        Log.e(getClass().getSimpleName(), "Error playing audio", e);
-                    }
-                }
+                state = 1;
 
                 isFlipped = random.nextBoolean();
 
@@ -98,12 +83,36 @@ public class BirdSprite extends AnimatedBitmapSprite {
                 }
             }
         }
+
+        if (stateChanged && state==2 && visible) {
+            try {
+                tweet = MediaPlayer.create(context, R.raw.bird);
+                tweet.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        mp.release();
+                    }
+                });
+                tweet.start();
+            } catch (Exception e) {
+                // just let things go on
+                Log.e(getClass().getSimpleName(), "Error playing audio", e);
+            }
+        }
+        if (state==2) {
+            if (frame==0 && oldFrame!=0) {
+                EventQueue.getInstance().publish(eventTopic, this);
+                state = 0;
+            }
+        }
     }
 
     @Override
     public void onRelease(float x, float y) {
         if (!moved) {
-            EventQueue.getInstance().publish(eventTopic, this);
+            state = 2;
+            frame = 0;
+            stateChanged = true;
         }
         moved = false;
     }
