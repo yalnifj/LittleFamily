@@ -81,7 +81,9 @@ public class DraggablePersonSprite extends TouchEventGameSprite {
 	}
 
 	public void setTargetWidth(int w) {
+		float r = height/width;
 		this.sw = w;
+		this.sh = (int) (w * r);
 	}
 
 	public void setTargetHeight(int h) {

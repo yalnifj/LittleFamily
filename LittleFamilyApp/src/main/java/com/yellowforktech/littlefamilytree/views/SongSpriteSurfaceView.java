@@ -350,7 +350,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
         if (replaceReady) {
             int i=0;
             while(i<peopleSprites.size()) {
-                if (y>peopleSprites.get(i).getY()) {
+                if (y<peopleSprites.get(i).getY()) {
                     break;
                 }
                 i++;
@@ -362,6 +362,16 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
                 }
             }
             reorderPeople();
+            for(Sprite s : selectedSprites) {
+                if (s instanceof DraggablePersonSprite) {
+                    DraggablePersonSprite ds = (DraggablePersonSprite) s;
+                    ds.setTargetX((int) ds.getX());
+                    ds.setTargetY((int) ds.getY());
+                    int width = (int) (getWidth() * 0.17f);
+                    if (width > 250) width = 250;
+                    ds.setTargetWidth(width);
+                }
+            }
         }
         replaceReady = false;
 		
