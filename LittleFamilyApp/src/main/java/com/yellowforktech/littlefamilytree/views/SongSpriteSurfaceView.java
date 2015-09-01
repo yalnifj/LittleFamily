@@ -82,9 +82,9 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
         pianoPlayer = MediaPlayer.create(context, R.raw.piano_allinourfamilytree);
         drumsPlayer = MediaPlayer.create(context, R.raw.drums_allinourfamilytree);
         flutePlayer = MediaPlayer.create(context, R.raw.flute_allinourfamilytree);
-        flutePlayer.setVolume(0.3f, 0.3f);
+        flutePlayer.setVolume(0.5f, 0.5f);
         violinPlayer = MediaPlayer.create(context, R.raw.violin_allinourfamilytree);
-        flutePlayer.setVolume(0.2f, 0.2f);
+        flutePlayer.setVolume(0.1f, 0.1f);
     }
 
     @Override
