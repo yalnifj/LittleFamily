@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SongActivity extends LittleFamilyActivity {
-
     private SongSpriteSurfaceView view;
     private List<LittlePerson> people;
     private List<LittlePerson> parents;

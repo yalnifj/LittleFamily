@@ -674,6 +674,17 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
+	public Media getRandomMedia() {
+		Media media = null;
+		SQLiteDatabase db = getReadableDatabase();
+		Cursor c = db.rawQuery("select * from " + TABLE_MEDIA+" ORDER BY RANDOM() limit 1", null);
+		while (c.moveToNext()) {
+			media = mediaFromCursor(c);
+		}
+		c.close();
+		return media;
+	}
+
     private Media mediaFromCursor(Cursor c) {
         Media m = new Media();
         m.setFamilySearchId(c.getString(c.getColumnIndexOrThrow(COL_FAMILY_SEARCH_ID)));

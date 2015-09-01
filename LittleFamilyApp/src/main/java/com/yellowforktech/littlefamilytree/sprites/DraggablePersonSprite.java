@@ -81,18 +81,26 @@ public class DraggablePersonSprite extends TouchEventGameSprite {
 	}
 
 	public void setTargetWidth(int w) {
-		float r = height/width;
+		float r = (float) height/width;
 		this.sw = w;
 		this.sh = (int) (w * r);
 	}
 
 	public void setTargetHeight(int h) {
-		float r = height/width;
+		float r = (float) height/width;
 		this.sh = h;
 		this.sw = (int) (h / r);
 	}
 
-    @Override
+	public boolean isMoving() {
+		return moving;
+	}
+
+	public void setMoving(boolean moving) {
+		this.moving = moving;
+	}
+
+	@Override
 	public void doStep()
 	{
 		super.doStep();

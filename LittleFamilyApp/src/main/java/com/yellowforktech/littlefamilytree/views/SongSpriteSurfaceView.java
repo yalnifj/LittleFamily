@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.media.MediaPlayer;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 
@@ -28,6 +29,8 @@ import java.util.List;
  */
 public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventListener {
     public static final String TOPIC_PERSON_TOUCHED = "topic_person_touched";
+    public static final String TOPIC_PLAY_SONG = "playPauseSong";
+    public static final String TOPIC_PLAY_RESET = "resetStage";
     private List<LittlePerson> family;
     private DisplayMetrics dm;
     private boolean spritesCreated = false;
@@ -53,6 +56,14 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
     private int manHeight = 0;
     private int womanWidth = 0;
     private int womanHeight = 0;
+    protected int rotation = 0;
+    protected int rotateDir = 1;
+    protected MediaPlayer pianoPlayer;
+    protected MediaPlayer drumsPlayer;
+    protected MediaPlayer flutePlayer;
+    protected MediaPlayer violinPlayer;
+
+    private boolean playing = false;
 
     public SongSpriteSurfaceView(Context context) {
         super(context);
@@ -68,18 +79,28 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
         multiSelect = false;
         peopleSprites = new ArrayList<>();
 		onStage = new ArrayList<>();
+        pianoPlayer = MediaPlayer.create(context, R.raw.piano_allinourfamilytree);
+        drumsPlayer = MediaPlayer.create(context, R.raw.drums_allinourfamilytree);
+        flutePlayer = MediaPlayer.create(context, R.raw.flute_allinourfamilytree);
+        flutePlayer.setVolume(0.3f, 0.3f);
+        violinPlayer = MediaPlayer.create(context, R.raw.violin_allinourfamilytree);
+        flutePlayer.setVolume(0.2f, 0.2f);
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         EventQueue.getInstance().unSubscribe(TOPIC_PERSON_TOUCHED, this);
+        EventQueue.getInstance().unSubscribe(TOPIC_PLAY_SONG, this);
+        EventQueue.getInstance().unSubscribe(TOPIC_PLAY_RESET, this);
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         EventQueue.getInstance().subscribe(TOPIC_PERSON_TOUCHED, this);
+        EventQueue.getInstance().subscribe(TOPIC_PLAY_SONG, this);
+        EventQueue.getInstance().subscribe(TOPIC_PLAY_RESET, this);
     }
 
     public LittleFamilyActivity getActivity() {
@@ -126,17 +147,29 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
         }
 
         super.doStep();
+
+        if (playing) {
+            rotation += rotateDir;
+            if (rotation > 10) {
+                rotateDir = -1;
+            }
+            if (rotation < -10) {
+                rotateDir = 1;
+            }
+        } else {
+            rotation = 0;
+        }
 		
 		Iterator<DraggablePersonSprite> i = peopleSprites.iterator();
 		while (i.hasNext()) {
-			Sprite s = i.next();
+            DraggablePersonSprite s = i.next();
 			s.doStep();
 			if (s.isRemoveMe()) i.remove();
 		}
 		
 		i = onStage.iterator();
 		while (i.hasNext()) {
-			Sprite s = i.next();
+            DraggablePersonSprite s = i.next();
 			s.doStep();
 			if (s.isRemoveMe()) i.remove();
 		}
@@ -145,6 +178,8 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
     public void createSprites() {
         synchronized (sprites) {
             sprites.clear();
+            onStage.clear();
+            peopleSprites.clear();
         }
 
         maxHeight = this.getHeight();
@@ -155,12 +190,34 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 
         manWidth = stage.getWidth()/7;
         womanWidth = (int) (manWidth + 4 * dm.density);
+
+        Bitmap drumsBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.drums, 0, (int)(width*1.7), (int)(width*1.7));
+        TouchStateAnimatedBitmapSprite drumKit = new TouchStateAnimatedBitmapSprite(drumsBm, activity);
+        drumKit.setX(stage.getWidth()/2 - drumsBm.getWidth()/3);
+        drumKit.setY(stage.getHeight() - (55 * dm.density + drumsBm.getHeight()));
+        drumKit.setResources(getResources());
+        addSprite(drumKit);
+
         Bitmap gPianoBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.piano, 0, (int)(width*1.7), (int)(width*1.7));
         TouchStateAnimatedBitmapSprite gPiano = new TouchStateAnimatedBitmapSprite(gPianoBm, activity);
-        gPiano.setX(getWidth() - (10 * dm.density + width + gPianoBm.getWidth()));
-        gPiano.setY(stage.getHeight() - (20 * dm.density + gPianoBm.getHeight()));
+        gPiano.setX(getWidth() - (15 * dm.density + width + gPianoBm.getWidth()));
+        gPiano.setY(stage.getHeight() - (10 * dm.density + gPianoBm.getHeight()));
         gPiano.setResources(getResources());
         addSprite(gPiano);
+
+        Bitmap violinBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.violin, 0, (int)(width*1.8), (int)(width*1.8));
+        TouchStateAnimatedBitmapSprite violin = new TouchStateAnimatedBitmapSprite(violinBm, activity);
+        violin.setX(stage.getWidth()/2 - (violinBm.getWidth()*0.75f));
+        violin.setY(stage.getHeight() - (violinBm.getHeight()));
+        violin.setResources(getResources());
+        addSprite(violin);
+
+        Bitmap clarinetBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.clarinet, 0, (int)(width*1.5), (int)(width*1.5));
+        TouchStateAnimatedBitmapSprite clarinet = new TouchStateAnimatedBitmapSprite(clarinetBm, activity);
+        clarinet.setX(20*dm.density);
+        clarinet.setY(stage.getHeight() - (35 * dm.density + clarinetBm.getHeight()));
+        clarinet.setResources(getResources());
+        addSprite(clarinet);
 
         Bitmap man = ImageHelper.loadBitmapFromResource(activity, R.drawable.man_silhouette, 0, 
 				manWidth, manWidth);
@@ -225,42 +282,80 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
         List<Bitmap> pauseList = new ArrayList<>(1);
         pauseList.add(pause);
         playButton.getBitmaps().put(1, pauseList);
-        playButton.setX(stage.getWidth()/2 - width/2);
-        playButton.setY(70*dm.density);
+        playButton.setX(stage.getWidth() / 2 - width);
+        playButton.setY(70 * dm.density);
+        playButton.setStateTransitionEvent(0, TOPIC_PLAY_SONG);
+        playButton.setStateTransitionEvent(1, TOPIC_PLAY_SONG);
+        playButton.setIgnoreAlpha(true);
         addSprite(playButton);
+
+        Bitmap reset = ImageHelper.loadBitmapFromResource(context, android.R.drawable.ic_menu_revert, 0, width, width);
+        TouchStateAnimatedBitmapSprite resetButton = new TouchStateAnimatedBitmapSprite(reset, context);
+        resetButton.setX(stage.getWidth() / 2);
+        resetButton.setY(70 * dm.density);
+        resetButton.setStateTransitionEvent(0, TOPIC_PLAY_RESET);
+        resetButton.setIgnoreAlpha(true);
+        addSprite(resetButton);
 		
         spritesCreated = true;
     }
 	
 	private void reorderPeople() {
-		float x = getWidth() * 0.82f;
-		float y = 10*dm.density;
-		for(DraggablePersonSprite s : peopleSprites) {
-			s.setX(x);
-			s.setY(y);
-			y = y + s.getHeight() + (10 * dm.density);
-		}
+        synchronized (sprites) {
+            float x = getWidth() * 0.82f;
+            float y = 10 * dm.density;
+            int width = (int) (getWidth() * 0.17f);
+            if (width > 250) width = 250;
+            for (DraggablePersonSprite s : peopleSprites) {
+                s.setTargetX((int) x);
+                s.setTargetY((int) y);
+                s.setTargetHeight(width);
+                s.setMoving(true);
+                y = y + width + (10 * dm.density);
+            }
+
+            nextSpot = 0;
+            for (DraggablePersonSprite ds : onStage) {
+                if (nextSpot == 0)
+                    ds.setTarget(selPerson1);
+                else if (nextSpot == 1)
+                    ds.setTarget(selPerson2);
+                else if (nextSpot == 2)
+                    ds.setTarget(selPerson3);
+                else ds.setTarget(selPerson4);
+
+                if (ds.getTarget() != null) {
+                    ds.setTargetX((int) ds.getTarget().getX());
+                    ds.setTargetY((int) ds.getTarget().getY());
+                    ds.setTargetHeight(womanHeight);
+                    ds.setMoving(true);
+                }
+                nextSpot++;
+            }
+        }
 	}
 
     @Override
     protected void touch_start(float x, float y) {
         super.touch_start(x, y+clipY);
 
-        for(int i=peopleSprites.size()-1; i>=0; i--) {
-            Sprite s = peopleSprites.get(i);
-            if (s.inSprite(x, y+clipY)) {
-                selectedSprites.add(s);
-                s.onSelect(x, y+clipY);
-                if (!multiSelect) return;
+        if (!playing) {
+            for (int i = peopleSprites.size() - 1; i >= 0; i--) {
+                Sprite s = peopleSprites.get(i);
+                if (s.inSprite(x, y + clipY)) {
+                    selectedSprites.add(s);
+                    s.onSelect(x, y + clipY);
+                    if (!multiSelect) return;
+                }
             }
-        }
-		
-		for(int i=onStage.size()-1; i>=0; i--) {
-            Sprite s = onStage.get(i);
-            if (s.inSprite(x, y)) {
-                selectedSprites.add(s);
-                s.onSelect(x, y);
-                if (!multiSelect) return;
+
+            for (int i = onStage.size() - 1; i >= 0; i--) {
+                Sprite s = onStage.get(i);
+                if (s.inSprite(x, y)) {
+                    selectedSprites.add(s);
+                    s.onSelect(x, y);
+                    if (!multiSelect) return;
+                }
             }
         }
     }
@@ -278,39 +373,29 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
                 replaceReady = false;
 				if (s instanceof DraggablePersonSprite) {
 					DraggablePersonSprite ds = (DraggablePersonSprite) s;
-                    if (moved && dropRect.contains((int)s.getX(), (int)(s.getY()-clipY))) {
-                        dropReady = true;
-                        if (nextSpot==0)
-                            ds.setTarget(selPerson1);
-                        else if (nextSpot==1)
-                            ds.setTarget(selPerson2);
-                        else if (nextSpot==2)
-                            ds.setTarget(selPerson3);
-                        else ds.setTarget(selPerson4);
-
-                        if (ds.getTarget()!=null) {
-                            ds.setTargetX((int) ds.getTarget().getX());
-                            ds.setTargetY((int) ds.getTarget().getY());
-                            ds.setTargetHeight(womanHeight);
+                    if (!onStage.contains(ds)) {
+                        if (moved && onStage.size()<4 && dropRect.contains((int) s.getX(), (int) (s.getY() - clipY))) {
+                            dropReady = true;
+                        } else {
+                            ds.setTarget(null);
                         }
                     } else {
-                        ds.setTarget(null);
-                    }
-                    if (onStage.contains(ds)) {
                         if (moved && ds.getX() > getWidth() * 0.82f) {
-                            float py = 0;
+                            float py = 10 * dm.density;
                             replaceReady = true;
                             boolean adjusted = false;
                             for (DraggablePersonSprite p : peopleSprites) {
-                                if (!adjusted && p.getY() > ds.getY()) {
+                                if (!adjusted && p.getY() > ds.getY()+clipY) {
                                     py = py + p.getHeight() + (10 * dm.density);
                                     adjusted = true;
                                 }
-                                p.setY(py);
+                                p.setTargetY((int) py);
+                                p.setMoving(true);
                                 py = py + p.getHeight() + (10 * dm.density);
                             }
-                        } else {
+                        } else if (replaceReady){
                             reorderPeople();
+                            replaceReady=false;
                         }
                     }
 				}
@@ -332,48 +417,41 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
     protected void touch_up(float x, float y) {
 
 		if(dropReady) {
-			for(Sprite s : selectedSprites) {
-				if (s instanceof DraggablePersonSprite) {
-					DraggablePersonSprite ds = (DraggablePersonSprite) s;
-					peopleSprites.remove(ds);
-					onStage.add(ds);
-					ds.setY(ds.getY()-clipY);
-                    ds.setThresholdX(5);
-                    ds.setThresholdY(5);
-				}
-			}
-			nextSpot++;
-			reorderPeople();
+            synchronized (sprites) {
+                for (Sprite s : selectedSprites) {
+                    if (s instanceof DraggablePersonSprite) {
+                        DraggablePersonSprite ds = (DraggablePersonSprite) s;
+                        peopleSprites.remove(ds);
+                        onStage.add(ds);
+                        ds.setY(ds.getY() - clipY);
+                        ds.setThresholdX(5);
+                        ds.setThresholdY(5);
+                    }
+                }
+            }
 		}
         dropReady = false;
 
         if (replaceReady) {
-            int i=0;
-            while(i<peopleSprites.size()) {
-                if (y<peopleSprites.get(i).getY()) {
-                    break;
+            synchronized (sprites) {
+                int i = 0;
+                while (i < peopleSprites.size()) {
+                    if (y < peopleSprites.get(i).getY()) {
+                        break;
+                    }
+                    i++;
                 }
-                i++;
-            }
-            for(Sprite s : selectedSprites) {
-                if (s instanceof DraggablePersonSprite) {
-                    onStage.remove(s);
-                    peopleSprites.add(i, (DraggablePersonSprite) s);
-                }
-            }
-            reorderPeople();
-            for(Sprite s : selectedSprites) {
-                if (s instanceof DraggablePersonSprite) {
-                    DraggablePersonSprite ds = (DraggablePersonSprite) s;
-                    ds.setTargetX((int) ds.getX());
-                    ds.setTargetY((int) ds.getY());
-                    int width = (int) (getWidth() * 0.17f);
-                    if (width > 250) width = 250;
-                    ds.setTargetWidth(width);
+                for (Sprite s : selectedSprites) {
+                    if (s instanceof DraggablePersonSprite) {
+                        onStage.remove(s);
+                        peopleSprites.add(i, (DraggablePersonSprite) s);
+                    }
                 }
             }
         }
         replaceReady = false;
+
+        reorderPeople();
 		
 		super.touch_up(x, y);
     }
@@ -395,7 +473,10 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 			
 			for (Sprite s : onStage) {
                 if (s.getX() + s.getWidth() >= 0 && s.getX() <= getWidth() && s.getY() + s.getHeight() >= 0 && s.getY() <= getHeight()) {
+                    canvas.save();
+                    canvas.rotate(rotation, s.getX()+s.getWidth()/2, s.getY()+s.getHeight()/2);
                     s.doDraw(canvas);
+                    canvas.restore();
                 }
             }
 
@@ -416,6 +497,42 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
             if (person!=null) {
                 activity.speak(person.getName());
             }
+        }
+        else if (topic.equals(TOPIC_PLAY_SONG)) {
+
+            if (onStage.size()<4) {
+                synchronized (sprites) {
+                    while (onStage.size() < 4 && peopleSprites.size() > 0) {
+                        DraggablePersonSprite sprite = peopleSprites.remove(0);
+                        onStage.add(sprite);
+                    }
+                }
+                reorderPeople();
+            }
+
+            //-- play or pause
+            if (!playing) {
+                playing = true;
+                pianoPlayer.start();
+                drumsPlayer.start();
+                flutePlayer.start();
+                violinPlayer.start();
+            }
+            else {
+                pianoPlayer.pause();
+                drumsPlayer.pause();
+                flutePlayer.pause();
+                violinPlayer.pause();
+                playing = false;
+            }
+        }
+        else if (topic.equals(TOPIC_PLAY_RESET)) {
+            playing = false;
+            pianoPlayer.reset();
+            drumsPlayer.reset();
+            flutePlayer.reset();
+            violinPlayer.reset();
+            createSprites();
         }
     }
 }

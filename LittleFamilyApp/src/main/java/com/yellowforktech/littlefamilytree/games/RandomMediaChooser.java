@@ -1,8 +1,11 @@
 package com.yellowforktech.littlefamilytree.games;
 
+import android.util.Log;
+
 import com.yellowforktech.littlefamilytree.activities.LittleFamilyActivity;
 import com.yellowforktech.littlefamilytree.activities.tasks.FamilyLoaderTask;
 import com.yellowforktech.littlefamilytree.activities.tasks.MemoriesLoaderTask;
+import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.data.Media;
 
@@ -117,7 +120,25 @@ public class RandomMediaChooser implements MemoriesLoaderTask.Listener {
                 noPhotos.add(selectedPerson);
                 loadMoreFamilyMembers();
             } else {
-                listener.onMediaLoaded(null);
+                DataService dataService = DataService.getInstance();
+                long mediaCount = 0;
+                try {
+                    mediaCount = dataService.getDBHelper().getMediaCount();
+                } catch (Exception e) {
+                    Log.e(getClass().getName(), "Error checking database for random media", e);
+                }
+                if (mediaCount > 0) {
+                    try {
+                        Media media = dataService.getDBHelper().getRandomMedia();
+                        listener.onMediaLoaded(media);
+                    } catch (Exception e) {
+                        Log.e(getClass().getName(), "Error loading random media from table", e);
+                        listener.onMediaLoaded(null);
+                    }
+
+                } else {
+                    listener.onMediaLoaded(null);
+                }
             }
         } else {
             Random rand = new Random();
