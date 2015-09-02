@@ -23,6 +23,8 @@ import com.yellowforktech.littlefamilytree.util.ImageHelper;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import android.graphics.Paint;
+import android.graphics.Color;
 
 /**
  * Created by kids on 6/17/15.
@@ -45,6 +47,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
     private float clipY = 0;
     private int maxHeight;
     private Bitmap stage;
+	private Paint textPaint;
 	
 	private AnimatedBitmapSprite selPerson1;
 	private AnimatedBitmapSprite selPerson2;
@@ -73,6 +76,8 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 	protected boolean violinOn = false;
 
     private boolean playing = false;
+	
+	private long playSteps;
 
     public SongSpriteSurfaceView(Context context) {
         super(context);
@@ -89,13 +94,18 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
         peopleSprites = new ArrayList<>();
 		onStage = new ArrayList<>();
         pianoPlayer = MediaPlayer.create(context, R.raw.piano_allinourfamilytree);
+		pianoPlayer.setVolume(1,1);
         drumsPlayer = MediaPlayer.create(context, R.raw.drums_allinourfamilytree);
         drumsPlayer.setVolume(0, 0);
         flutePlayer = MediaPlayer.create(context, R.raw.flute_allinourfamilytree);
-        flutePlayer.setVolume(0.7f, 0.7f);
+        flutePlayer.setVolume(0.3f, 0.3f);
         violinPlayer = MediaPlayer.create(context, R.raw.violin_allinourfamilytree);
         violinPlayer.setVolume(0, 0);
 		touchTolerance=6;
+		
+		textPaint = new Paint();
+		textPaint.setColor(Color.BLACK);
+		textPaint.setTextSize(40);
     }
 
     @Override
@@ -169,6 +179,14 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
         super.doStep();
 
         if (playing) {
+			playSteps++;
+			if (playSteps>150 && playSteps<160) {
+				DraggablePersonSprite ds = onStage.get(0);
+				ds.setTargetX(stage.getWidth()/2 - (int)(50*dm.density));
+				ds.setTargetHeight((int)(100*dm.density));
+				ds.setTargetY((int)(selPerson1.getY()+selPerson1.getHeight()));
+				ds.setMoving(true);
+			}
             rotation += rotateDir;
             if (rotation > 10) {
                 rotateDir = -1;
@@ -514,6 +532,8 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
                     canvas.restore();
                 }
             }
+			
+			canvas.drawText("playSteps="+playSteps, 20, 20, textPaint);
 
             canvas.translate(0, -clipY);
             for (Sprite s : peopleSprites) {
@@ -563,6 +583,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
         }
         else if (topic.equals(TOPIC_PLAY_RESET)) {
             playing = false;
+			playSteps = 0;
             pianoPlayer.reset();
             drumsPlayer.reset();
             flutePlayer.reset();
@@ -574,7 +595,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 			if (!fluteOn) {
 				flutePlayer.setVolume(0,0);
 			} else {
-				flutePlayer.setVolume(0.7f,0.7f);
+				flutePlayer.setVolume(0.3f,0.3f);
 			}
 		}
 		else if (topic.equals(TOPIC_TOGGLE_VIOLIN)) {
