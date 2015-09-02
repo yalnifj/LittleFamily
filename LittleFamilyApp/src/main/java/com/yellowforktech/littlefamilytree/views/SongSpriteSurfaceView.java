@@ -68,9 +68,9 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
     protected MediaPlayer flutePlayer;
     protected MediaPlayer violinPlayer;
 	protected boolean pianoOn = true;
-	protected boolean drumsOn = true;
+	protected boolean drumsOn = false;
 	protected boolean fluteOn = true;
-	protected boolean violinOn = true;
+	protected boolean violinOn = false;
 
     private boolean playing = false;
 
@@ -90,10 +90,11 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 		onStage = new ArrayList<>();
         pianoPlayer = MediaPlayer.create(context, R.raw.piano_allinourfamilytree);
         drumsPlayer = MediaPlayer.create(context, R.raw.drums_allinourfamilytree);
+        drumsPlayer.setVolume(0, 0);
         flutePlayer = MediaPlayer.create(context, R.raw.flute_allinourfamilytree);
         flutePlayer.setVolume(0.7f, 0.7f);
         violinPlayer = MediaPlayer.create(context, R.raw.violin_allinourfamilytree);
-        violinPlayer.setVolume(0.5f, 0.5f);
+        violinPlayer.setVolume(0, 0);
 		touchTolerance=6;
     }
 
@@ -212,18 +213,19 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 
         Bitmap drumsBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.drums, 0, (int)(width*1.7), (int)(width*1.7));
         TouchStateAnimatedBitmapSprite drumKit = new TouchStateAnimatedBitmapSprite(drumsBm, activity);
-        drumKit.setX(10*dm.density);
-        drumKit.setY(stage.getHeight() - (45 * dm.density + drumsBm.getHeight()));
+        drumKit.setX(10 * dm.density);
+        drumKit.setY(stage.getHeight() - (55 * dm.density + drumsBm.getHeight()));
         drumKit.setResources(getResources());
-		drumKit.setStateTransitionEvent(0, TOPIC_TOGGLE_DRUMS);
+        drumKit.setStateTransitionEvent(0, TOPIC_TOGGLE_DRUMS);
         drumKit.setStateTransitionEvent(1, TOPIC_TOGGLE_DRUMS);
-        drumKit.addBitmap(1, ImageHelper.loadBitmapFromResource(activity, R.drawable.drums_off, 0, (int)(width*1.7), (int)(width*1.7)));
+        drumKit.addBitmap(1, ImageHelper.loadBitmapFromResource(activity, R.drawable.drums_off, 0, (int)(width*1.7), (int)(width * 1.7)));
+        drumKit.setState(1);
         addSprite(drumKit);
 
         Bitmap gPianoBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.piano, 0, (int)(width*1.7), (int)(width*1.7));
         TouchStateAnimatedBitmapSprite gPiano = new TouchStateAnimatedBitmapSprite(gPianoBm, activity);
         gPiano.setX(getWidth() - (15 * dm.density + width + gPianoBm.getWidth()));
-        gPiano.setY(stage.getHeight() - (10 * dm.density + gPianoBm.getHeight()));
+        gPiano.setY(stage.getHeight() - (35 * dm.density + gPianoBm.getHeight()));
         gPiano.setResources(getResources());
 		gPiano.setStateTransitionEvent(0, TOPIC_TOGGLE_PIANO);
         gPiano.setStateTransitionEvent(1, TOPIC_TOGGLE_PIANO);
@@ -232,18 +234,19 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 
         Bitmap violinBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.violin, 0, (int)(width*1.8), (int)(width*1.8));
         TouchStateAnimatedBitmapSprite violin = new TouchStateAnimatedBitmapSprite(violinBm, activity);
-        violin.setX(stage.getWidth()/2 - violinBm.getWidth()/2.5f);
+        violin.setX(stage.getWidth()/2 - violinBm.getWidth() / 3f);
         violin.setY(stage.getHeight() - (violinBm.getHeight()));
         violin.setResources(getResources());
-		violin.setStateTransitionEvent(0, TOPIC_TOGGLE_VIOLIN);
+        violin.setStateTransitionEvent(0, TOPIC_TOGGLE_VIOLIN);
         violin.setStateTransitionEvent(1, TOPIC_TOGGLE_VIOLIN);
         violin.addBitmap(1, ImageHelper.loadBitmapFromResource(activity, R.drawable.violin_off, 0, (int)(width*1.8), (int)(width*1.8)));
+        violin.setState(1);
         addSprite(violin);
 
         Bitmap clarinetBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.clarinet, 0, (int)(width*1.5), (int)(width*1.5));
         TouchStateAnimatedBitmapSprite clarinet = new TouchStateAnimatedBitmapSprite(clarinetBm, activity);
-        clarinet.setX(stage.getWidth()/2- clarinetBm.getWidth()*0.6f);
-        clarinet.setY(stage.getHeight() - (45 * dm.density + clarinetBm.getHeight()));
+        clarinet.setX(stage.getWidth()/2- clarinetBm.getWidth());
+        clarinet.setY(stage.getHeight() - (20 * dm.density + clarinetBm.getHeight()));
         clarinet.setResources(getResources());
 		clarinet.setStateTransitionEvent(0, TOPIC_TOGGLE_FLUTE);
         clarinet.setStateTransitionEvent(1, TOPIC_TOGGLE_FLUTE);

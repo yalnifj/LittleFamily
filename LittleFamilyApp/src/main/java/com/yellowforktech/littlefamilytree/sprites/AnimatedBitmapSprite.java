@@ -137,6 +137,7 @@ public class AnimatedBitmapSprite extends Sprite {
         List<Bitmap> stateBits = bitmaps.get(state);
         if (stateBits==null) {
             stateBits = new ArrayList<>(1);
+            bitmaps.put(state, stateBits);
         }
         stateBits.add(bitmap);
     }
