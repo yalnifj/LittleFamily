@@ -2723,8 +2723,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="2.7804383"
-     inkscape:cx="80.603574"
-     inkscape:cy="911.813"
+     inkscape:cx="53.942059"
+     inkscape:cy="889.43564"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -4738,7 +4738,7 @@
        inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\assets\dolls\france\boy_thumb.png"
        inkscape:export-xdpi="86.406006"
        inkscape:export-ydpi="86.406006"
-       transform="translate(-147.64304,655.79865)">
+       transform="translate(0.17538129,-0.21302989)">
       <path
          sodipodi:nodetypes="ccccc"
          inkscape:connector-curvature="0"
@@ -4762,7 +4762,7 @@
          style="fill:#333333" />
     </g>
     <g
-       transform="translate(-147.6237,655.84749)"
+       transform="translate(0.19472129,-0.16418989)"
        id="g5350"
        inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\assets\dolls\france\boy_thumb.png"
        inkscape:export-xdpi="86.406006"
@@ -4787,7 +4787,7 @@
          style="fill:none;fill-rule:evenodd;stroke:#dcd8d0;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
     </g>
     <g
-       transform="translate(-147.6237,655.84749)"
+       transform="translate(0.19472129,-0.16418989)"
        id="g5497"
        inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\assets\dolls\france\boy_thumb.png"
        inkscape:export-xdpi="86.406006"
@@ -4939,21 +4939,21 @@
     </g>
     <g
        id="g5593"
-       transform="translate(-147.6237,661.84749)"
-       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\assets\dolls\france\boy_thumb.png"
-       inkscape:export-xdpi="86.406006"
-       inkscape:export-ydpi="86.406006">
+       transform="matrix(0.9467013,0,0,1,7.6722401,5.8358101)"
+       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\assets\dolls\france\boy_hat.png"
+       inkscape:export-xdpi="181.44"
+       inkscape:export-ydpi="181.44">
       <path
          sodipodi:nodetypes="cccsc"
          inkscape:connector-curvature="0"
          id="path4867-3"
-         d="M 5.7896896,58.380607 C 5.4134118,55.821918 66.697788,48.636915 128.22791,47.256172 140.74909,45.080657 148.73243,35.672003 125.18497,35.21813 111.70786,5.9918155 35.050256,11.975135 10.642783,43.101154 3.1415085,52.667274 5.7896896,58.380607 5.7896896,58.380607 Z"
+         d="M 8.449017,58.020951 C 8.0727392,55.462262 66.697788,48.636915 128.22791,47.256172 135.81034,48.677212 144.93339,36.75097 125.18497,35.21813 111.70786,5.9918155 37.850144,17.151332 10.262879,41.662532 2.6529333,48.423945 8.449017,58.020951 8.449017,58.020951 Z"
          style="fill:url(#radialGradient4885-5);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
       <path
          sodipodi:nodetypes="ccsccc"
          inkscape:connector-curvature="0"
          id="path4869-8"
-         d="m 15.766447,41.011167 c 0,0 6.592316,-12.481785 18.094391,-24.285914 16.896909,-22.593796 26.68385,-19.9696764 37.165229,-20.319548 11.18089,-0.3732215 14.40316,-2.9070641 36.401933,17.724137 15.59958,8.907489 20.1198,21.923557 20.1198,21.923557 z"
+         d="m 15.766447,38.133923 c 0,0 2.033469,-10.683508 13.535544,-22.487637 C 46.1989,-6.9475096 60.544688,-3.2444234 71.026067,-3.594295 c 11.18089,-0.3732215 14.40316,-2.9070641 36.401933,17.724137 15.59958,8.907489 17.84038,21.563901 17.84038,21.563901 z"
          style="fill:url(#linearGradient5572);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
       <path
          transform="matrix(1.8508176,-0.11940051,0.10535602,1.4612625,-17.535777,23.923619)"
