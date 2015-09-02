@@ -31,6 +31,11 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
     public static final String TOPIC_PERSON_TOUCHED = "topic_person_touched";
     public static final String TOPIC_PLAY_SONG = "playPauseSong";
     public static final String TOPIC_PLAY_RESET = "resetStage";
+	public static final String TOPIC_TOGGLE_PIANO = "togglePiano";
+	public static final String TOPIC_TOGGLE_DRUMS = "toggleDrums";
+	public static final String TOPIC_TOGGLE_FLUTE = "toggleFlute";
+	public static final String TOPIC_TOGGLE_VIOLIN = "toggleViolin";
+	
     private List<LittlePerson> family;
     private DisplayMetrics dm;
     private boolean spritesCreated = false;
@@ -62,6 +67,10 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
     protected MediaPlayer drumsPlayer;
     protected MediaPlayer flutePlayer;
     protected MediaPlayer violinPlayer;
+	protected boolean pianoOn = true;
+	protected boolean drumsOn = true;
+	protected boolean fluteOn = true;
+	protected boolean violinOn = true;
 
     private boolean playing = false;
 
@@ -82,9 +91,10 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
         pianoPlayer = MediaPlayer.create(context, R.raw.piano_allinourfamilytree);
         drumsPlayer = MediaPlayer.create(context, R.raw.drums_allinourfamilytree);
         flutePlayer = MediaPlayer.create(context, R.raw.flute_allinourfamilytree);
-        flutePlayer.setVolume(0.5f, 0.5f);
+        flutePlayer.setVolume(0.7f, 0.7f);
         violinPlayer = MediaPlayer.create(context, R.raw.violin_allinourfamilytree);
-        flutePlayer.setVolume(0.1f, 0.1f);
+        flutePlayer.setVolume(0.05f, 0.05f);
+		touchTolerance=6;
     }
 
     @Override
@@ -93,6 +103,10 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
         EventQueue.getInstance().unSubscribe(TOPIC_PERSON_TOUCHED, this);
         EventQueue.getInstance().unSubscribe(TOPIC_PLAY_SONG, this);
         EventQueue.getInstance().unSubscribe(TOPIC_PLAY_RESET, this);
+		EventQueue.getInstance().unSubscribe(TOPIC_TOGGLE_PIANO, this);
+		EventQueue.getInstance().unSubscribe(TOPIC_TOGGLE_FLUTE, this);
+		EventQueue.getInstance().unSubscribe(TOPIC_TOGGLE_VIOLIN, this);
+		EventQueue.getInstance().unSubscribe(TOPIC_TOGGLE_DRUMS, this);
     }
 
     @Override
@@ -101,6 +115,11 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
         EventQueue.getInstance().subscribe(TOPIC_PERSON_TOUCHED, this);
         EventQueue.getInstance().subscribe(TOPIC_PLAY_SONG, this);
         EventQueue.getInstance().subscribe(TOPIC_PLAY_RESET, this);
+		EventQueue.getInstance().subscribe(TOPIC_TOGGLE_PIANO, this);
+		EventQueue.getInstance().subscribe(TOPIC_TOGGLE_FLUTE, this);
+		EventQueue.getInstance().subscribe(TOPIC_TOGGLE_VIOLIN, this);
+		EventQueue.getInstance().subscribe(TOPIC_TOGGLE_DRUMS, this);
+		
     }
 
     public LittleFamilyActivity getActivity() {
@@ -193,9 +212,10 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 
         Bitmap drumsBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.drums, 0, (int)(width*1.7), (int)(width*1.7));
         TouchStateAnimatedBitmapSprite drumKit = new TouchStateAnimatedBitmapSprite(drumsBm, activity);
-        drumKit.setX(stage.getWidth()/2 - drumsBm.getWidth()/3);
-        drumKit.setY(stage.getHeight() - (55 * dm.density + drumsBm.getHeight()));
+        drumKit.setX(10*dm.density);
+        drumKit.setY(stage.getHeight() - (45 * dm.density + drumsBm.getHeight()));
         drumKit.setResources(getResources());
+		drumKit.setStateTransitionEvent(0, TOPIC_TOGGLE_DRUMS);
         addSprite(drumKit);
 
         Bitmap gPianoBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.piano, 0, (int)(width*1.7), (int)(width*1.7));
@@ -203,20 +223,24 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
         gPiano.setX(getWidth() - (15 * dm.density + width + gPianoBm.getWidth()));
         gPiano.setY(stage.getHeight() - (10 * dm.density + gPianoBm.getHeight()));
         gPiano.setResources(getResources());
+		gPiano.setStateTransitionEvent(0, TOPIC_TOGGLE_PIANO);
         addSprite(gPiano);
 
         Bitmap violinBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.violin, 0, (int)(width*1.8), (int)(width*1.8));
         TouchStateAnimatedBitmapSprite violin = new TouchStateAnimatedBitmapSprite(violinBm, activity);
-        violin.setX(stage.getWidth()/2 - (violinBm.getWidth()*0.75f));
+        violin.setX(stage.getWidth()/2 - violinBm.getWidth()/2.5f);
         violin.setY(stage.getHeight() - (violinBm.getHeight()));
         violin.setResources(getResources());
+		violin.setStateTransitionEvent(0, TOPIC_TOGGLE_VIOLIN);
         addSprite(violin);
 
         Bitmap clarinetBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.clarinet, 0, (int)(width*1.5), (int)(width*1.5));
         TouchStateAnimatedBitmapSprite clarinet = new TouchStateAnimatedBitmapSprite(clarinetBm, activity);
-        clarinet.setX(20*dm.density);
-        clarinet.setY(stage.getHeight() - (35 * dm.density + clarinetBm.getHeight()));
+        clarinet.setX(stage.getWidth()/2- clarinetBm.getWidth()*0.6f);
+        clarinet.setY(stage.getHeight() - (45 * dm.density + clarinetBm.getHeight()));
         clarinet.setResources(getResources());
+		clarinet.setStateTransitionEvent(0, TOPIC_TOGGLE_FLUTE);
+		clarinet.setIgnoreAlpha(true);
         addSprite(clarinet);
 
         Bitmap man = ImageHelper.loadBitmapFromResource(activity, R.drawable.man_silhouette, 0, 
@@ -534,5 +558,37 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
             violinPlayer.reset();
             createSprites();
         }
+		else if (topic.equals(TOPIC_TOGGLE_FLUTE)) {
+			fluteOn = !fluteOn;
+			if (!fluteOn) {
+				flutePlayer.setVolume(0,0);
+			} else {
+				flutePlayer.setVolume(0.7f,0.7f);
+			}
+		}
+		else if (topic.equals(TOPIC_TOGGLE_VIOLIN)) {
+			violinOn = !violinOn;
+			if (!violinOn) {
+				violinPlayer.setVolume(0,0);
+			} else {
+				violinPlayer.setVolume(0.05f,0.05f);
+			}
+		}
+		else if (topic.equals(TOPIC_TOGGLE_PIANO)) {
+			pianoOn = !pianoOn;
+			if (!pianoOn) {
+				pianoPlayer.setVolume(0,0);
+			} else {
+				pianoPlayer.setVolume(1,1);
+			}
+		}
+		else if (topic.equals(TOPIC_TOGGLE_DRUMS)) {
+			drumsOn=!drumsOn;
+			if (!drumsOn) {
+				drumsPlayer.setVolume(0,0);
+			} else {
+				drumsPlayer.setVolume(1,1);
+			}
+		}
     }
 }
