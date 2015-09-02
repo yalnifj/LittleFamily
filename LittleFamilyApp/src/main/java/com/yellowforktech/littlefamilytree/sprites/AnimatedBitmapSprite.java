@@ -133,6 +133,14 @@ public class AnimatedBitmapSprite extends Sprite {
         this.ignoreAlpha = ignoreAlpha;
     }
 
+    public void addBitmap(int state, Bitmap bitmap) {
+        List<Bitmap> stateBits = bitmaps.get(state);
+        if (stateBits==null) {
+            stateBits = new ArrayList<>(1);
+        }
+        stateBits.add(bitmap);
+    }
+
     @Override
     public void doStep() {
         if (bitmaps!=null && bitmaps.get(state)==null && bitmapIds.get(state)!=null && resources!=null) {

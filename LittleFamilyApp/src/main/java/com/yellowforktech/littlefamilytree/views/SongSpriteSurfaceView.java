@@ -93,7 +93,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
         flutePlayer = MediaPlayer.create(context, R.raw.flute_allinourfamilytree);
         flutePlayer.setVolume(0.7f, 0.7f);
         violinPlayer = MediaPlayer.create(context, R.raw.violin_allinourfamilytree);
-        flutePlayer.setVolume(0.05f, 0.05f);
+        violinPlayer.setVolume(0.5f, 0.5f);
 		touchTolerance=6;
     }
 
@@ -216,6 +216,8 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
         drumKit.setY(stage.getHeight() - (45 * dm.density + drumsBm.getHeight()));
         drumKit.setResources(getResources());
 		drumKit.setStateTransitionEvent(0, TOPIC_TOGGLE_DRUMS);
+        drumKit.setStateTransitionEvent(1, TOPIC_TOGGLE_DRUMS);
+        drumKit.addBitmap(1, ImageHelper.loadBitmapFromResource(activity, R.drawable.drums_off, 0, (int)(width*1.7), (int)(width*1.7)));
         addSprite(drumKit);
 
         Bitmap gPianoBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.piano, 0, (int)(width*1.7), (int)(width*1.7));
@@ -224,6 +226,8 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
         gPiano.setY(stage.getHeight() - (10 * dm.density + gPianoBm.getHeight()));
         gPiano.setResources(getResources());
 		gPiano.setStateTransitionEvent(0, TOPIC_TOGGLE_PIANO);
+        gPiano.setStateTransitionEvent(1, TOPIC_TOGGLE_PIANO);
+        gPiano.addBitmap(1, ImageHelper.loadBitmapFromResource(activity, R.drawable.piano_off, 0, (int)(width*1.7), (int)(width*1.7)));
         addSprite(gPiano);
 
         Bitmap violinBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.violin, 0, (int)(width*1.8), (int)(width*1.8));
@@ -232,6 +236,8 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
         violin.setY(stage.getHeight() - (violinBm.getHeight()));
         violin.setResources(getResources());
 		violin.setStateTransitionEvent(0, TOPIC_TOGGLE_VIOLIN);
+        violin.setStateTransitionEvent(1, TOPIC_TOGGLE_VIOLIN);
+        violin.addBitmap(1, ImageHelper.loadBitmapFromResource(activity, R.drawable.violin_off, 0, (int)(width*1.8), (int)(width*1.8)));
         addSprite(violin);
 
         Bitmap clarinetBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.clarinet, 0, (int)(width*1.5), (int)(width*1.5));
@@ -240,7 +246,9 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
         clarinet.setY(stage.getHeight() - (45 * dm.density + clarinetBm.getHeight()));
         clarinet.setResources(getResources());
 		clarinet.setStateTransitionEvent(0, TOPIC_TOGGLE_FLUTE);
+        clarinet.setStateTransitionEvent(1, TOPIC_TOGGLE_FLUTE);
 		clarinet.setIgnoreAlpha(true);
+        clarinet.addBitmap(1, ImageHelper.loadBitmapFromResource(activity, R.drawable.clarinet_off, 0, (int)(width*1.5), (int)(width*1.5)));
         addSprite(clarinet);
 
         Bitmap man = ImageHelper.loadBitmapFromResource(activity, R.drawable.man_silhouette, 0, 
@@ -571,7 +579,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 			if (!violinOn) {
 				violinPlayer.setVolume(0,0);
 			} else {
-				violinPlayer.setVolume(0.05f,0.05f);
+				violinPlayer.setVolume(0.5f,0.5f);
 			}
 		}
 		else if (topic.equals(TOPIC_TOGGLE_PIANO)) {
