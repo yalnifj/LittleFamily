@@ -158,8 +158,8 @@ public class AnimatedBitmapSprite extends Sprite {
                 else frame++;
                 if (frame >= bitmaps.get(state).size() || frame < 0) {
                     if (bounce) {
-                        if (backward) frame -= 2;
-                        else frame += 2;
+                        if (backward) frame = 1;
+                        else frame = bitmaps.get(state).size()-2;
                         backward = !backward;
                     } else {
                         frame = 0;

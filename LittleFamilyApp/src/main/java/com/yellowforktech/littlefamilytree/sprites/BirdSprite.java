@@ -100,7 +100,7 @@ public class BirdSprite extends AnimatedBitmapSprite {
             }
         }
         if (state==2) {
-            if (frame==0 && oldFrame!=0) {
+            if (frame>=bitmaps.get(state).size()-1) {
                 EventQueue.getInstance().publish(eventTopic, this);
                 state = 0;
             }

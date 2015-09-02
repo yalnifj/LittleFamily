@@ -3,17 +3,19 @@ package com.yellowforktech.littlefamilytree.activities;
 import android.os.Bundle;
 
 import com.yellowforktech.littlefamilytree.R;
-import com.yellowforktech.littlefamilytree.views.RotateSensorSpritedSurfaceView;
+import com.yellowforktech.littlefamilytree.views.FlyingSurfaceView;
 
 public class FlyingActivity extends LittleFamilyActivity {
 
-    private RotateSensorSpritedSurfaceView flyView;
+    private FlyingSurfaceView flyView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flying);
 
-        flyView = (RotateSensorSpritedSurfaceView) findViewById(R.id.flyingView);
+        flyView = (FlyingSurfaceView) findViewById(R.id.flyingView);
+
+        setupTopBar();
     }
 
     @Override

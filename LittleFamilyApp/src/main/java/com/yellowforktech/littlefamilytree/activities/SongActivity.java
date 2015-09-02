@@ -120,8 +120,10 @@ public class SongActivity extends LittleFamilyActivity {
     };
 
     private ParentsLoaderTask.Listener grandParentListener = new ParentsLoaderTask.Listener() {
+        int count = 0;
         @Override
         public void onComplete(ArrayList<LittlePerson> family) {
+            count++;
             if (family!=null && family.size()>0) {
                 for (LittlePerson child : family) {
                     if (child.getGender() == GenderType.Female)
@@ -130,9 +132,18 @@ public class SongActivity extends LittleFamilyActivity {
                         child.setRelationship("Grand father");
                     people.add(child);
                 }
+                parents = family;
             }
 
+            if (count<8 && people.size()<4) loadMorePeople();
             view.setFamily(people);
         }
     };
+
+    public void loadMorePeople() {
+        ParentsLoaderTask gptask = new ParentsLoaderTask(grandParentListener, SongActivity.this);
+        LittlePerson[] people = new LittlePerson[parents.size()];
+        people = parents.toArray(people);
+        gptask.execute(people);
+    }
 }

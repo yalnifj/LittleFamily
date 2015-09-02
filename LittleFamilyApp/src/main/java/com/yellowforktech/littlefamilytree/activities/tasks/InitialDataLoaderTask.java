@@ -62,6 +62,7 @@ public class InitialDataLoaderTask extends AsyncTask<LittlePerson, String, Array
         for(LittlePerson p : grandParents) {
             try {
                 List<LittlePerson> parents = dataService.getParents(p);
+                dataService.addToSyncQ(parents, 3);
             } catch (Exception e) {
                 Log.e(this.getClass().getSimpleName(), "error", e);
             }

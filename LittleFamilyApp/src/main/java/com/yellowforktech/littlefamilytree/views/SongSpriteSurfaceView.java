@@ -3,6 +3,8 @@ package com.yellowforktech.littlefamilytree.views;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.media.MediaPlayer;
 import android.util.AttributeSet;
@@ -10,6 +12,7 @@ import android.util.DisplayMetrics;
 
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.LittleFamilyActivity;
+import com.yellowforktech.littlefamilytree.activities.SongActivity;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.events.EventListener;
 import com.yellowforktech.littlefamilytree.events.EventQueue;
@@ -23,8 +26,6 @@ import com.yellowforktech.littlefamilytree.util.ImageHelper;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import android.graphics.Paint;
-import android.graphics.Color;
 
 /**
  * Created by kids on 6/17/15.
@@ -39,11 +40,12 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 	public static final String TOPIC_TOGGLE_VIOLIN = "toggleViolin";
 	
     private List<LittlePerson> family;
+    private List<LittlePerson> finishedPeople;
     private DisplayMetrics dm;
     private boolean spritesCreated = false;
     private List<DraggablePersonSprite> peopleSprites;
 
-    private LittleFamilyActivity activity;
+    private SongActivity activity;
     private float clipY = 0;
     private int maxHeight;
     private Bitmap stage;
@@ -102,6 +104,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 
     public void setup() {
         multiSelect = false;
+        finishedPeople = new ArrayList<>();
         peopleSprites = new ArrayList<>();
 		onStage = new ArrayList<>();
         pianoPlayer = MediaPlayer.create(context, R.raw.piano_allinourfamilytree);
@@ -148,7 +151,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
         return activity;
     }
 
-    public void setActivity(LittleFamilyActivity activity) {
+    public void setActivity(SongActivity activity) {
         this.activity = activity;
         dm = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -265,8 +268,22 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 				ds.setMoving(true);
 			}
 			if (playSteps > 720) {
-				resetSong();
+                for(DraggablePersonSprite ds : onStage) {
+                    LittlePerson p = ds.getPerson();
+                    family.remove(p);
+                    finishedPeople.add(p);
+                    ds.setTargetX(-100);
+                    ds.setMoving(true);
+                }
 			}
+            if (playSteps > 780) {
+                resetSong();
+                synchronized (sprites) {
+                    onStage.clear();
+                }
+                if (family.size()<8) activity.loadMorePeople();
+                reorderPeople();
+            }
             rotation += rotateDir;
             if (rotation > 10) {
                 rotateDir = -1;
@@ -631,9 +648,13 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 		name2Spoken=false;
 		name3Spoken=false;
 		name4Spoken=false;
+        if (pianoPlayer!=null) pianoPlayer.release();
 		pianoPlayer = MediaPlayer.create(context, R.raw.piano_allinourfamilytree);
+        if (drumsPlayer!=null) drumsPlayer.release();
 		drumsPlayer = MediaPlayer.create(context, R.raw.drums_allinourfamilytree);
+        if (flutePlayer!=null) flutePlayer.release();
 		flutePlayer = MediaPlayer.create(context, R.raw.flute_allinourfamilytree);
+        if (violinPlayer!=null) violinPlayer.release();
 		violinPlayer = MediaPlayer.create(context, R.raw.violin_allinourfamilytree);
 		if (!fluteOn) {
 			flutePlayer.setVolume(0,0);
