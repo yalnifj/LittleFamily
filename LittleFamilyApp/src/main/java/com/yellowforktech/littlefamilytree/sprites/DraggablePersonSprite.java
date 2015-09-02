@@ -99,6 +99,10 @@ public class DraggablePersonSprite extends TouchEventGameSprite {
 	public void setMoving(boolean moving) {
 		this.moving = moving;
 	}
+	
+	public LittlePerson getPerson() {
+		return person;
+	}
 
 	@Override
 	public void doStep()
