@@ -158,6 +158,13 @@ public class HomeActivity extends LittleFamilyActivity {
 
             Bitmap birdBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_tree_bird);
             BirdSprite birdSprite = new BirdSprite(birdBm, this, TOPIC_START_FLYING);
+            List<Bitmap> state1 = new ArrayList<>(5);
+            state1.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_tree_bird));
+            state1.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_tree_bird1));
+            state1.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_tree_bird2));
+            state1.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_tree_bird1));
+            state1.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_tree_bird));
+            birdSprite.getBitmaps().put(1, state1);
             birdSprite.setX(100 * dm.density);
             birdSprite.setY(330 * dm.density);
             birdSprite.setResources(this.getResources());
@@ -633,9 +640,9 @@ public class HomeActivity extends LittleFamilyActivity {
             TouchStateAnimatedBitmapSprite piano = new TouchStateAnimatedBitmapSprite(pianoBm, this);
             piano.setX(625 * dm.density);
             piano.setY(225 * dm.density);
-            List<Bitmap> state1 = new ArrayList<>(1);
-            state1.add(pianoBm);
-            piano.getBitmaps().put(1, state1);
+            List<Bitmap> pstate1 = new ArrayList<>(1);
+            pstate1.add(pianoBm);
+            piano.getBitmaps().put(1, pstate1);
 			piano.setStateTransitionEvent(1, TOPIC_START_SONG);
             piano.getAudio().put(1, R.raw.piano);
             homeView.addSprite(piano);

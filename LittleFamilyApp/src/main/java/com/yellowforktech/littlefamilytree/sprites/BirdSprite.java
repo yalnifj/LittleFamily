@@ -34,14 +34,6 @@ public class BirdSprite extends AnimatedBitmapSprite {
 
         flipped = new Matrix();
 
-        List<Integer> state1 = new ArrayList<>(5);
-        state1.add(R.drawable.house_tree_bird);
-        state1.add(R.drawable.house_tree_bird1);
-        state1.add(R.drawable.house_tree_bird2);
-        state1.add(R.drawable.house_tree_bird1);
-        state1.add(R.drawable.house_tree_bird);
-        bitmapIds.put(1, state1);
-
         List<Integer> state2 = new ArrayList<>(5);
         state2.add(R.drawable.house_tree_bird3);
         state2.add(R.drawable.house_tree_bird4);

@@ -8,6 +8,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
+import com.yellowforktech.littlefamilytree.activities.tasks.BitmapSequenceLoader;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +18,7 @@ import java.util.Map;
 /**
  * Created by jfinlay on 5/8/2015.
  */
-public class AnimatedBitmapSprite extends Sprite {
+public class AnimatedBitmapSprite extends Sprite implements BitmapSequenceLoader.Listener {
     protected Map<Integer, List<Bitmap>> bitmaps;
     protected Map<Integer, List<Integer>> bitmapIds;
     protected int frame;
@@ -29,6 +31,7 @@ public class AnimatedBitmapSprite extends Sprite {
     protected Resources resources;
     protected boolean selected;
     protected Paint selectedPaint;
+    protected int loadingState;
 
     public AnimatedBitmapSprite() {
         super();
@@ -150,6 +153,13 @@ public class AnimatedBitmapSprite extends Sprite {
                 loaded.add(BitmapFactory.decodeResource(getResources(), rid));
             }
             bitmaps.put(state, loaded);
+
+        }
+        //--preload next state bitmaps
+        if (bitmaps!=null && bitmaps.get(state+1)==null && bitmapIds.get(state+1)!=null && resources!=null) {
+            loadingState = state+1;
+            BitmapSequenceLoader loader = new BitmapSequenceLoader(getResources(), this);
+            loader.execute(bitmapIds.get(state+1));
         }
         if (bitmaps!=null && bitmaps.get(state)!=null && bitmaps.get(state).size()>1 ) {
             steps++;
@@ -175,27 +185,21 @@ public class AnimatedBitmapSprite extends Sprite {
         if (bitmaps!=null) {
             synchronized (bitmaps) {
                 List<Bitmap> frames = bitmaps.get(state);
+                if (frames==null) frames = bitmaps.get(state-1);
                 if (frames != null) {
                     if (frame >= 0 && frame < frames.size()) {
                         Bitmap bitmap = frames.get(frame);
-                        Rect rect = new Rect();
-                        rect.set((int) (x), (int) (y), (int) ((x + width)), (int) ((y + height)));
-                        if (matrix != null) {
-                            canvas.save();
-                            canvas.setMatrix(matrix);
-                        }
-                        canvas.drawBitmap(bitmap, null, rect, basePaint);
-                    /*
-                    if (selected) {
-                        if (Build.VERSION.SDK_INT > 20) {
-                            canvas.drawRoundRect(x, y, x + width, y + height, 3, 3, selectedPaint);
-                        } else {
-                            canvas.drawRect(x, y, x + width, y + height, selectedPaint);
-                        }
-                    }
-                    */
-                        if (matrix != null) {
-                            canvas.restore();
+                        if (bitmap!=null) {
+                            Rect rect = new Rect();
+                            rect.set((int) (x), (int) (y), (int) ((x + width)), (int) ((y + height)));
+                            if (matrix != null) {
+                                canvas.save();
+                                canvas.setMatrix(matrix);
+                            }
+                            canvas.drawBitmap(bitmap, null, rect, basePaint);
+                            if (matrix != null) {
+                                canvas.restore();
+                            }
                         }
                     }
                 }
@@ -264,5 +268,10 @@ public class AnimatedBitmapSprite extends Sprite {
                 bms.clear();
             }
         }
+    }
+
+    @Override
+    public void onComplete(ArrayList<Bitmap> bitmaps) {
+        this.bitmaps.put(loadingState, bitmaps);
     }
 }

@@ -11,7 +11,6 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 
 import com.yellowforktech.littlefamilytree.R;
-import com.yellowforktech.littlefamilytree.activities.LittleFamilyActivity;
 import com.yellowforktech.littlefamilytree.activities.SongActivity;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.events.EventListener;
@@ -147,7 +146,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 		
     }
 
-    public LittleFamilyActivity getActivity() {
+    public SongActivity getActivity() {
         return activity;
     }
 

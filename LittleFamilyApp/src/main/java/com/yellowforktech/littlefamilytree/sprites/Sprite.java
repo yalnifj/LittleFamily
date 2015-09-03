@@ -5,6 +5,9 @@ import android.graphics.Matrix;
 
 import com.yellowforktech.littlefamilytree.views.AbstractTouchAnimatedSurfaceView;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by jfinlay on 5/8/2015.
  */
@@ -22,6 +25,8 @@ public abstract class Sprite {
     protected AbstractTouchAnimatedSurfaceView surfaceView;
     protected boolean visible = true;
 
+    protected Map<String, Object> data;
+
     public Sprite() {
         x = 0;
         y = 0;
@@ -31,6 +36,7 @@ public abstract class Sprite {
         selectable = false;
         removeMe = false;
         this.scale = 1;
+        this.data = new HashMap<>(0);
     }
 
     public AbstractTouchAnimatedSurfaceView getSurfaceView() {
@@ -127,6 +133,14 @@ public abstract class Sprite {
 
     public void setVisible(boolean visible) {
         this.visible = visible;
+    }
+
+    public void setData(String key, Object value) {
+        data.put(key, value);
+    }
+
+    public Object getData(String key) {
+        return data.get(key);
     }
 
     public abstract void doStep();
