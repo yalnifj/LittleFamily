@@ -123,7 +123,7 @@ public class HeritageDressUpActivity extends LittleFamilyActivity implements Dre
             dollLayout.addView(ll);
 
             Space spacer = new Space(this);
-            spacer.setMinimumWidth(10);
+            spacer.setMinimumWidth(15);
             dollLayout.addView(spacer);
         }
     }
