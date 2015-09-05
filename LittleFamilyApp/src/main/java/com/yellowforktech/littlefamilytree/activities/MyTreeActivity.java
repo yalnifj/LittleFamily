@@ -209,10 +209,10 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
             vine.setY(rootSprite.getY() - ((float)31.5*dm.density));
             treeView.addSprite(vine);
             addDownVine(rootSprite, false);
-            addChildSprites(root.getChildren(), rootSprite.getX(), rootSprite.getY() + rootSprite.getHeight() + vineBm.getHeight(), false);
+            addChildSprites(root.getChildren(), rootSprite.getX(), rootSprite.getY() + rootSprite.getHeight() + vineBm.getHeight(), true);
         } else if (root.getLeft()!=null && root.getLeft().getChildren()!=null && root.getLeft().getChildren().size()>0){
             treeView.getSprites().remove(rootSprite);
-            addChildSprites(root.getLeft().getChildren(), rootSprite.getX(), rootSprite.getY(), true);
+            addChildSprites(root.getLeft().getChildren(), rootSprite.getX(), rootSprite.getY(), false);
         }
 
         treeView.setMaxWidth(maxX * 2);
