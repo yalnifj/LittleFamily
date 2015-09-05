@@ -148,7 +148,13 @@ public class ImageHelper {
                     float maxRatio = Math.max(widthRatio, heightRatio);
                     sourceWidth = (int) ((float) sourceWidth / maxRatio);
                     sourceHeight = (int) ((float) sourceHeight / maxRatio);
-                    bitmap = Bitmap.createScaledBitmap(bitmap, sourceWidth, sourceHeight, true);
+					try {
+						bitmap = Bitmap.createScaledBitmap(bitmap, sourceWidth, sourceHeight, true);
+					}
+					catch (OutOfMemoryError e) {
+						System.gc();
+						Log.e("ImageHelper", "Out of memory trying to resize image "+path, e);
+					}
                 }
             }
 
@@ -203,7 +209,13 @@ public class ImageHelper {
                     float maxRatio = Math.max(widthRatio, heightRatio);
                     sourceWidth = (int) ((float) sourceWidth / maxRatio);
                     sourceHeight = (int) ((float) sourceHeight / maxRatio);
-                    bitmap = Bitmap.createScaledBitmap(bitmap, sourceWidth, sourceHeight, true);
+                    try {
+						bitmap = Bitmap.createScaledBitmap(bitmap, sourceWidth, sourceHeight, true);
+					}
+					catch (OutOfMemoryError e) {
+						System.gc();
+						Log.e("ImageHelper", "Out of memory trying to resize image "+resourceId, e);
+					}
                 }
             }
         } catch (Exception e) {
@@ -255,7 +267,13 @@ public class ImageHelper {
                     float maxRatio = Math.max(widthRatio, heightRatio);
                     sourceWidth = (int) ((float) sourceWidth / maxRatio);
                     sourceHeight = (int) ((float) sourceHeight / maxRatio);
-                    bitmap = Bitmap.createScaledBitmap(bitmap, sourceWidth, sourceHeight, true);
+                    try {
+						bitmap = Bitmap.createScaledBitmap(bitmap, sourceWidth, sourceHeight, true);
+					}
+					catch (OutOfMemoryError e) {
+						System.gc();
+						Log.e("ImageHelper", "Out of memory trying to resize image ", e);
+					}
                 }
             }
         } catch (Exception e) {
