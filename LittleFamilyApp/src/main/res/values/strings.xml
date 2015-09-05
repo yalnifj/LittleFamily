@@ -33,6 +33,20 @@ Please wait...</string>
 	<string name="sister">Sister</string>
 	<string name="inlaw">In-Law</string>
 	<string name="parent">Parent</string>
+	
+	<string name="great3">Third</string>
+	<string name="great4">Fourth</string>
+	<string name="great5">Fifth</string>
+	<string name="great6">Sixth</string>
+	<string name="great7">Seventh</string>
+	<string name="great8">Eighth</string>
+	<string name="great9">Nineth</string>
+	<string name="great10">Tenth</string>
+	<string name="great11">Eleventh</string>
+	<string name="great12">Twelvth</string>
+	<string name="great13">Thirteenth</string>
+	<string name="great14">Fourteenth</string>
+	
     <string name="play">Play!</string>
     <string name="player_greeting">Hi, %1$s!</string>
     <string name="what_game">What would you like to play?</string>

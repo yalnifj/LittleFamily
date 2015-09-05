@@ -94,6 +94,7 @@ public class HeritageCalculatorTask extends AsyncTask<LittlePerson, Integer, Arr
                 Log.e(this.getClass().getSimpleName(), "error", e);
             }
         }
+		//--dont finish before talking complete
         long diff = System.currentTimeMillis() - starttime;
         if (diff < 4000) {
             try {

@@ -33,6 +33,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import com.yellowforktech.littlefamilytree.util.RelationshipCalculator;
 
 public class ChooseCultureActivity extends LittleFamilyActivity implements HeritageCalculatorTask.Listener, PersonHeritageChartView.SelectedPathListener {
     public static final String DOLL_CONFIG = "dollConfig";
@@ -106,19 +107,8 @@ public class ChooseCultureActivity extends LittleFamilyActivity implements Herit
         portraitImage.setImageBitmap(bm);
         portraitImage.setVisibility(View.VISIBLE);
 		
-		String relationship = "";
-		int greats = selectedPath.getTreePath().size() - 2;
-		for(int g=1; g<greats; g++) {
-			relationship = relationship + getResources().getString(R.string.great)+", ";
-		}
-		if (selectedPath.getTreePath().size()>1) {
-			relationship = relationship + getResources().getString(R.string.grand)+", ";
-		}
-		if (relative.getGender()==GenderType.Female) {
-			relationship += getResources().getString(R.string.mother);
-		} else {
-            relationship += getResources().getString(R.string.father);
-		}
+		String relationship = RelationshipCalculator.getAncestralRelationship(selectedPath.getTreePath().size(), relative, person, 
+					false, false, false, this);
 
         this.cultureNameView.setText(selectedPath.getPlace());
         double percent = selectedPath.getPercent()*100;

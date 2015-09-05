@@ -29,6 +29,8 @@ public class SplashActivity extends Activity implements EventListener {
     private SpritedSurfaceView plantView;
     private DataService dataService;
     private boolean startingIntent;
+	private boolean canContinue;
+	private int counter=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,8 @@ public class SplashActivity extends Activity implements EventListener {
     @Override
     protected void onStart() {
         super.onStart();
+		
+		startingIntent=false;
 
         MediaPlayer introPlayer = MediaPlayer.create(this, R.raw.intro);
         introPlayer.start();
@@ -51,6 +55,7 @@ public class SplashActivity extends Activity implements EventListener {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 mp.release();
+				canContinue=true;
             }
         });
 
@@ -113,7 +118,8 @@ public class SplashActivity extends Activity implements EventListener {
 
     @Override
     public void onEvent(String topic, Object o) {
-        if (!dataService.isAuthenticating() && !startingIntent) {
+		counter++;
+        if ((canContinue||counter>4) && !dataService.isAuthenticating() && !startingIntent) {
             gotoChooseFamilyMember(null);
         }
     }

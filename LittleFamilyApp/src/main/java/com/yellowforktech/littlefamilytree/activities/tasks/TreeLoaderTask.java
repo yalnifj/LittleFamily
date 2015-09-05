@@ -100,7 +100,7 @@ public class TreeLoaderTask extends AsyncTask<LittlePerson, Integer, TreeNode> {
         }
 
         if (node.getDepth()>0 || node.getSpouse()!=null) {
-			if (node.isRoot()) isInLaw=true;
+			if (node.isRoot() && node.getDepth()==0) isInLaw=true;
             TreeNode prNode = new TreeNode();
             prNode.setDepth(node.getDepth() + 1);
 			prNode.setIsInLaw(isInLaw);
