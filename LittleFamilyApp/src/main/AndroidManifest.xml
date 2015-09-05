@@ -71,7 +71,8 @@
         <activity
             android:name=".activities.HeritageDressUpActivity"
             android:label="@string/title_activity_heritage_dress_up"
-            android:parentActivityName=".activities.ChooseCultureActivity" >
+            android:parentActivityName=".activities.ChooseCultureActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.yellowforktech.littlefamilytree.activities.ChooseCultureActivity" />
@@ -79,7 +80,8 @@
         <activity
             android:name=".activities.ChooseCultureActivity"
             android:label="@string/title_activity_choose_culture"
-            android:parentActivityName=".activities.ChooseGameActivity" >
+            android:parentActivityName=".activities.ChooseGameActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.yellowforktech.littlefamilytree.activities.ChooseGameActivity" />

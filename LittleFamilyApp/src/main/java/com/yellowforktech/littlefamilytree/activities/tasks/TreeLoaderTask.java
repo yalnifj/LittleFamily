@@ -8,6 +8,8 @@ import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.data.TreeNode;
 
+import org.gedcomx.types.GenderType;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,7 +91,11 @@ public class TreeLoaderTask extends AsyncTask<LittlePerson, Integer, TreeNode> {
         }
         addParents(pNode);
 
-        node.setLeft(pNode);
+        if (person.getGender()== GenderType.Female) {
+            node.setRight(pNode);
+        } else {
+            node.setLeft(pNode);
+        }
 
         if (node.getDepth()>0 || node.getSpouse()!=null) {
             TreeNode prNode = new TreeNode();
@@ -107,7 +113,11 @@ public class TreeLoaderTask extends AsyncTask<LittlePerson, Integer, TreeNode> {
                 }
             }
             addParents(prNode);
-            node.setRight(prNode);
+            if (spouse.getGender()== GenderType.Female) {
+                node.setRight(prNode);
+            } else {
+                node.setLeft(prNode);
+            }
         }
     }
 

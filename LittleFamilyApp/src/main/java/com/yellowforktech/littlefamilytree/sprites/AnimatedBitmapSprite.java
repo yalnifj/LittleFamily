@@ -157,9 +157,18 @@ public class AnimatedBitmapSprite extends Sprite implements BitmapSequenceLoader
         }
         //--preload next state bitmaps
         if (bitmaps!=null && bitmaps.get(state+1)==null && bitmapIds.get(state+1)!=null && resources!=null) {
-            loadingState = state+1;
-            BitmapSequenceLoader loader = new BitmapSequenceLoader(getResources(), this);
-            loader.execute(bitmapIds.get(state+1));
+            if (bitmaps.get(state).size()>4) {
+                loadingState = state + 1;
+                BitmapSequenceLoader loader = new BitmapSequenceLoader(getResources(), this);
+                loader.execute(bitmapIds.get(state + 1));
+            }
+            else {
+                List<Bitmap> loaded = new ArrayList<>(bitmapIds.get(state+1).size());
+                for (Integer rid : bitmapIds.get(state+1)) {
+                    loaded.add(BitmapFactory.decodeResource(getResources(), rid));
+                }
+                bitmaps.put(state+1, loaded);
+            }
         }
         if (bitmaps!=null && bitmaps.get(state)!=null && bitmaps.get(state).size()>1 ) {
             steps++;

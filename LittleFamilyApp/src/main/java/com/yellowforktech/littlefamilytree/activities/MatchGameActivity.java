@@ -1,5 +1,6 @@
 package com.yellowforktech.littlefamilytree.activities;
 
+import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.Display;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
@@ -56,6 +58,8 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
         adapter = new MatchGameListAdapter(this);
         adapter.setFamily(game.getBoard());
         gridView.setAdapter(adapter);
+        gridView.setEnabled(true);
+        gridView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
         gridView.setOnItemClickListener(this);
         updateColumns();
 
@@ -90,47 +94,6 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (flipCount>=2) {
-			// user clicked before the previous images flipped so 
-			// speed up the flipover by clearing the handler and
-			// flipping in the same thread. then proceed to flip the next card
-			flipHandler.removeCallbacksAndMessages(null);
-			new flipOverHandler(null).run();
-		}
-		MatchPerson person = (MatchPerson) adapter.getItem(position);
-        String name = person.getPerson().getGivenName();
-
-		if (!person.isFlipped()){
-			if (flip1 < 0) flip1 = position;
-			else flip2 = position;
-			person.setFlipped(true);
-			//-- TODO get relationship name
-            if (name != null) {
-                speak(name);
-            }
-			flipCount++;
-			if (flipCount == 2) {
-				if (game.isMatch(flip1, flip2)) {
-					MatchPerson person1 = (MatchPerson) adapter.getItem(flip1);
-					MatchPerson person2 = (MatchPerson) adapter.getItem(flip2);
-					person1.setMatched(true);
-					person2.setMatched(true);
-				}
-				flip1 = -1;
-				flip2 = -1;
-				flipHandler = new Handler();
-				flipHandler.postDelayed(new flipOverHandler(name), FLIP_OVER_DELAY);
-			}
-            ObjectAnimator anim = (ObjectAnimator) AnimatorInflater.loadAnimator(this, R.animator.flipping);
-            anim.setTarget(view);
-            anim.setDuration(FLIP_TIME);
-            anim.start();
-			adapter.notifyDataSetChanged();
-		}
-    }
-
-    @Override
     public void onComplete(ArrayList<LittlePerson> family) {
         for(LittlePerson p : family) {
             if (!people.contains(p)) people.add(p);
@@ -146,6 +109,70 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
     @Override
     public void onStatusUpdate(String message) {
 
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+        if (flipCount>=2) {
+            // user clicked before the previous images flipped so
+            // speed up the flipover by clearing the handler and
+            // flipping in the same thread. then proceed to flip the next card
+            flipHandler.removeCallbacksAndMessages(null);
+            new flipOverHandler(null).run();
+        }
+        MatchPerson person = (MatchPerson) adapter.getItem(position);
+        String name = person.getPerson().getGivenName();
+
+        if (!person.isFlipped()){
+            if (flip1 < 0) flip1 = position;
+            else flip2 = position;
+            person.setFlipped(true);
+            //-- TODO get relationship name
+            if (name != null) {
+                speak(name);
+            }
+            flipCount++;
+            if (flipCount == 2) {
+                if (game.isMatch(flip1, flip2)) {
+                    MatchPerson person1 = (MatchPerson) adapter.getItem(flip1);
+                    MatchPerson person2 = (MatchPerson) adapter.getItem(flip2);
+                    person1.setMatched(true);
+                    person2.setMatched(true);
+                }
+                flip1 = -1;
+                flip2 = -1;
+                flipHandler = new Handler();
+                flipHandler.postDelayed(new flipOverHandler(name), FLIP_OVER_DELAY);
+            }
+            ObjectAnimator anim = (ObjectAnimator) AnimatorInflater.loadAnimator(this, R.animator.flipping);
+            anim.setTarget(view);
+            anim.setDuration(FLIP_TIME);
+            anim.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    gridView.setEnabled(false);
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    adapter.notifyDataSetChanged();
+                    view.clearAnimation();
+                    view.invalidate();
+                    gridView.invalidate();
+                    gridView.setEnabled(true);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+                }
+            });
+            anim.start();
+            adapter.notifyDataSetChanged();
+        }
     }
 
     public class flipOverHandler implements Runnable {
@@ -172,10 +199,33 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
                 if (!p.isMatched()) {
                     if (p.isFlipped()) {
                         ObjectAnimator anim = (ObjectAnimator) AnimatorInflater.loadAnimator(MatchGameActivity.this, R.animator.flipping);
-                        View view = gridView.getChildAt(pos);
+                        final View view = gridView.getChildAt(pos);
                         anim.setTarget(view);
                         anim.setDuration(FLIP_TIME);
-                        anim.start();
+                        anim.addListener(new Animator.AnimatorListener() {
+                            @Override
+                            public void onAnimationStart(Animator animation) {
+                                gridView.setEnabled(false);
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                adapter.notifyDataSetChanged();
+                                view.clearAnimation();
+                                view.invalidate();
+                                gridView.invalidate();
+                                gridView.setEnabled(true);
+                            }
+
+                            @Override
+                            public void onAnimationCancel(Animator animation) {
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animator animation) {
+                            }
+                        });
+                        anim.reverse();
                         p.setFlipped(false);
                     }
                 }
@@ -183,6 +233,7 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
             }
             flipCount = 0;
             adapter.notifyDataSetChanged();
+            gridView.invalidate();
         }
     }
 

@@ -12,9 +12,10 @@ import android.view.SurfaceView;
  * Created by kids on 4/30/15.
  */
 public abstract class AbstractTouchAnimatedSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
+    public static final long FPS = 30L;
     protected Context context;
     protected AnimationThread animationThread;
-    protected long animationDelay = 33L;
+    protected long animationDelay = 1000/FPS;
     protected float touchTolerance = 4;
 
     public AbstractTouchAnimatedSurfaceView(Context context) {
@@ -171,23 +172,32 @@ public abstract class AbstractTouchAnimatedSurfaceView extends SurfaceView imple
                 long starttime = System.currentTimeMillis();
                 view.doStep();
                 Canvas canvas = holder.lockCanvas();
-                if(canvas != null) {
-                    view.doDraw(canvas);
-                    holder.unlockCanvasAndPost(canvas);
+                try {
+                    synchronized (view.getHolder()) {
+                        if (canvas != null) {
+                            view.doDraw(canvas);
+                        }
+                    }
+                } finally {
+                    if (canvas!=null) {
+                        holder.unlockCanvasAndPost(canvas);
+                    }
                 }
                 long calctime = System.currentTimeMillis() - starttime;
                 long sleeptime = animationDelay - calctime;
 
-                int skippedFrames = (int) (calctime / animationDelay);
-                if (skippedFrames > 1 ) {
-                    Log.d(this.getClass().getSimpleName(), "Slow calculations missed "+skippedFrames+" frames.");
-                    sleeptime = animationDelay;
-                    int catchUp = (int) (skippedFrames*1.5);
-                    for(int c=0; c<catchUp; c++) {
-                        view.doStep();
+                if (sleeptime <= 0) {
+                    int skippedFrames = (int) (calctime / animationDelay);
+                    if (skippedFrames > 1) {
+                        Log.d(this.getClass().getSimpleName(), "Slow calculations missed " + skippedFrames + " frames.");
+                        int catchUp = (int) (skippedFrames);
+                        for (int c = 0; c < catchUp; c++) {
+                            view.doStep();
+                        }
                     }
+                    sleeptime = calctime - skippedFrames*animationDelay;
+                    if (sleeptime<=0) sleeptime = animationDelay;
                 }
-                if (sleeptime <=0 ) sleeptime = animationDelay;
 
                 try {
                     sleep(sleeptime);

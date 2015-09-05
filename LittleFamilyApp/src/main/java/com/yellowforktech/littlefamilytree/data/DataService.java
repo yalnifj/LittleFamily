@@ -218,6 +218,7 @@ public class DataService implements AuthTask.Listener {
 
     public boolean hasData() throws Exception {
         //-- check succesful login
+        waitForAuth();
         if (remoteService.getSessionId() == null) return false;
         //-- check for people
         LittlePerson person = getDBHelper().getFirstPerson();
@@ -361,7 +362,10 @@ public class DataService implements AuthTask.Listener {
                                 Log.d("SyncThread", "Local date=" + person.getLastSync() + " remote date=" + entry.getUpdated());
                             }
                             if (entry == null || entry.getUpdated().after(person.getLastSync())) {
-                                syncPerson(person);
+                                person = syncPerson(person);
+                                if (person==null) {
+                                    continue;
+                                }
                                 try {
                                     Thread.sleep(10000);  //-- don't bombard the server
                                 } catch (InterruptedException e) {
@@ -410,93 +414,99 @@ public class DataService implements AuthTask.Listener {
     }
     //--end sync thread
 
-    public void syncPerson(LittlePerson person) throws Exception {
+    public LittlePerson syncPerson(LittlePerson person) throws Exception {
         Person fsPerson = remoteService.getPerson(person.getFamilySearchId(), false);
-        LittlePerson updated = DataHelper.buildLittlePerson(fsPerson, context, remoteService, false);
-        updated.setId(person.getId());
-        person.setLastSync(updated.getLastSync());
-        person.setPhotoPath(updated.getPhotoPath());
-        person.setAge(updated.getAge());
-        person.setBirthDate(updated.getBirthDate());
-        person.setFamilySearchId(updated.getFamilySearchId());
-        person.setGender(updated.getGender());
-        person.setGivenName(updated.getGivenName());
-        person.setName(updated.getName());
-        getDBHelper().persistLittlePerson(person);
+        if (fsPerson.getTransientProperty("deleted")!=null) {
+            getDBHelper().deletePersonById(person.getId());
+            return null;
+        } else {
+            LittlePerson updated = DataHelper.buildLittlePerson(fsPerson, context, remoteService, false);
+            updated.setId(person.getId());
+            person.setLastSync(updated.getLastSync());
+            person.setPhotoPath(updated.getPhotoPath());
+            person.setAge(updated.getAge());
+            person.setBirthDate(updated.getBirthDate());
+            person.setFamilySearchId(updated.getFamilySearchId());
+            person.setGender(updated.getGender());
+            person.setGivenName(updated.getGivenName());
+            person.setName(updated.getName());
+            getDBHelper().persistLittlePerson(person);
 
-        try {
-            Thread.sleep(5000);  //-- don't bombard the server
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        List<Relationship> closeRelatives = remoteService.getCloseRelatives(person.getFamilySearchId(), false);
-        if (closeRelatives != null) {
-            List<com.yellowforktech.littlefamilytree.data.Relationship> oldRelations = getDBHelper().getRelationshipsForPerson(person.getId());
-            for (Relationship r : closeRelatives) {
-                com.yellowforktech.littlefamilytree.data.RelationshipType type = com.yellowforktech.littlefamilytree.data.RelationshipType.PARENTCHILD;
-                if (r.getKnownType() == RelationshipType.Couple) {
-                    type = com.yellowforktech.littlefamilytree.data.RelationshipType.SPOUSE;
+            try {
+                Thread.sleep(5000);  //-- don't bombard the server
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            List<Relationship> closeRelatives = remoteService.getCloseRelatives(person.getFamilySearchId(), false);
+            if (closeRelatives != null) {
+                List<com.yellowforktech.littlefamilytree.data.Relationship> oldRelations = getDBHelper().getRelationshipsForPerson(person.getId());
+                for (Relationship r : closeRelatives) {
+                    com.yellowforktech.littlefamilytree.data.RelationshipType type = com.yellowforktech.littlefamilytree.data.RelationshipType.PARENTCHILD;
+                    if (r.getKnownType() == RelationshipType.Couple) {
+                        type = com.yellowforktech.littlefamilytree.data.RelationshipType.SPOUSE;
+                    }
+                    com.yellowforktech.littlefamilytree.data.Relationship rel = syncRelationship(r.getPerson1().getResourceId(), r.getPerson2().getResourceId(), type);
+                    if (rel != null) {
+                        oldRelations.remove(rel);
+                    }
                 }
-                com.yellowforktech.littlefamilytree.data.Relationship rel = syncRelationship(r.getPerson1().getResourceId(), r.getPerson2().getResourceId(), type);
-                if (rel != null) {
-                    oldRelations.remove(rel);
+
+                for (com.yellowforktech.littlefamilytree.data.Relationship rel : oldRelations) {
+                    getDBHelper().deleteRelationshipById(rel.getId());
                 }
             }
 
-            for (com.yellowforktech.littlefamilytree.data.Relationship rel : oldRelations) {
-                getDBHelper().deleteRelationshipById(rel.getId());
-            }
-        }
-
-        List<SourceDescription> sds = remoteService.getPersonMemories(person.getFamilySearchId(), true);
-        boolean foundMedia = false;
-        if (sds != null) {
-            List<Media> oldMedia = getDBHelper().getMediaForPerson(person.getId());
-            for (SourceDescription sd : sds) {
-                Media med = getDBHelper().getMediaByFamilySearchId(sd.getId());
-                if (med == null) {
-                    List<Link> links = sd.getLinks();
-                    if (links != null) {
-                        for (Link link : links) {
-                            if (link.getRel() != null && link.getRel().equals("image")) {
-                                med = new Media();
-                                med.setType("photo");
-                                med.setFamilySearchId(sd.getId());
-                                String localPath = DataHelper.downloadFile(link.getHref().toString(), person.getFamilySearchId(), DataHelper.lastPath(link.getHref().toString()), remoteService, context);
-                                if (localPath != null) {
-                                    foundMedia = true;
-                                    med.setLocalPath(localPath);
-                                    getDBHelper().persistMedia(med);
-                                    Tag tag = new Tag();
-                                    tag.setMediaId(med.getId());
-                                    tag.setPersonId(person.getId());
-                                    getDBHelper().persistTag(tag);
+            List<SourceDescription> sds = remoteService.getPersonMemories(person.getFamilySearchId(), true);
+            boolean foundMedia = false;
+            if (sds != null) {
+                List<Media> oldMedia = getDBHelper().getMediaForPerson(person.getId());
+                for (SourceDescription sd : sds) {
+                    Media med = getDBHelper().getMediaByFamilySearchId(sd.getId());
+                    if (med == null) {
+                        List<Link> links = sd.getLinks();
+                        if (links != null) {
+                            for (Link link : links) {
+                                if (link.getRel() != null && link.getRel().equals("image")) {
+                                    med = new Media();
+                                    med.setType("photo");
+                                    med.setFamilySearchId(sd.getId());
+                                    String localPath = DataHelper.downloadFile(link.getHref().toString(), person.getFamilySearchId(), DataHelper.lastPath(link.getHref().toString()), remoteService, context);
+                                    if (localPath != null) {
+                                        foundMedia = true;
+                                        med.setLocalPath(localPath);
+                                        getDBHelper().persistMedia(med);
+                                        Tag tag = new Tag();
+                                        tag.setMediaId(med.getId());
+                                        tag.setPersonId(person.getId());
+                                        getDBHelper().persistTag(tag);
+                                    }
                                 }
                             }
                         }
+                    } else {
+                        foundMedia = true;
+                        oldMedia.remove(med);
+                    }
+                }
+
+                for (Media old : oldMedia) {
+                    getDBHelper().deleteMediaById(old.getId());
+                }
+
+                if (foundMedia) {
+                    if (person.isHasMedia() == null || person.isHasMedia() == false) {
+                        person.setHasMedia(true);
+                        getDBHelper().persistLittlePerson(person);
                     }
                 } else {
-                    foundMedia = true;
-                    oldMedia.remove(med);
-                }
-            }
-
-            for (Media old : oldMedia) {
-                getDBHelper().deleteMediaById(old.getId());
-            }
-
-            if (foundMedia) {
-                if (person.isHasMedia() == null || person.isHasMedia() == false) {
-                    person.setHasMedia(true);
-                    getDBHelper().persistLittlePerson(person);
-                }
-            } else {
-                if (person.isHasMedia() == null || person.isHasMedia() == true) {
-                    person.setHasMedia(false);
-                    getDBHelper().persistLittlePerson(person);
+                    if (person.isHasMedia() == null || person.isHasMedia() == true) {
+                        person.setHasMedia(false);
+                        getDBHelper().persistLittlePerson(person);
+                    }
                 }
             }
         }
+        return person;
     }
 
     private com.yellowforktech.littlefamilytree.data.Relationship syncRelationship(String fsid1, String fsid2, com.yellowforktech.littlefamilytree.data.RelationshipType type) throws Exception {
@@ -523,6 +533,8 @@ public class DataService implements AuthTask.Listener {
             getDBHelper().persistLittlePerson(relative);
         }
         if (person !=null && relative!=null) {
+            boolean personChanged = false;
+            boolean relativeChanged = false;
             com.yellowforktech.littlefamilytree.data.Relationship rel = getDBHelper().getRelationship(person.getId(), relative.getId(), type);
             if (rel==null) {
                 rel = new com.yellowforktech.littlefamilytree.data.Relationship();
@@ -531,6 +543,38 @@ public class DataService implements AuthTask.Listener {
                 rel.setType(type);
                 getDBHelper().persistRelationship(rel);
             }
+
+            if (rel.getType() == com.yellowforktech.littlefamilytree.data.RelationshipType.SPOUSE) {
+                person.setHasSpouses(true);
+                relative.setHasSpouses(true);
+                if (person.getAge() == null && relative.getAge() != null) {
+                    person.setAge(relative.getAge());
+                    personChanged = true;
+                }
+                if (relative.getAge() == null && person.getAge() != null) {
+                    relative.setAge(person.getAge());
+                    relativeChanged = true;
+                }
+            } else {
+                person.setHasChildren(true);
+                if (relative.getAge() == null && person.getAge() != null) {
+                    relative.setAge(person.getAge() - 25);
+                    relativeChanged = true;
+                }
+                relative.setHasParents(true);
+                if (person.getAge() == null && relative.getAge() != null) {
+                    person.setAge(relative.getAge() + 25);
+                    personChanged = true;
+                }
+            }
+
+            if (personChanged) {
+                getDBHelper().persistLittlePerson(person);
+            }
+            if (relativeChanged) {
+                getDBHelper().persistLittlePerson(relative);
+            }
+
             return rel;
         }
         return null;

@@ -34,16 +34,18 @@ public class ForceSynceTask extends AsyncTask<LittlePerson, String, LittlePerson
             for (LittlePerson p : persons) {
                 try {
                     person = p;
-                    dataService.syncPerson(person);
+                    person = dataService.syncPerson(person);
+                    if (person!=null) {
 
-                    statusUpdate("Syncing parents of "+person.getName());
-                    List<LittlePerson> parents = dataService.getParents(person);
+                        statusUpdate("Syncing parents of " + person.getName());
+                        List<LittlePerson> parents = dataService.getParents(person);
 
-                    statusUpdate("Syncing spouses of "+person.getName());
-                    List<LittlePerson> spouses = dataService.getSpouses(person);
+                        statusUpdate("Syncing spouses of " + person.getName());
+                        List<LittlePerson> spouses = dataService.getSpouses(person);
 
-                    statusUpdate("Syncing children of "+person.getName());
-                    List<LittlePerson> children = dataService.getChildren(person);
+                        statusUpdate("Syncing children of " + person.getName());
+                        List<LittlePerson> children = dataService.getChildren(person);
+                    }
 
                 } catch (Exception e) {
                     Log.e(this.getClass().getSimpleName(), "error", e);

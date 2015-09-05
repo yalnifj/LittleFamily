@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -11,7 +12,6 @@ import android.view.View;
 
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.data.DataService;
-import com.yellowforktech.littlefamilytree.data.ErrorLogger;
 import com.yellowforktech.littlefamilytree.events.EventListener;
 import com.yellowforktech.littlefamilytree.events.EventQueue;
 import com.yellowforktech.littlefamilytree.sprites.TouchStateAnimatedBitmapSprite;
@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+//import com.yellowforktech.littlefamilytree.data.ErrorLogger;
 
 public class SplashActivity extends Activity implements EventListener {
 
@@ -35,13 +37,23 @@ public class SplashActivity extends Activity implements EventListener {
 
         plantView = (SpritedSurfaceView) findViewById(R.id.plantView);
 
-        ErrorLogger logger = ErrorLogger.getInstance(this);
-        if (!logger.isAlive()) logger.start();
+        //ErrorLogger logger = ErrorLogger.getInstance(this);
+        //if (!logger.isAlive()) logger.start();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+
+        MediaPlayer introPlayer = MediaPlayer.create(this, R.raw.intro);
+        introPlayer.start();
+        introPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                mp.release();
+            }
+        });
+
         dataService = DataService.getInstance();
         dataService.setContext(this);
 

@@ -244,6 +244,22 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
                         personCache.put(personId, person);
                     }
                 }
+                //-- not found
+                else if(result.getStatusCode()==404) {
+                    personCache.remove(personId);
+                    Person person = new Person();
+                    person.setId(personId);
+                    person.setTransientProperty("deleted", true);
+                    return person;
+                }
+                //-- deleted
+                else if(result.getStatusCode()==410) {
+                    personCache.remove(personId);
+                    Person person = new Person();
+                    person.setId(personId);
+                    person.setTransientProperty("deleted", true);
+                    return person;
+                }
                 else {
                     //-- check status and retry if possible
                     if (handleStatusCodes(result)) {

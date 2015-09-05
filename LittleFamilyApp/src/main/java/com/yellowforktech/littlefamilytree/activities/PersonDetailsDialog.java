@@ -174,10 +174,16 @@ public class PersonDetailsDialog extends DialogFragment implements CompoundButto
 
 	@Override
 	public void onComplete(LittlePerson person) {
-		this.person = person;
-		if (pd!=null) pd.dismiss();
-		updatePerson();
-		Toast.makeText(this.getActivity(), "Succefully synced person "+person.getName(), Toast.LENGTH_LONG);
+		if (person==null) {
+			if (pd != null) pd.dismiss();
+			this.dismissAllowingStateLoss();
+			Toast.makeText(this.getActivity(), "This person was deleted in the remote family tree", Toast.LENGTH_LONG);
+		} else {
+			this.person = person;
+			if (pd != null) pd.dismiss();
+			updatePerson();
+			Toast.makeText(this.getActivity(), "Succefully synced person " + person.getName(), Toast.LENGTH_LONG);
+		}
 	}
 
 	@Override

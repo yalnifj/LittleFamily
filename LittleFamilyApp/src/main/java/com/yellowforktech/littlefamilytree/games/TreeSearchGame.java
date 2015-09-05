@@ -89,7 +89,7 @@ public class TreeSearchGame {
         }
 
         complete = false;
-        clueNumber = rand.nextInt(3);
+        clueNumber = rand.nextInt(clues.length);
     }
 
     public String getClueText() {

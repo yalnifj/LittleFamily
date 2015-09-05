@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Space;
 import android.widget.TextView;
 
 import com.yellowforktech.littlefamilytree.R;
@@ -120,6 +121,10 @@ public class HeritageDressUpActivity extends LittleFamilyActivity implements Dre
             ll.addView(place);
 
             dollLayout.addView(ll);
+
+            Space spacer = new Space(this);
+            spacer.setMinimumWidth(10);
+            dollLayout.addView(spacer);
         }
     }
 

@@ -7,7 +7,6 @@ import android.media.MediaPlayer;
 import android.util.Log;
 
 import com.yellowforktech.littlefamilytree.R;
-import com.yellowforktech.littlefamilytree.events.EventQueue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,9 +91,10 @@ public class BirdSprite extends AnimatedBitmapSprite {
             }
         }
         if (state==2) {
-            if (frame>=bitmaps.get(state).size()-1) {
-                EventQueue.getInstance().publish(eventTopic, this);
+            if (bitmaps.get(state)==null || frame>=bitmaps.get(state).size()-1) {
+                //EventQueue.getInstance().publish(eventTopic, this);
                 state = 0;
+                frame = 0;
             }
         }
     }
