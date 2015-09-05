@@ -46,10 +46,11 @@ public class TreeLoaderTask extends AsyncTask<LittlePerson, Integer, TreeNode> {
             if (maxDepth>1 && root.getChildren()!= null && root.getChildren().size()>0) {
                 maxDepth--; //-- reduce the depth if we have children
             }
-            addParents(root);
+            addParents(root, false);
             //-- add siblings if root node has no children
             if (root.getChildren()==null || root.getChildren().size()==0) {
                 addChildren(root.getLeft(), 1);
+				root.setIsChild(true);
             }
         } catch (Exception e) {
             Log.e(this.getClass().getSimpleName(), "error", e);
@@ -57,7 +58,7 @@ public class TreeLoaderTask extends AsyncTask<LittlePerson, Integer, TreeNode> {
         return root;
     }
 
-    protected void addParents(TreeNode node) throws Exception {
+    protected void addParents(TreeNode node, boolean isInLaw) throws Exception {
         if (node.getDepth() > startingDepth+maxDepth) {
             LittlePerson person = node.getPerson();
             if (person!=null) {
@@ -79,6 +80,7 @@ public class TreeLoaderTask extends AsyncTask<LittlePerson, Integer, TreeNode> {
 
         TreeNode pNode = new TreeNode();
         pNode.setDepth(node.getDepth() + 1);
+		pNode.setIsInLaw(isInLaw);
         LittlePerson person = node.getPerson();
         if (person!=null) {
             List<LittlePerson> parents = dataService.getParents(person);
@@ -89,7 +91,7 @@ public class TreeLoaderTask extends AsyncTask<LittlePerson, Integer, TreeNode> {
                 pNode.setSpouses(spList);
             }
         }
-        addParents(pNode);
+        addParents(pNode,isInLaw);
 
         if (person.getGender()== GenderType.Female) {
             node.setRight(pNode);
@@ -98,8 +100,10 @@ public class TreeLoaderTask extends AsyncTask<LittlePerson, Integer, TreeNode> {
         }
 
         if (node.getDepth()>0 || node.getSpouse()!=null) {
+			if (node.isRoot()) isInLaw=true;
             TreeNode prNode = new TreeNode();
             prNode.setDepth(node.getDepth() + 1);
+			prNode.setIsInLaw(isInLaw);
             LittlePerson spouse = node.getSpouse();
             if (spouse != null) {
                 List<LittlePerson> sparents = dataService.getParents(spouse);
@@ -112,7 +116,7 @@ public class TreeLoaderTask extends AsyncTask<LittlePerson, Integer, TreeNode> {
                     }
                 }
             }
-            addParents(prNode);
+            addParents(prNode, isInLaw);
             if (spouse.getGender()== GenderType.Female) {
                 node.setRight(prNode);
             } else {

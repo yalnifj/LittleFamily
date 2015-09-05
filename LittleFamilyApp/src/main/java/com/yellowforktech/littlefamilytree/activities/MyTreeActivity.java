@@ -392,6 +392,7 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
                 childNode.setPerson(child);
                 childNode.setDepth(0);
                 childNode.setIsRoot(false);
+				childNode.setIsChild(true);
                 childSprite = addTreeSprite(childNode, (int)x, (int)y-(30*dm.density), true);
                 treeView.removeSprite(childSprite);
                 childSprites.add(childSprite);

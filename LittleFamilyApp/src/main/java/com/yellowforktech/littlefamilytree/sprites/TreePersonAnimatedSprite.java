@@ -203,7 +203,7 @@ public class TreePersonAnimatedSprite extends Sprite {
                     LittlePerson person = father;
                     if (person==null) person = mother;
                     try {
-                        String relationship = node.getAncestralRelationship(person);
+                        String relationship = node.getAncestralRelationship(person, activity);
                         String text = "";
                         if (!relationship.equalsIgnoreCase("you")) {
                             text = String.format(activity.getResources().getString(R.string.relative_is_your),
@@ -221,7 +221,7 @@ public class TreePersonAnimatedSprite extends Sprite {
                 else {
                     state = STATE_OPEN_RIGHT;
                     try {
-                        String relationship = node.getAncestralRelationship(mother);
+                        String relationship = node.getAncestralRelationship(mother, activity);
                         String text = "";
                         if (!relationship.equalsIgnoreCase("you")) {
                             text = String.format(activity.getResources().getString(R.string.relative_is_your),
@@ -348,7 +348,7 @@ public class TreePersonAnimatedSprite extends Sprite {
                 String name = detailPerson.getName();
                 if (name == null) name = detailPerson.getGivenName();
                 canvas.drawText(name, getX() + leftLeaf.getWidth() + detailWidth / 2, getY() + 30, textPaint);
-                String relationship = node.getAncestralRelationship(detailPerson);
+                String relationship = node.getAncestralRelationship(detailPerson, activity);
                 canvas.drawText(relationship, getX() + leftLeaf.getWidth() + detailWidth / 2, getY() + 70, textPaint);
 
                 float bx = getX() + leftLeaf.getWidth() + 20;
@@ -372,7 +372,7 @@ public class TreePersonAnimatedSprite extends Sprite {
                 String name = detailPerson.getName();
                 if (name == null) name = detailPerson.getGivenName();
                 canvas.drawText(name, getX() + getWidth() + detailWidth / 2, getY() + 30, textPaint);
-                String relationship = node.getAncestralRelationship(detailPerson);
+                String relationship = node.getAncestralRelationship(detailPerson, activity);
                 canvas.drawText(relationship, getX() + getWidth() + detailWidth / 2, getY() + 70, textPaint);
 
                 float bx = getX() + getWidth() + 20;

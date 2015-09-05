@@ -9,6 +9,8 @@ import com.yellowforktech.littlefamilytree.data.TreeNode;
 import org.gedcomx.types.GenderType;
 
 import java.util.Random;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by jfinlay on 7/23/2015.
@@ -22,6 +24,7 @@ public class TreeSearchGame {
     private boolean complete;
     private TreeClue[] clues;
     private int clueNumber;
+	private List<LittlePerson> recentPeople;
 
     public TreeSearchGame(Context context) {
         this.context = context;
@@ -31,6 +34,8 @@ public class TreeSearchGame {
         clues[1] = new NameTreeClue();
         clues[2] = new FullNameTreeClue();
         clues[3] = new RelationshipTreeClue();
+		
+		recentPeople = new ArrayList<>();
     }
 
     public boolean isComplete() {
@@ -50,14 +55,21 @@ public class TreeSearchGame {
         rootPerson = root.getPerson();
         Random rand = new Random();
         targetPerson = null;
+		int counter = 0;
         int upDown = rand.nextInt(3);
         if (upDown==0) {
             if (root.getChildren()!=null && root.getChildren().size()>0) {
                 targetNode = root;
-                targetPerson = root.getChildren().get(rand.nextInt(root.getChildren().size()));
+                while (counter<10 && (targetPerson==null || recentPeople.contains(targetPerson))) {
+					targetPerson = root.getChildren().get(rand.nextInt(root.getChildren().size()));
+					counter++;
+				}
             } else if (root.getLeft()!=null && root.getLeft().getChildren()!=null && root.getLeft().getChildren().size()>0) {
                 targetNode = root.getLeft();
-                targetPerson = root.getLeft().getChildren().get(rand.nextInt(root.getLeft().getChildren().size()));
+				while (counter<10 &&(targetPerson==null || recentPeople.contains(targetPerson))) {
+                	targetPerson = root.getLeft().getChildren().get(rand.nextInt(root.getLeft().getChildren().size()));
+					counter++;
+				}
             }
         }
         if (targetPerson==null) {
@@ -65,7 +77,7 @@ public class TreeSearchGame {
             int p = rand.nextInt(2);
             if (targetNode.getLeft() != null) targetNode = targetNode.getLeft();
             if (p > 0 && targetNode.getRight() != null) targetNode = targetNode.getRight();
-            while (targetPerson == null) {
+            while (counter<10 && (targetPerson == null || recentPeople.contains(targetPerson))) {
                 int n = rand.nextInt(4);
                 switch (n) {
                     case 0:
@@ -85,6 +97,7 @@ public class TreeSearchGame {
                         targetPerson = targetNode.getSpouse();
                         break;
                 }
+				counter++;
             }
         }
 
@@ -104,7 +117,12 @@ public class TreeSearchGame {
     public boolean isMatch(TreeNode node, boolean isSpouse) {
         TreeClue clue = clues[clueNumber];
         boolean ret = clue.isMatch(node, isSpouse);
-        if (ret) complete = true;
+        if (ret) {
+			complete = true;
+			if (isSpouse) recentPeople.add(node.getSpouse());
+			else recentPeople.add(node.getPerson());
+			if (recentPeople.size()>5) recentPeople.remove(0);
+		}
         return ret;
     }
 
@@ -154,7 +172,7 @@ public class TreeSearchGame {
     public class RelationshipTreeClue implements TreeClue {
         @Override
         public String getClueText() {
-            String relationship = targetNode.getAncestralRelationship(targetPerson);
+            String relationship = targetNode.getAncestralRelationship(targetPerson, context);
             String clue = String.format(context.getResources().getString(R.string.clue_find_by_relationship), relationship);
             return clue;
         }
@@ -165,8 +183,8 @@ public class TreeSearchGame {
             if (isSpouse) person = node.getSpouse();
             if (person!=null) {
                 if (person==targetPerson) return true;
-                String relationship1 = targetNode.getAncestralRelationship(targetPerson);
-                String relationship2 = node.getAncestralRelationship(person);
+                String relationship1 = targetNode.getAncestralRelationship(targetPerson, context);
+                String relationship2 = node.getAncestralRelationship(person, context);
                 if (relationship1.equals(relationship2)) return true;
             }
             return false;

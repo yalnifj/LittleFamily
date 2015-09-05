@@ -3,6 +3,8 @@ package com.yellowforktech.littlefamilytree.data;
 import org.gedcomx.types.GenderType;
 
 import java.util.List;
+import android.content.Context;
+import com.yellowforktech.littlefamilytree.R;
 
 /**
  * Created by Parents on 5/29/2015.
@@ -17,6 +19,8 @@ public class TreeNode {
     private boolean isRoot;
     private boolean hasParents;
     private List<LittlePerson> children;
+	private boolean isChild;
+	private boolean isInLaw;
 
     public LittlePerson getPerson() {
         return person;
@@ -95,41 +99,66 @@ public class TreeNode {
     public void setIsRoot(boolean isRoot) {
         this.isRoot = isRoot;
     }
+	
+	public void setIsChild(boolean isChild)
+	{
+		this.isChild = isChild;
+	}
 
-    public String getAncestralRelationship(LittlePerson p) {
+	public boolean isChild()
+	{
+		return isChild;
+	}
+	
+	public void setIsInLaw(boolean isInLaw)
+	{
+		this.isInLaw = isInLaw;
+	}
+
+	public boolean isInLaw()
+	{
+		return isInLaw;
+	}
+
+    public String getAncestralRelationship(LittlePerson p, Context context) {
         String rel = "";
         for(int g=3; g<=this.getDepth(); g++) {
-            rel += "Great ";
+            rel += context.getResources().getString(R.string.great)+" ";
         }
         if (this.getDepth()>=2) {
-            rel += "Grand ";
+            rel += context.getResources().getString(R.string.grand)+" ";
         }
         if (p.getGender()== GenderType.Female) {
             if (this.getDepth()==0) {
                 if (this.isRoot()) {
-                    if (p==this.getPerson()) rel = "You";
-                    else rel = "Wife";
+                    if (p==this.getPerson()) rel = context.getResources().getString(R.string.you);
+                    else rel = context.getResources().getString(R.string.wife);
                 } else {
-                    rel = "Sister";
+                    if (isChild) rel = context.getResources().getString(R.string.daughter);
+					else rel = context.getResources().getString(R.string.sister);
                 }
             } else {
-                rel += "Mother";
+                rel += context.getResources().getString(R.string.mother);
             }
         }
         else if (p.getGender()==GenderType.Male) {
             if (this.getDepth()==0) {
                 if (this.isRoot()) {
-                    if (p==this.getPerson()) rel = "You";
-                    else rel = "Husband";
+                    if (p==this.getPerson()) rel = context.getResources().getString(R.string.you);
+                    else rel = context.getResources().getString(R.string.husband);
                 } else {
-                    rel = "Brother";
+                    if (isChild) rel = context.getResources().getString(R.string.son);
+					else rel = context.getResources().getString(R.string.brother);
                 }
             } else {
-                rel += "Father";
+                rel += context.getResources().getString(R.string.father);
             }
         } else {
-            rel += "Parent";
+            rel += context.getResources().getString(R.string.parent);
         }
+		if (isInLaw) {
+			rel += " "+context.getResources().getString(R.string.inlaw);
+		}
         return rel;
     }
 }
