@@ -127,7 +127,7 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
             //-- draw the cropped bitmap onto the copy
             copyCanvas.drawBitmap(canvasBitmap, src, src, null);
 
-            Bitmap branding = ImageHelper.loadBitmapFromResource(context, R.drawable.little_family_logo,0, (int) (w*0.3f), (int) (h*0.3f));
+            Bitmap branding = ImageHelper.loadBitmapFromResource(context, R.drawable.little_family_logo,0, (int) (w*0.4f), (int) (h*0.4f));
             //-- add the branding mark
             Rect dst = new Rect();
             dst.set(0, h - branding.getHeight(), branding.getWidth(), h);
@@ -214,15 +214,17 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
         complete = false;
 
         if (bm!=null) {
-            if (mBitmap!=null) {
-                synchronized (mBitmap) {
-                    mBitmap = null;
+            synchronized (originalBitmap) {
+                if (mBitmap != null) {
+                    synchronized (mBitmap) {
+                        mBitmap = null;
+                    }
                 }
+
+                ColoringImageFilterTask task = new ColoringImageFilterTask(this);
+                task.execute(originalBitmap);
             }
 
-            ColoringImageFilterTask task = new ColoringImageFilterTask(this);
-            task.execute(originalBitmap);
-			
 			synchronized(sprites) {
 				sprites.clear();
 			}

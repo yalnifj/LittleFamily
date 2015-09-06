@@ -25,19 +25,24 @@ public class ColoringImageFilterTask extends AsyncTask<Bitmap, Integer, Bitmap> 
         EdgeFilter filter = new EdgeFilter();
         AlphaFilter alphaFilter = new AlphaFilter();
         Bitmap orig = params[0];
-        //-- scale down
-        Bitmap bm = Bitmap.createScaledBitmap(orig, Math.min(400, orig.getWidth()), Math.min(400, orig.getHeight()), true);
-        int[] src = AndroidUtils.bitmapToIntArray(bm);
-        long starttime = System.currentTimeMillis();
-        int[] dst = filter.filter(src, bm.getWidth(), bm.getHeight());
-        long endtime = System.currentTimeMillis();
-        Log.d(this.getClass().getSimpleName(), "EdgeFilter ("+bm.getWidth()+","+bm.getHeight()+") took " + (endtime - starttime) + "ms");
-        dst = alphaFilter.filter(dst, bm.getWidth(), bm.getHeight());
-        long endtime2 = System.currentTimeMillis();
-        Log.d(this.getClass().getSimpleName(), "AlphaFilter took "+ (endtime2-endtime)+"ms");
-        Bitmap outlineBitmap = Bitmap.createBitmap(dst, bm.getWidth(), bm.getHeight(), Bitmap.Config.ARGB_8888);
-        //-- scale back up
-        outlineBitmap = Bitmap.createScaledBitmap(outlineBitmap, orig.getWidth(), orig.getHeight(), true);
+        Bitmap outlineBitmap = null;
+        if (orig!=null && !orig.isRecycled()) {
+            synchronized (orig) {
+                //-- scale down
+                Bitmap bm = Bitmap.createScaledBitmap(orig, Math.min(400, orig.getWidth()), Math.min(400, orig.getHeight()), true);
+                int[] src = AndroidUtils.bitmapToIntArray(bm);
+                long starttime = System.currentTimeMillis();
+                int[] dst = filter.filter(src, bm.getWidth(), bm.getHeight());
+                long endtime = System.currentTimeMillis();
+                Log.d(this.getClass().getSimpleName(), "EdgeFilter (" + bm.getWidth() + "," + bm.getHeight() + ") took " + (endtime - starttime) + "ms");
+                dst = alphaFilter.filter(dst, bm.getWidth(), bm.getHeight());
+                long endtime2 = System.currentTimeMillis();
+                Log.d(this.getClass().getSimpleName(), "AlphaFilter took " + (endtime2 - endtime) + "ms");
+                outlineBitmap = Bitmap.createBitmap(dst, bm.getWidth(), bm.getHeight(), Bitmap.Config.ARGB_8888);
+                //-- scale back up
+                outlineBitmap = Bitmap.createScaledBitmap(outlineBitmap, orig.getWidth(), orig.getHeight(), true);
+            }
+        }
         return outlineBitmap;
     }
 

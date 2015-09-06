@@ -168,12 +168,31 @@ public class RandomMediaChooser implements MemoriesLoaderTask.Listener {
     public class FamilyLoaderListener implements FamilyLoaderTask.Listener {
         @Override
         public void onComplete(ArrayList<LittlePerson> family) {
+            int counter =0;
             for (LittlePerson p : family) {
-                if (!noPhotos.contains(p) && !people.contains(p)) people.add(p);
+                if (!noPhotos.contains(p) && !people.contains(p)) {
+                    people.add(p);
+                    counter++;
+                }
             }
 
             backgroundLoadIndex++;
-            loadRandomImage();
+
+            //-- no pictures add all the people
+            if (counter==0) {
+                people.addAll(family);
+                if (people.size()>1) {
+                    LittlePerson current = selectedPerson;
+                    Random rand = new Random();
+                    selectedPerson = people.get(rand.nextInt(people.size()));
+                    while (current == selectedPerson) {
+                        selectedPerson = people.get(rand.nextInt(people.size()));
+                    }
+                }
+                loadMoreFamilyMembers();
+            } else {
+                loadRandomImage();
+            }
         }
 
         @Override

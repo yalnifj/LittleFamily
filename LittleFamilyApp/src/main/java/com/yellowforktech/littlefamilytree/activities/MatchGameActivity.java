@@ -38,6 +38,7 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
     private Handler flipHandler;
 	private int flip1 = -1;
 	private int flip2 = -1;
+    private boolean flipping;
 
     private int backgroundLoadIndex = 0;
 
@@ -74,6 +75,7 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
     @Override
     protected void onStart() {
         super.onStart();
+        flipping = false;
         DataService.getInstance().registerNetworkStateListener(this);
         if (people.size()<2) {
             FamilyLoaderTask task = new FamilyLoaderTask(this, this);
@@ -113,6 +115,7 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
 
     @Override
     public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+        if (flipping) return;
         if (flipCount>=2) {
             // user clicked before the previous images flipped so
             // speed up the flipover by clearing the handler and
@@ -150,6 +153,7 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
             anim.addListener(new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(Animator animation) {
+                    flipping = true;
                     gridView.setEnabled(false);
                 }
 
@@ -160,6 +164,7 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
                     view.invalidate();
                     gridView.invalidate();
                     gridView.setEnabled(true);
+                    flipping = false;
                 }
 
                 @Override
@@ -206,6 +211,7 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
                             @Override
                             public void onAnimationStart(Animator animation) {
                                 gridView.setEnabled(false);
+                                flipping = true;
                             }
 
                             @Override
@@ -215,6 +221,7 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
                                 view.invalidate();
                                 gridView.invalidate();
                                 gridView.setEnabled(true);
+                                flipping = false;
                             }
 
                             @Override

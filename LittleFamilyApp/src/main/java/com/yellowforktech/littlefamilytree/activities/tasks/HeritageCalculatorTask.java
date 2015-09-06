@@ -50,7 +50,9 @@ public class HeritageCalculatorTask extends AsyncTask<LittlePerson, Integer, Arr
         while(paths.size() > 0) {
             try {
                 HeritagePath path = paths.removeFirst();
-                if (path.getTreePath().size()>=MAX_PATHS || (!path.getPlace().equals(origin) && !path.getPlace().equals(PlaceHelper.UNKNOWN))) {
+                if (path.getTreePath().size()>=MAX_PATHS ||
+                        (!path.getPlace().equals(origin) && !path.getPlace().equals(PlaceHelper.UNKNOWN)
+                                && path.getTreePath().size()>2)) {
                     returnPaths.add(path);
                 }
                 else {
@@ -71,6 +73,9 @@ public class HeritageCalculatorTask extends AsyncTask<LittlePerson, Integer, Arr
                             ppath.setTreePath(new ArrayList<LittlePerson>(path.getTreePath()));
                             ppath.getTreePath().add(parent);
                             paths.add(ppath);
+                            if (origin.equals(PlaceHelper.UNKNOWN) && !ppath.getPlace().equals(PlaceHelper.UNKNOWN)) {
+                                origin = ppath.getPlace();
+                            }
                         }
                     } else {
                         //-- if we don't know if this person has parents, then sync them to pick up the parents next time

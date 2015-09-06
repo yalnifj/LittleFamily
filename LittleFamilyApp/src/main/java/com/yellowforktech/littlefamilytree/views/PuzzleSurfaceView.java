@@ -112,84 +112,86 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
 		canvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
         thumbnailHeight = getHeight()/10;
         if (bitmap!=null && !bitmap.isRecycled()) {
-            int width = getWidth();
-            int height = getHeight() - thumbnailHeight;
-            pieceWidth = width / game.getCols();
-            pieceHeight = height / game.getRows();
-            int bWidth = bitmap.getWidth() / game.getCols();
-            int bHeight = bitmap.getHeight() / game.getRows();
+            synchronized (bitmap) {
+                int width = getWidth();
+                int height = getHeight() - thumbnailHeight;
+                pieceWidth = width / game.getCols();
+                pieceHeight = height / game.getRows();
+                int bWidth = bitmap.getWidth() / game.getCols();
+                int bHeight = bitmap.getHeight() / game.getRows();
 
-            //-- maintain image aspect ratio
-            if (width > height) {
-                float ratio = ((float) bWidth) / (float)bHeight;
-                pieceWidth = (int)(pieceHeight * ratio);
-            } else {
-                float ratio = ((float) bHeight) / (float)(bWidth);
-                pieceHeight = (int)(pieceWidth * ratio);
-            }
+                //-- maintain image aspect ratio
+                if (width > height) {
+                    float ratio = ((float) bWidth) / (float) bHeight;
+                    pieceWidth = (int) (pieceHeight * ratio);
+                } else {
+                    float ratio = ((float) bHeight) / (float) (bWidth);
+                    pieceHeight = (int) (pieceWidth * ratio);
+                }
 
-            int centerX = getWidth()/2;
-            int centerY = (getHeight()-thumbnailHeight)/2;
+                int centerX = getWidth() / 2;
+                int centerY = (getHeight() - thumbnailHeight) / 2;
 
-            int puzzleWidth = pieceWidth*game.getCols();
-            int puzzleHeight = pieceHeight*game.getRows();
+                int puzzleWidth = pieceWidth * game.getCols();
+                int puzzleHeight = pieceHeight * game.getRows();
 
-            int left = centerX - (puzzleWidth/2);
-            if (left < 0) left = 0;
-            int top = centerY - (puzzleHeight /2);
-            if (top < 0) top = 0;
+                int left = centerX - (puzzleWidth / 2);
+                if (left < 0) left = 0;
+                int top = centerY - (puzzleHeight / 2);
+                if (top < 0) top = 0;
 
-            for(int r=0; r<game.getRows(); r++) {
-                for(int c=0; c<game.getCols(); c++) {
-                    int y = top + (r * pieceHeight);
-                    int x = left + (c * pieceWidth);
+                for (int r = 0; r < game.getRows(); r++) {
+                    for (int c = 0; c < game.getCols(); c++) {
+                        int y = top + (r * pieceHeight);
+                        int x = left + (c * pieceWidth);
 
-                    PuzzlePiece pp = game.getPiece(r, c);
-                    int by = pp.getRow() * bHeight;
-                    int bx = pp.getCol() * bWidth;
-                    Rect src = new Rect();
-                    src.set(bx, by, bx + bWidth, by + bHeight);
+                        PuzzlePiece pp = game.getPiece(r, c);
+                        int by = pp.getRow() * bHeight;
+                        int bx = pp.getCol() * bWidth;
+                        Rect src = new Rect();
+                        src.set(bx, by, bx + bWidth, by + bHeight);
 
-                    if (!pp.isAnimating() && !pp.isSelected()) {
-                        pp.setX(x);
-                        pp.setY(y);
-                    } else {
-                        x = pp.getX();
-                        y = pp.getY();
-                    }
-                    Rect dst = new Rect();
-                    dst.set(x, y, x + pieceWidth, y + pieceHeight);
-                    if (!pp.isSelected()) {
-                        canvas.drawBitmap(bitmap, src, dst, outlinePaint);
-                        if (!pp.isInPlace())
-                            canvas.drawRect(dst, outlinePaint);
+                        if (!pp.isAnimating() && !pp.isSelected()) {
+                            pp.setX(x);
+                            pp.setY(y);
+                        } else {
+                            x = pp.getX();
+                            y = pp.getY();
+                        }
+                        Rect dst = new Rect();
+                        dst.set(x, y, x + pieceWidth, y + pieceHeight);
+                        if (!pp.isSelected()) {
+                            canvas.drawBitmap(bitmap, src, dst, outlinePaint);
+                            if (!pp.isInPlace())
+                                canvas.drawRect(dst, outlinePaint);
+                        }
                     }
                 }
-            }
 
-            if (selected!=null) {
-                int by = selected.getRow() * bHeight;
-                int bx = selected.getCol() * bWidth;
-                Rect src = new Rect();
-                src.set(bx, by, bx + bWidth, by + bHeight);
+                if (selected != null) {
+                    int by = selected.getRow() * bHeight;
+                    int bx = selected.getCol() * bWidth;
+                    Rect src = new Rect();
+                    src.set(bx, by, bx + bWidth, by + bHeight);
+                    Rect dst = new Rect();
+                    dst.set(selected.getX(), selected.getY(), selected.getX() + pieceWidth, selected.getY() + pieceHeight);
+                    canvas.drawRect((float) (dst.left + 10), (float) (dst.top + 10), (float) (dst.right + 10), (float) (dst.bottom + 10), shadowPaint);
+                    canvas.drawBitmap(bitmap, src, dst, outlinePaint);
+                    canvas.drawRect(dst, outlinePaint);
+                }
+
                 Rect dst = new Rect();
-                dst.set(selected.getX(), selected.getY(), selected.getX() + pieceWidth, selected.getY() + pieceHeight);
-                canvas.drawRect((float) (dst.left + 10), (float) (dst.top + 10), (float) (dst.right + 10), (float) (dst.bottom + 10), shadowPaint);
-                canvas.drawBitmap(bitmap, src, dst, outlinePaint);
+                float ratio = (float) bitmap.getWidth() / bitmap.getHeight();
+                dst.set(0, height, (int) (thumbnailHeight * ratio), height + thumbnailHeight);
+                canvas.drawBitmap(bitmap, null, dst, null);
+
                 canvas.drawRect(dst, outlinePaint);
-            }
 
-            Rect dst = new Rect();
-            float ratio = (float)bitmap.getWidth() / bitmap.getHeight();
-            dst.set(0, height, (int) (thumbnailHeight * ratio), height+thumbnailHeight);
-            canvas.drawBitmap(bitmap, null, dst, null);
-			
-			canvas.drawRect(dst, outlinePaint);
-
-            if (showHint) {
-                Rect dst1 = new Rect();
-                dst1.set(left, top, left + pieceWidth*game.getCols(), top + pieceHeight*game.getRows());
-                canvas.drawBitmap(bitmap, null, dst1, null);
+                if (showHint) {
+                    Rect dst1 = new Rect();
+                    dst1.set(left, top, left + pieceWidth * game.getCols(), top + pieceHeight * game.getRows());
+                    canvas.drawBitmap(bitmap, null, dst1, null);
+                }
             }
         }
 		
@@ -308,15 +310,13 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
     }
 
     public void setBitmap(Bitmap bitmap) {
-        this.bitmap = bitmap;
-        int w = bitmap.getWidth();
-        int h = bitmap.getHeight();
-		
+        synchronized (bitmap) {
+            this.bitmap = bitmap;
+        }
 		starCount = 0;
 		synchronized(sprites) {
 			sprites.clear();
 		}
-
         this.invalidate();
 		System.gc();
     }

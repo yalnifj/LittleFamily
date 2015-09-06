@@ -1,11 +1,10 @@
 package com.yellowforktech.littlefamilytree.data;
 
-import org.gedcomx.types.GenderType;
+import android.content.Context;
+
+import com.yellowforktech.littlefamilytree.util.RelationshipCalculator;
 
 import java.util.List;
-import android.content.Context;
-import com.yellowforktech.littlefamilytree.R;
-import com.yellowforktech.littlefamilytree.util.RelationshipCalculator;
 
 /**
  * Created by Parents on 5/29/2015.

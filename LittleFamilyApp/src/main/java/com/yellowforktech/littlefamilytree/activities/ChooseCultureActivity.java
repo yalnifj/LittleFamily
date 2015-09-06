@@ -20,9 +20,8 @@ import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.games.DollConfig;
 import com.yellowforktech.littlefamilytree.games.DressUpDolls;
 import com.yellowforktech.littlefamilytree.util.ImageHelper;
+import com.yellowforktech.littlefamilytree.util.RelationshipCalculator;
 import com.yellowforktech.littlefamilytree.views.PersonHeritageChartView;
-
-import org.gedcomx.types.GenderType;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,7 +32,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.yellowforktech.littlefamilytree.util.RelationshipCalculator;
 
 public class ChooseCultureActivity extends LittleFamilyActivity implements HeritageCalculatorTask.Listener, PersonHeritageChartView.SelectedPathListener {
     public static final String DOLL_CONFIG = "dollConfig";
