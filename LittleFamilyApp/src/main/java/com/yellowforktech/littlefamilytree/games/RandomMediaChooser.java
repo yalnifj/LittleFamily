@@ -47,10 +47,6 @@ public class RandomMediaChooser implements MemoriesLoaderTask.Listener {
                 iterator.remove();
             }
         }
-
-        if (this.people.size()<3) {
-            loadMoreFamilyMembers();
-        }
     }
 
     public int getMaxTries() {
@@ -180,7 +176,9 @@ public class RandomMediaChooser implements MemoriesLoaderTask.Listener {
 
             //-- no pictures add all the people
             if (counter==0) {
-                people.addAll(family);
+                if (people.size()<2) {
+                    people.addAll(family);
+                }
                 if (people.size()>1) {
                     LittlePerson current = selectedPerson;
                     Random rand = new Random();

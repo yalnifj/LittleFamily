@@ -53,8 +53,11 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
         shadowPaint.setAlpha(200);
         shadowPaint.setStyle(Paint.Style.FILL);
 
+        bitmap = null;
+
         setTouchTolerance(10);
     }
+
 
     @Override
     public void doStep() {

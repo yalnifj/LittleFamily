@@ -102,7 +102,9 @@ public class PuzzleGameActivity extends LittleFamilyActivity implements RandomMe
         if (width < 5) width = getScreenWidth() / 2;
         if (height < 5) height = getScreenHeight() / 2 - 25;
         if (imageBitmap != null && !imageBitmap.isRecycled()) {
-            imageBitmap.recycle();
+            synchronized (imageBitmap) {
+                imageBitmap.recycle();
+            }
         }
         if (photo==null) {
             //-- could not find any images, fallback to a default image
