@@ -318,6 +318,7 @@ public class LittlePerson implements Serializable {
 
     public void setHasChildren(Boolean hasChildren) {
         this.hasChildren = hasChildren;
+        if (this.age < 16) this.age = 25;
     }
 
     public Boolean isHasSpouses() {
@@ -326,6 +327,7 @@ public class LittlePerson implements Serializable {
 
     public void setHasSpouses(Boolean hasSpouses) {
         this.hasSpouses = hasSpouses;
+        if (this.age < 16) age = 25;
     }
 
     public Boolean isHasMedia() {

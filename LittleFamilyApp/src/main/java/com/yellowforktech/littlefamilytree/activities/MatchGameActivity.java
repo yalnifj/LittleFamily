@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Point;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Display;
@@ -115,7 +116,6 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
 
     @Override
     public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
-        if (flipping) return;
         if (flipCount>=2) {
             // user clicked before the previous images flipped so
             // speed up the flipover by clearing the handler and
@@ -147,35 +147,35 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
                 flipHandler = new Handler();
                 flipHandler.postDelayed(new flipOverHandler(name), FLIP_OVER_DELAY);
             }
-            ObjectAnimator anim = (ObjectAnimator) AnimatorInflater.loadAnimator(this, R.animator.flipping);
-            anim.setTarget(view);
-            anim.setDuration(FLIP_TIME);
-            anim.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animation) {
-                    flipping = true;
-                    gridView.setEnabled(false);
-                }
+            if (Build.VERSION.SDK_INT > 17) {
+                ObjectAnimator anim = (ObjectAnimator) AnimatorInflater.loadAnimator(this, R.animator.flipping);
+                anim.setTarget(view);
+                anim.setDuration(FLIP_TIME);
+                anim.addListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        flipping = true;
+                    }
 
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    adapter.notifyDataSetChanged();
-                    view.clearAnimation();
-                    view.invalidate();
-                    gridView.invalidate();
-                    gridView.setEnabled(true);
-                    flipping = false;
-                }
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        adapter.notifyDataSetChanged();
+                        view.clearAnimation();
+                        view.invalidate();
+                        gridView.invalidate();
+                        flipping = false;
+                    }
 
-                @Override
-                public void onAnimationCancel(Animator animation) {
-                }
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+                    }
 
-                @Override
-                public void onAnimationRepeat(Animator animation) {
-                }
-            });
-            anim.start();
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+                    }
+                });
+                anim.start();
+            }
             adapter.notifyDataSetChanged();
         }
     }
@@ -203,36 +203,36 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
             for(MatchPerson p : game.getBoard()) {
                 if (!p.isMatched()) {
                     if (p.isFlipped()) {
-                        ObjectAnimator anim = (ObjectAnimator) AnimatorInflater.loadAnimator(MatchGameActivity.this, R.animator.flipping);
-                        final View view = gridView.getChildAt(pos);
-                        anim.setTarget(view);
-                        anim.setDuration(FLIP_TIME);
-                        anim.addListener(new Animator.AnimatorListener() {
-                            @Override
-                            public void onAnimationStart(Animator animation) {
-                                gridView.setEnabled(false);
-                                flipping = true;
-                            }
+                        if (Build.VERSION.SDK_INT > 17) {
+                            ObjectAnimator anim = (ObjectAnimator) AnimatorInflater.loadAnimator(MatchGameActivity.this, R.animator.flipping);
+                            final View view = gridView.getChildAt(pos);
+                            anim.setTarget(view);
+                            anim.setDuration(FLIP_TIME);
+                            anim.addListener(new Animator.AnimatorListener() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    flipping = true;
+                                }
 
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                adapter.notifyDataSetChanged();
-                                view.clearAnimation();
-                                view.invalidate();
-                                gridView.invalidate();
-                                gridView.setEnabled(true);
-                                flipping = false;
-                            }
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    adapter.notifyDataSetChanged();
+                                    view.clearAnimation();
+                                    view.invalidate();
+                                    gridView.invalidate();
+                                    flipping = false;
+                                }
 
-                            @Override
-                            public void onAnimationCancel(Animator animation) {
-                            }
+                                @Override
+                                public void onAnimationCancel(Animator animation) {
+                                }
 
-                            @Override
-                            public void onAnimationRepeat(Animator animation) {
-                            }
-                        });
-                        anim.reverse();
+                                @Override
+                                public void onAnimationRepeat(Animator animation) {
+                                }
+                            });
+                            anim.reverse();
+                        }
                         p.setFlipped(false);
                     }
                 }
