@@ -195,11 +195,15 @@ public class TouchStateAnimatedBitmapSprite extends AnimatedBitmapSprite {
                     loaded.add(BitmapFactory.decodeResource(getResources(), rid));
                 }
                 bitmaps.put(nextState, loaded);
+                state = nextState;
+                stateChanged = true;
+                frame = 0;
             }
 
         } else if (bitmaps.get(nextState)!=null) {
             state = nextState;
             stateChanged = true;
+            frame = 0;
         }
     }
 }

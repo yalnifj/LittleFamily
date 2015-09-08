@@ -156,7 +156,7 @@ public class AnimatedBitmapSprite extends Sprite implements BitmapSequenceLoader
 
         }
         //--preload next state bitmaps
-        if (bitmaps!=null && bitmaps.get(state+1)==null && bitmapIds.get(state+1)!=null && resources!=null) {
+        if (state>0 && bitmaps!=null && bitmaps.get(state+1)==null && bitmapIds.get(state+1)!=null && resources!=null) {
             if (bitmaps.get(state).size()>4) {
                 loadingState = state + 1;
                 BitmapSequenceLoader loader = new BitmapSequenceLoader(getResources(), this);

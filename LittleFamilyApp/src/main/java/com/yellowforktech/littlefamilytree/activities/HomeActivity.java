@@ -169,6 +169,7 @@ public class HomeActivity extends LittleFamilyActivity {
             birdSprite.setY(330 * dm.density);
             birdSprite.setResources(this.getResources());
             birdSprite.setSelectable(true);
+            birdSprite.setIgnoreAlpha(true);
             homeView.addSprite(birdSprite);
             //homeView.addActivitySprite(birdSprite);
 
@@ -191,6 +192,7 @@ public class HomeActivity extends LittleFamilyActivity {
             flipped.postScale(-1, 1);
             flipped.postTranslate(flowerBm2.getWidth()+(180*dm.density), 0);
             flower1.setMatrix(flipped);
+            flower1.setIgnoreAlpha(true);
             homeView.addSprite(flower1);
 
             TouchStateAnimatedBitmapSprite flower2 = new TouchStateAnimatedBitmapSprite(flowerBm2, this);
@@ -203,6 +205,7 @@ public class HomeActivity extends LittleFamilyActivity {
             flower2.getBitmapIds().put(1, spinning2);
             flower2.getAudio().put(1, R.raw.spinning);
             flower2.setStateTransition(1, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP3);
+            flower2.setIgnoreAlpha(true);
             homeView.addSprite(flower2);
 
             Bitmap roomsBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_rooms);
