@@ -484,6 +484,7 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
             }
             maxLevel = level;
             loadedLevels.put(level, new ArrayList<Sprite>());
+            levelArrows.put(level, new ArrayList<Sprite>());
 
             List<Sprite> oldSprites = new ArrayList<>(treeView.getSprites());
             int xdiff = 0;
@@ -531,12 +532,31 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
                 if (ydiff2>ydiff) ydiff = ydiff2;
             }
             if (xdiff>0 || ydiff >0) {
-                treeView.setMaxHeight(treeView.getMaxHeight() + ydiff);
-                treeView.setMaxWidth(treeView.getMaxWidth() + xdiff);
                 vineh.setY(vineh.getY() + ydiff);
+                //-- adjust the position of any sprites
                 for(Sprite s : oldSprites) {
-                    s.setX(s.getX()+xdiff);
+                    s.setX(s.getX() + xdiff);
                     s.setY(s.getY()+ydiff);
+                    if (maxX < s.getX()) {
+                        maxX = (int) s.getX();
+                        treeView.setMaxWidth(maxX * 2);
+                    }
+                    if (maxY < s.getY()) {
+                        maxY = (int) s.getY();
+                        treeView.setMaxHeight(maxY * 2);
+                    }
+                }
+
+                //-- adjust any hidden arrows
+                for(int l=level; l>0; l--) {
+                    if (levelArrows.get(l) != null) {
+                        for (Sprite a : levelArrows.get(l)) {
+                            if (!treeView.getSprites().contains(a)) {
+                                a.setX(a.getX()+xdiff);
+                                a.setY(a.getY()+ydiff);
+                            }
+                        }
+                    }
                 }
             }
             treeView.removeSprite(touchedArrow);
