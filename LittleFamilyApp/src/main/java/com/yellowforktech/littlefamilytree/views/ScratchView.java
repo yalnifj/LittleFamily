@@ -194,8 +194,8 @@ public class ScratchView extends SpritedSurfaceView {
 		bit.setY(y);
 		bit.setWidth(4 + random.nextInt(10));
 		bit.setHeight(4 + random.nextInt(10));
-        int xdir = (int) (x - oldX)/2;
-        int ydir = (int) (y - oldY)/2;
+        int xdir = (int) (x - oldX)/3;
+        int ydir = (int) (y - oldY)/3;
         bit.setXdir(xdir);
         bit.setYdir(ydir);
 		addSprite(bit);
@@ -210,7 +210,7 @@ public class ScratchView extends SpritedSurfaceView {
         mPath.lineTo(mX, mY);
         circlePath.reset();
         // commit the path to our offscreen
-        mCanvas.drawPath(mPath,  mPaint);
+        mCanvas.drawPath(mPath, mPaint);
         // kill this so we don't double draw
         mPath.reset();
 
@@ -221,26 +221,28 @@ public class ScratchView extends SpritedSurfaceView {
         }
 
         // check if scratch is complete
-        int xd = (int) mPaint.getStrokeWidth()/5;
-        int yd = (int) mPaint.getStrokeWidth()/5;
-        int count = 0;
-        int total = 0;
-        for(int y=yd; y<mBitmap.getHeight(); y+=yd) {
-            for(int x=xd; x<mBitmap.getWidth(); x+=xd) {
-                total++;
-                int pixel = mBitmap.getPixel(x,y);
-                if (Color.alpha(pixel) < 200) count++;
+        if (!complete) {
+            int xd = (int) mPaint.getStrokeWidth() / 5;
+            int yd = (int) mPaint.getStrokeWidth() / 5;
+            int count = 0;
+            int total = 0;
+            for (int y = yd; y < mBitmap.getHeight(); y += yd) {
+                for (int x = xd; x < mBitmap.getWidth(); x += xd) {
+                    total++;
+                    int pixel = mBitmap.getPixel(x, y);
+                    if (Color.alpha(pixel) < 200) count++;
+                }
             }
-        }
-        if (count > total * 0.98) {
-			Rect r = new Rect();
-			r.set(starBitmap.getWidth()/2, starBitmap.getHeight()/2,
-					getWidth()-starBitmap.getWidth()/2, mBitmap.getHeight()-starBitmap.getHeight()/2);
-			int sc = 10+random.nextInt(10);
-			addStars(r, false, sc);
-            complete = true;
-            for(ScratchCompleteListener l : listeners) {
-                l.onScratchComplete();
+            if (count > total * 0.98) {
+                Rect r = new Rect();
+                r.set(starBitmap.getWidth() / 2, starBitmap.getHeight() / 2,
+                        getWidth() - starBitmap.getWidth() / 2, mBitmap.getHeight() - starBitmap.getHeight() / 2);
+                int sc = 10 + random.nextInt(10);
+                addStars(r, false, sc);
+                complete = true;
+                for (ScratchCompleteListener l : listeners) {
+                    l.onScratchComplete();
+                }
             }
         }
     }
