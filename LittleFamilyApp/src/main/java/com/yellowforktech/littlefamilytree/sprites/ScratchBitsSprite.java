@@ -10,6 +10,8 @@ import android.graphics.Paint;
 public class ScratchBitsSprite extends Sprite {
     protected Paint paint;
 	protected int steps;
+	protected int ydir;
+	protected int xdir;
 	
     public ScratchBitsSprite() {
         super();
@@ -20,8 +22,25 @@ public class ScratchBitsSprite extends Sprite {
 		steps=0;
     }
 
-    public void doStep() {
-		setY(getY() + 8);
+	public int getXdir() {
+		return xdir;
+	}
+
+	public void setXdir(int xdir) {
+		this.xdir = xdir;
+	}
+
+	public int getYdir() {
+		return ydir;
+	}
+
+	public void setYdir(int ydir) {
+		this.ydir = ydir;
+	}
+
+	public void doStep() {
+		setY(getY() + ydir);
+		setX(getX() + xdir);
 		steps++;
 		if (steps > 20) {
 			this.setRemoveMe(true);

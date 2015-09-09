@@ -121,7 +121,7 @@ public class ScratchView extends SpritedSurfaceView {
                 dst.set(0, 0, w, h);
                 canvas.drawBitmap(imageBitmap, null, dst, null);
 
-                if (!complete) {
+                if (!complete && mBitmap!=null && !mBitmap.isRecycled()) {
                     canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
                     canvas.drawPath(circlePath, circlePaint);
                 }
@@ -182,9 +182,9 @@ public class ScratchView extends SpritedSurfaceView {
 	
 	@Override
 	public void doMove(float oldX, float oldY, float x, float y) {
-		mPath.quadTo(mX, mY, (x + mX)/2, (y + mY)/2);
+		mPath.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2);
 		// commit the path to our offscreen
-   		mCanvas.drawPath(mPath,  mPaint);
+   		mCanvas.drawPath(mPath, mPaint);
 
         circlePath.reset();
         circlePath.addCircle(mX, mY, 40, Path.Direction.CW);
@@ -194,6 +194,10 @@ public class ScratchView extends SpritedSurfaceView {
 		bit.setY(y);
 		bit.setWidth(4 + random.nextInt(10));
 		bit.setHeight(4 + random.nextInt(10));
+        int xdir = (int) (x - oldX)/2;
+        int ydir = (int) (y - oldY)/2;
+        bit.setXdir(xdir);
+        bit.setYdir(ydir);
 		addSprite(bit);
 
         if (bit.getWidth()>=12) {
