@@ -48,9 +48,11 @@ public class Media {
 
         Media media = (Media) o;
 
-        if (id != media.id) return false;
+        if (id == media.id) return true;
+        if (familySearchId.equals(media.familySearchId)) return true;
+        if (localPath.equals(media.localPath)) return true;
 
-        return true;
+        return false;
     }
 
     @Override

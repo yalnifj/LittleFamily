@@ -113,6 +113,7 @@ Please wait...</string>
     <string name="hasParents">Has Parents</string>
     <string name="hasSpouses">Has Spouses</string>
     <string name="hasChildren">Has Children</string>
+    <string name="hasMedia">Has Pictures</string>
     <string name="lastSync">Last Sync</string>
     <string name="visible">Visible</string>
     <string name="close">Close</string>

@@ -46,11 +46,11 @@
         android:id="@+id/linearLayout3">
 
         <ScrollView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:id="@+id/scrollView"
             android:layout_marginTop="10dp"
-            android:layout_weight="1">
+            android:layout_weight="2">
 
             <TableLayout
                 android:layout_width="match_parent"
@@ -272,6 +272,26 @@
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:text="Small Text"
                         android:id="@+id/txtHasChildren"
+                        android:padding="3dip" />
+                </TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/hasMedia"
+                        android:id="@+id/txtMedia"
+                        android:padding="3dip" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="Small Text"
+                        android:id="@+id/txtHasMedia"
                         android:padding="3dip" />
                 </TableRow>
                 <TableRow

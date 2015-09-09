@@ -96,7 +96,7 @@ public class ScratchView extends SpritedSurfaceView {
             mPaint.setStrokeWidth(w<h?w*0.15f:h*0.15f);
             Paint background = new Paint();
             background.setColor(Color.GRAY);
-            mCanvas.drawRect(0,0,w,h,background);
+            mCanvas.drawRect(0, 0, w, h, background);
         }
     }
 
@@ -109,20 +109,22 @@ public class ScratchView extends SpritedSurfaceView {
 		canvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
 		
 		if (imageBitmap!=null && !imageBitmap.isRecycled()) {
-            float ratio = (float) (imageBitmap.getWidth()) / imageBitmap.getHeight();
-            if ( w < h ) {
-				h = (int) (w / ratio);
-			} else {
-				w = (int)(h * ratio);
-			}
-			
-            Rect dst = new Rect();
-            dst.set(0, 0, w, h);
-            canvas.drawBitmap(imageBitmap, null, dst, null);
+            synchronized (imageBitmap) {
+                float ratio = (float) (imageBitmap.getWidth()) / imageBitmap.getHeight();
+                if (w < h) {
+                    h = (int) (w / ratio);
+                } else {
+                    w = (int) (h * ratio);
+                }
 
-            if (!complete) {
-                canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
-                canvas.drawPath(circlePath, circlePaint);
+                Rect dst = new Rect();
+                dst.set(0, 0, w, h);
+                canvas.drawBitmap(imageBitmap, null, dst, null);
+
+                if (!complete) {
+                    canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
+                    canvas.drawPath(circlePath, circlePaint);
+                }
             }
         }
 		

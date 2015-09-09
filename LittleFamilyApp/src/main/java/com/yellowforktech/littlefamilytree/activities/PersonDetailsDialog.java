@@ -23,9 +23,11 @@ import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.tasks.ForceSynceTask;
 import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
+import com.yellowforktech.littlefamilytree.data.Media;
 import com.yellowforktech.littlefamilytree.util.ImageHelper;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 public class PersonDetailsDialog extends DialogFragment implements CompoundButton.OnCheckedChangeListener, View.OnClickListener, ForceSynceTask.Listener {
     private LittlePerson person;
@@ -91,15 +93,75 @@ public class PersonDetailsDialog extends DialogFragment implements CompoundButto
 
 		TextView parentsView = (TextView) view.findViewById(R.id.txtHasParents);
 		if (person.isHasParents()==null) parentsView.setText("Not synced");
-		else parentsView.setText(person.isHasParents()?"Yes":"No");
+		else {
+			if (person.isHasParents()) {
+				String data = "Yes ";
+				try {
+					List<LittlePerson> parents = DataService.getInstance().getDBHelper().getParentsForPerson(person.getId());
+					if (parents!=null) {
+						data += " " + parents.size();
+					}
+				} catch (Exception e) {
+				}
+				parentsView.setText(data);
+			} else {
+				parentsView.setText("No");
+			}
+		}
 
 		TextView spousesView = (TextView) view.findViewById(R.id.txtHasSpouses);
 		if (person.isHasSpouses()==null) spousesView.setText("Not synced");
-		else spousesView.setText(person.isHasSpouses()?"Yes":"No");
+		else {
+			if (person.isHasSpouses()) {
+				String data = "Yes ";
+				try {
+					List<LittlePerson> spouses = DataService.getInstance().getDBHelper().getSpousesForPerson(person.getId());
+					if (spouses != null) {
+						data += " " + spouses.size();
+					}
+				} catch (Exception e) {
+				}
+				spousesView.setText(data);
+			} else {
+				spousesView.setText("No");
+			}
+		}
 
 		TextView childrenView = (TextView) view.findViewById(R.id.txtHasChildren);
 		if (person.isHasChildren()==null) childrenView.setText("Not synced");
-		else childrenView.setText(person.isHasChildren() ? "Yes" : "No");
+		else {
+			if (person.isHasChildren()) {
+				String data = "Yes ";
+				try {
+					List<LittlePerson> children = DataService.getInstance().getDBHelper().getChildrenForPerson(person.getId());
+					if (children != null) {
+						data += " " + children.size();
+					}
+				} catch (Exception e) {
+				}
+				childrenView.setText(data);
+			} else {
+				childrenView.setText("No");
+			}
+		}
+
+		TextView mediaView = (TextView) view.findViewById(R.id.txtHasMedia);
+		if (person.isHasMedia()==null) mediaView.setText("Not synced");
+		else {
+			if (person.isHasMedia()) {
+				String data = "Yes ";
+				try {
+					List<Media> media = DataService.getInstance().getDBHelper().getMediaForPerson(person.getId());
+					if (media != null) {
+						data += " " + media.size();
+					}
+				} catch (Exception e) {
+				}
+				mediaView.setText(data);
+			} else {
+				mediaView.setText("No");
+			}
+		}
 
 		TextView lastSyncView = (TextView) view.findViewById(R.id.txtLastSync);
 		lastSyncView.setText(person.getLastSync().toString());
