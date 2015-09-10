@@ -42,7 +42,7 @@ public class ScratchBitsSprite extends Sprite {
 		setY(getY() + ydir);
 		setX(getX() + xdir);
 		steps++;
-		if (steps > 20) {
+		if (steps > 30) {
 			this.setRemoveMe(true);
 		}
 	}
