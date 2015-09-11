@@ -13,12 +13,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.LinkedList;
 
 /**
  * Created by Parents on 8/16/2015.
  */
 public class RandomMediaChooser implements MemoriesLoaderTask.Listener {
-    public List<LittlePerson> people;
+    private List<LittlePerson> people;
+	private LinkedList<LittlePerson> queue;
     private LittlePerson selectedPerson;
     private Media photo;
     private List<Media> usedPhotos;
@@ -37,6 +39,9 @@ public class RandomMediaChooser implements MemoriesLoaderTask.Listener {
         this.people = people;
         this.activity = activity;
         this.listener = listener;
+		
+		queue = new LinkedList<>();
+		queue.addAll(people);
 
         usedPhotos = new ArrayList<>(maxUsed);
         noPhotos = new ArrayList<>();
@@ -95,15 +100,9 @@ public class RandomMediaChooser implements MemoriesLoaderTask.Listener {
     }
 
     public void loadMoreFamilyMembers() {
-        if (backgroundLoadIndex < maxTries) {
+        if (queue.size()>0) {
             FamilyLoaderTask task = new FamilyLoaderTask(new FamilyLoaderListener(), activity);
-            if (selectedPerson==null) {
-                if (people.size()>0) {
-                    selectedPerson = people.get(0);
-                } else {
-                    selectedPerson = noPhotos.get(0);
-                }
-            }
+			selectedPerson = queue.poll();
             if (selectedPerson!=null) {
                 task.execute(selectedPerson);
             }
@@ -115,9 +114,9 @@ public class RandomMediaChooser implements MemoriesLoaderTask.Listener {
     @Override
     public void onComplete(ArrayList<Media> photos) {
         if (photos == null || photos.size() == 0) {
+			people.remove(selectedPerson);
+			noPhotos.add(selectedPerson);
             if (backgroundLoadIndex < maxTries) {
-                people.remove(selectedPerson);
-                noPhotos.add(selectedPerson);
                 loadMoreFamilyMembers();
             } else {
                 DataService dataService = DataService.getInstance();
@@ -188,27 +187,22 @@ public class RandomMediaChooser implements MemoriesLoaderTask.Listener {
         public void onComplete(ArrayList<LittlePerson> family) {
             int counter =0;
             for (LittlePerson p : family) {
+				if (!queue.contains(p)) queue.add(p);
                 if (!noPhotos.contains(p) && !people.contains(p)) {
-                    people.add(p);
-                    counter++;
+					if (p.isHasMedia()==null || p.isHasMedia()) {
+                    	people.add(p);
+                    	counter++;
+					}
+					else {
+						noPhotos.add(p);
+					}
                 }
             }
 
             backgroundLoadIndex++;
 
-            //-- no pictures add all the people
-            if (counter==0) {
-                if (people.size()<2) {
-                    people.addAll(family);
-                }
-                if (people.size()>1) {
-                    LittlePerson current = selectedPerson;
-                    Random rand = new Random();
-                    selectedPerson = people.get(rand.nextInt(people.size()));
-                    while (current == selectedPerson) {
-                        selectedPerson = people.get(rand.nextInt(people.size()));
-                    }
-                }
+            //-- no pictures try again
+            if (counter==0 && people.size()<3) {
                 loadMoreFamilyMembers();
             } else {
                 loadRandomImage();
