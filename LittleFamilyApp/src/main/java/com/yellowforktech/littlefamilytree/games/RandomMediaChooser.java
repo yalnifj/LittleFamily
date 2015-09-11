@@ -28,16 +28,20 @@ public class RandomMediaChooser implements MemoriesLoaderTask.Listener {
 
     private int backgroundLoadIndex = 0;
 
-    private int maxTries = 10;
+    private int maxTries = 20;
     private int maxUsed = 20;
+	
+	private Random random;
 
     public RandomMediaChooser(List<LittlePerson> people, LittleFamilyActivity activity, RandomMediaListener listener) {
         this.people = people;
         this.activity = activity;
         this.listener = listener;
 
-        usedPhotos = new ArrayList<>(10);
+        usedPhotos = new ArrayList<>(maxUsed);
         noPhotos = new ArrayList<>();
+		
+		random = new Random();
 
         Iterator<LittlePerson> iterator = this.people.iterator();
         while(iterator.hasNext()) {
@@ -125,17 +129,27 @@ public class RandomMediaChooser implements MemoriesLoaderTask.Listener {
                 }
                 if (mediaCount > 0) {
                     try {
-                        photo = dataService.getDBHelper().getRandomMedia();
-                        int counter = 0;
-                        while(counter < 5 && usedPhotos.contains(photo)) {
-                            photo = dataService.getDBHelper().getRandomMedia();
-                            counter++;
-                        }
-                        if (usedPhotos.size() >= maxUsed) {
-                            usedPhotos.remove(0);
-                        }
-                        usedPhotos.add(photo);
-                        listener.onMediaLoaded(photo);
+						selectedPerson = dataService.getDBHelper().getRandomPersonWithMedia();
+						photos = (ArrayList<Media>) dataService.getDBHelper().getMediaForPerson(selectedPerson.getId());
+                        int index = random.nextInt(photos.size());
+						int origIndex = index;
+						photo = photos.get(index);
+						while (usedPhotos.contains(photo)) {
+							index++;
+							if (index >= photos.size()) index = 0;
+							photo = photos.get(index);
+							//-- stop if we've used all of these images
+							if (index == origIndex) {
+								loadMoreFamilyMembers();
+								return;
+							}
+						}
+						if (usedPhotos.size() >= maxUsed) {
+							usedPhotos.remove(0);
+						}
+						usedPhotos.add(photo);
+
+						listener.onMediaLoaded(photo);
                     } catch (Exception e) {
                         Log.e(getClass().getName(), "Error loading random media from table", e);
                         listener.onMediaLoaded(null);
@@ -146,8 +160,7 @@ public class RandomMediaChooser implements MemoriesLoaderTask.Listener {
                 }
             }
         } else {
-            Random rand = new Random();
-            int index = rand.nextInt(photos.size());
+            int index = random.nextInt(photos.size());
             int origIndex = index;
             photo = photos.get(index);
             while (usedPhotos.contains(photo)) {

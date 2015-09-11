@@ -26,6 +26,7 @@ import java.util.List;
 public class ScratchView extends SpritedSurfaceView {
     public int width;
     public  int height;
+	private Paint textPaint;
     private Bitmap imageBitmap;
     private Bitmap  mBitmap;
     private Canvas  mCanvas;
@@ -37,6 +38,7 @@ public class ScratchView extends SpritedSurfaceView {
     private Paint mPaint;
     private boolean complete = false;
     private MediaPlayer mediaPlayer;
+	private String name;
 
     public ScratchView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -61,6 +63,10 @@ public class ScratchView extends SpritedSurfaceView {
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
         mPaint.setStrokeWidth(12);
+		
+		textPaint = new Paint();
+		textPaint.setTextSize(30);
+		textPaint.setTextAlign(Paint.Align.CENTER);
     }
 
     @Override
@@ -125,6 +131,9 @@ public class ScratchView extends SpritedSurfaceView {
                     canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
                     canvas.drawPath(circlePath, circlePaint);
                 }
+				if (complete) {
+					canvas.drawText(name, w/2, h-textPaint.getTextSize()*2, textPaint);
+				}
             }
         }
 		
@@ -137,8 +146,9 @@ public class ScratchView extends SpritedSurfaceView {
         }
     }
 
-    public void setImageBitmap(Bitmap bm)
+    public void setImageBitmap(Bitmap bm, String name)
     {
+		this.name = name;
         //super.setImageBitmap(bm);
         this.imageBitmap = bm;
         int w = this.getWidth();

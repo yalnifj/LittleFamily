@@ -78,7 +78,7 @@ public class ScratchGameActivity extends LittleFamilyActivity implements Scratch
     }
 
     public void setupCanvas() {
-        layeredImage.setImageBitmap(imageBitmap);
+        layeredImage.setImageBitmap(imageBitmap, selectedPerson.getName());
     }
 
     @Override

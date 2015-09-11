@@ -236,6 +236,21 @@ public class DBHelper extends SQLiteOpenHelper {
         return person;
     }
 
+	public LittlePerson getRandomPersonWithMedia() {
+        SQLiteDatabase db = getReadableDatabase();
+        LittlePerson person = null;
+
+        Cursor c = db.rawQuery("select p.* from " + TABLE_LITTLE_PERSON + " p join "+TABLE_TAGS+" t on t."+COL_PERSON_ID+"=p."+COL_ID+
+			" where p.active='Y' order by RANDOM() LIMIT 1", null);
+        while (c.moveToNext()) {
+            person = personFromCursor(c);
+        }
+
+        c.close();
+
+        return person;
+    }
+	
     public void deletePersonById(int id) {
         if (id>0) {
             SQLiteDatabase db = getWritableDatabase();
