@@ -49,8 +49,12 @@ public class TreeLoaderTask extends AsyncTask<LittlePerson, Integer, TreeNode> {
             addParents(root, false);
             //-- add siblings if root node has no children
             if (root.getChildren()==null || root.getChildren().size()==0) {
-                addChildren(root.getLeft(), 1);
-				root.setIsChild(true);
+                TreeNode cn = root.getLeft();
+                if (cn==null) cn = root.getRight();
+                if (cn!=null) {
+                    addChildren(root.getLeft(), 1);
+                }
+                root.setIsChild(true);
             }
         } catch (Exception e) {
             Log.e(this.getClass().getSimpleName(), "error", e);

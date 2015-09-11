@@ -203,8 +203,8 @@ public class TreeSpriteSurfaceView extends SpritedClippedSurfaceView {
         synchronized (sprites) {
             for (Sprite s : sprites) {
                 s.setScale(scale);
-                if ((s.getX() + s.getWidth())*scale >= clipX*scale && s.getX()*scale <= getWidth() + clipX*scale
-                        && (s.getY() + s.getHeight())*scale >= clipY*scale && s.getY()*scale <= getHeight()+ clipY*scale ) {
+                if ((s.getX() + s.getWidth()) * scale >= clipX * scale && s.getX() * scale <= getWidth() + clipX * scale
+                        && (s.getY() + s.getHeight()) * scale >= clipY * scale && s.getY() * scale <= getHeight() + clipY * scale) {
                     Matrix m = s.getMatrix();
                     Matrix old = null;
                     if (m != null) {
@@ -225,7 +225,7 @@ public class TreeSpriteSurfaceView extends SpritedClippedSurfaceView {
             canvas.setMatrix(new Matrix());
             canvas.translate(0,0);
             searchSprite.setX(getWidth() - searchSprite.getWidth());
-            searchSprite.setY(10);
+            searchSprite.setY(getHeight() - searchSprite.getHeight() - 20);
             searchSprite.doDraw(canvas);
         }
     }

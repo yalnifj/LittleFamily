@@ -39,6 +39,7 @@ public class ScratchView extends SpritedSurfaceView {
     private boolean complete = false;
     private MediaPlayer mediaPlayer;
 	private String name;
+    private String relationship;
 
     public ScratchView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -65,7 +66,7 @@ public class ScratchView extends SpritedSurfaceView {
         mPaint.setStrokeWidth(12);
 		
 		textPaint = new Paint();
-		textPaint.setTextSize(30);
+		textPaint.setTextSize(45);
 		textPaint.setTextAlign(Paint.Align.CENTER);
     }
 
@@ -132,7 +133,17 @@ public class ScratchView extends SpritedSurfaceView {
                     canvas.drawPath(circlePath, circlePaint);
                 }
 				if (complete) {
-					canvas.drawText(name, w/2, h-textPaint.getTextSize()*2, textPaint);
+                    int top = (int) (h + textPaint.getTextSize());
+                    if (top + textPaint.getTextSize() > getHeight()) {
+                        top = (int) (h-textPaint.getTextSize()*1.7);
+                    }
+                    if (name!=null) {
+                        canvas.drawText(name, w / 2, top, textPaint);
+                    }
+                    if (relationship!=null) {
+                        top = (int) (top + textPaint.getTextSize());
+                        canvas.drawText(relationship, w / 2, top, textPaint);
+                    }
 				}
             }
         }
@@ -146,9 +157,10 @@ public class ScratchView extends SpritedSurfaceView {
         }
     }
 
-    public void setImageBitmap(Bitmap bm, String name)
+    public void setImageBitmap(Bitmap bm, String name, String relationship)
     {
 		this.name = name;
+        this.relationship = relationship;
         //super.setImageBitmap(bm);
         this.imageBitmap = bm;
         int w = this.getWidth();
