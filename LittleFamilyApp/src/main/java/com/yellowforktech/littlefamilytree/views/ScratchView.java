@@ -135,7 +135,7 @@ public class ScratchView extends SpritedSurfaceView {
 				if (complete) {
                     int top = (int) (h + textPaint.getTextSize());
                     if (top + textPaint.getTextSize() > getHeight()) {
-                        top = (int) (h-textPaint.getTextSize()*1.7);
+                        top = (int) (getHeight()-textPaint.getTextSize()*1.7);
                     }
                     if (name!=null) {
                         canvas.drawText(name, w / 2, top, textPaint);
@@ -248,14 +248,16 @@ public class ScratchView extends SpritedSurfaceView {
             int yd = (int) mPaint.getStrokeWidth() / 5;
             int count = 0;
             int total = 0;
-            for (int y = yd; y < mBitmap.getHeight(); y += yd) {
-                for (int x = xd; x < mBitmap.getWidth(); x += xd) {
+            int maxX = Math.min(mBitmap.getWidth(), getWidth());
+            int maxY = Math.min(mBitmap.getHeight(), getHeight());
+            for (int y = yd; y < maxY; y += yd) {
+                for (int x = xd; x < maxX; x += xd) {
                     total++;
                     int pixel = mBitmap.getPixel(x, y);
                     if (Color.alpha(pixel) < 200) count++;
                 }
             }
-            if (count > total * 0.98) {
+            if (count > total * 0.97) {
                 Rect r = new Rect();
                 r.set(starBitmap.getWidth() / 2, starBitmap.getHeight() / 2,
                         getWidth() - starBitmap.getWidth() / 2, mBitmap.getHeight() - starBitmap.getHeight() / 2);

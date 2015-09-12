@@ -90,7 +90,7 @@ public class PuzzleGameActivity extends LittleFamilyActivity implements RandomMe
             }
             puzzleGame.setupLevel(rows, cols);
         }
-        puzzleSurfaceView.setBitmap(imageBitmap);
+        puzzleSurfaceView.setBitmap(imageBitmap, selectedPerson.getName());
     }
 
     @Override

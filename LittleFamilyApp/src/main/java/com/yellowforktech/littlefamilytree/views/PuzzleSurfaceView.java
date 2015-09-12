@@ -27,6 +27,7 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
     private Bitmap bitmap;
     private Paint outlinePaint;
     private Paint shadowPaint;
+    private Paint textPaint;
 
     private int sRow;
     private int sCol;
@@ -38,6 +39,9 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
     private boolean animating = false;
     private boolean checkGame = false;
     private boolean showHint = false;
+    private boolean complete = false;
+
+    private String name;
 	
 	protected int starDelay = 1;
 
@@ -52,6 +56,10 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
         shadowPaint.setColor(Color.GRAY);
         shadowPaint.setAlpha(200);
         shadowPaint.setStyle(Paint.Style.FILL);
+
+        textPaint = new Paint();
+        textPaint.setTextSize(45);
+        textPaint.setTextAlign(Paint.Align.CENTER);
 
         bitmap = null;
 
@@ -97,6 +105,7 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
 
         if (!animating && checkGame) {
             if (game.isCompleted()) {
+                complete = true;
 				Rect r = new Rect();
 				r.set(starBitmap.getWidth()/2, starBitmap.getHeight()/2,
 					  getWidth()-starBitmap.getWidth()/2, pieceHeight*game.getRows()-starBitmap.getHeight()/2);
@@ -194,6 +203,16 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
                     Rect dst1 = new Rect();
                     dst1.set(left, top, left + pieceWidth * game.getCols(), top + pieceHeight * game.getRows());
                     canvas.drawBitmap(bitmap, null, dst1, null);
+                }
+
+                if (complete) {
+                    int ttop = (int) (top + puzzleHeight + textPaint.getTextSize());
+                    if (ttop + textPaint.getTextSize() > getHeight()) {
+                        ttop = (int) (getHeight()-textPaint.getTextSize()*1.7);
+                    }
+                    if (name!=null) {
+                        canvas.drawText(name, puzzleWidth / 2, ttop, textPaint);
+                    }
                 }
             }
         }
@@ -312,7 +331,9 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
         return bitmap;
     }
 
-    public void setBitmap(Bitmap bitmap) {
+    public void setBitmap(Bitmap bitmap, String name) {
+        complete = false;
+        this.name = name;
         synchronized (bitmap) {
             this.bitmap = bitmap;
         }
