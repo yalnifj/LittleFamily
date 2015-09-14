@@ -2,7 +2,10 @@ package com.yellowforktech.littlefamilytree.sprites;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.media.MediaPlayer;
 import android.util.Log;
 
@@ -33,25 +36,35 @@ public class BubbleAnimatedBitmapSprite extends BouncingAnimatedBitmapSprite {
     private int sHeight;
     private int photoWidth;
     protected MediaPlayer mediaPlayer;
+    protected int highliteWait = 300;
+    protected int hlDelay = 0;
+    protected int angle = 0;
+    protected Paint hlPaint;
 	
     public BubbleAnimatedBitmapSprite(Bitmap bitmap, int maxWidth, int maxHeight, LittleFamilyActivity activity, BubbleSpriteSurfaceView view, int photoWidth) {
         super(bitmap, maxWidth, maxHeight);
-        setSelectable(true);
         this.activity = activity;
-        setIgnoreAlpha(true);
-        setStepsPerFrame(2);
         this.view = view;
         this.photoWidth = photoWidth;
+        setup();
     }
 
     public BubbleAnimatedBitmapSprite(Map<Integer, List<Bitmap>> bitmaps, int maxWidth, int maxHeight, LittleFamilyActivity activity, BubbleSpriteSurfaceView view, int photoWidth) {
         super(bitmaps, maxWidth, maxHeight);
-        setSelectable(true);
         this.activity = activity;
-        setIgnoreAlpha(true);
-        setStepsPerFrame(2);
         this.view = view;
         this.photoWidth = photoWidth;
+        setup();
+    }
+
+    private void setup() {
+        setSelectable(true);
+        setIgnoreAlpha(true);
+        setStepsPerFrame(2);
+        hlPaint = new Paint();
+        hlPaint.setStyle(Paint.Style.STROKE);
+        hlPaint.setStrokeWidth(9);
+        hlPaint.setColor(Color.YELLOW);
     }
 
     public int getMx() {
@@ -98,6 +111,19 @@ public class BubbleAnimatedBitmapSprite extends BouncingAnimatedBitmapSprite {
     @Override
     public void doStep() {
         super.doStep();
+
+        if (state==0) {
+            if (person!=null && person == view.getNextPerson()) {
+                hlDelay++;
+                if (hlDelay>highliteWait) {
+                    angle+=10;
+                    if (angle>1080) {
+                        angle = 0;
+                        hlDelay = 0;
+                    }
+                }
+            }
+        }
 
         if (state==1 && frame==0 && oldFrame!=0) {
             frame = 5;
@@ -152,6 +178,15 @@ public class BubbleAnimatedBitmapSprite extends BouncingAnimatedBitmapSprite {
 			rect.set(px, py, px+photo.getWidth(), py+photo.getHeight());
 			canvas.drawBitmap(photo, null, rect, null);
 		}
+        if (state==0) {
+            if (angle>0) {
+                RectF r = new RectF();
+                r.set(x, y, x+getWidth(), y+getHeight());
+                canvas.drawArc(r, angle, 45, false, hlPaint);
+                canvas.drawArc(r, angle+120, 45, false, hlPaint);
+                canvas.drawArc(r, angle+240, 45, false, hlPaint);
+            }
+        }
 		if (state<2) {
             super.doDraw(canvas);
 		}
