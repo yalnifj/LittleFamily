@@ -41,7 +41,7 @@ public class AdultsAuthDialog extends DialogFragment {
         View v = inflater.inflate(R.layout.fragment_adult_auth, container, false);
         ImageView logo = (ImageView) v.findViewById(R.id.remoteLogo);
         DataService dataService = DataService.getInstance();
-        if (dataService.getServiceType().equals(DataService.SERVICE_TYPE_PHPGEDVIEW)) {
+        if (dataService.getServiceType()!=null && dataService.getServiceType().equals(DataService.SERVICE_TYPE_PHPGEDVIEW)) {
             logo.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.pgv_logo));
         }
         EditText usernameTxt = (EditText) v.findViewById(R.id.txtUsername);

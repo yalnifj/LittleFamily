@@ -11,9 +11,9 @@ import com.yellowforktech.littlefamilytree.data.Media;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-import java.util.LinkedList;
 
 /**
  * Created by Parents on 8/16/2015.
@@ -29,6 +29,7 @@ public class RandomMediaChooser implements MemoriesLoaderTask.Listener {
     private RandomMediaListener listener;
 
     private int backgroundLoadIndex = 0;
+    private int counter = 0;
 
     private int maxTries = 20;
     private int maxUsed = 20;
@@ -91,6 +92,7 @@ public class RandomMediaChooser implements MemoriesLoaderTask.Listener {
     }
 
     public void loadRandomImage() {
+        counter++;
         if (people != null && people.size() > 0) {
             Random rand = new Random();
             selectedPerson = people.get(rand.nextInt(people.size()));
@@ -101,6 +103,7 @@ public class RandomMediaChooser implements MemoriesLoaderTask.Listener {
 
     public void loadMoreFamilyMembers() {
         if (queue.size()>0) {
+            counter++;
             FamilyLoaderTask task = new FamilyLoaderTask(new FamilyLoaderListener(), activity);
 			selectedPerson = queue.poll();
             if (selectedPerson!=null) {
@@ -116,7 +119,7 @@ public class RandomMediaChooser implements MemoriesLoaderTask.Listener {
         if (photos == null || photos.size() == 0) {
 			people.remove(selectedPerson);
 			noPhotos.add(selectedPerson);
-            if (backgroundLoadIndex < maxTries) {
+            if (backgroundLoadIndex < maxTries && counter < maxTries) {
                 loadMoreFamilyMembers();
             } else {
                 DataService dataService = DataService.getInstance();
@@ -148,13 +151,16 @@ public class RandomMediaChooser implements MemoriesLoaderTask.Listener {
 						}
 						usedPhotos.add(photo);
 
+                        counter = 0;
 						listener.onMediaLoaded(photo);
                     } catch (Exception e) {
                         Log.e(getClass().getName(), "Error loading random media from table", e);
+                        counter = 0;
                         listener.onMediaLoaded(null);
                     }
 
                 } else {
+                    counter = 0;
                     listener.onMediaLoaded(null);
                 }
             }

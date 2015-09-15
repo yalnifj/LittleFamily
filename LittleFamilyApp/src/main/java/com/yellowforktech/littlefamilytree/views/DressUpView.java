@@ -121,8 +121,10 @@ public class DressUpView extends SpritedSurfaceView {
                     r2.set(offset, 0, w + offset, (int) (doll.getHeight() * factor));
                     canvas.drawBitmap(doll, null, r2, null);
 
-                    textPaint.setTextSize(getWidth() * 0.10f);
-                    canvas.drawText(dollConfig.getOriginalPlace(), getWidth() / 2, r2.bottom + 40, textPaint);
+                    if (textPaint!=null) {
+                        textPaint.setTextSize(getWidth() * 0.10f);
+                        canvas.drawText(dollConfig.getOriginalPlace(), getWidth() / 2, r2.bottom + 40, textPaint);
+                    }
 
                     if (clothing != null) {
                         for (int c = 0; c < clothing.length; c++) {

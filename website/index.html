@@ -84,6 +84,7 @@
                 <div class="col-sm-5 text-center">
                     <img class="main-icon" src="little_family_logo.png" border="0" />
                     <p>&nbsp;</p>
+                    <!--
                     <p class="beta">
                         Little Family Tree is currently in beta.
                     </p>
@@ -91,6 +92,7 @@
                         <button type="button" onclick="showContactForm(); return false;" class="btn btn-primary btn-xs">Contact Us!</button>
                         for information about participating in the beta program.
                     </p>
+                    -->
                     <p>
                         <a href="https://play.google.com/store/apps/details?id=com.yellowforktech.littlefamilytree">
                             <img alt="Android app on Google Play" width="172"
@@ -119,15 +121,15 @@
                     <p>&nbsp;</p>
                     <div class="row">
                         <div class="col-sm-6 text-center">
+                            <p>&nbsp;</p>
+                            <button type="button" onclick="window.location='familysearch.html'; return false;"
+                                    class="btn btn-primary">Learn more about our<br />FamilySearch
+                                integration.</button>
+                        </div>
+                        <div class="col-sm-4 text-center">
                             <a target="_blank" href="https://familysearch.org/apps/product/littlefamilytree/android">
                                 <img class="fsicon" src="FS-Certified.png" border="0"/>
                             </a>
-                        </div>
-                        <div class="col-sm-4 text-center">
-                            <p>&nbsp;</p>
-                            <button type="button" onclick="window.location='familysearch.html'; return false;"
-                                class="btn btn-primary">Learn more about our<br />FamilySearch
-                                integration.</button>
                         </div>
                     </div>
                 </div>
@@ -224,7 +226,7 @@
                 </a>
             </div>
             <div class="col-md-3 col-sm-6 outer-game-box" id="parentsguide-box">
-                <a href="#" class="portfolio-box">
+                <a href="parentsguide.html" class="portfolio-box">
                     <div class="game-box">
                         Parent's Guide
                     </div>
@@ -579,8 +581,10 @@
                 gameObjs[id].clicked = true;
                 gameObjs[id].animating = true;
                 gameObjs[id].direction = 1;
+                return false;
+            } else {
+                return true;
             }
-            return false;
         });
         $('.outer-game-box').on('mouseenter', function() {
             var id = $(this).attr('id');
