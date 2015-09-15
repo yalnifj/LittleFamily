@@ -134,6 +134,16 @@ section {
     background-size: cover;
 }
 
+#parentsguide-box {
+    background-image: url("game_icons/parentsguide_background.png");
+    background-size: cover;
+    color: white;
+}
+
+#parentsguide-box .game-box {
+    color: white;
+}
+
 #puzzle {
     position: relative;
     top: 30%;
