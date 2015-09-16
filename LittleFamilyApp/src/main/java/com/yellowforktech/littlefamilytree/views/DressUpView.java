@@ -123,7 +123,7 @@ public class DressUpView extends SpritedSurfaceView {
 
                     if (textPaint!=null) {
                         textPaint.setTextSize(getWidth() * 0.10f);
-                        canvas.drawText(dollConfig.getOriginalPlace(), getWidth() / 2, r2.bottom + 40, textPaint);
+                        canvas.drawText(dollConfig.getOriginalPlace(), getWidth() / 2, r2.bottom + textPaint.getTextSize(), textPaint);
                     }
 
                     if (clothing != null) {

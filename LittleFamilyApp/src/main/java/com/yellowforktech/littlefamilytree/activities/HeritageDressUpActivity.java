@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.View;
@@ -19,6 +21,7 @@ import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.games.DollConfig;
 import com.yellowforktech.littlefamilytree.games.DressUpDolls;
+import com.yellowforktech.littlefamilytree.util.ImageHelper;
 import com.yellowforktech.littlefamilytree.util.PlaceHelper;
 import com.yellowforktech.littlefamilytree.views.DressUpView;
 
@@ -26,7 +29,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class HeritageDressUpActivity extends LittleFamilyActivity implements DressUpView.DressedListener, View.OnClickListener {
@@ -67,6 +72,8 @@ public class HeritageDressUpActivity extends LittleFamilyActivity implements Dre
     @Override
     protected void onStart() {
         super.onStart();
+
+
         dressUpView.setDollConfig(dollConfig);
         dressUpView.addListener(this);
         Bitmap starBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.star1);
@@ -93,45 +100,17 @@ public class HeritageDressUpActivity extends LittleFamilyActivity implements Dre
             allDolls.add(dressUpDolls.getDollConfig(place, person));
         }
 
-        for(int index=0; index < allDolls.size(); index++) {
-            LinearLayout ll = new LinearLayout(this);
-            ll.setOrientation(LinearLayout.VERTICAL);
-            ImageView dollImage = new ImageView(this);
-            DollConfig dc = allDolls.get(index);
-            if (dc!=null) {
-                String thumbnailFile = dc.getThumbnail();
-                try {
-                    InputStream is = this.getAssets().open(thumbnailFile);
-                    Bitmap thumbnail = BitmapFactory.decodeStream(is);
-                    dollImage.setImageBitmap(thumbnail);
-                    is.close();
-                } catch (IOException e) {
-                    Log.e("DressUpDollsAdapter", "Error opening asset file", e);
-                }
-            }
-            dollImage.setTag(dc);
-            dollImage.setOnClickListener(this);
-            ll.addView(dollImage);
-            TextView place = new TextView(this);
-            if (Build.VERSION.SDK_INT > 16) {
-                place.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-            }
-            String placeTxt = allPlaces.get(index);
-            place.setText(placeTxt);
-            ll.addView(place);
-
-            dollLayout.addView(ll);
-
-            Space spacer = new Space(this);
-            spacer.setMinimumWidth(15);
-            dollLayout.addView(spacer);
-        }
+        DollConfigLoader dcl = new DollConfigLoader();
+        dcl.execute();
     }
 
     @Override
     public void onDressed() {
         playCompleteSound();
         dollScroller.setVisibility(View.VISIBLE);
+        dollScroller.bringToFront();
+        dollScroller.getParent().requestLayout();
+        ((View)dollScroller.getParent()).invalidate();
     }
 
     @Override
@@ -141,12 +120,72 @@ public class HeritageDressUpActivity extends LittleFamilyActivity implements Dre
         dollScroller.setVisibility(View.INVISIBLE);
     }
 
-    /*
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        dollConfig = (DollConfig) adapter.getItem(position);
-        dressUpView.setDollConfig(dollConfig);
-        dollLayout.setVisibility(View.INVISIBLE);
+
+    public class DollConfigLoader extends AsyncTask<String, String, Map<Integer, Bitmap>> {
+
+        @Override
+        protected Map<Integer, Bitmap> doInBackground(String... params) {
+            DisplayMetrics dm = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(dm);
+            Map<Integer, Bitmap> map = new HashMap<>();
+            for(int index=0; index < allDolls.size(); index++) {
+                DollConfig dc = allDolls.get(index);
+                if (dc!=null) {
+                    String thumbnailFile = dc.getThumbnail();
+                    try {
+                        InputStream is = getAssets().open(thumbnailFile);
+                        Bitmap thumbnail = ImageHelper.loadBitmapFromStream(is, 0, (int) (120 * dm.density), (int) (120 * dm.density));
+                        //Bitmap thumbnail = BitmapFactory.decodeStream(is);
+                        map.put(index, thumbnail);
+                        is.close();
+                    } catch (IOException e) {
+                        Log.e("DressUpDollsAdapter", "Error opening asset file", e);
+                    }
+                }
+            }
+            return map;
+        }
+
+        @Override
+        protected void onPostExecute(Map<Integer, Bitmap> integerBitmapMap) {
+            super.onPostExecute(integerBitmapMap);
+            DisplayMetrics dm = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(dm);
+            for(int index=0; index < allDolls.size(); index++) {
+                LinearLayout ll = new LinearLayout(HeritageDressUpActivity.this);
+                ll.setOrientation(LinearLayout.VERTICAL);
+                ImageView dollImage = new ImageView(HeritageDressUpActivity.this);
+                DollConfig dc = allDolls.get(index);
+                if (dc!=null) {
+                    String thumbnailFile = dc.getThumbnail();
+                    try {
+                        InputStream is = getAssets().open(thumbnailFile);
+                        Bitmap thumbnail = ImageHelper.loadBitmapFromStream(is, 0, (int) (120 * dm.density), (int) (120 * dm.density));
+                        //Bitmap thumbnail = BitmapFactory.decodeStream(is);
+                        dollImage.setImageBitmap(thumbnail);
+                        is.close();
+                    } catch (IOException e) {
+                        Log.e("DressUpDollsAdapter", "Error opening asset file", e);
+                    }
+                }
+                dollImage.setTag(dc);
+                dollImage.setOnClickListener(HeritageDressUpActivity.this);
+                ll.addView(dollImage);
+                TextView place = new TextView(HeritageDressUpActivity.this);
+                if (Build.VERSION.SDK_INT > 16) {
+                    place.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                }
+                String placeTxt = allPlaces.get(index);
+                place.setText(placeTxt);
+                ll.addView(place);
+
+                dollLayout.addView(ll);
+
+                Space spacer = new Space(HeritageDressUpActivity.this);
+                spacer.setMinimumWidth(15);
+                dollLayout.addView(spacer);
+            }
+
+        }
     }
-    */
 }

@@ -99,6 +99,7 @@ public class PlaceHelper {
         if (!place.equals("United States") && PlaceHelper.isInUS(place))
             place = "United States";
         if (place.equals("Eng") || place.equals("Great Britain")) place = "England";
+        if (place.equals("Holland")) place.equals("Netherlands");
         return place;
     }
 }
