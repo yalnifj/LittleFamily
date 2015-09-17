@@ -10,8 +10,10 @@ import android.util.Log;
 
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
+import com.yellowforktech.littlefamilytree.events.EventQueue;
 import com.yellowforktech.littlefamilytree.sprites.AnimatedBitmapSprite;
 import com.yellowforktech.littlefamilytree.sprites.BirdSprite;
+import com.yellowforktech.littlefamilytree.sprites.CatSprite;
 import com.yellowforktech.littlefamilytree.sprites.ClippedRepeatedBackgroundSprite;
 import com.yellowforktech.littlefamilytree.sprites.MovingAnimatedBitmapSprite;
 import com.yellowforktech.littlefamilytree.sprites.MovingTouchStateAnimatedBitmapSprite;
@@ -28,12 +30,13 @@ import java.util.Collections;
 import java.util.List;
 
 public class HomeActivity extends LittleFamilyActivity {
-
+    public static final String TOPIC_ANIMATE_CAT = "animateCat";
 
     private LittlePerson selectedPerson;
     private ArrayList<LittlePerson> people;
     private ClippedRepeatedBackgroundSprite homeBackground;
     private HomeView homeView;
+    private CatSprite catSprite;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -53,12 +56,17 @@ public class HomeActivity extends LittleFamilyActivity {
 	
 	public void onStart() {
 		super.onStart();
+        EventQueue.getInstance().subscribe(TOPIC_ANIMATE_CAT, this);
+
 		setupHomeViewSprites();
         homeView.resume();
 	}
 	
 	public void onStop() {
 		super.onStop();
+
+        EventQueue.getInstance().unSubscribe(TOPIC_ANIMATE_CAT, this);
+
 		homeView.stop();
         homeView.onDestroy();
         if (homeBackground!=null) {
@@ -245,10 +253,15 @@ public class HomeActivity extends LittleFamilyActivity {
             }
 
             Bitmap couchBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_familyroom_couch);
-            AnimatedBitmapSprite couch = new AnimatedBitmapSprite(couchBm);
+            TouchEventGameSprite couch = new TouchEventGameSprite(couchBm, TOPIC_ANIMATE_CAT);
             couch.setX(555 * dm.density);
             couch.setY(575 * dm.density);
             homeView.addSprite(couch);
+
+            catSprite = new CatSprite(this);
+            catSprite.setX(couch.getX() + (couch.getWidth()/2));
+            catSprite.setY(630*dm.density);
+            homeView.addSprite(catSprite);
 
             Bitmap frameBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_familyroom_frame);
             TouchStateAnimatedBitmapSprite frameBtn = new TouchStateAnimatedBitmapSprite(frameBm, this);
@@ -806,5 +819,11 @@ public class HomeActivity extends LittleFamilyActivity {
         }
     }
 
-
+    @Override
+    public void onEvent(String topic, Object o) {
+        super.onEvent(topic, o);
+        if (topic.equals(TOPIC_ANIMATE_CAT)) {
+            catSprite.setAnimating(true);
+        }
+    }
 }
