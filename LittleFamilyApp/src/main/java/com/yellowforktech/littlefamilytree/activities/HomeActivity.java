@@ -493,8 +493,30 @@ public class HomeActivity extends LittleFamilyActivity {
             toaster.setStateTransition(3, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
             toaster.getAudio().put(1, R.raw.toaster1);
             toaster.getAudio().put(3, R.raw.toaster2);
-
             homeView.addSprite(toaster);
+
+            Bitmap kettleBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_kitchen_kettle);
+            TouchStateAnimatedBitmapSprite kettle = new TouchStateAnimatedBitmapSprite(kettleBm, this);
+            kettle.setX(1120 * dm.density);
+            kettle.setY(562 * dm.density);
+            kettle.setResources(getResources());
+            List<Integer> warmingUp = new ArrayList<>(5);
+            warmingUp.add(R.drawable.house_kitchen_kettle2);
+            warmingUp.add(R.drawable.house_kitchen_kettle3);
+            warmingUp.add(R.drawable.house_kitchen_kettle4);
+            warmingUp.add(R.drawable.house_kitchen_kettle5);
+            warmingUp.add(R.drawable.house_kitchen_kettle6);
+            kettle.getBitmapIds().put(1, warmingUp);
+            kettle.setStateTransition(1, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP3);
+            List<Integer> steaming = new ArrayList<>(5);
+            steaming.add(R.drawable.house_kitchen_kettle7);
+            steaming.add(R.drawable.house_kitchen_kettle8);
+            steaming.add(R.drawable.house_kitchen_kettle9);
+            steaming.add(R.drawable.house_kitchen_kettle10);
+            steaming.add(R.drawable.house_kitchen_kettle11);
+            kettle.getBitmapIds().put(2, steaming);
+            kettle.setStateTransition(2, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP3);
+            homeView.addSprite(kettle);
 
             Bitmap bubbles1bm = BitmapFactory.decodeResource(getResources(), R.drawable.bubbles1);
             TouchEventGameSprite bubbles = new TouchEventGameSprite(bubbles1bm, TOPIC_START_BUBBLES);

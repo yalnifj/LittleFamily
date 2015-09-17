@@ -16595,6 +16595,30 @@
        y1="511.14999"
        x2="101.95"
        y2="559.90002" />
+    <filter
+       inkscape:collect="always"
+       id="filter3981-1-8">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="3.4085625"
+         id="feGaussianBlur3983-0-7" />
+    </filter>
+    <filter
+       inkscape:collect="always"
+       id="filter3981-1-8-1">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="3.4085625"
+         id="feGaussianBlur3983-0-7-7" />
+    </filter>
+    <filter
+       inkscape:collect="always"
+       id="filter3981-1-8-4">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="3.4085625"
+         id="feGaussianBlur3983-0-7-4" />
+    </filter>
   </defs>
   <sodipodi:namedview
      id="base"
@@ -16603,11 +16627,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.86377567"
-     inkscape:cx="448.33789"
-     inkscape:cy="-675.64104"
+     inkscape:zoom="7.2434884"
+     inkscape:cx="1407.1671"
+     inkscape:cy="182.32107"
      inkscape:document-units="px"
-     inkscape:current-layer="layer6"
+     inkscape:current-layer="layer12"
      showgrid="false"
      inkscape:window-width="1179"
      inkscape:window-height="891"
@@ -18922,6 +18946,125 @@
            inkscape:connector-curvature="0"
            id="path5323-0-9-8-2-4-9"
            d="m 252.34092,1488.7397 c 0,0.7979 -0.64687,1.4448 -1.4448,1.4448 -0.79793,0 -1.44479,-0.6469 -1.44479,-1.4448 0,-0.7979 0.64686,-1.4448 1.44479,-1.4448 0.79793,0 1.4448,0.6469 1.4448,1.4448 z" />
+      </g>
+    </g>
+    <g
+       style="display:inline;opacity:0.522"
+       transform="matrix(0.05068256,-0.04921273,0.03335057,0.07751438,1388.5406,495.88807)"
+       inkscape:label="Capa 1"
+       id="layer1-09-3-1"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_kitchen_kettle11.png"
+       inkscape:export-xdpi="65.620003"
+       inkscape:export-ydpi="65.620003">
+      <g
+         transform="translate(-293.56,357.15)"
+         id="g4082-0-9"
+         style="">
+        <path
+           d="m 457.19,261.88 c -17.01,0 -30.78,12.24 -30.78,27.31 0,15.07 13.77,27.31 30.78,27.31 2.39,0 4.73,-0.26 6.97,-0.72 0.12,27.9 22.79,50.5 50.72,50.5 8.4,0 16.3,-2.07 23.28,-5.69 6.75,9.61 17.9,15.91 30.53,15.91 20.59,0 37.31,-16.72 37.31,-37.31 0,-20.59 -16.72,-37.32 -37.31,-37.31 -1.66,0 -3.28,0.13 -4.88,0.34 -5.86,-21.54 -25.55,-37.38 -48.93,-37.38 -11.71,0 -22.48,3.97 -31.07,10.63 -5.34,-8.12 -15.26,-13.59 -26.62,-13.59 z"
+           style="fill:#e4eaed"
+           id="path3894-1-0"
+           inkscape:connector-curvature="0" />
+        <path
+           inkscape:radius="-8.6188364"
+           transform="translate(-188,164)"
+           inkscape:original="M 645.1875 97.875 C 628.18309 97.875 614.40624 110.11509 614.40625 125.1875 C 614.40625 140.25991 628.18312 152.49999 645.1875 152.5 C 647.57874 152.5 649.92118 152.23894 652.15625 151.78125 C 652.27553 179.68008 674.94831 202.28124 702.875 202.28125 C 711.27716 202.28125 719.17561 200.21475 726.15625 196.59375 C 732.90748 206.19896 744.06355 212.5 756.6875 212.5 C 777.27991 212.5 794.00003 195.77991 794 175.1875 C 794 154.59509 777.2799 137.87499 756.6875 137.875 C 755.02907 137.875 753.4139 138.00866 751.8125 138.21875 C 745.95324 116.67977 726.26169 100.84375 702.875 100.84375 C 691.17391 100.84375 680.39766 104.80515 671.8125 111.46875 C 666.47168 103.35068 656.54719 97.874999 645.1875 97.875 z "
+           d="m 645.1875,106.49414 c -12.86841,0 -22.16212,8.87295 -22.16211,18.69336 0,9.8204 9.29373,18.69335 22.16211,18.69336 1.76394,0 3.5336,-0.19349 5.24023,-0.54297 a 8.6196983,8.6196983 0 0 1 10.34766,8.40625 c 0.0994,23.2493 18.82309,41.91796 42.09961,41.91797 6.98897,0 13.50097,-1.70419 19.3125,-4.71875 a 8.6196983,8.6196983 0 0 1 11.01953,2.69336 c 5.20232,7.40152 13.72449,12.24414 23.48047,12.24414 15.92701,0 28.69338,-12.76636 28.69336,-28.69336 0,-15.92701 -12.76637,-28.69337 -28.69336,-28.69336 -1.19534,0 -2.42613,0.0953 -3.75391,0.26953 a 8.6196983,8.6196983 0 0 1 -9.4375,-6.2832 c -4.85625,-17.85188 -21.12516,-31.01758 -40.62109,-31.01758 -9.75582,0 -18.64486,3.27839 -25.77734,8.81445 a 8.6196983,8.6196983 0 0 1 -12.48633,-2.07226 c -3.62437,-5.50906 -10.83382,-9.71094 -19.42383,-9.71094 z"
+           sodipodi:type="inkscape:offset"
+           style="fill:#ffffff;filter:url(#filter3981-1-8)"
+           id="path3903-1-7" />
+        <path
+           d="m 478.43,283.3 c -10.07,3.11 -17.22,22.68 -17.41,29.67 1.79,4.13 3.32,1.86 4.17,-0.71 1.9,-5.76 5.36,-21.3 13.24,-28.96 z"
+           style="fill:#e4eaed"
+           sodipodi:nodetypes="ccsc"
+           id="path3985-0-6-0"
+           inkscape:connector-curvature="0" />
+        <path
+           d="m 547.16,326.58 c -9.42,4.74 -13.22,25.22 -12.25,32.14 2.45,3.78 3.59,1.28 4,-1.39 0.91,-5.99 1.75,-21.89 8.25,-30.75 z"
+           style="fill:#e4eaed"
+           sodipodi:nodetypes="ccsc"
+           id="path3987-8-5-0"
+           inkscape:connector-curvature="0" />
+      </g>
+    </g>
+    <g
+       style="display:inline;opacity:0.515"
+       transform="matrix(0.05631502,0.0137642,-0.04023137,0.05632987,1453.7575,500.2672)"
+       inkscape:label="Capa 1"
+       id="layer1-09-3-1-1"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_kitchen_kettle11.png"
+       inkscape:export-xdpi="65.620003"
+       inkscape:export-ydpi="65.620003">
+      <g
+         transform="matrix(1.187374,0.03281486,0.09593982,1.2982257,-428.9512,168.56023)"
+         id="g4082-0-9-7"
+         style="">
+        <path
+           d="m 457.19,261.88 c -17.01,0 -30.78,12.24 -30.78,27.31 0,15.07 13.77,27.31 30.78,27.31 2.39,0 4.73,-0.26 6.97,-0.72 0.12,27.9 22.79,50.5 50.72,50.5 8.4,0 16.3,-2.07 23.28,-5.69 6.75,9.61 17.9,15.91 30.53,15.91 20.59,0 37.31,-16.72 37.31,-37.31 0,-20.59 -16.72,-37.32 -37.31,-37.31 -1.66,0 -3.28,0.13 -4.88,0.34 -5.86,-21.54 -25.55,-37.38 -48.93,-37.38 -11.71,0 -22.48,3.97 -31.07,10.63 -5.34,-8.12 -15.26,-13.59 -26.62,-13.59 z"
+           style="fill:#e4eaed"
+           id="path3894-1-0-3"
+           inkscape:connector-curvature="0" />
+        <path
+           inkscape:radius="-8.6188364"
+           transform="translate(-188,164)"
+           inkscape:original="M 645.1875 97.875 C 628.18309 97.875 614.40624 110.11509 614.40625 125.1875 C 614.40625 140.25991 628.18312 152.49999 645.1875 152.5 C 647.57874 152.5 649.92118 152.23894 652.15625 151.78125 C 652.27553 179.68008 674.94831 202.28124 702.875 202.28125 C 711.27716 202.28125 719.17561 200.21475 726.15625 196.59375 C 732.90748 206.19896 744.06355 212.5 756.6875 212.5 C 777.27991 212.5 794.00003 195.77991 794 175.1875 C 794 154.59509 777.2799 137.87499 756.6875 137.875 C 755.02907 137.875 753.4139 138.00866 751.8125 138.21875 C 745.95324 116.67977 726.26169 100.84375 702.875 100.84375 C 691.17391 100.84375 680.39766 104.80515 671.8125 111.46875 C 666.47168 103.35068 656.54719 97.874999 645.1875 97.875 z "
+           d="m 645.1875,106.49414 c -12.86841,0 -22.16212,8.87295 -22.16211,18.69336 0,9.8204 9.29373,18.69335 22.16211,18.69336 1.76394,0 3.5336,-0.19349 5.24023,-0.54297 a 8.6196983,8.6196983 0 0 1 10.34766,8.40625 c 0.0994,23.2493 18.82309,41.91796 42.09961,41.91797 6.98897,0 13.50097,-1.70419 19.3125,-4.71875 a 8.6196983,8.6196983 0 0 1 11.01953,2.69336 c 5.20232,7.40152 13.72449,12.24414 23.48047,12.24414 15.92701,0 28.69338,-12.76636 28.69336,-28.69336 0,-15.92701 -12.76637,-28.69337 -28.69336,-28.69336 -1.19534,0 -2.42613,0.0953 -3.75391,0.26953 a 8.6196983,8.6196983 0 0 1 -9.4375,-6.2832 c -4.85625,-17.85188 -21.12516,-31.01758 -40.62109,-31.01758 -9.75582,0 -18.64486,3.27839 -25.77734,8.81445 a 8.6196983,8.6196983 0 0 1 -12.48633,-2.07226 c -3.62437,-5.50906 -10.83382,-9.71094 -19.42383,-9.71094 z"
+           sodipodi:type="inkscape:offset"
+           style="fill:#ffffff;filter:url(#filter3981-1-8-1)"
+           id="path3903-1-7-6" />
+        <path
+           d="m 478.43,283.3 c -10.07,3.11 -17.22,22.68 -17.41,29.67 1.79,4.13 3.32,1.86 4.17,-0.71 1.9,-5.76 5.36,-21.3 13.24,-28.96 z"
+           style="fill:#e4eaed"
+           sodipodi:nodetypes="ccsc"
+           id="path3985-0-6-0-2"
+           inkscape:connector-curvature="0" />
+        <path
+           d="m 547.16,326.58 c -9.42,4.74 -13.22,25.22 -12.25,32.14 2.45,3.78 3.59,1.28 4,-1.39 0.91,-5.99 1.75,-21.89 8.25,-30.75 z"
+           style="fill:#e4eaed"
+           sodipodi:nodetypes="ccsc"
+           id="path3987-8-5-0-3"
+           inkscape:connector-curvature="0" />
+      </g>
+    </g>
+    <g
+       style="display:inline;opacity:0.541"
+       transform="matrix(0.0278043,0.05622646,-0.08613613,0.02425322,1500.6943,525.06291)"
+       inkscape:label="Capa 1"
+       id="layer1-09-3-1-9"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_kitchen_kettle11.png"
+       inkscape:export-xdpi="65.620003"
+       inkscape:export-ydpi="65.620003"
+       inkscape:transform-center-x="-0.03477158"
+       inkscape:transform-center-y="0.6122702">
+      <g
+         transform="translate(-293.56,357.15)"
+         id="g4082-0-9-0"
+         style="">
+        <path
+           d="m 457.19,261.88 c -17.01,0 -30.78,12.24 -30.78,27.31 0,15.07 13.77,27.31 30.78,27.31 2.39,0 4.73,-0.26 6.97,-0.72 0.12,27.9 22.79,50.5 50.72,50.5 8.4,0 16.3,-2.07 23.28,-5.69 6.75,9.61 17.9,15.91 30.53,15.91 20.59,0 37.31,-16.72 37.31,-37.31 0,-20.59 -16.72,-37.32 -37.31,-37.31 -1.66,0 -3.28,0.13 -4.88,0.34 -5.86,-21.54 -25.55,-37.38 -48.93,-37.38 -11.71,0 -22.48,3.97 -31.07,10.63 -5.34,-8.12 -15.26,-13.59 -26.62,-13.59 z"
+           style="fill:#e4eaed"
+           id="path3894-1-0-1"
+           inkscape:connector-curvature="0" />
+        <path
+           inkscape:radius="-8.6188364"
+           transform="translate(-188,164)"
+           inkscape:original="M 645.1875 97.875 C 628.18309 97.875 614.40624 110.11509 614.40625 125.1875 C 614.40625 140.25991 628.18312 152.49999 645.1875 152.5 C 647.57874 152.5 649.92118 152.23894 652.15625 151.78125 C 652.27553 179.68008 674.94831 202.28124 702.875 202.28125 C 711.27716 202.28125 719.17561 200.21475 726.15625 196.59375 C 732.90748 206.19896 744.06355 212.5 756.6875 212.5 C 777.27991 212.5 794.00003 195.77991 794 175.1875 C 794 154.59509 777.2799 137.87499 756.6875 137.875 C 755.02907 137.875 753.4139 138.00866 751.8125 138.21875 C 745.95324 116.67977 726.26169 100.84375 702.875 100.84375 C 691.17391 100.84375 680.39766 104.80515 671.8125 111.46875 C 666.47168 103.35068 656.54719 97.874999 645.1875 97.875 z "
+           d="m 645.1875,106.49414 c -12.86841,0 -22.16212,8.87295 -22.16211,18.69336 0,9.8204 9.29373,18.69335 22.16211,18.69336 1.76394,0 3.5336,-0.19349 5.24023,-0.54297 a 8.6196983,8.6196983 0 0 1 10.34766,8.40625 c 0.0994,23.2493 18.82309,41.91796 42.09961,41.91797 6.98897,0 13.50097,-1.70419 19.3125,-4.71875 a 8.6196983,8.6196983 0 0 1 11.01953,2.69336 c 5.20232,7.40152 13.72449,12.24414 23.48047,12.24414 15.92701,0 28.69338,-12.76636 28.69336,-28.69336 0,-15.92701 -12.76637,-28.69337 -28.69336,-28.69336 -1.19534,0 -2.42613,0.0953 -3.75391,0.26953 a 8.6196983,8.6196983 0 0 1 -9.4375,-6.2832 c -4.85625,-17.85188 -21.12516,-31.01758 -40.62109,-31.01758 -9.75582,0 -18.64486,3.27839 -25.77734,8.81445 a 8.6196983,8.6196983 0 0 1 -12.48633,-2.07226 c -3.62437,-5.50906 -10.83382,-9.71094 -19.42383,-9.71094 z"
+           sodipodi:type="inkscape:offset"
+           style="fill:#ffffff;filter:url(#filter3981-1-8-4)"
+           id="path3903-1-7-9" />
+        <path
+           d="m 478.43,283.3 c -10.07,3.11 -17.22,22.68 -17.41,29.67 1.79,4.13 3.32,1.86 4.17,-0.71 1.9,-5.76 5.36,-21.3 13.24,-28.96 z"
+           style="fill:#e4eaed"
+           sodipodi:nodetypes="ccsc"
+           id="path3985-0-6-0-5"
+           inkscape:connector-curvature="0" />
+        <path
+           d="m 547.16,326.58 c -9.42,4.74 -13.22,25.22 -12.25,32.14 2.45,3.78 3.59,1.28 4,-1.39 0.91,-5.99 1.75,-21.89 8.25,-30.75 z"
+           style="fill:#e4eaed"
+           sodipodi:nodetypes="ccsc"
+           id="path3987-8-5-0-6"
+           inkscape:connector-curvature="0" />
       </g>
     </g>
   </g>
@@ -30197,24 +30340,27 @@
        inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_kitchen.png"
        inkscape:export-xdpi="65.620003"
        inkscape:export-ydpi="65.620003" />
-    <path
-       class="fil5"
-       d="m 1016.5191,638.14708 c -6.1146,0 -11.0583,6.51714 -11.0583,14.5219 0,1.55845 0.1952,3.04606 0.5204,4.39199 -0.7155,2.7627 -1.0408,6.23379 -1.1058,8.85482 l 23.3525,0 c -0.1301,-2.62103 -0.4553,-6.02128 -1.1058,-8.78398 0.3253,-1.41677 0.5204,-2.90438 0.5204,-4.46283 0,-8.00476 -4.9437,-14.5219 -11.1234,-14.5219 z m 0,2.47935 c 5.2039,0 9.3671,4.88786 9.3671,12.04255 l 0,1.13341 -0.065,-0.0708 -18.539,0 -0.065,0 0,-1.06258 c 0,-7.1547 4.1632,-12.04255 9.302,-12.04255 z m 0,5.17121 c -0.8456,0 -1.4961,0.77922 -1.4961,1.70013 l 0,0.99174 c -2.8622,0.42503 -4.8136,1.98347 -6.1797,4.32115 l 15.4166,0 c -1.366,-2.33768 -3.3175,-3.89612 -6.1796,-4.32115 l 0,-0.99174 c 0,-0.92091 -0.7155,-1.70013 -1.5612,-1.70013 z m 19.5798,9.49237 -8.4564,2.05431 c 0.5854,1.62929 0.9107,3.4711 1.1058,5.45457 0,0.14168 0.065,0.28336 0.065,0.42503 l 10.4729,-6.72966 -3.1874,-1.20425 z"
-       id="path5897_1"
-       inkscape:connector-curvature="0"
-       style="clip-rule:evenodd;display:inline;fill:#d12d2d;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
-       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_kitchen.png"
-       inkscape:export-xdpi="65.620003"
-       inkscape:export-ydpi="65.620003" />
-    <path
-       class="fil4"
-       d="m 1003.1841,657.98187 c -0.8457,0 -1.4961,0.70839 -1.4961,1.62929 l 0,3.04606 c 0,0.85006 0.6504,1.62929 1.4961,1.62929 l 1.1058,0 c 0.1301,-2.40852 0.3903,-4.03781 1.0408,-6.2338 -0.1301,-0.0708 -0.2602,-0.0708 -0.3903,-0.0708 l -1.7563,0 z m 1.6262,8.78398 0,2.62103 23.4827,0 0,-2.62103 -23.4827,0 z"
-       id="path5889"
-       inkscape:connector-curvature="0"
-       style="clip-rule:evenodd;display:inline;fill:#808080;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
-       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_kitchen.png"
-       inkscape:export-xdpi="65.620003"
-       inkscape:export-ydpi="65.620003" />
+    <g
+       id="g11832">
+      <path
+         inkscape:export-ydpi="65.620003"
+         inkscape:export-xdpi="65.620003"
+         inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_kitchen.png"
+         style="clip-rule:evenodd;display:inline;fill:#d12d2d;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
+         inkscape:connector-curvature="0"
+         id="path5897_1"
+         d="m 1016.5191,638.14708 c -6.1146,0 -11.0583,6.51714 -11.0583,14.5219 0,1.55845 0.1952,3.04606 0.5204,4.39199 -0.7155,2.7627 -1.0408,6.23379 -1.1058,8.85482 l 23.3525,0 c -0.1301,-2.62103 -0.4553,-6.02128 -1.1058,-8.78398 0.3253,-1.41677 0.5204,-2.90438 0.5204,-4.46283 0,-8.00476 -4.9437,-14.5219 -11.1234,-14.5219 z m 0,2.47935 c 5.2039,0 9.3671,4.88786 9.3671,12.04255 l 0,1.13341 -0.065,-0.0708 -18.539,0 -0.065,0 0,-1.06258 c 0,-7.1547 4.1632,-12.04255 9.302,-12.04255 z m 0,5.17121 c -0.8456,0 -1.4961,0.77922 -1.4961,1.70013 l 0,0.99174 c -2.8622,0.42503 -4.8136,1.98347 -6.1797,4.32115 l 15.4166,0 c -1.366,-2.33768 -3.3175,-3.89612 -6.1796,-4.32115 l 0,-0.99174 c 0,-0.92091 -0.7155,-1.70013 -1.5612,-1.70013 z m 19.5798,9.49237 -8.4564,2.05431 c 0.5854,1.62929 0.9107,3.4711 1.1058,5.45457 0,0.14168 0.065,0.28336 0.065,0.42503 l 10.4729,-6.72966 -3.1874,-1.20425 z"
+         class="fil5" />
+      <path
+         inkscape:export-ydpi="65.620003"
+         inkscape:export-xdpi="65.620003"
+         inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_kitchen.png"
+         style="clip-rule:evenodd;display:inline;fill:#808080;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
+         inkscape:connector-curvature="0"
+         id="path5889"
+         d="m 1003.1841,657.98187 c -0.8457,0 -1.4961,0.70839 -1.4961,1.62929 l 0,3.04606 c 0,0.85006 0.6504,1.62929 1.4961,1.62929 l 1.1058,0 c 0.1301,-2.40852 0.3903,-4.03781 1.0408,-6.2338 -0.1301,-0.0708 -0.2602,-0.0708 -0.3903,-0.0708 l -1.7563,0 z m 1.6262,8.78398 0,2.62103 23.4827,0 0,-2.62103 -23.4827,0 z"
+         class="fil4" />
+    </g>
     <path
        class="fil9"
        d="m 976.70917,639.28049 c -1.88642,0 -3.38255,1.62929 -3.38255,3.68361 l 0,5.52541 14.70106,0 0,-5.52541 c 0,-2.05432 -1.49612,-3.68361 -3.38254,-3.68361 l -7.93597,0 z"
@@ -44407,6 +44553,60 @@
        d="m 1404.4705,735.78445 0,-96.3766 6.583,16.29567 0,96.37659 z"
        id="path9268-0"
        inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_kitchen_fridge6.png"
+       inkscape:export-xdpi="65.620003"
+       inkscape:export-ydpi="65.620003" />
+    <path
+       class="fil5"
+       d="m 1399.51,547.36243 c -6.1121,0.17897 -10.8628,6.83803 -10.6285,14.83936 0.045,1.55777 0.2843,3.03905 0.6487,4.37487 -0.6343,2.78246 -0.8579,6.26159 -0.8462,8.88339 l 23.3425,-0.68355 c -0.2066,-2.6161 -0.6314,-6.00537 -1.3624,-8.74784 0.2835,-1.42572 0.435,-2.91841 0.3896,-4.47615 -0.2342,-8.00133 -5.3665,-14.37096 -11.5436,-14.19007 z m 0.072,2.47826 c 5.2018,-0.15231 9.5061,4.61159 9.7157,11.76323 l 0.034,1.13293 -0.067,-0.0688 -18.531,0.54266 -0.065,0.002 -0.031,-1.06212 c -0.2094,-7.15163 3.8088,-12.15925 8.9455,-12.30967 z m 20.0006,14.08419 -8.3925,2.30096 c 0.6327,1.61145 1.0118,3.44296 1.2649,5.41986 0.01,0.14163 0.073,0.28133 0.078,0.42296 l 10.2715,-7.03332 -3.2214,-1.11045 z"
+       id="path5897_1-1"
+       inkscape:connector-curvature="0"
+       style="clip-rule:evenodd;display:inline;fill:#d12d2d;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_kitchen_kettle11.png"
+       inkscape:export-xdpi="65.620003"
+       inkscape:export-ydpi="65.620003"
+       sodipodi:nodetypes="ssccccsscsccccsccccccccc" />
+    <path
+       class="fil4"
+       d="m 1386.7614,567.57906 c -0.8455,0.0248 -1.4749,0.75186 -1.4479,1.67236 l 0.089,3.04476 c 0.025,0.8497 0.6978,1.60955 1.5431,1.58481 l 1.1054,-0.0324 c 0.06,-2.41129 0.2722,-4.04748 0.8579,-6.26158 -0.132,-0.067 -0.262,-0.0631 -0.3921,-0.0592 l -1.7554,0.0514 z m 1.8825,8.7326 0.077,2.61991 23.4727,-0.68737 -0.077,-2.61991 -23.4727,0.68737 z"
+       id="path5889-9"
+       inkscape:connector-curvature="0"
+       style="clip-rule:evenodd;display:inline;fill:#808080;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_kitchen_kettle11.png"
+       inkscape:export-xdpi="65.620003"
+       inkscape:export-ydpi="65.620003" />
+    <path
+       style="clip-rule:evenodd;display:inline;fill:#d12d2d;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
+       d="m 1399.0572,554.76493 c -0.8418,0.0819 -1.4138,0.92032 -1.3247,1.83689 l 0.096,0.98701 c -2.8073,0.69993 -4.5989,2.43984 -5.7326,4.89871 l 15.3445,-1.49139 c -1.5857,-2.19458 -3.6789,-3.55694 -6.5685,-3.70312 l -0.096,-0.98701 c -0.088,-0.91669 -0.8768,-1.62291 -1.7184,-1.54115 z"
+       id="path5897_1-1-5"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_kitchen_kettle11.png"
+       inkscape:export-xdpi="65.620003"
+       inkscape:export-ydpi="65.620003" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#d9e9f1;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 1420.6257,563.51978 c 1.3682,-1.38448 3.5652,-3.18049 3.5799,-8.08689"
+       id="path11960"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_kitchen_kettle11.png"
+       inkscape:export-xdpi="65.620003"
+       inkscape:export-ydpi="65.620003" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#d9e9f1;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 1421.5744,564.10194 8.185,-5.79987"
+       id="path11962"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_kitchen_kettle11.png"
+       inkscape:export-xdpi="65.620003"
+       inkscape:export-ydpi="65.620003"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#d9e9f1;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 1422.6739,564.27445 c 1.322,-1.14773 3.6564,-2.01614 8.0445,-1.48244"
+       id="path11964"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_kitchen_kettle11.png"
        inkscape:export-xdpi="65.620003"
        inkscape:export-ydpi="65.620003" />
   </g>
