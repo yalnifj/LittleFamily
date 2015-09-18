@@ -260,7 +260,7 @@ public class HomeActivity extends LittleFamilyActivity {
 
             catSprite = new CatSprite(this);
             catSprite.setX(couch.getX() + (couch.getWidth()/2));
-            catSprite.setY(630*dm.density);
+            catSprite.setY(628*dm.density);
             homeView.addSprite(catSprite);
 
             Bitmap frameBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_familyroom_frame);
@@ -529,6 +529,7 @@ public class HomeActivity extends LittleFamilyActivity {
             steaming.add(R.drawable.house_kitchen_kettle11);
             kettle.getBitmapIds().put(2, steaming);
             kettle.setStateTransition(2, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP3);
+            kettle.getAudio().put(1, R.raw.kettle);
             homeView.addSprite(kettle);
 
             Bitmap bubbles1bm = BitmapFactory.decodeResource(getResources(), R.drawable.bubbles1);
