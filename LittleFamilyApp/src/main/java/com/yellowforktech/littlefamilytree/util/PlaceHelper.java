@@ -32,6 +32,9 @@ public class PlaceHelper {
     static {
         Arrays.sort(abbvStates);
     }
+
+    private static String[] canadaStates = {"alberta","british columbia","manitoba","new brunswick","newfoundland",
+            "newfoundland and labrador","nova scotia","ontario","prince edward island","quebec","saskatchewan"};
 	
 	private static String[] tribes = {
 		"cherokee", "apache", "navajo", "iriquois"
@@ -92,14 +95,15 @@ public class PlaceHelper {
 
     public static String getPlaceCountry(String p) {
         String place = PlaceHelper.getTopPlace(p);
-        if (place == null) place = UNKNOWN;
-        if (place.equals("United Kingdom")) {
+        if (place == null) return UNKNOWN;
+        if (place.equalsIgnoreCase("United Kingdom")) {
             place = getTopPlace(p, 2);
         }
-        if (!place.equals("United States") && PlaceHelper.isInUS(place))
-            place = "United States";
-        if (place.equals("Eng") || place.equals("Great Britain")) place = "England";
-        if (place.equals("Holland")) place.equals("Netherlands");
+        if (!place.equalsIgnoreCase("United States") && PlaceHelper.isInUS(place))
+            return "United States";
+        if (place.equalsIgnoreCase("Eng") || place.equalsIgnoreCase("Great Britain")) return "England";
+        if (place.equalsIgnoreCase("Holland")) return "Netherlands";
+        if (Arrays.binarySearch(canadaStates, place.toLowerCase())>=0) return "Canada";
         return place;
     }
 }

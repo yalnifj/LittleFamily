@@ -29,6 +29,16 @@ public class HeritageCalculatorTask extends AsyncTask<LittlePerson, Integer, Arr
         dataService.setContext(context);
     }
 
+    public boolean canEndPath(HeritagePath path, String origin) {
+        if (path.getTreePath().size()>=MAX_PATHS) return true;
+        if (path.getPlace().equals(origin)) return false;
+        if (path.getPlace().equals(PlaceHelper.UNKNOWN)) return false;
+        if (path.getTreePath().size()<=2) return false;
+        if (origin.equalsIgnoreCase("united states") && path.getPlace().equalsIgnoreCase("canada")) return false;
+        if (origin.equalsIgnoreCase("canada") && path.getPlace().equalsIgnoreCase("united states")) return false;
+        return true;
+    }
+
     @Override
     protected ArrayList<HeritagePath> doInBackground(LittlePerson[] persons) {
         long starttime = System.currentTimeMillis();
@@ -50,9 +60,7 @@ public class HeritageCalculatorTask extends AsyncTask<LittlePerson, Integer, Arr
         while(paths.size() > 0) {
             try {
                 HeritagePath path = paths.removeFirst();
-                if (path.getTreePath().size()>=MAX_PATHS ||
-                        (!path.getPlace().equals(origin) && !path.getPlace().equals(PlaceHelper.UNKNOWN)
-                                && path.getTreePath().size()>2)) {
+                if (canEndPath(path, origin)) {
                     returnPaths.add(path);
                 }
                 else {
@@ -64,6 +72,7 @@ public class HeritageCalculatorTask extends AsyncTask<LittlePerson, Integer, Arr
                         for (LittlePerson parent : parents) {
                             HeritagePath ppath = new HeritagePath();
                             ppath.setPercent(path.getPercent() / parents.size());
+                            //-- sometimes people use nationality as a note, try to ignore those
                             if (parent.getNationality()!=null && parent.getNationality().length()<80) {
                                 ppath.setPlace(parent.getNationality());
                             } else {
