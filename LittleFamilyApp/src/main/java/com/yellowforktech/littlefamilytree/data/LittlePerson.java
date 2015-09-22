@@ -134,18 +134,21 @@ public class LittlePerson implements Serializable {
                         DateFormat df = new SimpleDateFormat("dd MMM yyyy");
                         try {
                             this.birthDate = df.parse(birthDateStr);
-                            Calendar today = Calendar.getInstance();
-                            Calendar birthCal = Calendar.getInstance();
-                            birthCal.setTime(birthDate);
                             updateAge();
                         } catch (ParseException e) {
-                            Pattern p = Pattern.compile("\\d\\d\\d\\d");
-                            Matcher m = p.matcher(birthDateStr);
-                            if (m.find()) {
-                                String birthYearStr = m.group();
-                                int birthYear = Integer.parseInt(birthYearStr);
-                                Calendar cal = Calendar.getInstance();
-                                age = cal.get(Calendar.YEAR) - birthYear;
+                            DateFormat df2 = new SimpleDateFormat("+yyyy-MM-dd");
+                            try {
+                                this.birthDate = df2.parse(birthDateStr);
+                                updateAge();
+                            } catch (ParseException e2) {
+                                Pattern p = Pattern.compile("\\d\\d\\d\\d");
+                                Matcher m = p.matcher(birthDateStr);
+                                if (m.find()) {
+                                    String birthYearStr = m.group();
+                                    int birthYear = Integer.parseInt(birthYearStr);
+                                    Calendar cal = Calendar.getInstance();
+                                    age = cal.get(Calendar.YEAR) - birthYear;
+                                }
                             }
                         }
                     }
