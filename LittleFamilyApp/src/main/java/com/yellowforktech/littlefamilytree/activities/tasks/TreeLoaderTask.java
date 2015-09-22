@@ -97,7 +97,7 @@ public class TreeLoaderTask extends AsyncTask<LittlePerson, Integer, TreeNode> {
         }
         addParents(pNode,isInLaw);
 
-        if (person.getGender()== GenderType.Female) {
+        if (person!=null && person.getGender()== GenderType.Female) {
             node.setRight(pNode);
         } else {
             node.setLeft(pNode);
@@ -121,7 +121,7 @@ public class TreeLoaderTask extends AsyncTask<LittlePerson, Integer, TreeNode> {
                 }
             }
             addParents(prNode, isInLaw);
-            if (spouse.getGender()== GenderType.Female) {
+            if (node.getLeft()!=null || (spouse!=null && spouse.getGender()== GenderType.Female)) {
                 node.setRight(prNode);
             } else {
                 node.setLeft(prNode);

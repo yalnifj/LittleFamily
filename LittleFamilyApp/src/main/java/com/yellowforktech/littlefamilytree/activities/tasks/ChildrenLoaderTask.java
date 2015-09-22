@@ -19,10 +19,12 @@ public class ChildrenLoaderTask extends AsyncTask<LittlePerson, String, ArrayLis
     private Listener listener;
     private Context context;
     private DataService dataService;
+    private boolean includeSteps;
 
-    public ChildrenLoaderTask(Listener listener, Context context) {
+    public ChildrenLoaderTask(Listener listener, Context context, boolean includeSteps) {
         this.listener = listener;
         this.context = context;
+        this.includeSteps = includeSteps;
         dataService = DataService.getInstance();
         dataService.setContext(context);
         dataService.registerNetworkStateListener(this);
@@ -40,11 +42,17 @@ public class ChildrenLoaderTask extends AsyncTask<LittlePerson, String, ArrayLis
                     if (familyMembers.size()==0) {
                         familyMembers.addAll(people);
                     } else {
-                        ArrayList<LittlePerson> union = new ArrayList<>();
-                        for(LittlePerson child : people) {
-                            if (familyMembers.contains(child)) union.add(child);
+                        if (!includeSteps) {
+                            ArrayList<LittlePerson> union = new ArrayList<>();
+                            for (LittlePerson child : people) {
+                                if (familyMembers.contains(child)) union.add(child);
+                            }
+                            familyMembers = union;
+                        } else {
+                            for (LittlePerson child : people) {
+                                if (!familyMembers.contains(child)) familyMembers.add(child);
+                            }
                         }
-                        familyMembers = union;
                     }
                 }
             } catch (Exception e) {

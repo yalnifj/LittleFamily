@@ -39,6 +39,8 @@ public class LittlePerson implements Serializable {
     private Boolean hasSpouses;
     private Boolean hasMedia;
 
+    private Integer treeLevel;
+
     @Override
     public String toString() {
         return "LittlePerson{" +
@@ -135,10 +137,7 @@ public class LittlePerson implements Serializable {
                             Calendar today = Calendar.getInstance();
                             Calendar birthCal = Calendar.getInstance();
                             birthCal.setTime(birthDate);
-                            age = today.get(Calendar.YEAR) - birthCal.get(Calendar.YEAR);
-                            if (today.get(Calendar.MONTH) < birthCal.get(Calendar.MONTH)) age--;
-                            else if (today.get(Calendar.MONTH) == birthCal.get(Calendar.MONTH)
-                                    && today.get(Calendar.DATE) < birthCal.get(Calendar.DATE)) age--;
+                            updateAge();
                         } catch (ParseException e) {
                             Pattern p = Pattern.compile("\\d\\d\\d\\d");
                             Matcher m = p.matcher(birthDateStr);
@@ -168,6 +167,18 @@ public class LittlePerson implements Serializable {
         Fact nFact = fsPerson.getFirstFactOfType(FactType.Nationality);
         if (nFact!=null) {
             nationality = nFact.getValue();
+        }
+    }
+
+    public void updateAge() {
+        if (birthDate!=null) {
+            Calendar today = Calendar.getInstance();
+            Calendar birthCal = Calendar.getInstance();
+            birthCal.setTime(birthDate);
+            age = today.get(Calendar.YEAR) - birthCal.get(Calendar.YEAR);
+            if (today.get(Calendar.MONTH) < birthCal.get(Calendar.MONTH)) age--;
+            else if (today.get(Calendar.MONTH) == birthCal.get(Calendar.MONTH)
+                    && today.get(Calendar.DATE) < birthCal.get(Calendar.DATE)) age--;
         }
     }
 
@@ -336,6 +347,18 @@ public class LittlePerson implements Serializable {
 
     public void setHasMedia(Boolean hasMedia) {
         this.hasMedia = hasMedia;
+    }
+
+    /**
+     * The level in the tree from the root person
+     * @return
+     */
+    public Integer getTreeLevel() {
+        return treeLevel;
+    }
+
+    public void setTreeLevel(Integer treeLevel) {
+        this.treeLevel = treeLevel;
     }
 
     @Override

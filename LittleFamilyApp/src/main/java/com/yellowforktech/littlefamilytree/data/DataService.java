@@ -354,16 +354,16 @@ public class DataService implements AuthTask.Listener {
                         int syncDelay = Integer.parseInt(syncDelayStr);
                         cal.add(Calendar.HOUR, -1 * syncDelay);
                         LittlePerson person = tp.person;
-                        Log.d("SyncThread", "Sync Q has "+syncQ.size()+" people in it.");
+                        Log.d("SyncThread", "Sync Q has " + syncQ.size() + " people in it.");
                         if (person.getLastSync().before(cal.getTime())) {
                             Log.d("SyncThread", "Synchronizing person " + person.getId() + " " + person.getFamilySearchId() + " " + person.getName());
                             Entry entry = remoteService.getLastChangeForPerson(person.getFamilySearchId());
-                            if (entry!=null) {
+                            if (entry != null) {
                                 Log.d("SyncThread", "Local date=" + person.getLastSync() + " remote date=" + entry.getUpdated());
                             }
                             if (entry == null || entry.getUpdated().after(person.getLastSync())) {
                                 person = syncPerson(person);
-                                if (person==null) {
+                                if (person == null) {
                                     continue;
                                 }
                                 try {
@@ -381,23 +381,105 @@ public class DataService implements AuthTask.Listener {
                                 }
                             }
                         }
-                    }
 
-                    //-- force load of family members if we haven't previously loaded them
-                    //--- allows building the tree in the background
-                    if (tp.depth < 6) {
-                        if (tp.person.isHasParents() == null) {
-                            List<LittlePerson> dbParents = getDBHelper().getParentsForPerson(tp.person.getId());
-                            if (dbParents==null || dbParents.size()==0) {
-                                Log.d("SyncThread", "Synchronizing parents " + tp.person.getId() + " " + tp.person.getFamilySearchId() + " " + tp.person.getName());
-                                List<LittlePerson> parents = getParentsFromRemoteService(tp.person);
-                                for (LittlePerson p : parents) {
-                                    addToSyncQ(p, tp.depth + 1);
+                        //-- make sure person has a tree level
+                        if (tp.person.getTreeLevel()==null) {
+                            List<LittlePerson> dbChildren = getDBHelper().getChildrenForPerson(tp.person.getId());
+                            if (dbChildren!=null && dbChildren.size()>0) {
+                                for (LittlePerson child : dbChildren) {
+                                    if (child.getTreeLevel()!=null) {
+                                        tp.person.setTreeLevel(child.getTreeLevel() + 1);
+                                        getDBHelper().persistLittlePerson(tp.person);
+                                        break;
+                                    }
                                 }
-                                try {
-                                    Thread.sleep(10000);  //-- don't bombard the server
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
+                            }
+                            if (tp.person.getTreeLevel()==null) {
+                                List<LittlePerson> dbSpouses = getDBHelper().getSpousesForPerson(tp.person.getId());
+                                if (dbSpouses!=null && dbSpouses.size()>0) {
+                                    for (LittlePerson spouse : dbSpouses) {
+                                        if (spouse.getTreeLevel()!=null) {
+                                            tp.person.setTreeLevel(spouse.getTreeLevel());
+                                            getDBHelper().persistLittlePerson(tp.person);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            if (tp.person.getTreeLevel()==null) {
+                                List<LittlePerson> dbParents = getDBHelper().getParentsForPerson(tp.person.getId());
+                                if (dbParents!=null && dbParents.size()>0) {
+                                    for (LittlePerson parent : dbParents) {
+                                        if (parent.getTreeLevel()!=null) {
+                                            tp.person.setTreeLevel(parent.getTreeLevel()-1);
+                                            getDBHelper().persistLittlePerson(tp.person);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        //-- force load of family members if we haven't previously loaded them
+                        //--- allows building the tree in the background
+                        if (tp.depth < 6) {
+                            if (tp.person.isHasParents() == null) {
+                                List<LittlePerson> dbParents = getDBHelper().getParentsForPerson(tp.person.getId());
+                                if (dbParents == null || dbParents.size() == 0) {
+                                    Log.d("SyncThread", "Synchronizing parents for " + tp.person.getId() + " " + tp.person.getFamilySearchId() + " " + tp.person.getName());
+                                    List<LittlePerson> parents = getParentsFromRemoteService(tp.person);
+                                    for (LittlePerson p : parents) {
+                                        addToSyncQ(p, tp.depth + 1);
+                                    }
+                                    try {
+                                        Thread.sleep(10000);  //-- don't bombard the server
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                } else {
+                                    tp.person.setHasParents(true);
+                                    getDBHelper().persistLittlePerson(tp.person);
+                                }
+                            }
+                        }
+
+                        //-- force load descendants of lower levels, picks up aunts, uncles, cousins, grandchildren
+                        if (tp.person.getTreeLevel()!=null && tp.person.getTreeLevel()<2) {
+                            if (tp.person.isHasChildren()==null) {
+                                List<LittlePerson> dbChildren = getDBHelper().getChildrenForPerson(tp.person.getId());
+                                if (dbChildren == null || dbChildren.size() == 0) {
+                                    Log.d("SyncThread", "Synchronizing children for " + tp.person.getId() + " " + tp.person.getFamilySearchId() + " " + tp.person.getName());
+                                    List<LittlePerson> children = getChildrenFromRemoteService(tp.person);
+                                    for (LittlePerson p : children) {
+                                        addToSyncQ(p, tp.depth - 1);
+                                    }
+                                    try {
+                                        Thread.sleep(10000);  //-- don't bombard the server
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                } else {
+                                    tp.person.setHasChildren(true);
+                                    getDBHelper().persistLittlePerson(tp.person);
+                                }
+                            }
+
+                            if (tp.person.isHasSpouses()==null) {
+                                List<LittlePerson> dbSpouses = getDBHelper().getSpousesForPerson(tp.person.getId());
+                                if (dbSpouses == null || dbSpouses.size() == 0) {
+                                    Log.d("SyncThread", "Synchronizing spouses for " + tp.person.getId() + " " + tp.person.getFamilySearchId() + " " + tp.person.getName());
+                                    List<LittlePerson> spouses = getSpousesFromRemoteService(tp.person);
+                                    for (LittlePerson p : spouses) {
+                                        addToSyncQ(p, tp.depth);
+                                    }
+                                    try {
+                                        Thread.sleep(10000);  //-- don't bombard the server
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                } else {
+                                    tp.person.setHasSpouses(true);
+                                    getDBHelper().persistLittlePerson(tp.person);
                                 }
                             }
                         }
@@ -545,8 +627,22 @@ public class DataService implements AuthTask.Listener {
             }
 
             if (rel.getType() == com.yellowforktech.littlefamilytree.data.RelationshipType.SPOUSE) {
-                person.setHasSpouses(true);
-                relative.setHasSpouses(true);
+                if (person.isHasSpouses()==null || person.isHasSpouses()==false) {
+                    person.setHasSpouses(true);
+                    personChanged = true;
+                }
+                if (relative.isHasSpouses()==null || relative.isHasSpouses()==false) {
+                    relative.setHasSpouses(true);
+                    relativeChanged = true;
+                }
+                if (person.getTreeLevel()==null && relative.getTreeLevel()!=null) {
+                    person.setTreeLevel(relative.getTreeLevel());
+                    personChanged = true;
+                }
+                if (relative.getTreeLevel()==null && person.getTreeLevel()!=null) {
+                    relative.setTreeLevel(person.getTreeLevel());
+                    relativeChanged = true;
+                }
                 if (person.getAge() == null && relative.getAge() != null) {
                     person.setAge(relative.getAge());
                     personChanged = true;
@@ -556,12 +652,28 @@ public class DataService implements AuthTask.Listener {
                     relativeChanged = true;
                 }
             } else {
-                person.setHasChildren(true);
+                if (person.isHasChildren()==null || person.isHasChildren()==false) {
+                    person.setHasChildren(true);
+                    personChanged = true;
+                }
+                if (person.getTreeLevel()==null && relative.getTreeLevel()!=null) {
+                    person.setTreeLevel(relative.getTreeLevel() + 1);
+                    personChanged = true;
+                }
                 if (relative.getAge() == null && person.getAge() != null) {
                     relative.setAge(person.getAge() - 25);
                     relativeChanged = true;
                 }
-                relative.setHasParents(true);
+
+
+                if (relative.isHasParents()==null || relative.isHasParents()==false) {
+                    relative.setHasParents(true);
+                    relativeChanged = true;
+                }
+                if (relative.getTreeLevel()==null && person.getTreeLevel()!=null) {
+                    relative.setTreeLevel(person.getTreeLevel()-1);
+                    relativeChanged = true;
+                }
                 if (person.getAge() == null && relative.getAge() != null) {
                     person.setAge(relative.getAge() + 25);
                     personChanged = true;
@@ -592,7 +704,7 @@ public class DataService implements AuthTask.Listener {
                 getDBHelper().persistLittlePerson(person);
             }
         }
-        if (person.isHasParents()==null || person.getLastSync().before(cal.getTime())) {
+        if (person.isHasParents()==null || person.getLastSync().before(cal.getTime()) || person.getTreeLevel()==null) {
             synchronized (syncQ) {
                 ThreadPerson tp = new ThreadPerson();
                 tp.person = person;
@@ -643,9 +755,14 @@ public class DataService implements AuthTask.Listener {
             waitForAuth();
             Person fsPerson = remoteService.getCurrentPerson();
             person = DataHelper.buildLittlePerson(fsPerson, context, remoteService, true);
+            person.setTreeLevel(0);
             getDBHelper().persistLittlePerson(person);
             fireNetworkStateChanged(DataNetworkState.REMOTE_FINISHED);
         } else {
+            if (person.getTreeLevel()==null) {
+                person.setTreeLevel(0);
+                getDBHelper().persistLittlePerson(person);
+            }
             addToSyncQ(person, 0);
         }
 
@@ -821,20 +938,32 @@ public class DataService implements AuthTask.Listener {
                 if (r.getKnownType() == RelationshipType.Couple) {
                     rel.setType(com.yellowforktech.littlefamilytree.data.RelationshipType.SPOUSE);
                     person1.setHasSpouses(true);
+                    if (person2.getTreeLevel()==null && person1.getTreeLevel()!=null) {
+                        person2.setTreeLevel(person1.getTreeLevel());
+                    }
                     if (person2.getAge() == null && person1.getAge() != null) {
                         person2.setAge(person1.getAge());
                     }
                     person2.setHasSpouses(true);
+                    if (person1.getTreeLevel()==null && person2.getTreeLevel()!=null) {
+                        person1.setTreeLevel(person2.getTreeLevel());
+                    }
                     if (person1.getAge() == null && person2.getAge() != null) {
                         person1.setAge(person2.getAge());
                     }
                 } else {
                     rel.setType(com.yellowforktech.littlefamilytree.data.RelationshipType.PARENTCHILD);
                     person1.setHasChildren(true);
+                    if (person2.getTreeLevel()==null && person1.getTreeLevel()!=null) {
+                        person2.setTreeLevel(person1.getTreeLevel()-1);
+                    }
                     if (person2.getAge() == null && person1.getAge() != null) {
                         person2.setAge(person1.getAge() - 25);
                     }
                     person2.setHasParents(true);
+                    if (person1.getTreeLevel()==null && person2.getTreeLevel()!=null) {
+                        person1.setTreeLevel(person2.getTreeLevel()+1);
+                    }
                     if (person1.getAge() == null && person2.getAge() != null) {
                         person1.setAge(person2.getAge() + 25);
                     }

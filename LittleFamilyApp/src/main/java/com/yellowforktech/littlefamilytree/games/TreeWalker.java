@@ -2,6 +2,7 @@ package com.yellowforktech.littlefamilytree.games;
 
 import android.content.Context;
 
+import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.tasks.ChildrenLoaderTask;
 import com.yellowforktech.littlefamilytree.activities.tasks.ParentsLoaderTask;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
@@ -47,21 +48,21 @@ public class TreeWalker {
             if (family!=null && family.size()>0) {
                 for (LittlePerson parent : family) {
                     if (parent.getGender() == GenderType.Female)
-                        parent.setRelationship("Mommy");
+                        parent.setRelationship(context.getResources().getString(R.string.mother));
                     else
-                        parent.setRelationship("Daddy");
+                        parent.setRelationship(context.getResources().getString(R.string.father));
                     people.add(parent);
                 }
 
                 parents = family;
 
-                ChildrenLoaderTask ctask = new ChildrenLoaderTask(siblingListener, context);
+                ChildrenLoaderTask ctask = new ChildrenLoaderTask(siblingListener, context, false);
                 LittlePerson[] people = new LittlePerson[family.size()];
                 people = family.toArray(people);
                 ctask.execute(people);
             }
 
-            ChildrenLoaderTask ctask2 = new ChildrenLoaderTask(childListener, context);
+            ChildrenLoaderTask ctask2 = new ChildrenLoaderTask(childListener, context, false);
             ctask2.execute(selectedPerson);
         }
     };
@@ -72,9 +73,9 @@ public class TreeWalker {
             if (family!=null && family.size()>0) {
                 for (LittlePerson child : family) {
                     if (child.getGender() == GenderType.Female)
-                        child.setRelationship("Daughter");
+                        child.setRelationship(context.getResources().getString(R.string.daughter));
                     else
-                        child.setRelationship("Son");
+                        child.setRelationship(context.getResources().getString(R.string.son));
                     people.add(child);
                 }
                 //view.setFamily(people);
@@ -95,9 +96,9 @@ public class TreeWalker {
             if (family!=null && family.size()>0) {
                 for (LittlePerson child : family) {
                     if (child.getGender() == GenderType.Female)
-                        child.setRelationship("Sister");
+                        child.setRelationship(context.getResources().getString(R.string.sister));
                     else
-                        child.setRelationship("Brother");
+                        child.setRelationship(context.getResources().getString(R.string.brother));
                     people.add(child);
                 }
             }
@@ -119,9 +120,9 @@ public class TreeWalker {
             if (family!=null && family.size()>0) {
                 for (LittlePerson child : family) {
                     if (child.getGender() == GenderType.Female)
-                        child.setRelationship("Grand mother");
+                        child.setRelationship(context.getResources().getString(R.string.grand)+" "+context.getResources().getString(R.string.mother));
                     else
-                        child.setRelationship("Grand father");
+                        child.setRelationship(context.getResources().getString(R.string.grand)+" "+context.getResources().getString(R.string.father));
                     people.add(child);
                 }
                 parents = family;

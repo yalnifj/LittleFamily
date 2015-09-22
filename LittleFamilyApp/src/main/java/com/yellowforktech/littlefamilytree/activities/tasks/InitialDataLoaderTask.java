@@ -58,6 +58,16 @@ public class InitialDataLoaderTask extends AsyncTask<LittlePerson, String, Array
             }
         }
 
+        //-- grandchildren
+        for(LittlePerson p : familyMembers) {
+            try {
+                List<LittlePerson> children = dataService.getChildren(p);
+                dataService.addToSyncQ(children, 1);
+            } catch (Exception e) {
+                Log.e(this.getClass().getSimpleName(), "error", e);
+            }
+        }
+
         //-- great grandparents
         for(LittlePerson p : grandParents) {
             try {

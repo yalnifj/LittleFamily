@@ -11,14 +11,17 @@ import android.widget.GridView;
 
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.adapters.FamilyMemberListAdapter;
+import com.yellowforktech.littlefamilytree.activities.tasks.ChildrenLoaderTask;
 import com.yellowforktech.littlefamilytree.activities.tasks.FamilyLoaderTask;
 import com.yellowforktech.littlefamilytree.activities.tasks.PersonLoaderTask;
 import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterView.OnItemClickListener, FamilyLoaderTask.Listener, PersonLoaderTask.Listener {
+public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterView.OnItemClickListener, FamilyLoaderTask.Listener,
+        PersonLoaderTask.Listener, ChildrenLoaderTask.Listener {
     public static final String SELECTED_PERSON = "selectedPerson";
     public static final String FAMILY = "family";
     public static final int LOGIN_REQUEST = 1;
@@ -26,7 +29,6 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
     private GridView gridView;
     private FamilyMemberListAdapter adapter;
     private ArrayList<LittlePerson> family;
-    private boolean launchGame = false;
 
     private DataService dataService;
     private LittlePerson selectedPerson;
@@ -60,8 +62,16 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
                 Intent intent = new Intent( this, ChooseRemoteService.class );
                 startActivityForResult( intent, LOGIN_REQUEST );
             } else {
-                PersonLoaderTask task = new PersonLoaderTask(this, this);
-                task.execute();
+                List<LittlePerson> cousins = dataService.getDBHelper().getCousins();
+                if (cousins!=null) {
+                    family = new ArrayList<>(cousins);
+                }
+                if (cousins==null || cousins.size()<3) {
+                    PersonLoaderTask task = new PersonLoaderTask(this, this);
+                    task.execute();
+                } else {
+                    loadFamily();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -82,6 +92,12 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
     }
 
     @Override
+    public void onInit(int code) {
+        super.onInit(code);
+        speak(getResources().getString(R.string.title_activity_choose_family_member));
+    }
+
+    @Override
     protected void onActivityResult( int requestCode, int resultCode, Intent data ) {
         switch(requestCode) {
             case LOGIN_REQUEST:
@@ -95,7 +111,6 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        launchGame = true;
         selectedPerson = (LittlePerson) gridView.getItemAtPosition(position);
         Intent intent = new Intent( this, HomeActivity.class );
         intent.putExtra(SELECTED_PERSON, selectedPerson);
@@ -104,14 +119,42 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
     }
 
 
+    int familyCount = 0;
     @Override
     public void onComplete(ArrayList<LittlePerson> familyMembers) {
-        this.family = familyMembers;
-        adapter.setFamily(familyMembers);
+        if (familyCount==0) {
+            familyCount++;
+            if (this.family==null) {
+                this.family = familyMembers;
+            }
+            else {
+                for(LittlePerson p : familyMembers) {
+                    if (!this.family.contains(p)) {
+                        this.family.add(p);
+                    }
+                }
+            }
+            //-- get grandchildren
+            LittlePerson[] people = new LittlePerson[familyMembers.size()];
+            familyMembers.toArray(people);
+            ChildrenLoaderTask task = new ChildrenLoaderTask(this, this, true);
+            task.execute(people);
+        } else {
+            //-- add grandchildren
+            for(LittlePerson p : familyMembers) {
+                if (!this.family.contains(p)) {
+                    this.family.add(p);
+                }
+            }
+            loadFamily();
+        }
+    }
+
+    public void loadFamily() {
+        adapter.setFamily(this.family);
         updateColumns();
-        speak(getResources().getString(R.string.title_activity_choose_family_member));
         try {
-            if (DataService.getInstance().getDBHelper().getMediaCount() < 3) {
+            if (DataService.getInstance().getDBHelper().getMediaCount() < 5) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage(R.string.low_media);
                 builder.setPositiveButton("OK", null);
@@ -121,6 +164,7 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
         } catch (Exception e) {
             Log.e("ChooseFamilyMember", "Error checking database", e);
         }
+        gridView.invalidate();
     }
 
     @Override
