@@ -274,7 +274,7 @@ public class LittlePerson implements Serializable {
                 if (gender==GenderType.Female) return com.yellowforktech.littlefamilytree.R.drawable.girl;
                 return com.yellowforktech.littlefamilytree.R.drawable.boy;
             }
-            if (age < 45) {
+            if (age < 50) {
                 if (gender==GenderType.Female) return com.yellowforktech.littlefamilytree.R.drawable.mom;
                 return com.yellowforktech.littlefamilytree.R.drawable.dad;
             }
@@ -332,7 +332,7 @@ public class LittlePerson implements Serializable {
 
     public void setHasChildren(Boolean hasChildren) {
         this.hasChildren = hasChildren;
-        if (this.age==null || this.age < 16) this.age = 25;
+        if (hasChildren && (this.age==null || this.age < 16)) this.age = 25;
     }
 
     public Boolean isHasSpouses() {
@@ -341,7 +341,7 @@ public class LittlePerson implements Serializable {
 
     public void setHasSpouses(Boolean hasSpouses) {
         this.hasSpouses = hasSpouses;
-        if (this.age==null || this.age < 16) age = 25;
+        if (hasSpouses && (this.age==null || this.age < 16)) age = 25;
     }
 
     public Boolean isHasMedia() {

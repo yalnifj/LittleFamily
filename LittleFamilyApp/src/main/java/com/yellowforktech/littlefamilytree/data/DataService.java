@@ -704,7 +704,8 @@ public class DataService implements AuthTask.Listener {
                 getDBHelper().persistLittlePerson(person);
             }
         }
-        if (person.isHasParents()==null || person.getLastSync().before(cal.getTime()) || person.getTreeLevel()==null) {
+        if (person.isHasParents()==null || person.getLastSync().before(cal.getTime()) || person.getTreeLevel()==null
+                || (person.getTreeLevel()<=1 && person.isHasChildren()==null)) {
             synchronized (syncQ) {
                 ThreadPerson tp = new ThreadPerson();
                 tp.person = person;

@@ -347,7 +347,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
 		List<LittlePerson> people = new ArrayList<>();
 		LittlePerson person = null;
-		Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, COL_TREE_LEVEL+", "+COL_AGE);
+		Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, COL_TREE_LEVEL+" ASC,"+COL_AGE+" ASC");
 		while (c.moveToNext()) {
 			person = personFromCursor(c);
 			people.add(person);
