@@ -204,6 +204,24 @@ section {
     transition: all .35s;
 }
 
+.socialbuttons {
+    position: absolute;
+    right: 10px;
+    top: -5px;
+}
+
+.socialmedia {
+    font-size: 40px;
+}
+
+.mainNave .socialmedia {
+    margin-top: 0px;
+    margin-right: 10px;
+    margin-bottom: 0px;
+    font-size: 35px;
+    line-height: 40px;
+}
+
 @media(min-width:768px) {
     .portfolio-box .portfolio-box-caption .portfolio-box-caption-content .project-category {
         font-size: 16px;
@@ -211,5 +229,12 @@ section {
 
     .portfolio-box .portfolio-box-caption .portfolio-box-caption-content .project-name {
         font-size: 22px;
+    }
+}
+
+@media(max-width:767px) {
+    .contact-section {
+        text-align: center;
+        margin-bottom: 50px;
     }
 }

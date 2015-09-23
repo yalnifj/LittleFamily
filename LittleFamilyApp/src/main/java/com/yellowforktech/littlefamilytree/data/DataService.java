@@ -697,13 +697,6 @@ public class DataService implements AuthTask.Listener {
         String syncDelayStr = PreferenceManager.getDefaultSharedPreferences(context).getString("sync_delay", "1");
         int syncDelay = Integer.parseInt(syncDelayStr);
         cal.add(Calendar.HOUR, -1 * syncDelay);
-        if (person.isHasParents()==null) {
-            List<LittlePerson> parents = getDBHelper().getParentsForPerson(person.getId());
-            if (parents!=null && parents.size()>0) {
-                person.setHasParents(true);
-                getDBHelper().persistLittlePerson(person);
-            }
-        }
         if (person.isHasParents()==null || person.getLastSync().before(cal.getTime()) || person.getTreeLevel()==null
                 || (person.getTreeLevel()<=1 && person.isHasChildren()==null)) {
             synchronized (syncQ) {
@@ -816,26 +809,35 @@ public class DataService implements AuthTask.Listener {
     public List<LittlePerson> getFamilyMembersFromRemoteService(LittlePerson person, boolean loadSpouse) throws Exception {
         List<LittlePerson> family = new ArrayList<>();
         waitForAuth();
-        LittlePerson spouse = null;
         List<Relationship> closeRelatives = remoteService.getCloseRelatives(person.getFamilySearchId(), true);
         if (closeRelatives!=null) {
             family = processRelatives(closeRelatives, person);
-        }
-        if (loadSpouse) {
-            List<LittlePerson> spouseParents = new ArrayList<>();
-            for(LittlePerson p : family) {
-                if ("spouse".equals(p.getRelationship())) {
-                    List<Relationship> spouseRelatives = remoteService.getCloseRelatives(p.getFamilySearchId(), false);
-                    List<LittlePerson> spouseFamily = processRelatives(spouseRelatives, p);
-                    for (LittlePerson parent : spouseFamily) {
-                        if ("parent".equals(parent.getRelationship()) && !family.contains(parent)) {
-                            spouseParents.add(parent);
-                            p.setHasParents(true);
+            for (Relationship r : closeRelatives) {
+                if (r.getKnownType()==RelationshipType.Couple) {
+                    person.setHasSpouses(true);
+                    if (loadSpouse) {
+                        LittlePerson spouse = null;
+                        if (r.getPerson1().getResourceId().equals(person.getFamilySearchId())) {
+                            spouse = getPersonByRemoteId(r.getPerson2().getResourceId());
+                        } else {
+                            spouse = getPersonByRemoteId(r.getPerson1().getResourceId());
+                        }
+                        if (spouse!=null) {
+                            List<LittlePerson> spouseParents = getParentsFromRemoteService(spouse);
+                            for (LittlePerson sParent : spouseParents) {
+                                if (!family.contains(sParent)) family.add(sParent);
+                            }
                         }
                     }
                 }
+                if (r.getKnownType()==RelationshipType.ParentChild) {
+                    if (r.getPerson1().getResourceId().equals(person.getFamilySearchId())) {
+                        person.setHasChildren(true);
+                    } else {
+                        person.setHasParents(true);
+                    }
+                }
             }
-            family.addAll(spouseParents);
         }
         return family;
     }
@@ -938,14 +940,12 @@ public class DataService implements AuthTask.Listener {
                 com.yellowforktech.littlefamilytree.data.Relationship rel = new com.yellowforktech.littlefamilytree.data.Relationship();
                 if (r.getKnownType() == RelationshipType.Couple) {
                     rel.setType(com.yellowforktech.littlefamilytree.data.RelationshipType.SPOUSE);
-                    person1.setHasSpouses(true);
                     if (person2.getTreeLevel()==null && person1.getTreeLevel()!=null) {
                         person2.setTreeLevel(person1.getTreeLevel());
                     }
                     if (person2.getAge() == null && person1.getAge() != null) {
                         person2.setAge(person1.getAge());
                     }
-                    person2.setHasSpouses(true);
                     if (person1.getTreeLevel()==null && person2.getTreeLevel()!=null) {
                         person1.setTreeLevel(person2.getTreeLevel());
                     }
@@ -954,14 +954,12 @@ public class DataService implements AuthTask.Listener {
                     }
                 } else {
                     rel.setType(com.yellowforktech.littlefamilytree.data.RelationshipType.PARENTCHILD);
-                    person1.setHasChildren(true);
                     if (person2.getTreeLevel()==null && person1.getTreeLevel()!=null) {
                         person2.setTreeLevel(person1.getTreeLevel()-1);
                     }
                     if (person2.getAge() == null && person1.getAge() != null) {
                         person2.setAge(person1.getAge() - 25);
                     }
-                    person2.setHasParents(true);
                     if (person1.getTreeLevel()==null && person2.getTreeLevel()!=null) {
                         person1.setTreeLevel(person2.getTreeLevel()+1);
                     }
@@ -993,17 +991,10 @@ public class DataService implements AuthTask.Listener {
                 if (parents == null) {
                     parents = new ArrayList<>();
                 }
-                if (parents.size()==0) {
-                    person.setHasParents(false);
-                    getDBHelper().persistLittlePerson(person);
-                } else {
-                    person.setHasParents(true);
-                    getDBHelper().persistLittlePerson(person);
-                }
                 fireNetworkStateChanged(DataNetworkState.REMOTE_FINISHED);
             }
         } else {
-            if (person.isHasParents()==null || !person.isHasParents()) {
+            if (person.isHasParents()!=null || !person.isHasParents()) {
                 person.setHasParents(true);
                 getDBHelper().persistLittlePerson(person);
             }
@@ -1022,17 +1013,10 @@ public class DataService implements AuthTask.Listener {
                 if (children == null) {
                     children = new ArrayList<>();
                 }
-                if (children.size() == 0) {
-                    person.setHasChildren(false);
-                    getDBHelper().persistLittlePerson(person);
-                } else {
-                    person.setHasChildren(true);
-                    getDBHelper().persistLittlePerson(person);
-                }
                 fireNetworkStateChanged(DataNetworkState.REMOTE_FINISHED);
             }
         } else {
-            if (person.isHasChildren()==null || !person.isHasChildren()) {
+            if (person.isHasChildren()!=null && !person.isHasChildren()) {
                 person.setHasChildren(true);
                 getDBHelper().persistLittlePerson(person);
             }
@@ -1051,17 +1035,10 @@ public class DataService implements AuthTask.Listener {
                 if (spouses == null) {
                     spouses = new ArrayList<>();
                 }
-                if (spouses.size() == 0) {
-                    person.setHasSpouses(false);
-                    getDBHelper().persistLittlePerson(person);
-                } else {
-                    person.setHasSpouses(true);
-                    getDBHelper().persistLittlePerson(person);
-                }
                 fireNetworkStateChanged(DataNetworkState.REMOTE_FINISHED);
             }
         } else {
-            if (person.isHasSpouses()==null || !person.isHasSpouses()) {
+            if (person.isHasSpouses()!=null || !person.isHasSpouses()) {
                 person.setHasSpouses(true);
                 getDBHelper().persistLittlePerson(person);
             }

@@ -34,6 +34,12 @@ public class LittlePerson implements Serializable {
     private String photoPath;
     private GenderType gender;
 	private Date birthDate;
+    private String birthPlace;
+    private Integer age;
+    private boolean alive;
+    private Date lastSync;
+    private boolean active;
+    private String nationality;
     private Boolean hasParents;
     private Boolean hasChildren;
     private Boolean hasSpouses;
@@ -52,13 +58,6 @@ public class LittlePerson implements Serializable {
                 ", gender=" + gender +
                 '}';
     }
-
-    private String birthPlace;
-    private Integer age;
-    private boolean alive;
-    private Date lastSync;
-    private boolean active;
-    private String nationality;
 
     public LittlePerson() {
     }

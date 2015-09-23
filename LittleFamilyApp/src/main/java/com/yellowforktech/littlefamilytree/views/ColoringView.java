@@ -169,27 +169,29 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
             shareCanvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
 
             if (originalBitmap != null && !originalBitmap.isRecycled()) {
-                float ratio = (float) (originalBitmap.getWidth()) / originalBitmap.getHeight();
-                if (ratio > 1) {
-                    h = (int) (w / ratio);
-                } else {
-                    w = (int) (h * ratio);
-                }
-                if (mBitmap == null) {
-                    createDrawingBitmap(w, h);
-                }
-                synchronized (mBitmap) {
-                    Rect dst = new Rect();
-                    dst.set(0, 0, w, h);
-                    shareCanvas.drawRect(0, 0, w, h, background);
-                    shareCanvas.drawBitmap(originalBitmap, null, dst, paint2);
-                    if (!showOriginal) {
-                        shareCanvas.drawBitmap(mBitmap, null, dst, mBitmapPaint);
-                        if (outlineBitmap != null) {
-                            shareCanvas.drawBitmap(outlineBitmap, null, dst, paint2);
-                        }
+                synchronized (originalBitmap) {
+                    float ratio = (float) (originalBitmap.getWidth()) / originalBitmap.getHeight();
+                    if (ratio > 1) {
+                        h = (int) (w / ratio);
+                    } else {
+                        w = (int) (h * ratio);
+                    }
+                    if (mBitmap == null) {
+                        createDrawingBitmap(w, h);
+                    }
+                    synchronized (mBitmap) {
+                        Rect dst = new Rect();
+                        dst.set(0, 0, w, h);
+                        shareCanvas.drawRect(0, 0, w, h, background);
+                        shareCanvas.drawBitmap(originalBitmap, null, dst, paint2);
+                        if (!showOriginal) {
+                            shareCanvas.drawBitmap(mBitmap, null, dst, mBitmapPaint);
+                            if (outlineBitmap != null) {
+                                shareCanvas.drawBitmap(outlineBitmap, null, dst, paint2);
+                            }
 
-                        shareCanvas.drawPath(circlePath, circlePaint);
+                            shareCanvas.drawPath(circlePath, circlePaint);
+                        }
                     }
                 }
             }

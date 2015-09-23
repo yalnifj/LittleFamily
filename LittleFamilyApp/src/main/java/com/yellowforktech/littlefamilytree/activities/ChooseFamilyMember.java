@@ -63,6 +63,7 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
                 startActivityForResult( intent, LOGIN_REQUEST );
             } else {
                 List<LittlePerson> cousins = dataService.getDBHelper().getCousins();
+                dataService.addToSyncQ(cousins, 1);
                 if (cousins!=null) {
                     family = new ArrayList<>(cousins);
                 }
