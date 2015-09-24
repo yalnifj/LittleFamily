@@ -4,19 +4,24 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.yellowforktech.littlefamilytree.R;
+import com.yellowforktech.littlefamilytree.activities.tasks.FamilyLoaderTask;
 import com.yellowforktech.littlefamilytree.activities.tasks.ParentsLoaderTask;
 import com.yellowforktech.littlefamilytree.activities.tasks.WaitTask;
-import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.views.BubbleSpriteSurfaceView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
+import java.util.Set;
 
 public class BubblePopActivity extends LittleFamilyActivity implements ParentsLoaderTask.Listener, BubbleSpriteSurfaceView.BubbleCompleteListener{
     private LittlePerson selectedPerson;
     private Queue<LittlePerson> que;
+    private Set<LittlePerson> completed;
     private BubbleSpriteSurfaceView bubbleView;
 
     @Override
@@ -34,13 +39,14 @@ public class BubblePopActivity extends LittleFamilyActivity implements ParentsLo
         que = new LinkedList<>();
         que.add(selectedPerson);
 
+        completed = new HashSet<>();
+
         setupTopBar();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        DataService.getInstance().registerNetworkStateListener(this);
         ParentsLoaderTask loader = new ParentsLoaderTask(this, this);
         loader.execute(que.peek());
         bubbleView.resume();
@@ -49,7 +55,6 @@ public class BubblePopActivity extends LittleFamilyActivity implements ParentsLo
     @Override
     protected void onStop() {
         super.onStop();
-        DataService.getInstance().unregisterNetworkStateListener(this);
         bubbleView.stop();
     }
 
@@ -67,10 +72,37 @@ public class BubblePopActivity extends LittleFamilyActivity implements ParentsLo
 
     @Override
     public void onComplete(ArrayList<LittlePerson> parents) {
-        ArrayList<LittlePerson> children = new ArrayList<>(3);
-        children.add(que.poll());
-        bubbleView.setParentsAndChildren(parents, children);
-        que.addAll(parents);
+        LittlePerson person = null;
+        synchronized (que) {
+            ArrayList<LittlePerson> children = new ArrayList<>(3);
+            person = que.poll();
+            children.add(person);
+            completed.add(person);
+            bubbleView.setParentsAndChildren(parents, children);
+            que.addAll(parents);
+        }
+
+        if (person.getTreeLevel()!=null && person.getTreeLevel()<2) {
+            FamilyLoaderTask familyLoaderTask = new FamilyLoaderTask(new FamilyLoaderTask.Listener() {
+                @Override
+                public void onComplete(ArrayList<LittlePerson> family) {
+                    synchronized (que) {
+                        for (LittlePerson p : family) {
+                            if (!completed.contains(p) && !que.contains(p)) {
+                                que.add(p);
+                            }
+                        }
+
+                        Collections.shuffle((List<?>) que);
+                    }
+                }
+
+                @Override
+                public void onStatusUpdate(String message) {
+                }
+            }, this);
+            familyLoaderTask.execute(person);
+        }
     }
 
     @Override

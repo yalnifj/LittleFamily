@@ -30,9 +30,10 @@ public class InitialDataLoaderTask extends AsyncTask<LittlePerson, String, Array
 
     @Override
     protected ArrayList<LittlePerson> doInBackground(LittlePerson[] persons) {
-        Log.d(this.getClass().getSimpleName(), "Starting InitialDataLoaderTask.doInBackground "+persons);
+        Log.d(this.getClass().getSimpleName(), "Starting InitialDataLoaderTask.doInBackground " + persons);
         ArrayList<LittlePerson> familyMembers = new ArrayList<>();
         for (LittlePerson person : persons) {
+            familyMembers.add(person);
             try {
                 List<LittlePerson> people = dataService.getFamilyMembers(person);
                 if (people != null) {
@@ -43,14 +44,25 @@ public class InitialDataLoaderTask extends AsyncTask<LittlePerson, String, Array
             }
         }
 
-        //-- grandparents
+        //-- grandchildren
         List<LittlePerson> grandParents = new ArrayList<>();
+        List<LittlePerson> grandChildren = new ArrayList<>();
         for(LittlePerson p : familyMembers) {
             try {
                 List<LittlePerson> parents = dataService.getParents(p);
-                for(LittlePerson parent : parents) {
-                    if (!familyMembers.contains(parent)) {
-                        grandParents.add(parent);
+                if (parents!=null) {
+                    for (LittlePerson parent : parents) {
+                        if (!familyMembers.contains(parent) && !grandParents.contains(parent)) {
+                            grandParents.add(parent);
+                        }
+                    }
+                }
+                List<LittlePerson> children = dataService.getChildren(p);
+                if (children!=null) {
+                    for (LittlePerson child : children) {
+                        if (!familyMembers.contains(child) && !grandChildren.contains(child)) {
+                            grandChildren.add(child);
+                        }
                     }
                 }
             } catch (Exception e) {
@@ -58,25 +70,39 @@ public class InitialDataLoaderTask extends AsyncTask<LittlePerson, String, Array
             }
         }
 
-        //-- grandchildren
-        for(LittlePerson p : familyMembers) {
+        familyMembers.addAll(grandChildren);
+        for(LittlePerson p : grandChildren) {
             try {
                 List<LittlePerson> children = dataService.getChildren(p);
-                dataService.addToSyncQ(children, 1);
+                if (children!=null) {
+                    for (LittlePerson child : children) {
+                        if (!familyMembers.contains(child)) {
+                            familyMembers.add(child);
+                        }
+                    }
+                }
             } catch (Exception e) {
                 Log.e(this.getClass().getSimpleName(), "error", e);
             }
         }
 
-        //-- great grandparents
         for(LittlePerson p : grandParents) {
             try {
-                List<LittlePerson> parents = dataService.getParents(p);
-                dataService.addToSyncQ(parents, 3);
+                if (familyMembers.size()<10) {
+                    List<LittlePerson> parents = dataService.getParents(p);
+                    dataService.addToSyncQ(parents, 3);
+                }
+                dataService.addToSyncQ(p, 2);
             } catch (Exception e) {
                 Log.e(this.getClass().getSimpleName(), "error", e);
             }
         }
+        try {
+            dataService.addToSyncQ(familyMembers, 2);
+        } catch (Exception e) {
+            Log.e(this.getClass().getSimpleName(), "error", e);
+        }
+
         return familyMembers;
     }
 

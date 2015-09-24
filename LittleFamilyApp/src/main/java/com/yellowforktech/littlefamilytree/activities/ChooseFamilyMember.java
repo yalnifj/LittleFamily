@@ -71,7 +71,7 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
                     PersonLoaderTask task = new PersonLoaderTask(this, this);
                     task.execute();
                 } else {
-                    loadFamily();
+                    showFamily();
                 }
             }
         } catch (Exception e) {
@@ -147,11 +147,11 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
                     this.family.add(p);
                 }
             }
-            loadFamily();
+            showFamily();
         }
     }
 
-    public void loadFamily() {
+    public void showFamily() {
         adapter.setFamily(this.family);
         updateColumns();
         try {

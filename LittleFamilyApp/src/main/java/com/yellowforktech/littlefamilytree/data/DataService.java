@@ -796,13 +796,12 @@ public class DataService implements AuthTask.Listener {
 
     public List<LittlePerson> getFamilyMembers(LittlePerson person, boolean loadSpouse) throws Exception {
         List<LittlePerson> family = getDBHelper().getRelativesForPerson(person.getId(), loadSpouse);
-        if ((family==null || family.size()==0) && (person.isHasSpouses()==null || person.isHasParents()==null || person.isHasChildren()==null)) {
+        if (person.isHasSpouses()==null || person.isHasParents()==null || person.isHasChildren()==null) {
             fireNetworkStateChanged(DataNetworkState.REMOTE_STARTING);
             family = getFamilyMembersFromRemoteService(person, loadSpouse);
             fireNetworkStateChanged(DataNetworkState.REMOTE_FINISHED);
-        } else {
-            addToSyncQ(family, 1);
         }
+        addToSyncQ(family, person.getTreeLevel()==null ? 1 : person.getTreeLevel());
         return family;
     }
 
@@ -838,6 +837,7 @@ public class DataService implements AuthTask.Listener {
                     }
                 }
             }
+            getDBHelper().persistLittlePerson(person);
         }
         return family;
     }
@@ -983,7 +983,7 @@ public class DataService implements AuthTask.Listener {
 
     public List<LittlePerson> getParents(LittlePerson person) throws Exception {
         List<LittlePerson> parents = getDBHelper().getParentsForPerson(person.getId());
-        if (parents==null || parents.size()==0) {
+        if (person.isHasParents()==null || parents==null || parents.size()==0) {
             if (person.isHasParents()==null || person.isHasParents()) {
                 fireNetworkStateChanged(DataNetworkState.REMOTE_STARTING);
                 parents = getParentsFromRemoteService(person);
@@ -994,7 +994,7 @@ public class DataService implements AuthTask.Listener {
                 fireNetworkStateChanged(DataNetworkState.REMOTE_FINISHED);
             }
         } else {
-            if (person.isHasParents()!=null || !person.isHasParents()) {
+            if (person.isHasParents()!=null && !person.isHasParents()) {
                 person.setHasParents(true);
                 getDBHelper().persistLittlePerson(person);
             }
@@ -1005,7 +1005,7 @@ public class DataService implements AuthTask.Listener {
 
     public List<LittlePerson> getChildren(LittlePerson person) throws Exception {
         List<LittlePerson> children = getDBHelper().getChildrenForPerson(person.getId());
-        if (children==null || children.size()==0) {
+        if (person.isHasChildren()==null || children==null || children.size()==0) {
             if (person.isHasChildren()==null || person.isHasChildren()) {
                 fireNetworkStateChanged(DataNetworkState.REMOTE_STARTING);
                 getChildrenFromRemoteService(person);
@@ -1027,7 +1027,7 @@ public class DataService implements AuthTask.Listener {
 
     public List<LittlePerson> getSpouses(LittlePerson person) throws Exception {
         List<LittlePerson> spouses = getDBHelper().getSpousesForPerson(person.getId());
-        if (spouses==null || spouses.size()==0) {
+        if (person.isHasSpouses()==null || spouses==null || spouses.size()==0) {
             if (person.isHasSpouses()==null || person.isHasSpouses()) {
                 fireNetworkStateChanged(DataNetworkState.REMOTE_STARTING);
                 getSpousesFromRemoteService(person);
@@ -1038,7 +1038,7 @@ public class DataService implements AuthTask.Listener {
                 fireNetworkStateChanged(DataNetworkState.REMOTE_FINISHED);
             }
         } else {
-            if (person.isHasSpouses()!=null || !person.isHasSpouses()) {
+            if (person.isHasSpouses()!=null && !person.isHasSpouses()) {
                 person.setHasSpouses(true);
                 getDBHelper().persistLittlePerson(person);
             }
@@ -1048,68 +1048,68 @@ public class DataService implements AuthTask.Listener {
     }
 
     public List<Media> getMediaForPerson(LittlePerson person) throws Exception {
-        List<Media> media = getDBHelper().getMediaForPerson(person.getId());
+        List<Media> media = null;
         if (person.isHasMedia()==null) {
-            if (media == null || media.size() == 0) {
-                media = new ArrayList<>();
-                try {
-                    boolean mediaFound = false;
-                    fireNetworkStateChanged(DataNetworkState.REMOTE_STARTING);
-                    waitForAuth();
-                    List<SourceDescription> sds = remoteService.getPersonMemories(person.getFamilySearchId(), true);
-                    if (sds != null) {
-                        for (SourceDescription sd : sds) {
-                            Media med = getDBHelper().getMediaByFamilySearchId(sd.getId());
-                            if (med == null) {
-                                List<Link> links = sd.getLinks();
-                                if (links != null) {
-                                    for (Link link : links) {
-                                        try {
-                                            if (link.getRel() != null && link.getRel().equals("image")) {
-                                                med = new Media();
-                                                med.setType("photo");
-                                                med.setFamilySearchId(sd.getId());
-                                                String folderName = person.getFamilySearchId();
-                                                String fileName = DataHelper.lastPath(link.getHref().toString());
-                                                File localFile = DataHelper.getImageFile(folderName, fileName, context);
-                                                String localPath = null;
-                                                if (!localFile.exists()) {
-                                                    localPath = DataHelper.downloadFile(link.getHref().toString(), folderName, fileName, remoteService, context);
-                                                } else {
-                                                    localPath = localFile.getAbsolutePath();
-                                                }
-                                                if (localPath != null) {
-                                                    mediaFound = true;
-                                                    med.setLocalPath(localPath);
-                                                    getDBHelper().persistMedia(med);
-                                                    media.add(med);
-                                                    Tag tag = new Tag();
-                                                    tag.setMediaId(med.getId());
-                                                    tag.setPersonId(person.getId());
-                                                    getDBHelper().persistTag(tag);
-                                                }
+            media = new ArrayList<>();
+            try {
+                boolean mediaFound = false;
+                fireNetworkStateChanged(DataNetworkState.REMOTE_STARTING);
+                waitForAuth();
+                List<SourceDescription> sds = remoteService.getPersonMemories(person.getFamilySearchId(), true);
+                if (sds != null) {
+                    for (SourceDescription sd : sds) {
+                        Media med = getDBHelper().getMediaByFamilySearchId(sd.getId());
+                        if (med == null) {
+                            List<Link> links = sd.getLinks();
+                            if (links != null) {
+                                for (Link link : links) {
+                                    try {
+                                        if (link.getRel() != null && link.getRel().equals("image")) {
+                                            med = new Media();
+                                            med.setType("photo");
+                                            med.setFamilySearchId(sd.getId());
+                                            String folderName = person.getFamilySearchId();
+                                            String fileName = DataHelper.lastPath(link.getHref().toString());
+                                            File localFile = DataHelper.getImageFile(folderName, fileName, context);
+                                            String localPath = null;
+                                            if (!localFile.exists()) {
+                                                localPath = DataHelper.downloadFile(link.getHref().toString(), folderName, fileName, remoteService, context);
+                                            } else {
+                                                localPath = localFile.getAbsolutePath();
                                             }
-                                        } catch (Exception e) {
-                                            Log.e(this.getClass().getSimpleName(), "Error loading image ", e);
+                                            if (localPath != null) {
+                                                mediaFound = true;
+                                                med.setLocalPath(localPath);
+                                                getDBHelper().persistMedia(med);
+                                                media.add(med);
+                                                Tag tag = new Tag();
+                                                tag.setMediaId(med.getId());
+                                                tag.setPersonId(person.getId());
+                                                getDBHelper().persistTag(tag);
+                                            }
                                         }
+                                    } catch (Exception e) {
+                                        Log.e(this.getClass().getSimpleName(), "Error loading image ", e);
                                     }
                                 }
-                            } else {
-                                media.add(med);
                             }
+                        } else {
+                            media.add(med);
                         }
                     }
-                    if (mediaFound) {
-                        person.setHasMedia(true);
-                    } else {
-                        person.setHasMedia(false);
-                    }
-                    getDBHelper().persistLittlePerson(person);
-                    fireNetworkStateChanged(DataNetworkState.REMOTE_FINISHED);
-                } catch (RemoteServiceSearchException e) {
-                    Log.e(this.getClass().getSimpleName(), "error", e);
                 }
+                if (mediaFound) {
+                    person.setHasMedia(true);
+                } else {
+                    person.setHasMedia(false);
+                }
+                getDBHelper().persistLittlePerson(person);
+                fireNetworkStateChanged(DataNetworkState.REMOTE_FINISHED);
+            } catch (RemoteServiceSearchException e) {
+                Log.e(this.getClass().getSimpleName(), "error", e);
             }
+        } else {
+            media = getDBHelper().getMediaForPerson(person.getId());
         }
         return media;
     }
