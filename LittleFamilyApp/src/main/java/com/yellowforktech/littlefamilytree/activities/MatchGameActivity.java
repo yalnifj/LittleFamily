@@ -49,9 +49,9 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
         setContentView(R.layout.activity_match_game);
 
         Intent intent = getIntent();
-        people = (List<LittlePerson>) intent.getSerializableExtra(ChooseFamilyMember.FAMILY);
         selectedPerson = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
-
+        people = new ArrayList<>();
+        people.add(selectedPerson);
         game = new MatchingGame(1, people);
         game.setupLevel();
         flipCount = 0;
@@ -63,14 +63,9 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
         gridView.setEnabled(true);
         gridView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
         gridView.setOnItemClickListener(this);
-        updateColumns();
 
         setupTopBar();
-
-        if (people==null) {
-            people = new ArrayList<>();
-            people.add(selectedPerson);
-        }
+        updateColumns();
     }
 
     @Override
@@ -78,10 +73,8 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
         super.onStart();
         flipping = false;
         DataService.getInstance().registerNetworkStateListener(this);
-        if (people.size()<2) {
-            FamilyLoaderTask task = new FamilyLoaderTask(this, this);
-            task.execute(people.get(backgroundLoadIndex));
-        }
+        FamilyLoaderTask task = new FamilyLoaderTask(this, this);
+        task.execute(people.get(backgroundLoadIndex));
     }
 
     @Override

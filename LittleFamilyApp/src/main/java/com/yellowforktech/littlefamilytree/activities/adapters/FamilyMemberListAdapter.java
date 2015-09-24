@@ -2,6 +2,7 @@ package com.yellowforktech.littlefamilytree.activities.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +15,16 @@ import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.util.ImageHelper;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by jfinlay on 12/30/2014.
  */
 public class FamilyMemberListAdapter extends BaseAdapter {
     private List<LittlePerson> family;
+    private Map<Integer, Bitmap> bitmaps;
     private Context context;
 
     public FamilyMemberListAdapter(Context context) {
@@ -30,6 +34,7 @@ public class FamilyMemberListAdapter extends BaseAdapter {
 
     public void setFamily(List<LittlePerson> family) {
         this.family = family;
+        bitmaps = new HashMap<>(family.size());
         notifyDataSetChanged();
     }
 
@@ -59,45 +64,55 @@ public class FamilyMemberListAdapter extends BaseAdapter {
     static class ViewHolder {
         ImageView portrait;
         TextView name;
-        Bitmap bitmap;
     }
 
     @Override
     public View getView(int index, View convertView, ViewGroup parent) {
-        ViewHolder holder;
+        ViewHolder holder = null;
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        if (convertView == null) {
+        if (convertView!=null) {
+            holder = (ViewHolder) convertView.getTag();
+        }
+
+        if (convertView == null || holder==null) {
             convertView = inflater.inflate(R.layout.person_portait_name, null);
             holder = new ViewHolder();
             holder.portrait = (ImageView) convertView.findViewById(R.id.person_portrait);
             holder.name = (TextView) convertView.findViewById(R.id.person_name);
             convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
         }
 
-        GridView gridView = (GridView) parent;
-        int width = (int) ((parent.getWidth() / gridView.getNumColumns())-parent.getWidth()*.05);
-        int height = width;
         LittlePerson person = (LittlePerson) getItem(index);
-        if (person!=null) {
-            if (person.getGivenName()!=null) {
+        if (person != null) {
+            if (person.getGivenName() != null) {
                 holder.name.setText(person.getGivenName());
             } else {
                 holder.name.setText(person.getName());
             }
-            if (holder.bitmap==null) {
+
+            if (bitmaps.get(person.getId())==null) {
+                GridView gridView = (GridView) parent;
+                int parentWidth = parent.getWidth();
+                if (parentWidth == 0) {
+                    DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+                    parentWidth = (int) (metrics.widthPixels - 35 * metrics.density);
+                }
+                int width = (int) ((parentWidth / gridView.getNumColumns()) - parent.getWidth() * .05);
+                if (width == 0) width = 200;
+                int height = width;
+
                 if (person.getPhotoPath() != null) {
                     Bitmap bm = ImageHelper.loadBitmapFromFile(person.getPhotoPath(), ImageHelper.getOrientation(person.getPhotoPath()), width, height, false);
-                    holder.bitmap = bm;
+                    bitmaps.put(person.getId(), bm);
                 } else {
                     Bitmap bm = ImageHelper.loadBitmapFromResource(context, person.getDefaultPhotoResource(), 0, width, height);
-                    holder.bitmap = bm;
+                    bitmaps.put(person.getId(), bm);
                 }
             }
-            holder.portrait.setImageBitmap(holder.bitmap);
+            holder.portrait.setImageBitmap(bitmaps.get(person.getId()));
         }
+
 
         return convertView;
     }
