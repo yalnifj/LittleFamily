@@ -95,11 +95,13 @@ public class BubbleAnimatedBitmapSprite extends BouncingAnimatedBitmapSprite {
 	{
 		this.person = person;
 		photo = null;
-        if (person.getPhotoPath() != null) {
-            photo = ImageHelper.loadBitmapFromFile(person.getPhotoPath(), ImageHelper.getOrientation(person.getPhotoPath()), (int) (width * 0.7), (int) (height * 0.7), false);
-        }
-        if (photo==null){
-            photo = ImageHelper.loadBitmapFromResource(activity, person.getDefaultPhotoResource(), 0, (int)(width*0.7), (int) (height*0.7));
+        if (person!=null) {
+            if (person.getPhotoPath() != null) {
+                photo = ImageHelper.loadBitmapFromFile(person.getPhotoPath(), ImageHelper.getOrientation(person.getPhotoPath()), (int) (width * 0.7), (int) (height * 0.7), false);
+            }
+            if (photo == null) {
+                photo = ImageHelper.loadBitmapFromResource(activity, person.getDefaultPhotoResource(), 0, (int) (width * 0.7), (int) (height * 0.7));
+            }
         }
 	}
 

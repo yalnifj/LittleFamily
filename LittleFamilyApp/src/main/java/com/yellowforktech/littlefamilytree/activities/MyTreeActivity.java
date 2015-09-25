@@ -586,7 +586,9 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
                 treeSearchGame.nextClue();
             }
 
-            speak(treeSearchGame.getClueText());
+            if (treeSearchGame.getTargetPerson()!=null) {
+                speak(treeSearchGame.getClueText());
+            }
         } else if (topic.equals(TOPIC_PERSON_SELECTED)) {
             if (isTreeSearchGameActive()) {
                 Map<String, Object> params = (Map<String, Object>) o;

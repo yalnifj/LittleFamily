@@ -8,9 +8,9 @@ import com.yellowforktech.littlefamilytree.data.TreeNode;
 
 import org.gedcomx.types.GenderType;
 
-import java.util.Random;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Created by jfinlay on 7/23/2015.
@@ -50,6 +50,7 @@ public class TreeSearchGame {
         return targetPerson;
     }
 
+    int retryCounter = 0;
     public void findRandomPerson(TreeNode root) {
         rootNode = root;
         rootPerson = root.getPerson();
@@ -100,6 +101,12 @@ public class TreeSearchGame {
 				counter++;
             }
         }
+
+        if (targetPerson==null && retryCounter < 5) {
+            retryCounter++;
+            findRandomPerson(root);
+        }
+        retryCounter = 0;
 
         complete = false;
         clueNumber = rand.nextInt(clues.length);

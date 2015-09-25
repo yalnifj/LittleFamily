@@ -461,17 +461,19 @@ public class TreePersonAnimatedSprite extends Sprite {
                         float by = getY() + detailHeight - MyTreeActivity.buttonSize * 2;
                         int count = 1;
                         for (Bitmap button : activityButtons) {
-                            if (x > bx * scale && y > by * scale
-                                    && x < (bx + button.getWidth()) * scale && y < (by + button.getHeight()) * scale) {
-                                sendEvent(button, node.getPerson());
-                                break;
+                            if (button!=null) {
+                                if (x > bx * scale && y > by * scale
+                                        && x < (bx + button.getWidth()) * scale && y < (by + button.getHeight()) * scale) {
+                                    sendEvent(button, node.getPerson());
+                                    break;
+                                }
+                                bx += button.getWidth() + 20;
+                                if (count % 3 == 0) {
+                                    by += MyTreeActivity.buttonSize;
+                                    bx = getX() + leftLeaf.getWidth() + 20;
+                                }
+                                count++;
                             }
-                            bx += button.getWidth() + 20;
-                            if (count % 3 == 0) {
-                                by += MyTreeActivity.buttonSize;
-                                bx = getX() + leftLeaf.getWidth() + 20;
-                            }
-                            count++;
                         }
                         state = STATE_ANIMATING_CLOSED_LEFT;
                     } else {
@@ -484,17 +486,19 @@ public class TreePersonAnimatedSprite extends Sprite {
                             float by = getY() + detailHeight - MyTreeActivity.buttonSize * 2;
                             int count = 1;
                             for (Bitmap button : spActivityButtons) {
-                                if (x > bx * scale && y > by * scale
-                                        && x < (bx + button.getWidth()) * scale && y < (by + button.getHeight()) * scale) {
-                                    sendEvent(button, node.getSpouse());
-                                    break;
+                                if (button!=null) {
+                                    if (x > bx * scale && y > by * scale
+                                            && x < (bx + button.getWidth()) * scale && y < (by + button.getHeight()) * scale) {
+                                        sendEvent(button, node.getSpouse());
+                                        break;
+                                    }
+                                    bx += button.getWidth() + 20;
+                                    if (count % 3 == 0) {
+                                        bx = getX() + getWidth() + 20;
+                                        by += MyTreeActivity.buttonSize;
+                                    }
+                                    count++;
                                 }
-                                bx += button.getWidth() + 20;
-                                if (count % 3 == 0) {
-                                    bx = getX() + getWidth() + 20;
-                                    by += MyTreeActivity.buttonSize;
-                                }
-                                count++;
                             }
                             state = STATE_ANIMATING_CLOSED_RIGHT;
                         }
