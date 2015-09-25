@@ -15,6 +15,7 @@ import com.yellowforktech.littlefamilytree.data.Media;
 import com.yellowforktech.littlefamilytree.games.PuzzleGame;
 import com.yellowforktech.littlefamilytree.games.RandomMediaChooser;
 import com.yellowforktech.littlefamilytree.util.ImageHelper;
+import com.yellowforktech.littlefamilytree.util.RelationshipCalculator;
 import com.yellowforktech.littlefamilytree.views.PuzzleSurfaceView;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class PuzzleGameActivity extends LittleFamilyActivity implements RandomMe
     private Bitmap imageBitmap;
     private Media photo;
     private RandomMediaChooser mediaChooser;
+    private LittlePerson player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,7 @@ public class PuzzleGameActivity extends LittleFamilyActivity implements RandomMe
         Intent intent = getIntent();
         people = (List<LittlePerson>) intent.getSerializableExtra(ChooseFamilyMember.FAMILY);
         selectedPerson = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
+        player = selectedPerson;
 
         if (people==null) {
             people = new ArrayList<>();
@@ -90,7 +93,8 @@ public class PuzzleGameActivity extends LittleFamilyActivity implements RandomMe
             }
             puzzleGame.setupLevel(rows, cols);
         }
-        puzzleSurfaceView.setBitmap(imageBitmap, selectedPerson.getName());
+        String relationship = RelationshipCalculator.getRelationship(player, selectedPerson, this);
+        puzzleSurfaceView.setBitmap(imageBitmap, selectedPerson.getName(), relationship);
     }
 
     @Override

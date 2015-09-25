@@ -7,8 +7,8 @@ android {
         applicationId "com.yellowforktech.littlefamilytree"
         minSdkVersion 15
         targetSdkVersion 21
-        versionName "1.0.1"
-        versionCode 13
+        versionName "1.0.2"
+        versionCode 14
     }
     buildTypes {
         release {
@@ -21,6 +21,21 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
     productFlavors {
+        local {
+            minSdkVersion 15
+            applicationId 'com.yellowforktech.littlefamilytree'
+            targetSdkVersion 21
+        }
+        beta {
+            minSdkVersion 15
+            applicationId 'com.yellowforktech.littlefamilytreefree'
+            targetSdkVersion 21
+        }
+        production {
+            minSdkVersion 15
+            applicationId 'com.yellowforktech.littlefamilytree.com.yellowforktech.littlefamilytree.littlefamilytree1'
+            targetSdkVersion 21
+        }
     }
 }
 

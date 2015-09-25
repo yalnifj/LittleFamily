@@ -36,7 +36,7 @@ public class BubbleAnimatedBitmapSprite extends BouncingAnimatedBitmapSprite {
     private int sHeight;
     private int photoWidth;
     protected MediaPlayer mediaPlayer;
-    protected int highliteWait = 300;
+    protected int highliteWait = 200;
     protected int hlDelay = 0;
     protected int angle = 0;
     protected Paint hlPaint;

@@ -44,6 +44,7 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
     private String name;
 	
 	protected int starDelay = 1;
+    private String relationship;
 
     public PuzzleSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -213,6 +214,10 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
                     if (name!=null) {
                         canvas.drawText(name, puzzleWidth / 2, ttop, textPaint);
                     }
+                    if (relationship!=null) {
+                        ttop = (int) (ttop + textPaint.getTextSize());
+                        canvas.drawText(relationship, puzzleWidth / 2, ttop, textPaint);
+                    }
                 }
             }
         }
@@ -331,9 +336,10 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
         return bitmap;
     }
 
-    public void setBitmap(Bitmap bitmap, String name) {
+    public void setBitmap(Bitmap bitmap, String name, String relationship) {
         complete = false;
         this.name = name;
+        this.relationship = relationship;
         synchronized (bitmap) {
             this.bitmap = bitmap;
         }

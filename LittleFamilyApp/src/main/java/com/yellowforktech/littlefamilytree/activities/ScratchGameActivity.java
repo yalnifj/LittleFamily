@@ -14,6 +14,7 @@ import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.data.Media;
 import com.yellowforktech.littlefamilytree.games.RandomMediaChooser;
 import com.yellowforktech.littlefamilytree.util.ImageHelper;
+import com.yellowforktech.littlefamilytree.util.RelationshipCalculator;
 import com.yellowforktech.littlefamilytree.views.ScratchView;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public class ScratchGameActivity extends LittleFamilyActivity implements Scratch
 
     private List<LittlePerson> people;
     private LittlePerson selectedPerson;
+    private LittlePerson player;
 
     private ScratchView layeredImage;
     private String imagePath;
@@ -45,6 +47,7 @@ public class ScratchGameActivity extends LittleFamilyActivity implements Scratch
         Intent intent = getIntent();
         people = (List<LittlePerson>) intent.getSerializableExtra(ChooseFamilyMember.FAMILY);
         selectedPerson = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
+        player = selectedPerson;
 
         if (people==null) {
             people = new ArrayList<>();
@@ -78,7 +81,8 @@ public class ScratchGameActivity extends LittleFamilyActivity implements Scratch
     }
 
     public void setupCanvas() {
-        layeredImage.setImageBitmap(imageBitmap, selectedPerson.getName(), null);
+        String relationship = RelationshipCalculator.getRelationship(player, selectedPerson, this);
+        layeredImage.setImageBitmap(imageBitmap, selectedPerson.getName(), relationship);
     }
 
     @Override
