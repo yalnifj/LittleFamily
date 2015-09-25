@@ -67,6 +67,18 @@ public class RelationshipCalculator
 							return context.getResources().getString(R.string.son);
 						}
 					} else {
+						for(LittlePerson c : myFamily) {
+							if (c.getTreeLevel().equals(p.getTreeLevel())) {
+								List<LittlePerson> cspouses = dataService.getDBHelper().getSpousesForPerson(c.getId());
+								if (cspouses.contains(p)) {
+									if (p.getGender() == GenderType.Female) {
+										return context.getResources().getString(R.string.daughter)+" "+context.getResources().getString(R.string.inlaw);
+									} else {
+										return context.getResources().getString(R.string.son)+" "+context.getResources().getString(R.string.inlaw);
+									}
+								}
+							}
+						}
 						if (p.getGender() == GenderType.Female) {
 							return context.getResources().getString(R.string.niece);
 						} else {
