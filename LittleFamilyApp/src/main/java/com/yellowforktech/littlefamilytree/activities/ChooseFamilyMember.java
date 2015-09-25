@@ -18,7 +18,8 @@ import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterView.OnItemClickListener, FamilyLoaderTask.Listener,
         PersonLoaderTask.Listener, ChildrenLoaderTask.Listener {
@@ -62,17 +63,8 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
                 Intent intent = new Intent( this, ChooseRemoteService.class );
                 startActivityForResult( intent, LOGIN_REQUEST );
             } else {
-                List<LittlePerson> cousins = dataService.getDBHelper().getCousins();
-                dataService.addToSyncQ(cousins, 1);
-                if (cousins!=null) {
-                    family = new ArrayList<>(cousins);
-                }
-                if (cousins==null || cousins.size()<3) {
-                    PersonLoaderTask task = new PersonLoaderTask(this, this);
-                    task.execute();
-                } else {
-                    showFamily();
-                }
+                PersonLoaderTask task = new PersonLoaderTask(this, this);
+                task.execute();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -126,18 +118,17 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
         if (familyCount==0) {
             familyCount++;
             if (this.family==null) {
-                this.family = familyMembers;
+                this.family = new ArrayList<>();
             }
-            else {
-                for(LittlePerson p : familyMembers) {
-                    if (!this.family.contains(p)) {
-                        this.family.add(p);
-                    }
+            for(LittlePerson p : familyMembers) {
+                if ((p.getTreeLevel()==null || p.getTreeLevel() <=0) && !this.family.contains(p)) {
+                    this.family.add(p);
                 }
             }
+
             //-- get grandchildren
-            LittlePerson[] people = new LittlePerson[familyMembers.size()];
-            familyMembers.toArray(people);
+            LittlePerson[] people = new LittlePerson[family.size()];
+            family.toArray(people);
             ChildrenLoaderTask task = new ChildrenLoaderTask(this, this, true);
             task.execute(people);
         } else {
@@ -147,6 +138,18 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
                     this.family.add(p);
                 }
             }
+
+            Comparator<LittlePerson> comp = new Comparator<LittlePerson>() {
+                @Override
+                public int compare(LittlePerson lhs, LittlePerson rhs) {
+                    if (lhs.getAge()!=null && rhs.getAge()!=null) {
+                        return lhs.getAge().compareTo(rhs.getAge());
+                    }
+                    return 0;
+                }
+            };
+            Collections.sort(this.family, comp);
+
             showFamily();
         }
     }
@@ -185,7 +188,9 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
 
     @Override
     public void onComplete(LittlePerson person) {
+        familyCount = 0;
         FamilyLoaderTask task = new FamilyLoaderTask(this, this);
+        task.setGetInLaws(false);
         task.execute(person);
     }
 }

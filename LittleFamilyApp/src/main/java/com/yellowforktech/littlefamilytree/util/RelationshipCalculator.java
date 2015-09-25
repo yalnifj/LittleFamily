@@ -20,6 +20,14 @@ public class RelationshipCalculator
 			DataService dataService = DataService.getInstance();
 			try {
 				if (p.getTreeLevel().equals(me.getTreeLevel())) {
+					List<LittlePerson> spouses = dataService.getSpouses(me);
+					if (spouses.contains(p)) {
+						if (p.getGender() == GenderType.Female) {
+							return context.getResources().getString(R.string.wife);
+						} else {
+							return context.getResources().getString(R.string.husband);
+						}
+					}
 					List<LittlePerson> parents = dataService.getParents(me);
 					for(LittlePerson parent : parents) {
 						List<LittlePerson> myFamily = dataService.getChildren(parent);

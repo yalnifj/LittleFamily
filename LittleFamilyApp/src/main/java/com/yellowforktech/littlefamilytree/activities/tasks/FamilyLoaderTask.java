@@ -19,6 +19,7 @@ public class FamilyLoaderTask extends AsyncTask<LittlePerson, String, ArrayList<
     private Listener listener;
     private Context context;
     private DataService dataService;
+    private boolean getInLaws = true;
 
     public FamilyLoaderTask(Listener listener, Context context) {
         this.listener = listener;
@@ -28,13 +29,21 @@ public class FamilyLoaderTask extends AsyncTask<LittlePerson, String, ArrayList<
         dataService.registerNetworkStateListener(this);
     }
 
+    public boolean isGetInLaws() {
+        return getInLaws;
+    }
+
+    public void setGetInLaws(boolean getInLaws) {
+        this.getInLaws = getInLaws;
+    }
+
     @Override
     protected ArrayList<LittlePerson> doInBackground(LittlePerson[] persons) {
         Log.d(this.getClass().getSimpleName(), "Starting FamilyLoaderTask.doInBackground "+persons);
         ArrayList<LittlePerson> familyMembers = new ArrayList<>();
         for (LittlePerson person : persons) {
             try {
-                List<LittlePerson> people = dataService.getFamilyMembers(person);
+                List<LittlePerson> people = dataService.getFamilyMembers(person, getInLaws);
                 if (people != null) {
                     for (LittlePerson p : people) {
                         familyMembers.add(p);
