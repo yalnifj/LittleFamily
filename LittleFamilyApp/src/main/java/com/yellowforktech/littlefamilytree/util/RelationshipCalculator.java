@@ -38,6 +38,20 @@ public class RelationshipCalculator
 								return context.getResources().getString(R.string.brother);
 							}
 						}
+						//-- check for in-laws
+						for (LittlePerson bs : myFamily) {
+							if (bs.getTreeLevel()!=null && bs.getTreeLevel().equals(me.getTreeLevel())) {
+								List<LittlePerson> bsspouses = dataService.getDBHelper().getSpousesForPerson(bs.getId());
+								if (bsspouses.contains(p)) {
+									if (p.getGender() == GenderType.Female) {
+										return context.getResources().getString(R.string.sister)+" "+context.getResources().getString(R.string.inlaw);
+									} else {
+										return context.getResources().getString(R.string.brother)+" "+context.getResources().getString(R.string.inlaw);
+									}
+								}
+
+							}
+						}
 					}
 					return context.getResources().getString(R.string.cousin);
 				}
@@ -101,6 +115,7 @@ public class RelationshipCalculator
 						rel += " "+context.getResources().getString(R.string.inlaw);
 					}
 					else {
+						rel = rel.replaceAll("Grand", "Great");
 						if (p.getGender() == GenderType.Female) {
 							rel += context.getResources().getString(R.string.aunt);
 						} else {
