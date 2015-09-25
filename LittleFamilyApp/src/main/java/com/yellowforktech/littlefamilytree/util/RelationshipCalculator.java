@@ -53,7 +53,10 @@ public class RelationshipCalculator
 							}
 						}
 					}
-					return context.getResources().getString(R.string.cousin);
+					if (p.getTreeLevel()<=1) {
+						return context.getResources().getString(R.string.cousin);
+					}
+					return null;
 				}
 				if (p.getTreeLevel().equals(me.getTreeLevel()-1)) {
 					List<LittlePerson> myFamily = dataService.getDBHelper().getRelativesForPerson(me.getId(), false);
