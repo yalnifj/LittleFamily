@@ -20,7 +20,7 @@ public class RelationshipCalculator
 			DataService dataService = DataService.getInstance();
 			try {
 				if (p.getTreeLevel().equals(me.getTreeLevel())) {
-					List<LittlePerson> spouses = dataService.getSpouses(me);
+					List<LittlePerson> spouses = dataService.getDBHelper().getSpousesForPerson(me.getId());
 					if (spouses.contains(p)) {
 						if (p.getGender() == GenderType.Female) {
 							return context.getResources().getString(R.string.wife);
@@ -28,9 +28,9 @@ public class RelationshipCalculator
 							return context.getResources().getString(R.string.husband);
 						}
 					}
-					List<LittlePerson> parents = dataService.getParents(me);
+					List<LittlePerson> parents = dataService.getDBHelper().getParentsForPerson(me.getId());
 					for(LittlePerson parent : parents) {
-						List<LittlePerson> myFamily = dataService.getChildren(parent);
+						List<LittlePerson> myFamily = dataService.getDBHelper().getChildrenForPerson(parent.getId());
 						if (myFamily.contains(p)) {
 							if (p.getGender() == GenderType.Female) {
 								return context.getResources().getString(R.string.sister);
@@ -56,7 +56,7 @@ public class RelationshipCalculator
 					return context.getResources().getString(R.string.cousin);
 				}
 				if (p.getTreeLevel().equals(me.getTreeLevel()-1)) {
-					List<LittlePerson> myFamily = dataService.getFamilyMembers(me);
+					List<LittlePerson> myFamily = dataService.getDBHelper().getRelativesForPerson(me.getId(), false);
 					if (myFamily.contains(p)) {
 						if (p.getGender() == GenderType.Female) {
 							return context.getResources().getString(R.string.daughter);
