@@ -41,22 +41,6 @@ public class RelationshipCalculator
 					}
 					return context.getResources().getString(R.string.cousin);
 				}
-				if (p.getTreeLevel().equals(me.getTreeLevel()+1)) {
-					List<LittlePerson> myFamily = dataService.getFamilyMembers(me);
-					if (myFamily.contains(p)) {
-						if (p.getGender() == GenderType.Female) {
-							return context.getResources().getString(R.string.mother);
-						} else {
-							return context.getResources().getString(R.string.father);
-						}
-					} else {
-						if (p.getGender() == GenderType.Female) {
-							return context.getResources().getString(R.string.aunt);
-						} else {
-							return context.getResources().getString(R.string.uncle);
-						}
-					}
-				}
 				if (p.getTreeLevel().equals(me.getTreeLevel()-1)) {
 					List<LittlePerson> myFamily = dataService.getFamilyMembers(me);
 					if (myFamily.contains(p)) {
@@ -73,19 +57,31 @@ public class RelationshipCalculator
 						}
 					}
 				}
-				if (p.getTreeLevel() > me.getTreeLevel()+1) {
+				if (p.getTreeLevel() > me.getTreeLevel()) {
 					int distance = p.getTreeLevel() - me.getTreeLevel();
 					String rel = getGreatness(distance, context);
 					int d = 0;
 					List<LittlePerson> levelPeople = new ArrayList<>();
 					levelPeople.add(me);
+
+					List<LittlePerson> inLaws = new ArrayList<>();
+					List<LittlePerson> spouses = dataService.getDBHelper().getSpousesForPerson(me.getId());
+					inLaws.addAll(spouses);
 					do {
 						List<LittlePerson> nextLevel = new ArrayList<>();
 						for(LittlePerson pp : levelPeople) {
-							List<LittlePerson> parents = dataService.getParents(pp);
+							List<LittlePerson> parents = dataService.getDBHelper().getParentsForPerson(pp.getId());
 							nextLevel.addAll(parents);
 						}
 						levelPeople = nextLevel;
+
+						List<LittlePerson> nextInLaw = new ArrayList<>();
+						for(LittlePerson pp : inLaws) {
+							List<LittlePerson> parents = dataService.getDBHelper().getParentsForPerson(pp.getId());
+							nextInLaw.addAll(parents);
+						}
+						inLaws = nextInLaw;
+
 						d++;
 					} while(d<distance);
 
@@ -95,12 +91,31 @@ public class RelationshipCalculator
 						} else {
 							rel += context.getResources().getString(R.string.father);
 						}
-					} else {
+					}
+					else if (inLaws.contains(p)) {
+						if (p.getGender() == GenderType.Female) {
+							rel += context.getResources().getString(R.string.mother);
+						} else {
+							rel += context.getResources().getString(R.string.father);
+						}
+						rel += " "+context.getResources().getString(R.string.inlaw);
+					}
+					else {
 						if (p.getGender() == GenderType.Female) {
 							rel += context.getResources().getString(R.string.aunt);
 						} else {
 							rel += context.getResources().getString(R.string.uncle);
 						}
+					}
+					return rel;
+				}
+				if (p.getTreeLevel() < me.getTreeLevel() -1) {
+					int distance = Math.abs(p.getTreeLevel() - me.getTreeLevel());
+					String rel = getGreatness(distance, context);
+					if (p.getGender() == GenderType.Female) {
+						rel += context.getResources().getString(R.string.daughter);
+					} else {
+						rel += context.getResources().getString(R.string.son);
 					}
 					return rel;
 				}
