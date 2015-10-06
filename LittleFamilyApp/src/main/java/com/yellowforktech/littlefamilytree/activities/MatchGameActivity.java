@@ -52,13 +52,10 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
         selectedPerson = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
         people = new ArrayList<>();
         people.add(selectedPerson);
-        game = new MatchingGame(1, people);
-        game.setupLevel();
         flipCount = 0;
 
         gridView = (GridView) findViewById(R.id.gridViewMatch);
         adapter = new MatchGameListAdapter(this);
-        adapter.setFamily(game.getBoard());
         gridView.setAdapter(adapter);
         gridView.setEnabled(true);
         gridView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
@@ -93,6 +90,12 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
     public void onComplete(ArrayList<LittlePerson> family) {
         for(LittlePerson p : family) {
             if (!people.contains(p)) people.add(p);
+        }
+
+        if (game==null) {
+            game = new MatchingGame(1, people);
+            game.setupLevel();
+            adapter.setFamily(game.getBoard());
         }
 
         backgroundLoadIndex++;
