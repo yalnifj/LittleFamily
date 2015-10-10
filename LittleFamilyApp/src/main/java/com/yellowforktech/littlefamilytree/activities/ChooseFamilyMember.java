@@ -126,6 +126,10 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
                 }
             }
 
+            if (family.size()<=1) {
+                family.addAll(familyMembers);
+            }
+
             //-- get grandchildren
             LittlePerson[] people = new LittlePerson[family.size()];
             family.toArray(people);
@@ -189,6 +193,10 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
     @Override
     public void onComplete(LittlePerson person) {
         familyCount = 0;
+        if (family==null) {
+            family = new ArrayList<>();
+        }
+        family.add(person);
         FamilyLoaderTask task = new FamilyLoaderTask(this, this);
         task.setGetInLaws(false);
         task.execute(person);
