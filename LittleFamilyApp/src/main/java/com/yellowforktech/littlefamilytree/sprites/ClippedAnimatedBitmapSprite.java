@@ -74,6 +74,10 @@ public class ClippedAnimatedBitmapSprite extends AnimatedBitmapSprite {
                     Rect rect = new Rect();
                     rect.set((int) (x), (int) (y), (int) ((x + width) ), (int) ((y + height) ));
                     if (matrix!=null) {
+                        if (oldScale!=scale) {
+                            buildMatrix();
+                            oldScale = scale;
+                        }
                         canvas.save();
                         canvas.setMatrix(matrix);
                     }

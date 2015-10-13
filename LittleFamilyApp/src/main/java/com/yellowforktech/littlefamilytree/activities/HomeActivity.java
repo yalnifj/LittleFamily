@@ -3,7 +3,6 @@ package com.yellowforktech.littlefamilytree.activities;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -189,7 +188,7 @@ public class HomeActivity extends LittleFamilyActivity {
             Bitmap flowerBm2 = BitmapFactory.decodeResource(getResources(), R.drawable.house_flowers_a1);
             TouchStateAnimatedBitmapSprite flower1 = new TouchStateAnimatedBitmapSprite(flowerBm2, this);
             flower1.setX(90*dm.density);
-            flower1.setY(600*dm.density);
+            flower1.setY(600 * dm.density);
             flower1.setIgnoreAlpha(true);
             flower1.setResources(getResources());
             List<Integer> spinning = new ArrayList<>(5);
@@ -201,10 +200,7 @@ public class HomeActivity extends LittleFamilyActivity {
             flower1.getBitmapIds().put(1, spinning);
             flower1.getAudio().put(1, R.raw.spinning);
             flower1.setStateTransition(1, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP3);
-            Matrix flipped = new Matrix();
-            flipped.postScale(-1, 1);
-            flipped.postTranslate(flowerBm2.getWidth()+(180*dm.density), 0);
-            flower1.setMatrix(flipped);
+            flower1.setFlipHoriz(true);
             flower1.setIgnoreAlpha(true);
             homeView.addSprite(flower1);
 

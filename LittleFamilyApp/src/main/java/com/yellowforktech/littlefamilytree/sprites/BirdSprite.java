@@ -2,7 +2,6 @@ package com.yellowforktech.littlefamilytree.sprites;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.media.MediaPlayer;
 import android.util.Log;
 
@@ -16,7 +15,6 @@ import java.util.Random;
  * Created by jfinlay on 8/28/2015.
  */
 public class BirdSprite extends AnimatedBitmapSprite {
-    protected  Matrix flipped;
     protected int delay;
     protected boolean isFlipped;
     protected Context context;
@@ -30,8 +28,6 @@ public class BirdSprite extends AnimatedBitmapSprite {
         super(bitmap);
         this.context = context;
         this.eventTopic = eventTopic;
-
-        flipped = new Matrix();
 
         List<Integer> state2 = new ArrayList<>(5);
         state2.add(R.drawable.house_tree_bird3);
@@ -61,11 +57,9 @@ public class BirdSprite extends AnimatedBitmapSprite {
                 isFlipped = random.nextBoolean();
 
                 if (isFlipped) {
-                    flipped.postScale(-1*scale, scale);
-                    flipped.postTranslate(getWidth() + x * 2, 0);
-                    this.matrix = flipped;
+                    setFlipHoriz(true);
                 } else {
-                    matrix = null;
+                    setFlipHoriz(false);
                 }
             } else {
                 if (frame!=oldFrame && frame == 0) {

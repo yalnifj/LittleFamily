@@ -207,7 +207,9 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
         if (family==null) {
             family = new ArrayList<>();
         }
-        family.add(person);
+        if (!family.contains(person)) {
+            family.add(person);
+        }
         FamilyLoaderTask task = new FamilyLoaderTask(this, this);
         task.setGetInLaws(false);
         task.execute(person);

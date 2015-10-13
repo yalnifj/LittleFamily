@@ -58,17 +58,12 @@ public class ClippedRepeatedBackgroundSprite extends Sprite {
     public void doDraw(Canvas canvas) {
         if (background!=null) {
             Rect clipRect = new Rect();
-            clipRect.set(0, clipY, background.getWidth(), clipY + (int)(height));
+            int clipHeight = (int) (clipY*scale + height/scale);
+            if (clipHeight > background.getHeight()) clipHeight = background.getHeight();
+            clipRect.set(0, (int) (clipY*scale), background.getWidth(), clipHeight);
             Rect rect = new Rect();
             rect.set((int) (x), (int) (y), (int) ((x + width) ), (int) ((y + height) ));
-            if (matrix!=null) {
-                canvas.save();
-                canvas.setMatrix(matrix);
-            }
             canvas.drawBitmap(background, clipRect, rect, null);
-            if (matrix!=null) {
-                canvas.restore();
-            }
         }
     }
 
@@ -77,21 +72,21 @@ public class ClippedRepeatedBackgroundSprite extends Sprite {
         clipX -= (newX-oldX);
         clipY -= (newY-oldY);
 
-        if (width > maxWidth) {
+        if (width >= maxWidth * scale) {
             clipX = 0;
         } else {
             if (clipX < 0) clipX = 0;
-            else if (clipX + (int) (width * scale) > maxWidth * scale)
-                clipX = (int) ((maxWidth - width) * scale);
+            else if (clipX + (int) (width) > maxWidth)
+                clipX = (int) ((maxWidth - width));
         }
 
 
-        if (height > maxHeight) {
+        if (height >= maxHeight * scale) {
             clipY = 0;
         } else {
             if (clipY < 0) clipY = 0;
-            else if (clipY + height * scale > maxHeight * scale)
-                clipY = (int) ((maxHeight - height) * scale);
+            else if (clipY + height > maxHeight)
+                clipY = (int) ((maxHeight) - height);
         }
         return true;
     }

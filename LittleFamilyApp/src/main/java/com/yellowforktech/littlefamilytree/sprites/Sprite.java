@@ -22,6 +22,7 @@ public abstract class Sprite {
     protected boolean removeMe;
     protected Matrix matrix;
     protected float scale;
+    protected float oldScale;
     protected AbstractTouchAnimatedSurfaceView surfaceView;
     protected boolean visible = true;
 
@@ -107,10 +108,6 @@ public abstract class Sprite {
         return matrix;
     }
 
-    public void setMatrix(Matrix matrix) {
-        this.matrix = matrix;
-    }
-
     public boolean isSelected() {
         return selected;
     }
@@ -124,6 +121,7 @@ public abstract class Sprite {
     }
 
     public void setScale(float scale) {
+        oldScale = this.scale;
         this.scale = scale;
     }
 

@@ -27,6 +27,7 @@ public class HomeView extends ScaledSpritedClippedSurfaceView {
     private Random random;
     private int state = 0;
     private Sprite activeSprite = null;
+    private boolean scaleSet = false;
 
     public HomeView(Context context) {
         super(context);
@@ -81,8 +82,12 @@ public class HomeView extends ScaledSpritedClippedSurfaceView {
     @Override
     public void doDraw(Canvas canvas) {
 
-        if (getHeight() > maxHeight) {
-            scale = (float)getHeight() / (float)maxHeight;
+        if (!scaleSet) {
+            minScale = (float) getHeight() / (float) maxHeight;
+            if (getHeight() > maxHeight) {
+                scale = minScale;
+            }
+            scaleSet = true;
         }
 
         super.doDraw(canvas);

@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
@@ -32,6 +33,9 @@ public class AnimatedBitmapSprite extends Sprite implements BitmapSequenceLoader
     protected boolean selected;
     protected Paint selectedPaint;
     protected int loadingState;
+    protected boolean flipHoriz;
+    protected boolean flipVert;
+    protected Matrix flipMatrix;
 
     public AnimatedBitmapSprite() {
         super();
@@ -49,6 +53,7 @@ public class AnimatedBitmapSprite extends Sprite implements BitmapSequenceLoader
         selectedPaint.setStrokeWidth(3);
         selectedPaint.setAlpha(150);
         selectedPaint.setStyle(Paint.Style.STROKE);
+        flipMatrix = new Matrix();
     }
 
     public AnimatedBitmapSprite(Bitmap bitmap) {
@@ -59,6 +64,7 @@ public class AnimatedBitmapSprite extends Sprite implements BitmapSequenceLoader
         bitmaps.put(0, list);
         this.setWidth(bitmap.getWidth());
         this.setHeight(bitmap.getHeight());
+        flipMatrix = new Matrix();
     }
 
     public AnimatedBitmapSprite(Map<Integer, List<Bitmap>> bitmaps) {
@@ -68,6 +74,7 @@ public class AnimatedBitmapSprite extends Sprite implements BitmapSequenceLoader
         frame = 0;
         stepsPerFrame = 3;
         basePaint = new Paint();
+        flipMatrix = new Matrix();
     }
 
     public Map<Integer, List<Bitmap>> getBitmaps() {
@@ -136,6 +143,46 @@ public class AnimatedBitmapSprite extends Sprite implements BitmapSequenceLoader
         this.ignoreAlpha = ignoreAlpha;
     }
 
+    public boolean isFlipHoriz() {
+        return flipHoriz;
+    }
+
+    public void setFlipHoriz(boolean flipHoriz) {
+        this.flipHoriz = flipHoriz;
+        buildMatrix();
+    }
+
+    public boolean isFlipVert() {
+        return flipVert;
+    }
+
+    public void setFlipVert(boolean flipVert) {
+        this.flipVert = flipVert;
+        buildMatrix();
+    }
+
+    public void buildMatrix() {
+        if (flipHoriz || flipVert) {
+            int tx = 0;
+            int ty = 0;
+            float sx = scale;
+            if (flipHoriz) {
+                sx = -scale;
+                tx = (int) ((this.getWidth() + this.getX()*2)*scale);
+            }
+            float sy = scale;
+            if (flipVert) {
+                sy = -scale;
+                ty = (int) ((this.getHeight()+this.getY()*2)*scale);
+            }
+            flipMatrix.postScale(sx, sy);
+            flipMatrix.postTranslate(tx, ty);
+            matrix = flipMatrix;
+        } else {
+            matrix = null;
+        }
+    }
+
     public void addBitmap(int state, Bitmap bitmap) {
         List<Bitmap> stateBits = bitmaps.get(state);
         if (stateBits==null) {
@@ -157,18 +204,11 @@ public class AnimatedBitmapSprite extends Sprite implements BitmapSequenceLoader
         }
         //--preload next state bitmaps
         if (state>0 && bitmaps!=null && bitmaps.get(state+1)==null && bitmapIds.get(state+1)!=null && resources!=null) {
-            if (bitmaps.get(state).size()>4) {
-                loadingState = state + 1;
-                BitmapSequenceLoader loader = new BitmapSequenceLoader(getResources(), this);
-                loader.execute(bitmapIds.get(state + 1));
+            List<Bitmap> loaded = new ArrayList<>(bitmapIds.get(state+1).size());
+            for (Integer rid : bitmapIds.get(state+1)) {
+                loaded.add(BitmapFactory.decodeResource(getResources(), rid));
             }
-            else {
-                List<Bitmap> loaded = new ArrayList<>(bitmapIds.get(state+1).size());
-                for (Integer rid : bitmapIds.get(state+1)) {
-                    loaded.add(BitmapFactory.decodeResource(getResources(), rid));
-                }
-                bitmaps.put(state+1, loaded);
-            }
+            bitmaps.put(state+1, loaded);
         }
         if (bitmaps!=null && bitmaps.get(state)!=null && bitmaps.get(state).size()>1 ) {
             steps++;
@@ -202,6 +242,10 @@ public class AnimatedBitmapSprite extends Sprite implements BitmapSequenceLoader
                             Rect rect = new Rect();
                             rect.set((int) (x), (int) (y), (int) ((x + width)), (int) ((y + height)));
                             if (matrix != null) {
+                                if (oldScale!=scale) {
+                                    buildMatrix();
+                                    oldScale = scale;
+                                }
                                 canvas.save();
                                 canvas.setMatrix(matrix);
                             }
