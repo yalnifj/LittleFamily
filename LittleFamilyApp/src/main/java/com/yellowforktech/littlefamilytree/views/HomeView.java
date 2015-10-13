@@ -19,7 +19,7 @@ import java.util.Random;
 /**
  * Created by kids on 7/7/15.
  */
-public class HomeView extends SpritedClippedSurfaceView {
+public class HomeView extends ScaledSpritedClippedSurfaceView {
     private Bitmap lockBitmap;
     private TouchEventGameSprite lockSprite;
     private long timer;
@@ -80,6 +80,11 @@ public class HomeView extends SpritedClippedSurfaceView {
 
     @Override
     public void doDraw(Canvas canvas) {
+
+        if (getHeight() > maxHeight) {
+            scale = (float)getHeight() / (float)maxHeight;
+        }
+
         super.doDraw(canvas);
 
         canvas.setMatrix(new Matrix());

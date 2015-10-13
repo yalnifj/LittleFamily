@@ -214,6 +214,11 @@ public class PGVLoginActivity extends Activity implements AuthTask.Listener, Per
     public void onComplete(LittlePerson person) {
         pd.setMessage("Loading close family members from PhpGedView...");
         intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
+        try {
+            dataService.getDBHelper().saveProperty(DataService.ROOT_PERSON_ID, String.valueOf(person.getId()));
+        } catch (Exception e) {
+            Log.e("PGVLoginActivity", "Error saving property", e);
+        }
         InitialDataLoaderTask task = new InitialDataLoaderTask(this, this);
         task.execute(person);
     }

@@ -170,6 +170,11 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
         if (person!=null) {
             pd.setMessage("Loading close family members from FamilySearch...");
             intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
+            try {
+                dataService.getDBHelper().saveProperty(DataService.ROOT_PERSON_ID, String.valueOf(person.getId()));
+            } catch (Exception e) {
+                Log.e("FSLoginActivity", "Error saving property", e);
+            }
             InitialDataLoaderTask task = new InitialDataLoaderTask(this, this);
             task.execute(person);
         } else {

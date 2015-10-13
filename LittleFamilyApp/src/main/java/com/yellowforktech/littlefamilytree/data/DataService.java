@@ -44,6 +44,7 @@ public class DataService implements AuthTask.Listener {
     public static final String SERVICE_BASEURL = "BaseUrl";
     public static final String SERVICE_DEFAULTPERSONID = "DefaultPersonId";
     public static final String SERVICE_USERNAME= "Username";
+    public static final String ROOT_PERSON_ID = "Root_Person_id";
 
     private RemoteService remoteService;
     private DBHelper dbHelper = null;
@@ -742,7 +743,26 @@ public class DataService implements AuthTask.Listener {
     }
 
     public LittlePerson getDefaultPerson() throws Exception {
-        LittlePerson person = getDBHelper().getFirstPerson();
+        LittlePerson person = null;
+        String idStr = getDBHelper().getProperty(DataService.ROOT_PERSON_ID);
+        if (idStr!=null) {
+            try {
+                int id = Integer.parseInt(idStr);
+                person = getDBHelper().getPersonById(id);
+            } catch (Exception e) {
+                Log.e("DataService", "Error loading property", e);
+            }
+        }
+        else {
+            person = getDBHelper().getFirstPerson();
+            if (person!=null) {
+                try {
+                    getDBHelper().saveProperty(DataService.ROOT_PERSON_ID, String.valueOf(person.getId()));
+                } catch (Exception e) {
+                    Log.e("DataService", "Error saving property", e);
+                }
+            }
+        }
 
         if (person==null) {
             fireNetworkStateChanged(DataNetworkState.REMOTE_STARTING);

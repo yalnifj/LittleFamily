@@ -111,6 +111,17 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
         startActivity(intent);
     }
 
+    public void onLoginButtonClicked(View view) {
+        if (dataService.getServiceType().equals(DataService.SERVICE_TYPE_PHPGEDVIEW)) {
+            Intent intent = new Intent( this, PGVLoginActivity.class );
+            startActivity(intent);
+        }
+        if (dataService.getServiceType().equals(DataService.SERVICE_TYPE_FAMILYSEARCH)) {
+            Intent intent = new Intent( this, FSLoginActivity.class );
+            startActivity(intent);
+        }
+    }
+
 
     int familyCount = 0;
     @Override

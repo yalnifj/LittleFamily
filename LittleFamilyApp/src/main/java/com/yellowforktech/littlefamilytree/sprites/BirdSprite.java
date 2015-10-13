@@ -61,7 +61,7 @@ public class BirdSprite extends AnimatedBitmapSprite {
                 isFlipped = random.nextBoolean();
 
                 if (isFlipped) {
-                    flipped.postScale(-1, 1);
+                    flipped.postScale(-1*scale, scale);
                     flipped.postTranslate(getWidth() + x * 2, 0);
                     this.matrix = flipped;
                 } else {
