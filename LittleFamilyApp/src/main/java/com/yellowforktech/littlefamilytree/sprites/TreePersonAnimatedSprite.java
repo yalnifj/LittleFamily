@@ -128,7 +128,7 @@ public class TreePersonAnimatedSprite extends Sprite {
             if (node.getSpouse().getBirthPlace() != null) {
                 place = node.getSpouse().getBirthPlace();
             }
-            DollConfig dollConfig = activity.getDressUpDolls().getDollConfig(place, node.getSpouse());
+            DollConfig dollConfig = activity.getDressUpDolls().getDollConfig(PlaceHelper.getTopPlace(place), node.getSpouse());
             String thumbnailFile = dollConfig.getThumbnail();
             try {
                 InputStream is = activity.getAssets().open(thumbnailFile);
