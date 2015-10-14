@@ -2,12 +2,12 @@ package com.yellowforktech.littlefamilytree.views;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 
 import com.yellowforktech.littlefamilytree.sprites.Sprite;
-import android.graphics.*;
 
 /**
  * Created by Parents on 10/12/2015.
@@ -122,13 +122,13 @@ public class ScaledSpritedClippedSurfaceView extends SpritedClippedSurfaceView {
             clipY -= (newY-oldY);
 
             if (clipX < 0) clipX = 0;
-            if (clipX + getWidth() >= maxWidth*scale) {
-                clipX = (int) (maxWidth*scale - getWidth());
+            if (clipX*scale + getWidth() >= maxWidth*scale) {
+                clipX = (int) (maxWidth - getWidth()/scale);
             }
 
             if (clipY < 0) clipY = 0;
-            if (clipY + getHeight() >= maxHeight*scale) {
-                clipY = (int) (maxHeight*scale - getHeight());
+            if (clipY*scale + getHeight() >= maxHeight*scale) {
+                clipY = (int) (maxHeight - getHeight()/scale);
             }
         }
     }
@@ -155,7 +155,7 @@ public class ScaledSpritedClippedSurfaceView extends SpritedClippedSurfaceView {
 						if (m != null) {
 							old = new Matrix();
 							old.set(m);
-							m.postTranslate(-clipX, -clipY);
+							m.postTranslate(-clipX*scale, -clipY*scale);
 						}
 						s.doDraw(canvas);
 						if (m != null) {

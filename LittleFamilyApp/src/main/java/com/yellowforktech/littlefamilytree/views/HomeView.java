@@ -63,6 +63,14 @@ public class HomeView extends ScaledSpritedClippedSurfaceView {
         activitySprites.add(s);
     }
 
+    public boolean isScaleSet() {
+        return scaleSet;
+    }
+
+    public void setScaleSet(boolean scaleSet) {
+        this.scaleSet = scaleSet;
+    }
+
     @Override
     public void doStep() {
         super.doStep();
@@ -104,13 +112,13 @@ public class HomeView extends ScaledSpritedClippedSurfaceView {
         super.doDraw(canvas);
 
         canvas.setMatrix(new Matrix());
-        canvas.translate(0,0);
+        canvas.translate(0, 0);
         lockSprite.setX(getWidth() - lockSprite.getWidth() * 1.5f);
         lockSprite.setY(getHeight() - lockSprite.getHeight() * 1.5f);
         lockSprite.doDraw(canvas);
 		
-		profileSprite.setX(getWidth() - profileSprite.getWidth() * 2.5f);
-        profileSprite.setY(getHeight() - profileSprite.getHeight() * 1.5f);
+		profileSprite.setX(lockSprite.getX() - profileSprite.getWidth() * 1.2f);
+        profileSprite.setY(lockSprite.getY());
         profileSprite.doDraw(canvas);
     }
 

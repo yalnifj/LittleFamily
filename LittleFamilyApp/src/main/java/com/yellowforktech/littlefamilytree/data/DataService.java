@@ -743,23 +743,28 @@ public class DataService implements AuthTask.Listener {
     }
 
     public LittlePerson getDefaultPerson() throws Exception {
+        return getDefaultPerson(false);
+    }
+
+    public LittlePerson getDefaultPerson(boolean ignoreLocal) throws Exception {
         LittlePerson person = null;
-        String idStr = getDBHelper().getProperty(DataService.ROOT_PERSON_ID);
-        if (idStr!=null) {
-            try {
-                int id = Integer.parseInt(idStr);
-                person = getDBHelper().getPersonById(id);
-            } catch (Exception e) {
-                Log.e("DataService", "Error loading property", e);
-            }
-        }
-        else {
-            person = getDBHelper().getFirstPerson();
-            if (person!=null) {
+        if (!ignoreLocal) {
+            String idStr = getDBHelper().getProperty(DataService.ROOT_PERSON_ID);
+            if (idStr != null) {
                 try {
-                    getDBHelper().saveProperty(DataService.ROOT_PERSON_ID, String.valueOf(person.getId()));
+                    int id = Integer.parseInt(idStr);
+                    person = getDBHelper().getPersonById(id);
                 } catch (Exception e) {
-                    Log.e("DataService", "Error saving property", e);
+                    Log.e("DataService", "Error loading property", e);
+                }
+            } else {
+                person = getDBHelper().getFirstPerson();
+                if (person != null) {
+                    try {
+                        getDBHelper().saveProperty(DataService.ROOT_PERSON_ID, String.valueOf(person.getId()));
+                    } catch (Exception e) {
+                        Log.e("DataService", "Error saving property", e);
+                    }
                 }
             }
         }
@@ -768,9 +773,12 @@ public class DataService implements AuthTask.Listener {
             fireNetworkStateChanged(DataNetworkState.REMOTE_STARTING);
             waitForAuth();
             Person fsPerson = remoteService.getCurrentPerson();
-            person = DataHelper.buildLittlePerson(fsPerson, context, remoteService, true);
-            person.setTreeLevel(0);
-            getDBHelper().persistLittlePerson(person);
+            person = getPersonByRemoteId(fsPerson.getId());
+            if (person==null) {
+                person = DataHelper.buildLittlePerson(fsPerson, context, remoteService, true);
+                person.setTreeLevel(0);
+                getDBHelper().persistLittlePerson(person);
+            }
             fireNetworkStateChanged(DataNetworkState.REMOTE_FINISHED);
         } else {
             if (person.getTreeLevel()==null) {

@@ -199,6 +199,7 @@ public class PGVLoginActivity extends Activity implements AuthTask.Listener, Per
             pd.setMessage("Loading person data from PhpGedView...");
             intent = new Intent();
             PersonLoaderTask task = new PersonLoaderTask(this, this);
+            task.setIgnoreLocal(true);
             task.execute();
         }
         else {

@@ -14,6 +14,7 @@ public class PersonLoaderTask extends AsyncTask<Integer, Integer, LittlePerson> 
     private Listener listener;
     private Context context;
     private DataService dataService;
+    private boolean ignoreLocal = false;
 
     public PersonLoaderTask(Listener listener, Context context) {
         this.listener = listener;
@@ -22,20 +23,28 @@ public class PersonLoaderTask extends AsyncTask<Integer, Integer, LittlePerson> 
         dataService.setContext(context);
     }
 
+    public boolean isIgnoreLocal() {
+        return ignoreLocal;
+    }
+
+    public void setIgnoreLocal(boolean ignoreLocal) {
+        this.ignoreLocal = ignoreLocal;
+    }
+
     @Override
     protected LittlePerson doInBackground(Integer[] id) {
         Log.d(this.getClass().getSimpleName(), "Starting PersonLoaderTask.doInBackground "+id);
         LittlePerson person = null;
         try {
-            if (id==null || id.length==0) {
-                person = dataService.getDefaultPerson();
+            if (id == null || id.length == 0) {
+                person = dataService.getDefaultPerson(ignoreLocal);
             } else {
                 person = dataService.getPersonById(id[0]);
             }
-            if (person!=null) {
+            if (person != null) {
                 dataService.getMediaForPerson(person);
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             Log.e(this.getClass().getSimpleName(), "error", e);
         }
         return person;

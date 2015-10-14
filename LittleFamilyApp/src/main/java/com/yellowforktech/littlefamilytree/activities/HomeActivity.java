@@ -19,6 +19,7 @@ import com.yellowforktech.littlefamilytree.sprites.MovingTouchStateAnimatedBitma
 import com.yellowforktech.littlefamilytree.sprites.PersonLeavesButton;
 import com.yellowforktech.littlefamilytree.sprites.TouchEventGameSprite;
 import com.yellowforktech.littlefamilytree.sprites.TouchStateAnimatedBitmapSprite;
+import com.yellowforktech.littlefamilytree.util.ImageHelper;
 import com.yellowforktech.littlefamilytree.views.HomeView;
 
 import java.io.FileNotFoundException;
@@ -27,7 +28,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import com.yellowforktech.littlefamilytree.util.*;
 
 public class HomeActivity extends LittleFamilyActivity {
     public static final String TOPIC_ANIMATE_CAT = "animateCat";
@@ -99,6 +99,8 @@ public class HomeActivity extends LittleFamilyActivity {
             int maxHeight = (int) (800*dm.density);
             homeView.setMaxHeight(maxHeight);
             homeView.setMaxWidth(maxWidth);
+            homeView.setScaleSet(false);
+            homeView.setScale(1.0f);
 
             Bitmap backBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.house_background2);
             homeBackground = new ClippedRepeatedBackgroundSprite(backBitmap, maxWidth, maxHeight);
@@ -112,11 +114,9 @@ public class HomeActivity extends LittleFamilyActivity {
 			if (selectedPerson!=null) {
 				Bitmap photo = null;
 				if (selectedPerson.getPhotoPath() != null) {
-					photo = ImageHelper.loadBitmapFromFile(selectedPerson.getPhotoPath(), ImageHelper.getOrientation(selectedPerson.getPhotoPath()), 40, 40, false);
-					
+					photo = ImageHelper.loadBitmapFromFile(selectedPerson.getPhotoPath(), ImageHelper.getOrientation(selectedPerson.getPhotoPath()), (int) (40*dm.density), (int) (30*dm.density), false);
 				} else {
-					photo = ImageHelper.loadBitmapFromResource(this, selectedPerson.getDefaultPhotoResource(), 0, 40, 40);
-					
+					photo = ImageHelper.loadBitmapFromResource(this, selectedPerson.getDefaultPhotoResource(), 0, (int)(30*dm.density), (int)(30*dm.density));
 				}
 				TouchEventGameSprite profileSprite = new TouchEventGameSprite(photo, LittleFamilyActivity.TOPIC_START_PROFILE);
 				profileSprite.setSelectable(true);

@@ -76,8 +76,8 @@ public class ClippedRepeatedBackgroundSprite extends Sprite {
             clipX = 0;
         } else {
             if (clipX < 0) clipX = 0;
-            else if (clipX + (int) (width) > maxWidth)
-                clipX = (int) ((maxWidth - width));
+            else if (clipX*scale + width >= maxWidth*scale)
+                clipX = (int) (maxWidth - width/scale);
         }
 
 
@@ -85,8 +85,8 @@ public class ClippedRepeatedBackgroundSprite extends Sprite {
             clipY = 0;
         } else {
             if (clipY < 0) clipY = 0;
-            else if (clipY + height > maxHeight)
-                clipY = (int) ((maxHeight) - height);
+            else if (clipY*scale + height >= maxHeight*scale)
+                clipY = (int) (maxHeight - height/scale);
         }
         return true;
     }

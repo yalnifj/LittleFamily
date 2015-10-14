@@ -204,12 +204,8 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
     @Override
     public void onComplete(LittlePerson person) {
         familyCount = 0;
-        if (family==null) {
-            family = new ArrayList<>();
-        }
-        if (!family.contains(person)) {
-            family.add(person);
-        }
+        family = new ArrayList<>();
+        family.add(person);
         FamilyLoaderTask task = new FamilyLoaderTask(this, this);
         task.setGetInLaws(false);
         task.execute(person);

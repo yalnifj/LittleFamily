@@ -154,6 +154,7 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
             pd.setMessage("Loading person data from FamilySearch...");
             intent = new Intent();
             PersonLoaderTask task = new PersonLoaderTask(this, this);
+            task.setIgnoreLocal(true);
             task.execute();
         }
         else {
