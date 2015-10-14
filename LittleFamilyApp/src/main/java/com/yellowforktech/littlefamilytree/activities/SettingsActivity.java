@@ -19,6 +19,7 @@ import android.util.Log;
 
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.data.DataService;
+import com.yellowforktech.littlefamilytree.data.LittlePerson;
 
 import java.util.List;
 import java.util.Locale;
@@ -45,6 +46,7 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
     private static final boolean ALWAYS_SIMPLE_PREFS = false;
     protected TextToSpeech tts;
     protected ListPreference voicePref;
+    protected static LittlePerson selectedPerson;
 
 
     @Override
@@ -52,6 +54,9 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
         super.onPostCreate(savedInstanceState);
 
         tts = new TextToSpeech(this, this);
+
+        Intent intent = getIntent();
+        selectedPerson = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
 
         setupSimplePreferencesScreen();
     }
@@ -163,6 +168,7 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 Intent intent = new Intent( SettingsActivity.this, PersonSearchActivity.class );
+                intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, selectedPerson);
                 startActivity(intent);
                 return true;
             }
@@ -375,6 +381,7 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     Intent intent = new Intent( getActivity(), PersonSearchActivity.class );
+                    intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, selectedPerson);
                     startActivity(intent);
                     return true;
                 }

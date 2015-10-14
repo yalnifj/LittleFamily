@@ -36,6 +36,7 @@ Please wait...</string>
     <string name="uncle">Uncle</string>
     <string name="niece">Niece</string>
     <string name="nephew">Nephew</string>
+    <string name="unknown">Unknown</string>
 	
 	<string name="great3">Third</string>
 	<string name="great4">Fourth</string>
@@ -108,6 +109,7 @@ Please wait...</string>
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="gender">Gender</string>
+    <string name="relationship">Relationship</string>
     <string name="birthDate">Birth Date</string>
 	<string name="birthYear">Birth Year</string>
     <string name="birthPlace">Birth Place</string>

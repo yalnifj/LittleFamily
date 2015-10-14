@@ -301,6 +301,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
 		public void doAction(boolean success) {
 			if (success) {
 				Intent intent = new Intent(LittleFamilyActivity.this, SettingsActivity.class);
+                intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, selectedPerson);
 				startActivity(intent);
 			} else {
 				Toast.makeText(LittleFamilyActivity.this, "Unable to verify password", Toast.LENGTH_LONG).show();

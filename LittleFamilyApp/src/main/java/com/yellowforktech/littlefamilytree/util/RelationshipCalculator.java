@@ -15,6 +15,7 @@ import java.util.List;
 public class RelationshipCalculator
 {
 	public static String getRelationship(LittlePerson me, LittlePerson p, Context context) {
+		if (me==null || p==null) return "";
 		if (me.equals(p)) return context.getResources().getString(R.string.you);
 		if (p.getTreeLevel()!=null && me.getTreeLevel()!=null) {
 			DataService dataService = DataService.getInstance();

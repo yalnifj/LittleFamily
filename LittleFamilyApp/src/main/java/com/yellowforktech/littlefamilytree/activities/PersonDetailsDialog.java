@@ -25,12 +25,14 @@ import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.data.Media;
 import com.yellowforktech.littlefamilytree.util.ImageHelper;
+import com.yellowforktech.littlefamilytree.util.RelationshipCalculator;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class PersonDetailsDialog extends DialogFragment implements CompoundButton.OnCheckedChangeListener, View.OnClickListener, ForceSynceTask.Listener {
     private LittlePerson person;
+	private LittlePerson selectedPerson;
 	private SimpleDateFormat df = new SimpleDateFormat("yyyy");
 	private View view;
 	private ProgressDialog pd;
@@ -41,7 +43,8 @@ public class PersonDetailsDialog extends DialogFragment implements CompoundButto
 	@Override
 	public void setArguments(Bundle args) {
 		super.setArguments(args);
-		person = (LittlePerson) args.getSerializable(ChooseFamilyMember.SELECTED_PERSON);
+		selectedPerson = (LittlePerson) args.getSerializable(ChooseFamilyMember.SELECTED_PERSON);
+		person = (LittlePerson) args.getSerializable("person");
 	}
 
     @Override
@@ -76,6 +79,10 @@ public class PersonDetailsDialog extends DialogFragment implements CompoundButto
 
 		TextView genderView = (TextView) view.findViewById(R.id.txtGender);
 		genderView.setText(person.getGender().toString());
+
+		TextView relationshipView = (TextView) view.findViewById(R.id.txtRelationship);
+		String relationship = RelationshipCalculator.getRelationship(selectedPerson, person, getActivity());
+		relationshipView.setText(relationship);
 
 		CheckBox activeBox = (CheckBox) view.findViewById(R.id.chkActive);
 		activeBox.setChecked(person.isActive());
