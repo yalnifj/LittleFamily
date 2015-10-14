@@ -133,7 +133,7 @@ public class HeritageDressUpActivity extends LittleFamilyActivity implements Dre
                 if (dc!=null) {
                     String thumbnailFile = dc.getThumbnail();
                     try {
-                        InputStream is = getAssets().open(thumbnailFile);
+                        InputStream is = HeritageDressUpActivity.this.getAssets().open(thumbnailFile);
                         Bitmap thumbnail = ImageHelper.loadBitmapFromStream(is, 0, (int) (120 * dm.density), (int) (120 * dm.density));
                         //Bitmap thumbnail = BitmapFactory.decodeStream(is);
                         map.put(index, thumbnail);
@@ -157,16 +157,8 @@ public class HeritageDressUpActivity extends LittleFamilyActivity implements Dre
                 ImageView dollImage = new ImageView(HeritageDressUpActivity.this);
                 DollConfig dc = allDolls.get(index);
                 if (dc!=null) {
-                    String thumbnailFile = dc.getThumbnail();
-                    try {
-                        InputStream is = getAssets().open(thumbnailFile);
-                        Bitmap thumbnail = ImageHelper.loadBitmapFromStream(is, 0, (int) (120 * dm.density), (int) (120 * dm.density));
-                        //Bitmap thumbnail = BitmapFactory.decodeStream(is);
-                        dollImage.setImageBitmap(thumbnail);
-                        is.close();
-                    } catch (IOException e) {
-                        Log.e("DressUpDollsAdapter", "Error opening asset file", e);
-                    }
+                    Bitmap thumbnail = integerBitmapMap.get(index);
+                    dollImage.setImageBitmap(thumbnail);
                 }
                 dollImage.setTag(dc);
                 dollImage.setOnClickListener(HeritageDressUpActivity.this);

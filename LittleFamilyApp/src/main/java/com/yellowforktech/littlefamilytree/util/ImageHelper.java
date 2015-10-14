@@ -245,8 +245,10 @@ public class ImageHelper {
             if (sourceWidth > targetWidth || sourceHeight > targetHeight) {
                 options.inJustDecodeBounds = false;
                 options.inSampleSize = calculateInSampleSize(options, targetWidth, targetHeight);
+                is.reset();
                 bitmap = BitmapFactory.decodeStream(is, null, options);
             } else {
+                is.reset();
                 bitmap = BitmapFactory.decodeStream(is);
             }
 

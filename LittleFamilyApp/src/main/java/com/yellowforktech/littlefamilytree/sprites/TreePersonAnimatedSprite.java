@@ -78,19 +78,6 @@ public class TreePersonAnimatedSprite extends Sprite {
         this.detailWidth = 400;
         this.detailHeight = 300;
 
-        activityButtons = new ArrayList<>();
-        activityButtons.add(activity.getMatchBtn());
-        activityButtons.add(activity.getPuzzleBtn());
-        activityButtons.add(activity.getPaintBtn());
-        activityButtons.add(activity.getPencilBtn());
-        activityButtons.add(activity.getBubbleBtn());
-        spActivityButtons = new ArrayList<>();
-        spActivityButtons.add(activity.getMatchBtn());
-        spActivityButtons.add(activity.getPuzzleBtn());
-        spActivityButtons.add(activity.getPaintBtn());
-        spActivityButtons.add(activity.getPencilBtn());
-        spActivityButtons.add(activity.getBubbleBtn());
-
         if (showSpouse) {
             this.setWidth(leftLeaf.getWidth() + rightLeaf.getWidth());
         } else {
@@ -115,9 +102,7 @@ public class TreePersonAnimatedSprite extends Sprite {
                 InputStream is = activity.getAssets().open(thumbnailFile);
                 dressUpBtn = ImageHelper.loadBitmapFromStream(is, 0, MyTreeActivity.buttonSize, MyTreeActivity.buttonSize);
                 if (node.getPerson().getGender() == GenderType.Female && showSpouse) {
-                    spActivityButtons.add(dressUpBtn);
-                } else {
-                    activityButtons.add(dressUpBtn);
+                    spDressUpBtn = dressUpBtn;
                 }
                 is.close();
             } catch (IOException e) {
@@ -147,11 +132,11 @@ public class TreePersonAnimatedSprite extends Sprite {
             String thumbnailFile = dollConfig.getThumbnail();
             try {
                 InputStream is = activity.getAssets().open(thumbnailFile);
-                spDressUpBtn = ImageHelper.loadBitmapFromStream(is, 0, MyTreeActivity.buttonSize, MyTreeActivity.buttonSize);
+                Bitmap spThumb = ImageHelper.loadBitmapFromStream(is, 0, MyTreeActivity.buttonSize, MyTreeActivity.buttonSize);
                 if (node.getSpouse().getGender()==GenderType.Female) {
-                    spActivityButtons.add(spDressUpBtn);
+                    spDressUpBtn = spThumb;
                 } else {
-                    activityButtons.add(spDressUpBtn);
+                    dressUpBtn = spThumb;
                 }
                 is.close();
             } catch (IOException e) {
@@ -351,6 +336,16 @@ public class TreePersonAnimatedSprite extends Sprite {
                 String relationship = node.getAncestralRelationship(detailPerson, activity);
                 canvas.drawText(relationship, getX() + leftLeaf.getWidth() + detailWidth / 2, getY() + 70, textPaint);
 
+                if (activityButtons==null) {
+                    activityButtons = new ArrayList<>();
+                    activityButtons.add(activity.getMatchBtn());
+                    activityButtons.add(activity.getPuzzleBtn());
+                    activityButtons.add(activity.getPaintBtn());
+                    activityButtons.add(activity.getPencilBtn());
+                    activityButtons.add(activity.getBubbleBtn());
+                    if (dressUpBtn != null) activityButtons.add(dressUpBtn);
+                }
+
                 float bx = getX() + leftLeaf.getWidth() + 20;
                 float by = getY() + detailHeight - MyTreeActivity.buttonSize * 2;
                 int count = 1;
@@ -374,6 +369,16 @@ public class TreePersonAnimatedSprite extends Sprite {
                 canvas.drawText(name, getX() + getWidth() + detailWidth / 2, getY() + 30, textPaint);
                 String relationship = node.getAncestralRelationship(detailPerson, activity);
                 canvas.drawText(relationship, getX() + getWidth() + detailWidth / 2, getY() + 70, textPaint);
+
+                if (spActivityButtons==null) {
+                    spActivityButtons = new ArrayList<>();
+                    spActivityButtons.add(activity.getMatchBtn());
+                    spActivityButtons.add(activity.getPuzzleBtn());
+                    spActivityButtons.add(activity.getPaintBtn());
+                    spActivityButtons.add(activity.getPencilBtn());
+                    spActivityButtons.add(activity.getBubbleBtn());
+                    if (spDressUpBtn != null) spActivityButtons.add(spDressUpBtn);
+                }
 
                 float bx = getX() + getWidth() + 20;
                 float by = getY() + detailHeight - MyTreeActivity.buttonSize * 2;
@@ -464,7 +469,9 @@ public class TreePersonAnimatedSprite extends Sprite {
                             if (button!=null) {
                                 if (x > bx * scale && y > by * scale
                                         && x < (bx + button.getWidth()) * scale && y < (by + button.getHeight()) * scale) {
-                                    sendEvent(button, node.getPerson());
+                                    LittlePerson sendPerson = node.getPerson();
+                                    if (sendPerson.getGender()==GenderType.Female) sendPerson = node.getSpouse();
+                                    sendEvent(button, sendPerson);
                                     break;
                                 }
                                 bx += button.getWidth() + 20;
@@ -489,7 +496,9 @@ public class TreePersonAnimatedSprite extends Sprite {
                                 if (button!=null) {
                                     if (x > bx * scale && y > by * scale
                                             && x < (bx + button.getWidth()) * scale && y < (by + button.getHeight()) * scale) {
-                                        sendEvent(button, node.getSpouse());
+                                        LittlePerson sendPerson = node.getPerson();
+                                        if (sendPerson.getGender()!=GenderType.Female) sendPerson = node.getSpouse();
+                                        sendEvent(button, sendPerson);
                                         break;
                                     }
                                     bx += button.getWidth() + 20;
