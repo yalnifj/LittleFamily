@@ -35,7 +35,6 @@ public class AnimatedBitmapSprite extends Sprite implements BitmapSequenceLoader
     protected int loadingState;
     protected boolean flipHoriz;
     protected boolean flipVert;
-    protected Matrix flipMatrix;
 
     public AnimatedBitmapSprite() {
         super();
@@ -53,7 +52,6 @@ public class AnimatedBitmapSprite extends Sprite implements BitmapSequenceLoader
         selectedPaint.setStrokeWidth(3);
         selectedPaint.setAlpha(150);
         selectedPaint.setStyle(Paint.Style.STROKE);
-        flipMatrix = new Matrix();
     }
 
     public AnimatedBitmapSprite(Bitmap bitmap) {
@@ -64,7 +62,6 @@ public class AnimatedBitmapSprite extends Sprite implements BitmapSequenceLoader
         bitmaps.put(0, list);
         this.setWidth(bitmap.getWidth());
         this.setHeight(bitmap.getHeight());
-        flipMatrix = new Matrix();
     }
 
     public AnimatedBitmapSprite(Map<Integer, List<Bitmap>> bitmaps) {
@@ -74,7 +71,7 @@ public class AnimatedBitmapSprite extends Sprite implements BitmapSequenceLoader
         frame = 0;
         stepsPerFrame = 3;
         basePaint = new Paint();
-        flipMatrix = new Matrix();
+        
     }
 
     public Map<Integer, List<Bitmap>> getBitmaps() {
@@ -163,21 +160,21 @@ public class AnimatedBitmapSprite extends Sprite implements BitmapSequenceLoader
 
     public void buildMatrix() {
         if (flipHoriz || flipVert) {
-            int tx = 0;
-            int ty = 0;
+			matrix = new Matrix();
+            float tx = 0;
+            float ty = 0;
             float sx = scale;
             if (flipHoriz) {
                 sx = -scale;
-                tx = (int) ((this.getWidth() + this.getX()*2)*scale);
+                tx = ((this.getWidth() + this.getX()*2)*scale);
             }
             float sy = scale;
             if (flipVert) {
                 sy = -scale;
-                ty = (int) ((this.getHeight()+this.getY()*2)*scale);
+                ty = ((this.getHeight() + this.getY()*2)*scale);
             }
-            flipMatrix.postScale(sx, sy);
-            flipMatrix.postTranslate(tx, ty);
-            matrix = flipMatrix;
+            matrix.postScale(sx, sy);
+            matrix.postTranslate(tx, ty);
         } else {
             matrix = null;
         }
@@ -194,6 +191,10 @@ public class AnimatedBitmapSprite extends Sprite implements BitmapSequenceLoader
 
     @Override
     public void doStep() {
+		if (oldScale!=scale) {
+			buildMatrix();
+			oldScale = scale;
+		}
         if (bitmaps!=null && bitmaps.get(state)==null && bitmapIds.get(state)!=null && resources!=null) {
             List<Bitmap> loaded = new ArrayList<>(bitmapIds.get(state).size());
             for (Integer rid : bitmapIds.get(state)) {
@@ -242,10 +243,6 @@ public class AnimatedBitmapSprite extends Sprite implements BitmapSequenceLoader
                             Rect rect = new Rect();
                             rect.set((int) (x), (int) (y), (int) ((x + width)), (int) ((y + height)));
                             if (matrix != null) {
-                                if (oldScale!=scale) {
-                                    buildMatrix();
-                                    oldScale = scale;
-                                }
                                 canvas.save();
                                 canvas.setMatrix(matrix);
                             }
@@ -269,8 +266,8 @@ public class AnimatedBitmapSprite extends Sprite implements BitmapSequenceLoader
             if (bitmaps!=null) {
                 List<Bitmap> frames = bitmaps.get(state);
                 Bitmap bitmap = frames.get(frame);
-                int bx = (int)(tx-x*scale);
-                int by = (int)(ty-y*scale);
+                int bx = (int)((tx/scale)-x);
+                int by = (int)((ty/scale)-y);
                 if (bx < bitmap.getWidth() && by < bitmap.getHeight()) {
                     int color = bitmap.getPixel(bx, by);
                     int alpha = Color.alpha(color);

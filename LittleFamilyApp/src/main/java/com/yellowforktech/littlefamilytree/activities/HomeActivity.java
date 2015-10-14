@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import com.yellowforktech.littlefamilytree.util.*;
 
 public class HomeActivity extends LittleFamilyActivity {
     public static final String TOPIC_ANIMATE_CAT = "animateCat";
@@ -107,6 +108,20 @@ public class HomeActivity extends LittleFamilyActivity {
 
             Bitmap starBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.star1);
             homeView.setStarBitmap(starBitmap);
+			
+			if (selectedPerson!=null) {
+				Bitmap photo = null;
+				if (selectedPerson.getPhotoPath() != null) {
+					photo = ImageHelper.loadBitmapFromFile(selectedPerson.getPhotoPath(), ImageHelper.getOrientation(selectedPerson.getPhotoPath()), 40, 40, false);
+					
+				} else {
+					photo = ImageHelper.loadBitmapFromResource(this, selectedPerson.getDefaultPhotoResource(), 0, 40, 40);
+					
+				}
+				TouchEventGameSprite profileSprite = new TouchEventGameSprite(photo, LittleFamilyActivity.TOPIC_START_PROFILE);
+				profileSprite.setSelectable(true);
+				homeView.setProfileSprite(profileSprite);
+			}
 
             Bitmap cloudBm1 = BitmapFactory.decodeResource(getResources(), R.drawable.house_cloud1);
             MovingTouchStateAnimatedBitmapSprite cloud1 = new MovingTouchStateAnimatedBitmapSprite(cloudBm1, this);

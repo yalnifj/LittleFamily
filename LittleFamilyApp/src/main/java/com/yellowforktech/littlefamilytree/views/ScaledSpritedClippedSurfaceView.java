@@ -7,6 +7,7 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 
 import com.yellowforktech.littlefamilytree.sprites.Sprite;
+import android.graphics.*;
 
 /**
  * Created by Parents on 10/12/2015.
@@ -149,7 +150,17 @@ public class ScaledSpritedClippedSurfaceView extends SpritedClippedSurfaceView {
                 s.setScale(scale);
                 if ((s.getX() + s.getWidth()) * scale >= clipX*scale && s.getX() * scale <= getWidth() + clipX*scale
                         && (s.getY() + s.getHeight()) * scale >= clipY * scale && s.getY() * scale <= getHeight() + clipY*scale) {
-                    s.doDraw(canvas);
+						Matrix m = s.getMatrix();
+						Matrix old = null;
+						if (m != null) {
+							old = new Matrix();
+							old.set(m);
+							m.postTranslate(-clipX, -clipY);
+						}
+						s.doDraw(canvas);
+						if (m != null) {
+							m.set(old);
+						}
                 }
             }
         }

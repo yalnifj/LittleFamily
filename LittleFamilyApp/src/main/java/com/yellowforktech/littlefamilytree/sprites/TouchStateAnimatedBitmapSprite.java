@@ -124,8 +124,8 @@ public class TouchStateAnimatedBitmapSprite extends AnimatedBitmapSprite {
                     return true;
                 }
                 if (touchRectangles.get(state)!=null) {
-                    int px = (int)(tx-x*scale);
-                    int py = (int)(ty-y*scale);
+                    int px = (int)(tx/scale-x);
+                    int py = (int)(ty/scale-y);
                     if (touchRectangles.get(state).contains(px, py)) {
                         return true;
                     }
@@ -133,8 +133,8 @@ public class TouchStateAnimatedBitmapSprite extends AnimatedBitmapSprite {
                 if (bitmaps!=null) {
                     List<Bitmap> frames = bitmaps.get(state);
                     Bitmap bitmap = frames.get(frame);
-                    int px = (int)(tx-x*scale);
-                    int py = (int)(ty-y*scale);
+                    int px = (int)(tx/scale-x);
+                    int py = (int)(ty/scale-y);
                     if (px<bitmap.getWidth() && py < bitmap.getHeight()) {
                         int color = bitmap.getPixel(px, py);
                         int alpha = Color.alpha(color);

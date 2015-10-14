@@ -22,6 +22,7 @@ import java.util.Random;
 public class HomeView extends ScaledSpritedClippedSurfaceView {
     private Bitmap lockBitmap;
     private TouchEventGameSprite lockSprite;
+	private TouchEventGameSprite profileSprite;
     private long timer;
     private List<Sprite> activitySprites;
     private Random random;
@@ -47,6 +48,16 @@ public class HomeView extends ScaledSpritedClippedSurfaceView {
         lockSprite = new TouchEventGameSprite(lockBitmap, LittleFamilyActivity.TOPIC_START_SETTINGS);
         lockSprite.setIgnoreAlpha(true);
     }
+
+	public void setProfileSprite(TouchEventGameSprite profileSprite)
+	{
+		this.profileSprite = profileSprite;
+	}
+
+	public TouchEventGameSprite getProfileSprite()
+	{
+		return profileSprite;
+	}
 
     public void addActivitySprite(Sprite s) {
         activitySprites.add(s);
@@ -97,6 +108,10 @@ public class HomeView extends ScaledSpritedClippedSurfaceView {
         lockSprite.setX(getWidth() - lockSprite.getWidth() * 1.5f);
         lockSprite.setY(getHeight() - lockSprite.getHeight() * 1.5f);
         lockSprite.doDraw(canvas);
+		
+		profileSprite.setX(getWidth() - profileSprite.getWidth() * 2.5f);
+        profileSprite.setY(getHeight() - profileSprite.getHeight() * 1.5f);
+        profileSprite.doDraw(canvas);
     }
 
     @Override
@@ -105,6 +120,9 @@ public class HomeView extends ScaledSpritedClippedSurfaceView {
 
         if (lockSprite.inSprite(x, y)) {
             lockSprite.onSelect(x, y);
+        }
+		if (profileSprite.inSprite(x, y)) {
+            profileSprite.onSelect(x, y);
         }
     }
 
@@ -115,8 +133,12 @@ public class HomeView extends ScaledSpritedClippedSurfaceView {
         if (lockSprite.inSprite(x, y)) {
             lockSprite.onRelease(x, y);
         }
+		if (profileSprite.inSprite(x, y)) {
+            profileSprite.onRelease(x, y);
+        }
 
         lockSprite.setSelected(false);
+		profileSprite.setSelected(false);
     }
 
 }

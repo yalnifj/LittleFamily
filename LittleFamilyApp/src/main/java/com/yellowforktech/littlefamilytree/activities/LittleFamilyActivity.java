@@ -44,6 +44,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     public static final String TOPIC_START_SETTINGS = "startSettings";
 	public static final String TOPIC_START_SONG = "startSong";
     public static final String TOPIC_START_FLYING = "startFlying";
+	public static final String TOPIC_START_PROFILE = "startProfile";
     protected TextToSpeech tts;
     protected MediaPlayer successPlayer;
     protected MediaPlayer buzzPlayer;
@@ -97,6 +98,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         EventQueue.getInstance().subscribe(TOPIC_START_SETTINGS, this);
         EventQueue.getInstance().subscribe(TOPIC_START_SONG, this);
         EventQueue.getInstance().subscribe(TOPIC_START_FLYING, this);
+		EventQueue.getInstance().subscribe(TOPIC_START_PROFILE, this);
     }
 
     @Override
@@ -121,6 +123,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         EventQueue.getInstance().unSubscribe(TOPIC_START_SETTINGS, this);
         EventQueue.getInstance().unSubscribe(TOPIC_START_SONG, this);
         EventQueue.getInstance().unSubscribe(TOPIC_START_FLYING, this);
+		EventQueue.getInstance().unSubscribe(TOPIC_START_PROFILE, this);
     }
 
     public void showLoadingDialog() {
@@ -346,6 +349,9 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
             case TOPIC_START_FLYING:
                 startFlyingGame(person);
                 break;
+			case TOPIC_START_PROFILE:
+				onProfileButtonPressed(null);
+				break;
         }
     }
 
