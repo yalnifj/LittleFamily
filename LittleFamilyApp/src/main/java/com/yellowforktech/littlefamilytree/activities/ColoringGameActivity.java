@@ -64,7 +64,10 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Random
             people.add(selectedPerson);
         }
 
-        mediaChooser = new RandomMediaChooser(people, this, this);
+        mediaChooser = RandomMediaChooser.getInstance();
+		mediaChooser.setActivity(this);
+		mediaChooser.setListener(this);
+		mediaChooser.addPeople(people);
 
         setupTopBar();
     }

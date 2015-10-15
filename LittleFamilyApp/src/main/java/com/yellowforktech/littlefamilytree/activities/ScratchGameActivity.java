@@ -54,7 +54,10 @@ public class ScratchGameActivity extends LittleFamilyActivity implements Scratch
             people.add(selectedPerson);
         }
 
-        mediaChooser = new RandomMediaChooser(people, this, this);
+        mediaChooser = RandomMediaChooser.getInstance();
+		mediaChooser.setActivity(this);
+		mediaChooser.setListener(this);
+		mediaChooser.addPeople(people);
 
         setupTopBar();
     }

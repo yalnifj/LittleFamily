@@ -35,11 +35,38 @@ public class RandomMediaChooser implements MemoriesLoaderTask.Listener {
     private int maxUsed = 20;
 	
 	private Random random;
+	
+	private static RandomMediaChooser instance;
 
-    public RandomMediaChooser(List<LittlePerson> people, LittleFamilyActivity activity, RandomMediaListener listener) {
-        this.people = people;
-        this.activity = activity;
-        this.listener = listener;
+	public void setListener(RandomMediaListener listener)
+	{
+		this.listener = listener;
+	}
+
+	public RandomMediaListener getListener()
+	{
+		return listener;
+	}
+
+	public void setActivity(LittleFamilyActivity activity)
+	{
+		this.activity = activity;
+	}
+
+	public LittleFamilyActivity getActivity()
+	{
+		return activity;
+	}
+	
+	public static RandomMediaChooser getInstance() {
+		if (instance==null) {
+			instance = new RandomMediaChooser();
+		}
+		return instance;
+	}
+
+    private RandomMediaChooser() {
+        this.people = new LinkedList<>();
 		
 		queue = new LinkedList<>();
 		queue.addAll(people);
@@ -48,15 +75,6 @@ public class RandomMediaChooser implements MemoriesLoaderTask.Listener {
         noPhotos = new ArrayList<>();
 		
 		random = new Random();
-
-        Iterator<LittlePerson> iterator = this.people.iterator();
-        while(iterator.hasNext()) {
-            LittlePerson person = iterator.next();
-            if (person.isHasMedia()!=null && person.isHasMedia()==false) {
-                noPhotos.add(person);
-                iterator.remove();
-            }
-        }
     }
 
     public int getMaxTries() {
@@ -87,8 +105,16 @@ public class RandomMediaChooser implements MemoriesLoaderTask.Listener {
         return people;
     }
 
-    public void setPeople(List<LittlePerson> people) {
-        this.people = people;
+    public void addPeople(List<LittlePerson> people) {
+        for (LittlePerson person : people) {
+			 if (!this.people.contains(person)) {
+				 if (person.isHasMedia()!=null && person.isHasMedia()==false) {
+					 noPhotos.add(person);
+				 } else {
+					this.people.add(person);
+				 }
+			 }
+		}
     }
 
     public void loadRandomImage() {
