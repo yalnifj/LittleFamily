@@ -219,7 +219,9 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
                 for(int p=cultures.size()-1; p>=0; p--) {
                     HeritagePath path = cultures.get(p);
                     Paint paint = new Paint();
-                    paint.setTextSize((int)(this.getHeight()*0.05));
+					int textSize = (int)(this.getHeight()*0.05);
+					if (textSize > 20) textSize = 20;
+                    paint.setTextSize(textSize);
                     paint.setColor(Color.BLACK);
                     paint.setTextAlign(Paint.Align.LEFT);
                     paint.setStrokeWidth(2);
