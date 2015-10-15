@@ -124,11 +124,12 @@ public class TouchStateAnimatedBitmapSprite extends AnimatedBitmapSprite {
                     return true;
                 }
                 if (touchRectangles.get(state)!=null) {
-                    int px = (int)(tx/scale-x);
-                    int py = (int)(ty/scale-y);
+                    int px = (int)(tx-x);
+                    int py = (int)(ty-y);
                     if (touchRectangles.get(state).contains(px, py)) {
                         return true;
                     }
+					return false;
                 }
                 if (bitmaps!=null) {
                     List<Bitmap> frames = bitmaps.get(state);

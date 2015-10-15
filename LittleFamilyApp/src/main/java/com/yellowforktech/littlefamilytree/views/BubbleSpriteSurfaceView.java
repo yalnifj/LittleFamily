@@ -54,6 +54,7 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
     private AnimatedBitmapSprite childSpot;
     private Paint spotPaint;
     private DisplayMetrics dm;
+	private float bubbleScale =1.0f;
 
     private LittleFamilyActivity activity;
     private List<BubbleCompleteListener> listeners;
@@ -232,7 +233,7 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
                 Random rand = new Random();
                 BubbleAnimatedBitmapSprite bubble = new BubbleAnimatedBitmapSprite(bubbleBm, getWidth(), getHeight(), activity, this, (int) (fatherSpot.getWidth()*0.8));
                 bubble.getBitmaps().put(1, popping);
-                int width = (int) (bubbleBm.getWidth() * (0.5 + rand.nextFloat()));
+                int width = (int) (bubbleBm.getWidth() * bubbleScale * (0.5 + rand.nextFloat()));
                 bubble.setWidth(width);
                 bubble.setHeight(width);
                 int slope = 5 - rand.nextInt(10);
@@ -250,6 +251,9 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
     }
 
     public void createSprites() {
+		if (getHeight() > 800) {
+			bubbleScale = (float) getHeight() / 800;
+		}
         spotBm = BitmapFactory.decodeResource(getResources(), com.yellowforktech.littlefamilytree.R.drawable.bubble_spot);
         spotHBm = BitmapFactory.decodeResource(getResources(), com.yellowforktech.littlefamilytree.R.drawable.bubble_spot_h);
         spotDownBm = BitmapFactory.decodeResource(getResources(), com.yellowforktech.littlefamilytree.R.drawable.bubble_spot_down);
@@ -311,6 +315,7 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
         int fheight  = (int)(getHeight()/2 - sink.getHeight()*0.75f);
         int fwidth = (int) (fheight * fr);
         float scale = (float) fheight / faucet1bm.getHeight();
+		//faucet.setScale((float)fheight/faucet1bm.getHeight());
         faucet.setWidth(fwidth);
         faucet.setHeight(fheight);
         faucet.setX(sink.getX() + sink.getWidth() / 2);
@@ -350,6 +355,7 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
         int pwidth = (int) (pheight * pr);
         soap.setWidth(pwidth);
         soap.setHeight(pheight);
+		//soap.setScale((float)pheight/soap1bm.getHeight());
         soap.setX(faucet.getX() + faucet.getWidth() / 2);
         soap.setY(faucet.getY() + faucet.getHeight() - pheight + 5 * dm.density);
         List<Bitmap> squirting = new ArrayList<>(4);
@@ -375,7 +381,7 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
         soap.setStateTransition(4, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
         soap.setStateTransitionEvent(4, TOPIC_SOAP_ADDED);
         touchRect = new Rect();
-        touchRect.set((int) (soap.getWidth()*0.6f), 0, soap.getWidth(), soap.getHeight());
+        touchRect.set((int) (soap.getWidth()*0.65f), 0, soap.getWidth(), soap.getHeight());
         soap.setTouchRectangles(0, touchRect);
         addSprite(soap);
 
@@ -384,7 +390,7 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
         for (int b = 0; b < count; b++) {
             BubbleAnimatedBitmapSprite bubble = new BubbleAnimatedBitmapSprite(bubbleBm, getWidth(), getHeight(), activity, this, (int) (spotWidth*0.8));
             bubble.getBitmaps().put(1, popping);
-            int width = (int) (bubbleBm.getWidth() * (0.5 + rand.nextFloat()));
+            int width = (int) (bubbleBm.getWidth() * bubbleScale * (0.5 + rand.nextFloat()));
             bubble.setWidth(width);
             bubble.setHeight(width);
             int slope = 5 - rand.nextInt(10);
@@ -405,6 +411,8 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
                 bubble.setSlope(slope);
                 float speed = 5.0f - rand.nextFloat() * 10.0f;
                 bubble.setSpeed(speed);
+				bubble.setWidth((int)(bubbleBm.getWidth()* bubbleScale));
+				bubble.setHeight((int)(bubbleBm.getHeight()* bubbleScale));
                 bubble.setY(rand.nextInt(getHeight() - bubble.getHeight()));
                 bubble.setX(rand.nextInt(getWidth() - bubble.getWidth()));
                 bubble.setPerson(person);
