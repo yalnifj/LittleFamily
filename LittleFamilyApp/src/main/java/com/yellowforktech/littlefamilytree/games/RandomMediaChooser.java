@@ -10,7 +10,6 @@ import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.data.Media;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -20,7 +19,7 @@ import java.util.Random;
  */
 public class RandomMediaChooser implements MemoriesLoaderTask.Listener {
     private List<LittlePerson> people;
-	private LinkedList<LittlePerson> queue;
+	private LinkedList<LittlePerson> familyLoaderQueue;
     private LittlePerson selectedPerson;
     private Media photo;
     private List<Media> usedPhotos;
@@ -68,8 +67,7 @@ public class RandomMediaChooser implements MemoriesLoaderTask.Listener {
     private RandomMediaChooser() {
         this.people = new LinkedList<>();
 		
-		queue = new LinkedList<>();
-		queue.addAll(people);
+		familyLoaderQueue = new LinkedList<>();
 
         usedPhotos = new ArrayList<>(maxUsed);
         noPhotos = new ArrayList<>();
@@ -113,7 +111,10 @@ public class RandomMediaChooser implements MemoriesLoaderTask.Listener {
 				 } else {
 					this.people.add(person);
 				 }
-			 }
+             }
+             if (!familyLoaderQueue.contains(person)) {
+                 familyLoaderQueue.add(person);
+             }
 		}
     }
 
@@ -128,10 +129,10 @@ public class RandomMediaChooser implements MemoriesLoaderTask.Listener {
     }
 
     public void loadMoreFamilyMembers() {
-        if (queue.size()>0) {
+        if (familyLoaderQueue.size()>0) {
             counter++;
             FamilyLoaderTask task = new FamilyLoaderTask(new FamilyLoaderListener(), activity);
-			selectedPerson = queue.poll();
+			selectedPerson = familyLoaderQueue.poll();
             if (selectedPerson!=null) {
                 task.execute(selectedPerson);
             }
@@ -219,7 +220,7 @@ public class RandomMediaChooser implements MemoriesLoaderTask.Listener {
         public void onComplete(ArrayList<LittlePerson> family) {
             int counter =0;
             for (LittlePerson p : family) {
-				if (!queue.contains(p)) queue.add(p);
+				if (!familyLoaderQueue.contains(p)) familyLoaderQueue.add(p);
                 if (!noPhotos.contains(p) && !people.contains(p)) {
 					if (p.isHasMedia()==null || p.isHasMedia()) {
                     	people.add(p);

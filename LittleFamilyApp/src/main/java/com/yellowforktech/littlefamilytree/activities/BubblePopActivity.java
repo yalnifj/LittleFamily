@@ -8,6 +8,7 @@ import com.yellowforktech.littlefamilytree.activities.tasks.FamilyLoaderTask;
 import com.yellowforktech.littlefamilytree.activities.tasks.ParentsLoaderTask;
 import com.yellowforktech.littlefamilytree.activities.tasks.WaitTask;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
+import com.yellowforktech.littlefamilytree.games.RecentPersonTracker;
 import com.yellowforktech.littlefamilytree.views.BubbleSpriteSurfaceView;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public class BubblePopActivity extends LittleFamilyActivity implements ParentsLo
     private Queue<LittlePerson> que;
     private Set<LittlePerson> completed;
     private BubbleSpriteSurfaceView bubbleView;
+    private RecentPersonTracker personTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,8 @@ public class BubblePopActivity extends LittleFamilyActivity implements ParentsLo
 
         Intent intent = getIntent();
         selectedPerson = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
+
+        personTracker = RecentPersonTracker.getInstance();
 
         que = new LinkedList<>();
         que.add(selectedPerson);
@@ -74,12 +78,18 @@ public class BubblePopActivity extends LittleFamilyActivity implements ParentsLo
     public void onComplete(ArrayList<LittlePerson> parents) {
         LittlePerson person = null;
         synchronized (que) {
+            que.addAll(parents);
             ArrayList<LittlePerson> children = new ArrayList<>(3);
             person = que.poll();
-            children.add(person);
+            if (personTracker.personRecentlyUsed(person) && que.size()>0) {
+                ParentsLoaderTask loader = new ParentsLoaderTask(this, this);
+                loader.execute(que.peek());
+                return;
+            }
             completed.add(person);
+            personTracker.addPerson(person);
+            children.add(person);
             bubbleView.setParentsAndChildren(parents, children);
-            que.addAll(parents);
         }
 
         if (person.getTreeLevel()!=null && person.getTreeLevel()<2) {

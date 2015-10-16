@@ -251,9 +251,6 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
     }
 
     public void createSprites() {
-		if (getHeight() > 800) {
-			bubbleScale = (float) getHeight() / 800;
-		}
         spotBm = BitmapFactory.decodeResource(getResources(), com.yellowforktech.littlefamilytree.R.drawable.bubble_spot);
         spotHBm = BitmapFactory.decodeResource(getResources(), com.yellowforktech.littlefamilytree.R.drawable.bubble_spot_h);
         spotDownBm = BitmapFactory.decodeResource(getResources(), com.yellowforktech.littlefamilytree.R.drawable.bubble_spot_down);
@@ -385,6 +382,7 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
         soap.setTouchRectangles(0, touchRect);
         addSprite(soap);
 
+        bubbleScale = 1.25f * ((float) spotWidth) / bubbleBm.getWidth();
         Random rand = new Random();
         int count = rand.nextInt(8) + 4;
         for (int b = 0; b < count; b++) {
@@ -411,8 +409,8 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
                 bubble.setSlope(slope);
                 float speed = 5.0f - rand.nextFloat() * 10.0f;
                 bubble.setSpeed(speed);
-				bubble.setWidth((int)(bubbleBm.getWidth()* bubbleScale));
-				bubble.setHeight((int)(bubbleBm.getHeight()* bubbleScale));
+				bubble.setWidth(spotWidth);
+				bubble.setHeight(spotWidth);
                 bubble.setY(rand.nextInt(getHeight() - bubble.getHeight()));
                 bubble.setX(rand.nextInt(getWidth() - bubble.getWidth()));
                 bubble.setPerson(person);

@@ -1,11 +1,14 @@
 package com.yellowforktech.littlefamilytree.games;
-import java.util.*;
-import com.yellowforktech.littlefamilytree.data.*;
+
+import com.yellowforktech.littlefamilytree.data.LittlePerson;
+
+import java.util.Deque;
+import java.util.LinkedList;
 
 public class RecentPersonTracker
 {
 	private Deque<Integer> recentPersonIds;
-	private int maxRecent = 10;
+	private int maxRecent = 32;
 	
 	private static RecentPersonTracker instance;
 	

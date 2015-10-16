@@ -22,6 +22,7 @@ import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.data.MatchPerson;
 import com.yellowforktech.littlefamilytree.games.MatchingGame;
+import com.yellowforktech.littlefamilytree.games.RecentPersonTracker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,7 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
 	private int flip1 = -1;
 	private int flip2 = -1;
     private boolean flipping;
+    private RecentPersonTracker personTracker;
 
     private int backgroundLoadIndex = 0;
 
@@ -51,8 +53,13 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
         Intent intent = getIntent();
         selectedPerson = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
         people = new ArrayList<>();
-        people.add(selectedPerson);
         flipCount = 0;
+
+        personTracker = RecentPersonTracker.getInstance();
+        if (!personTracker.personRecentlyUsed(selectedPerson)) {
+            people.add(selectedPerson);
+            personTracker.addPerson(selectedPerson);
+        }
 
         gridView = (GridView) findViewById(R.id.gridViewMatch);
         adapter = new MatchGameListAdapter(this);
@@ -71,7 +78,11 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
         flipping = false;
         DataService.getInstance().registerNetworkStateListener(this);
         FamilyLoaderTask task = new FamilyLoaderTask(this, this);
-        task.execute(people.get(backgroundLoadIndex));
+        if (people.size()>0) {
+            task.execute(people.get(backgroundLoadIndex));
+        } else {
+            task.execute(selectedPerson);
+        }
     }
 
     @Override
@@ -89,7 +100,17 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
     @Override
     public void onComplete(ArrayList<LittlePerson> family) {
         for(LittlePerson p : family) {
-            if (!people.contains(p)) people.add(p);
+            if (!people.contains(p) && !personTracker.personRecentlyUsed(p)) {
+                people.add(p);
+            }
+        }
+
+        if (people.size() < 2) {
+            FamilyLoaderTask task = new FamilyLoaderTask(this, this);
+            LittlePerson[] arrayPeople = new LittlePerson[family.size()];
+            family.toArray(arrayPeople);
+            task.execute(arrayPeople);
+            return;
         }
 
         if (game==null) {
@@ -121,6 +142,7 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
         }
         MatchPerson person = (MatchPerson) adapter.getItem(position);
         String name = person.getPerson().getGivenName();
+        personTracker.addPerson(person.getPerson());
 
         if (!person.isFlipped()){
             if (flip1 < 0) flip1 = position;
