@@ -199,7 +199,7 @@ public class DBHelper extends SQLiteOpenHelper {
             }
 		}
 		// --update
-		else {
+		if (person.getId() > 0) {
 			String selection = COL_ID + " LIKE ?";
 			String[] selectionArgs = { String.valueOf(person.getId()) };
 

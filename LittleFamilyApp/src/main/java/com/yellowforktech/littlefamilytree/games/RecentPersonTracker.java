@@ -8,7 +8,7 @@ import java.util.LinkedList;
 public class RecentPersonTracker
 {
 	private Deque<Integer> recentPersonIds;
-	private int maxRecent = 32;
+	private int maxRecent = 16;
 	
 	private static RecentPersonTracker instance;
 	
