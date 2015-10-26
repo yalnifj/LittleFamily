@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.View;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.yellowforktech.littlefamilytree.R;
@@ -18,6 +19,7 @@ import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.data.Media;
 import com.yellowforktech.littlefamilytree.games.RandomMediaChooser;
 import com.yellowforktech.littlefamilytree.util.ImageHelper;
+import com.yellowforktech.littlefamilytree.views.BrushSizeView;
 import com.yellowforktech.littlefamilytree.views.ColoringView;
 import com.yellowforktech.littlefamilytree.views.WaterColorImageView;
 
@@ -26,7 +28,9 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ColoringGameActivity extends LittleFamilyActivity implements RandomMediaChooser.RandomMediaListener, ColoringView.ColoringCompleteListener {
+public class ColoringGameActivity extends LittleFamilyActivity implements RandomMediaChooser.RandomMediaListener, ColoringView.ColoringCompleteListener, SeekBar.OnSeekBarChangeListener {
+    public static int maxBrushSize = 50;
+    public static int minBrushSize = 15;
 
     private List<LittlePerson> people;
     private LittlePerson selectedPerson;
@@ -38,6 +42,8 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Random
     private Media photo;
     private RandomMediaChooser mediaChooser;
 	private ShareAction shareAction = new ShareAction();
+    private SeekBar seekBar;
+    private BrushSizeView brushSizeView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +60,15 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Random
         colorPicker = (WaterColorImageView) findViewById(R.id.colorPicker);
         colorPicker.setActivity(this);
         colorPicker.registerListener(layeredImage);
+
+        seekBar = (SeekBar) findViewById(R.id.seekBar);
+        seekBar.setOnSeekBarChangeListener(this);
+        seekBar.setMax(maxBrushSize);
+
+        brushSizeView = (BrushSizeView) findViewById(R.id.brushSize);
+        brushSizeView.setMaxSize(maxBrushSize);
+        brushSizeView.setMinSize(minBrushSize);
+        seekBar.setProgress(maxBrushSize/2);
 
         Intent intent = getIntent();
         people = (List<LittlePerson>) intent.getSerializableExtra(ChooseFamilyMember.FAMILY);
@@ -77,6 +92,7 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Random
         super.onStart();
 		Bitmap starBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.star1);
 		layeredImage.setStarBitmap(starBitmap);
+        layeredImage.setBrushSize(maxBrushSize/2);
         DataService.getInstance().registerNetworkStateListener(this);
 
         showLoadingDialog();
@@ -105,6 +121,22 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Random
     public void setupCanvas() {
         showLoadingDialog();
         layeredImage.setImageBitmap(imageBitmap);
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        brushSizeView.setBrushSize(progress);
+        layeredImage.setBrushSize(brushSizeView.getBrushSize());
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
     }
 
     @Override

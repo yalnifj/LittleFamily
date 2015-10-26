@@ -10,6 +10,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.yellowforktech.littlefamilytree.R;
@@ -46,6 +47,8 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
     private boolean noColor = true;
     private Paint background;
 
+    private float brushSize = 25;
+
     public ColoringView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
@@ -63,8 +66,6 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setDither(true);
-        //mPaint.setColor(Color.RED);
-        //mPaint.setAlpha(100);
         mPaint.setColor(Color.parseColor("#99ffffff"));
         mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_ATOP));
         mPaint.setStyle(Paint.Style.STROKE);
@@ -75,9 +76,7 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
         noPaint = new Paint();
         noPaint.setAntiAlias(true);
         noPaint.setDither(true);
-        //noPaint.setColor(Color.RED);
         noPaint.setAlpha(100);
-        //noPaint.setColor(Color.parseColor("#99ffffff"));
         noPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
         noPaint.setStyle(Paint.Style.STROKE);
         noPaint.setStrokeJoin(Paint.Join.ROUND);
@@ -140,8 +139,8 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
         mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         synchronized (mBitmap) {
             mCanvas = new Canvas(mBitmap);
-            mPaint.setStrokeWidth(w < h ? w * 0.12f : h * 0.12f);
-            noPaint.setStrokeWidth(w < h ? w * 0.12f : h * 0.12f);
+            mPaint.setStrokeWidth(brushSize);
+            noPaint.setStrokeWidth(brushSize);
             Paint background = new Paint();
             background.setColor(Color.WHITE);
             mCanvas.drawRect(0, 0, w, h, background);
@@ -239,6 +238,17 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
         if (color==0) noColor = true;
     }
 
+    public float getBrushSize() {
+        return brushSize;
+    }
+
+    public void setBrushSize(float brushSize) {
+        this.brushSize = brushSize;
+        DisplayMetrics dm = context.getResources().getDisplayMetrics();
+        mPaint.setStrokeWidth(brushSize*dm.density);
+        noPaint.setStrokeWidth(brushSize*dm.density);
+    }
+
     protected void touch_start(float x, float y) {
         super.touch_start(x,y);
 		if (!loaded || mBitmap==null) return;
@@ -256,7 +266,7 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
             if (!noColor) mCanvas.drawPath(mPath, mPaint);
 
             circlePath.reset();
-            circlePath.addCircle(mX, mY, 25, Path.Direction.CW);
+            circlePath.addCircle(mX, mY, brushSize, Path.Direction.CW);
         }
     }
 
@@ -272,8 +282,8 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
 
         if (!complete) {
             // check if scratch is complete
-            int xd = (int) mPaint.getStrokeWidth() / 4;
-            int yd = (int) mPaint.getStrokeWidth() / 4;
+            int xd = getWidth() / 20;
+            int yd = getHeight() / 30;
             int count = 0;
             int total = 0;
             for (int y = yd; y < mBitmap.getHeight(); y += yd) {
