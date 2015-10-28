@@ -139,8 +139,7 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
         mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         synchronized (mBitmap) {
             mCanvas = new Canvas(mBitmap);
-            mPaint.setStrokeWidth(brushSize);
-            noPaint.setStrokeWidth(brushSize);
+            setBrushSize(brushSize);
             Paint background = new Paint();
             background.setColor(Color.WHITE);
             mCanvas.drawRect(0, 0, w, h, background);

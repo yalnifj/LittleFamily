@@ -80,13 +80,13 @@ public class PlaceHelper {
 
     public static String getTopPlace(String place) {
         if (place==null) return null;
-        String[] parts = place.split("[,]+");
+        String[] parts = place.split("[,\\\\/]+");
         return parts[parts.length-1].trim().replaceAll("[<>\\[\\]\\(\\)\\.\"]+", "");
     }
 
     public static String getTopPlace(String place, int level) {
         if (place==null) return null;
-        String[] parts = place.split("[,]+");
+        String[] parts = place.split("[,\\\\/]+");
         if (parts.length>=level) {
             return parts[parts.length - level].trim().replaceAll("[<>\\[\\]\\(\\)\\.\"]+", "");
         }
@@ -101,8 +101,10 @@ public class PlaceHelper {
         }
         if (!place.equalsIgnoreCase("United States") && PlaceHelper.isInUS(place))
             return "United States";
-        if (place.equalsIgnoreCase("Eng") || place.equalsIgnoreCase("Great Britain")) return "England";
+
+        if (place.equalsIgnoreCase("Eng") || place.equalsIgnoreCase("Great Britain") || place.equalsIgnoreCase("gb") || place.toLowerCase().endsWith("england")) return "England";
         if (place.equalsIgnoreCase("Holland")) return "Netherlands";
+        if (place.equalsIgnoreCase("Northern Ireland")) return "Ireland";
         if (Arrays.binarySearch(canadaStates, place.toLowerCase())>=0) return "Canada";
         return place;
     }

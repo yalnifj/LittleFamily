@@ -499,7 +499,7 @@ public class DataService implements AuthTask.Listener {
 
     public LittlePerson syncPerson(LittlePerson person) throws Exception {
         Person fsPerson = remoteService.getPerson(person.getFamilySearchId(), false);
-        if (fsPerson.getTransientProperty("deleted")!=null) {
+        if (fsPerson==null || fsPerson.getTransientProperty("deleted")!=null) {
             getDBHelper().deletePersonById(person.getId());
             return null;
         } else {

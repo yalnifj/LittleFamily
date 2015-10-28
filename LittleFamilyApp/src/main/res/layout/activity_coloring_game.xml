@@ -32,16 +32,21 @@
             android:layout_height="fill_parent"
             android:layout_weight="1" />
 
-        <view
-            class="com.yellowforktech.littlefamilytree.views.BrushSizeView"
-            android:layout_width="50dp"
-            android:layout_height="fill_parent"
-            android:id="@+id/brushSize" />
-        <view
-            class="com.yellowforktech.littlefamilytree.views.VerticalSeekBar"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:id="@+id/seekBar" />
+            android:orientation="vertical"
+            android:layout_weight="0">
+            <view
+                class="com.yellowforktech.littlefamilytree.views.BrushSizeView"
+                android:layout_width="50dp"
+                android:layout_height="70dp"
+                android:id="@+id/brushSize" />
+            <SeekBar
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/seekBar" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -51,16 +56,16 @@
             <ImageButton
                 android:id="@+id/nextBtn"
                 android:src="@android:drawable/ic_media_next"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:onClick="nextImage"
                 style="@android:style/Widget.Holo.Button" />
 
             <ImageButton
                 android:id="@+id/shareBtn"
                 android:src="@android:drawable/ic_menu_camera"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:onClick="shareImage"
                 android:visibility="visible"
                 style="@android:style/Widget.Holo.Button" />

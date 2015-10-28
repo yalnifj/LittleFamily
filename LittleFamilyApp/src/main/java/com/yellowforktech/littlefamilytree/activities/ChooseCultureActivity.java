@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yellowforktech.littlefamilytree.R;
+import com.yellowforktech.littlefamilytree.activities.adapters.PersonPagerAdapter;
 import com.yellowforktech.littlefamilytree.activities.tasks.HeritageCalculatorTask;
 import com.yellowforktech.littlefamilytree.activities.tasks.WaitTask;
 import com.yellowforktech.littlefamilytree.data.DataService;
@@ -19,8 +21,8 @@ import com.yellowforktech.littlefamilytree.data.HeritagePath;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.games.DollConfig;
 import com.yellowforktech.littlefamilytree.games.DressUpDolls;
-import com.yellowforktech.littlefamilytree.util.ImageHelper;
 import com.yellowforktech.littlefamilytree.util.RelationshipCalculator;
+import com.yellowforktech.littlefamilytree.views.PagerContainer;
 import com.yellowforktech.littlefamilytree.views.PersonHeritageChartView;
 
 import java.io.IOException;
@@ -37,16 +39,18 @@ public class ChooseCultureActivity extends LittleFamilyActivity implements Herit
     public static final String DOLL_CONFIG = "dollConfig";
     private LittlePerson person;
     private Map<String, HeritagePath> cultures;
+    private Map<String, List<LittlePerson>> culturePeople;
     private PersonHeritageChartView chartView;
     private TextView titleView;
-    private TextView personNameView;
     private TextView cultureNameView;
-    private ImageView portraitImage;
     private ImageView dollImage;
     private Button playButton;
     private HeritagePath selectedPath;
     private DressUpDolls dressUpDolls;
     private long starttime;
+    private PagerContainer personContainer;
+    private PersonPagerAdapter adapter;
+    private MyPageTransformer transformer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,15 +60,27 @@ public class ChooseCultureActivity extends LittleFamilyActivity implements Herit
         chartView = (PersonHeritageChartView) findViewById(R.id.personChart);
         titleView = (TextView) findViewById(R.id.titleText);
 
-        personNameView = (TextView) findViewById(R.id.personNameTextView);
-        personNameView.setText("");
         cultureNameView = (TextView) findViewById(R.id.cultureNameTextView);
         cultureNameView.setText("");
 
-        portraitImage = (ImageView) findViewById(R.id.portraitImage);
-        portraitImage.setVisibility(View.INVISIBLE);
         dollImage = (ImageView) findViewById(R.id.dollImage);
         dollImage.setVisibility(View.INVISIBLE);
+
+        personContainer = (PagerContainer) findViewById(R.id.personPagerContainer);
+        ViewPager pager = personContainer.getViewPager();
+        adapter = new PersonPagerAdapter(this);
+        pager.setAdapter(adapter);
+        //Necessary or the pager will only have one extra page to show
+        // make this at least however many pages you can see
+        pager.setOffscreenPageLimit(3);
+        //A little space between pages
+        pager.setPageMargin(0);
+
+        //If hardware acceleration is enabled, you should also remove
+        // clipping on the pager for its children.
+        pager.setClipChildren(false);
+        transformer = new MyPageTransformer();
+        pager.setPageTransformer(true, transformer);
 
         playButton = (Button) findViewById(R.id.play_button);
 
@@ -82,6 +98,8 @@ public class ChooseCultureActivity extends LittleFamilyActivity implements Herit
         setupTopBar();
     }
 
+
+
     public void startDressUpActivity(View view) {
         if (selectedPath!=null) {
             Intent intent = new Intent(this, HeritageDressUpActivity.class);
@@ -95,19 +113,11 @@ public class ChooseCultureActivity extends LittleFamilyActivity implements Herit
     public void setSelectedPath(HeritagePath selectedPath) {
         this.selectedPath = selectedPath;
         LittlePerson relative = selectedPath.getTreePath().get(selectedPath.getTreePath().size() - 1);
-        this.personNameView.setText(relative.getName());
-        Bitmap bm = null;
-        if (relative.getPhotoPath() != null) {
-            bm = ImageHelper.loadBitmapFromFile(relative.getPhotoPath(), ImageHelper.getOrientation(relative.getPhotoPath()), this.portraitImage.getWidth(), this.portraitImage.getHeight(), false);
-        } else {
-            bm = ImageHelper.loadBitmapFromResource(this, relative.getDefaultPhotoResource(), 0, this.portraitImage.getWidth(), this.portraitImage.getHeight());
-        }
-        portraitImage.setImageBitmap(bm);
-        portraitImage.setVisibility(View.VISIBLE);
 		
 		String relationship = RelationshipCalculator.getAncestralRelationship(selectedPath.getTreePath().size(), relative, person, 
 					false, false, false, this);
 
+        relative.setRelationship(relationship);
         this.cultureNameView.setText(selectedPath.getPlace());
         double percent = selectedPath.getPercent()*100;
         DecimalFormat decf = new DecimalFormat("#.#");
@@ -123,6 +133,12 @@ public class ChooseCultureActivity extends LittleFamilyActivity implements Herit
             text += " " + relative.getName();
         }
 		speak(text);
+
+        List<LittlePerson> people = culturePeople.get(selectedPath.getPlace());
+        transformer.setPageWidth(personContainer.getViewPager().getWidth());
+        adapter.setPeople(people);
+        personContainer.getViewPager().invalidate();
+        personContainer.getViewPager().setCurrentItem(0);
 
         DollConfig dollConfig = dressUpDolls.getDollConfig(selectedPath.getPlace(), person);
         String thumbnailFile = dollConfig.getThumbnail();
@@ -148,43 +164,45 @@ public class ChooseCultureActivity extends LittleFamilyActivity implements Herit
 
             @Override
             public void onComplete(Integer progress) {
-                cultures = new HashMap<String, HeritagePath>();
+                cultures = new HashMap<>();
+                culturePeople = new HashMap<>();
                 titleView.setText(R.string.choose_culture);
 
                 for(HeritagePath path : paths) {
                     String place = path.getPlace();
                     if (cultures.get(place)==null) {
                         cultures.put(place, path);
+                        List<LittlePerson> pl = new ArrayList<>();
+                        pl.add(path.getTreePath().get(path.getTreePath().size()-1));
+                        culturePeople.put(place, pl);
                     } else {
                         Double percent = cultures.get(place).getPercent() + path.getPercent();
                         if (cultures.get(place).getTreePath().size() <= path.getTreePath().size()) {
                             cultures.get(place).setPercent(percent);
+                            culturePeople.get(place).add(path.getTreePath().get(path.getTreePath().size()-1));
                         } else {
                             path.setPercent(percent);
                             cultures.put(place, path);
+                            culturePeople.get(place).add(0, path.getTreePath().get(path.getTreePath().size() - 1));
                         }
                     }
                 }
 
                 List<HeritagePath> uniquepaths = new ArrayList<>(cultures.size());
-                if (cultures.size() < 10 ) {
-                    uniquepaths.addAll(cultures.values());
-                } else {
-                    int count = 0;
-                    for (HeritagePath path : cultures.values()) {
-                        if (count<12 && path.getPercent() > 0.0009) {
-                            uniquepaths.add(path);
-                            LittlePerson lastInPath = path.getTreePath().get(path.getTreePath().size()-1);
-                            try {
-                                DataService.getInstance().addToSyncQ(lastInPath, path.getTreePath().size());
-                            } catch (Exception e) {
-                                Log.e(this.getClass().getName(), "Error adding person to sync Q " + lastInPath, e);
-                            }
-                            count++;
-                        }
+                uniquepaths.addAll(cultures.values());
+                Collections.sort(uniquepaths);
+                if (uniquepaths.size()>13) {
+                    uniquepaths = uniquepaths.subList(0, 13);
+                }
+                for (HeritagePath path : uniquepaths) {
+                    LittlePerson lastInPath = path.getTreePath().get(path.getTreePath().size()-1);
+                    try {
+                        DataService.getInstance().addToSyncQ(lastInPath, path.getTreePath().size());
+                    } catch (Exception e) {
+                        Log.e(this.getClass().getName(), "Error adding person to sync Q " + lastInPath, e);
                     }
                 }
-                Collections.sort(uniquepaths);
+
                 chartView.setHeritageMap(uniquepaths);
 
                 if (uniquepaths.size()>0) {
@@ -210,5 +228,32 @@ public class ChooseCultureActivity extends LittleFamilyActivity implements Herit
     @Override
     public void onSelectedPath(HeritagePath path) {
         setSelectedPath(path);
+    }
+
+    public class MyPageTransformer implements ViewPager.PageTransformer {
+        private float pageWidth;
+
+        public float getPageWidth() {
+            return pageWidth;
+        }
+
+        public void setPageWidth(float pageWidth) {
+            this.pageWidth = pageWidth;
+        }
+
+        @Override
+        public void transformPage(View page, float position) {
+            if (position < -2 || position > 2) {
+                page.setAlpha(0);
+            } else {
+                page.setAlpha(1.0f - (0.45f * Math.abs(position)));
+                page.setRotationY(position * 40);
+                page.setScaleX(1.0f - (0.30f * Math.abs(position)));
+                page.setScaleY(1.0f - (0.30f * Math.abs(position)));
+                if (pageWidth>0) {
+                    page.setTranslationX(pageWidth / 4 + (-1 * position * Math.abs(position) * pageWidth / 2.5f));
+                }
+            }
+        }
     }
 }

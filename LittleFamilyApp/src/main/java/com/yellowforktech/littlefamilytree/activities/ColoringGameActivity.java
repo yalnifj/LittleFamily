@@ -125,8 +125,10 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Random
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        brushSizeView.setBrushSize(progress);
-        layeredImage.setBrushSize(brushSizeView.getBrushSize());
+        if (brushSizeView!=null) {
+            brushSizeView.setBrushSize(progress);
+            if (layeredImage!=null) layeredImage.setBrushSize(brushSizeView.getBrushSize());
+        }
     }
 
     @Override
