@@ -75,20 +75,27 @@
             <ImageView
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
+                android:layout_weight="1"
                 android:id="@+id/dollImage"
-                android:layout_gravity="top|center_horizontal"
+                android:layout_gravity="center_horizontal"
                 android:clickable="false"
                 android:onClick="startDressUpActivity" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="36dp"
+                android:layout_gravity="center_horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="0dp"
+                android:paddingBottom="0dp"
+                android:minHeight="0dp"
+                android:text="@string/play"
+                android:id="@+id/play_button"
+                android:onClick="startDressUpActivity"
+                android:visibility="invisible" />
         </LinearLayout>
 
     </LinearLayout>
-
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/play"
-        android:id="@+id/play_button"
-        android:onClick="startDressUpActivity"
-        android:visibility="invisible" />
 
 </LinearLayout>
