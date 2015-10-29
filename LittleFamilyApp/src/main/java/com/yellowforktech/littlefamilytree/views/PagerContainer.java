@@ -2,6 +2,8 @@ package com.yellowforktech.littlefamilytree.views;
 
 import android.content.Context;
 import android.graphics.Point;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -99,4 +101,20 @@ public class PagerContainer extends FrameLayout implements ViewPager.OnPageChang
     public void onPageScrollStateChanged(int state) {
         mNeedsRedraw = (state != ViewPager.SCROLL_STATE_IDLE);
     }
+
+    @Override
+    public void invalidate() {
+        super.invalidate();
+        handler.sendEmptyMessage(0);
+    }
+
+    private Handler handler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (getViewPager().beginFakeDrag())
+            {
+                getViewPager().fakeDragBy(0f);
+                getViewPager().endFakeDrag();
+            }
+        }
+    };
 }

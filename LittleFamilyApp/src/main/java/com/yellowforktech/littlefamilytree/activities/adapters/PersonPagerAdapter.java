@@ -65,6 +65,7 @@ public class PersonPagerAdapter extends PagerAdapter {
             bm = ImageHelper.loadBitmapFromResource(context, person.getDefaultPhotoResource(), 0, parent.getHeight(), parent.getHeight());
         }
         portrait.setImageBitmap(bm);
+        portrait.setTag(person);
 
         parent.addView(view);
         return view;

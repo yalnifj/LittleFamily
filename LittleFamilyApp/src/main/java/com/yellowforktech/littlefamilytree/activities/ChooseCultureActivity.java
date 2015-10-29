@@ -110,19 +110,21 @@ public class ChooseCultureActivity extends LittleFamilyActivity implements Herit
         }
     }
 
-    public void setSelectedPath(HeritagePath selectedPath) {
-        this.selectedPath = selectedPath;
-        LittlePerson relative = selectedPath.getTreePath().get(selectedPath.getTreePath().size() - 1);
-		
-		String relationship = RelationshipCalculator.getAncestralRelationship(selectedPath.getTreePath().size(), relative, person, 
-					false, false, false, this);
+    public void personTapped(View view) {
+        LittlePerson relative = (LittlePerson) view.getTag();
+        speakDetails(relative);
+    }
+
+    public void speakDetails(LittlePerson relative) {
+        String relationship = RelationshipCalculator.getAncestralRelationship(selectedPath.getTreePath().size(), relative, person,
+                false, false, false, this);
 
         relative.setRelationship(relationship);
         this.cultureNameView.setText(selectedPath.getPlace());
         double percent = selectedPath.getPercent()*100;
         DecimalFormat decf = new DecimalFormat("#.#");
         String percString = decf.format(percent);
-		String text = String.format(getResources().getString(R.string.you_are_percent),
+        String text = String.format(getResources().getString(R.string.you_are_percent),
                 percString, selectedPath.getPlace(),
                 relationship);
         if (relative.getBirthDate()!=null) {
@@ -132,13 +134,20 @@ public class ChooseCultureActivity extends LittleFamilyActivity implements Herit
         } else {
             text += " " + relative.getName();
         }
-		speak(text);
+        speak(text);
+    }
+
+    public void setSelectedPath(HeritagePath selectedPath) {
+        this.selectedPath = selectedPath;
+        LittlePerson relative = selectedPath.getTreePath().get(selectedPath.getTreePath().size() - 1);
+		speakDetails(relative);
 
         List<LittlePerson> people = culturePeople.get(selectedPath.getPlace());
         transformer.setPageWidth(personContainer.getViewPager().getWidth());
         adapter.setPeople(people);
         personContainer.getViewPager().invalidate();
         personContainer.getViewPager().setCurrentItem(0);
+        personContainer.invalidate();
 
         DollConfig dollConfig = dressUpDolls.getDollConfig(selectedPath.getPlace(), person);
         String thumbnailFile = dollConfig.getThumbnail();

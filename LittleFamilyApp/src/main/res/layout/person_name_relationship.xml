@@ -18,6 +18,8 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/personPortrait"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:onClick="personTapped"
+        android:clickable="true" />
 
 </LinearLayout>
