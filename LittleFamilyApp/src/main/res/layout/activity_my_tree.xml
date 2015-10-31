@@ -10,7 +10,7 @@
     <FrameLayout
         tools:layout="@layout/fragment_top_bar"
         android:layout_width="fill_parent"
-        android:layout_height="40dp"
+        android:layout_height="@dimen/topbar_height"
         android:id="@+id/topBarFragment"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />

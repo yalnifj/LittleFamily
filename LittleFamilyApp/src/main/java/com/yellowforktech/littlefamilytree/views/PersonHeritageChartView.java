@@ -132,7 +132,7 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
             for(int p=cultures.size()-1; p>=0; p--) {
                 HeritagePath path = cultures.get(p);
                 int height = (int)(this.getHeight()*path.getPercent());
-                if (height < 30) height = 30;
+                if (height < 15*density) height = (int) (15*density);
                 top = top - height;
                 if (top < 0) {
                     height = height+top;
@@ -220,7 +220,7 @@ public class PersonHeritageChartView extends SurfaceView implements SurfaceHolde
                     HeritagePath path = cultures.get(p);
                     Paint paint = new Paint();
 					int textSize = (int)(this.getHeight()*0.05);
-					if (textSize > 20) textSize = 20;
+					if (textSize > 20*density) textSize = (int) (20*density);
                     paint.setTextSize(textSize);
                     paint.setColor(Color.BLACK);
                     paint.setTextAlign(Paint.Align.LEFT);
