@@ -60,6 +60,8 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Random
         colorPicker = (WaterColorImageView) findViewById(R.id.colorPicker);
         colorPicker.setActivity(this);
         colorPicker.registerListener(layeredImage);
+		
+		maxBrushSize = getWindowManager().getDefaultDisplay().getWidth()/8;
 
         seekBar = (SeekBar) findViewById(R.id.seekBar);
         seekBar.setOnSeekBarChangeListener(this);

@@ -265,7 +265,7 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
             if (!noColor) mCanvas.drawPath(mPath, mPaint);
 
             circlePath.reset();
-            circlePath.addCircle(mX, mY, brushSize, Path.Direction.CW);
+            circlePath.addCircle(mX, mY, brushSize*0.7f, Path.Direction.CW);
         }
     }
 

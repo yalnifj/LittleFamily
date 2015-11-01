@@ -95,7 +95,7 @@ public class BrushSizeView extends View {
         }
 
         brushPath.reset();
-        brushPath.addCircle(getWidth()/2, getHeight()/2, brushSize, Path.Direction.CW);
+        brushPath.addCircle(getWidth()/2, getHeight()/2, brushSize*0.7f, Path.Direction.CW);
         canvas.drawPath(brushPath, brushPaint);
     }
 }
