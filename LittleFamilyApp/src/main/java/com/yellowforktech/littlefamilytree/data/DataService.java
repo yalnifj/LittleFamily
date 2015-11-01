@@ -509,10 +509,14 @@ public class DataService implements AuthTask.Listener {
             person.setPhotoPath(updated.getPhotoPath());
             person.setAge(updated.getAge());
             person.setBirthDate(updated.getBirthDate());
+            person.setBirthPlace(updated.getBirthPlace());
+            person.setAlive(updated.isAlive());
             person.setFamilySearchId(updated.getFamilySearchId());
             person.setGender(updated.getGender());
             person.setGivenName(updated.getGivenName());
             person.setName(updated.getName());
+            person.setNationality(updated.getNationality());
+            person.updateAge();
             getDBHelper().persistLittlePerson(person);
 
             try {
