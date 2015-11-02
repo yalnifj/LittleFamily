@@ -206,7 +206,9 @@ public class ScratchView extends SpritedSurfaceView {
 	public void doMove(float oldX, float oldY, float x, float y) {
 		mPath.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2);
 		// commit the path to our offscreen
-   		mCanvas.drawPath(mPath, mPaint);
+        if (mCanvas!=null) {
+            mCanvas.drawPath(mPath, mPaint);
+        }
 
         circlePath.reset();
         circlePath.addCircle(mX, mY, 40, Path.Direction.CW);
@@ -232,7 +234,9 @@ public class ScratchView extends SpritedSurfaceView {
         mPath.lineTo(mX, mY);
         circlePath.reset();
         // commit the path to our offscreen
-        mCanvas.drawPath(mPath, mPaint);
+        if (mCanvas!=null) {
+            mCanvas.drawPath(mPath, mPaint);
+        }
         // kill this so we don't double draw
         mPath.reset();
 
@@ -243,7 +247,7 @@ public class ScratchView extends SpritedSurfaceView {
         }
 
         // check if scratch is complete
-        if (!complete) {
+        if (!complete && mBitmap!=null) {
             int xd = (int) mPaint.getStrokeWidth() / 5;
             int yd = (int) mPaint.getStrokeWidth() / 5;
             int count = 0;
