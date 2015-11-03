@@ -574,7 +574,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	public Relationship getRelationship(int id1, int id2, RelationshipType type) {
 		SQLiteDatabase db = getReadableDatabase();
 		String[] projection = {
-			COL_ID1, COL_ID2, COL_TYPE
+			COL_ID, COL_ID1, COL_ID2, COL_TYPE
 		};
 		String selection = "(("+COL_ID1 + " LIKE ? and "+COL_ID2+" LIKE ?) "
 				+" OR ("+COL_ID1 + " LIKE ? and "+COL_ID2+" LIKE ?)) "
@@ -598,7 +598,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		List<Relationship> relationships = new ArrayList<>();
 		SQLiteDatabase db = getReadableDatabase();
 		String[] projection = {
-			COL_ID1, COL_ID2, COL_TYPE
+			COL_ID, COL_ID1, COL_ID2, COL_TYPE
 		};
 		String selection = COL_ID1 + " LIKE ? or "+COL_ID2+" LIKE ?";
 			
@@ -618,6 +618,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	
 	public Relationship relationshipFromCursor(Cursor c) {
 		Relationship r = new Relationship();
+		r.setId(c.getInt(c.getColumnIndexOrThrow(COL_ID)));
 		r.setId1(c.getInt(c.getColumnIndexOrThrow(COL_ID1)));
 		r.setId2(c.getInt(c.getColumnIndexOrThrow(COL_ID2)));
 		int type = c.getInt(c.getColumnIndexOrThrow(COL_TYPE));

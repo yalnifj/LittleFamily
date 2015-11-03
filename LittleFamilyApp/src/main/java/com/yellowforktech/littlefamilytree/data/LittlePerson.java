@@ -147,6 +147,12 @@ public class LittlePerson implements Serializable {
                                     int birthYear = Integer.parseInt(birthYearStr);
                                     Calendar cal = Calendar.getInstance();
                                     age = cal.get(Calendar.YEAR) - birthYear;
+                                    DateFormat df3 = new SimpleDateFormat("yyyy");
+                                    try {
+                                        this.birthDate = df3.parse(birthYearStr);
+                                    }  catch (ParseException e3) {
+                                        //-- nothing to do
+                                    }
                                 }
                             }
                         }

@@ -47,6 +47,7 @@ public class HeritageCalculatorTask extends AsyncTask<LittlePerson, Integer, Arr
         ArrayList<HeritagePath> returnPaths = new ArrayList<>();
         LinkedList<HeritagePath> paths = new LinkedList<>();
         LittlePerson person = persons[0];
+        if (person==null) return returnPaths;
 
         String origin = PlaceHelper.getPlaceCountry(person.getBirthPlace());
 

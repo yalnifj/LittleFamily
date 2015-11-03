@@ -541,6 +541,18 @@ public class DataService implements AuthTask.Listener {
                 for (com.yellowforktech.littlefamilytree.data.Relationship rel : oldRelations) {
                     getDBHelper().deleteRelationshipById(rel.getId());
                 }
+            } else {
+                //-- person no longer has relationships so deleted them all
+                List<com.yellowforktech.littlefamilytree.data.Relationship> oldRelations = getDBHelper().getRelationshipsForPerson(person.getId());
+                if (oldRelations!=null) {
+                    for (com.yellowforktech.littlefamilytree.data.Relationship rel : oldRelations) {
+                        getDBHelper().deleteRelationshipById(rel.getId());
+                    }
+                }
+                person.setHasChildren(false);
+                person.setHasSpouses(false);
+                person.setHasParents(false);
+                getDBHelper().persistLittlePerson(person);
             }
 
             List<SourceDescription> sds = remoteService.getPersonMemories(person.getFamilySearchId(), true);
