@@ -569,7 +569,7 @@ public class DataService implements AuthTask.Listener {
                                     med = new Media();
                                     med.setType("photo");
                                     med.setFamilySearchId(sd.getId());
-                                    String localPath = DataHelper.downloadFile(link.getHref().toString(), person.getFamilySearchId(), DataHelper.lastPath(link.getHref().toString()), remoteService, context);
+                                    String localPath = DataHelper.downloadFile(link.getHref().toString(), person.getFamilySearchId(), sd.getId()+"-"+DataHelper.lastPath(link.getHref().toString()), remoteService, context);
                                     if (localPath != null) {
                                         foundMedia = true;
                                         med.setLocalPath(localPath);
@@ -1113,7 +1113,7 @@ public class DataService implements AuthTask.Listener {
                                             med.setType("photo");
                                             med.setFamilySearchId(sd.getId());
                                             String folderName = person.getFamilySearchId();
-                                            String fileName = DataHelper.lastPath(link.getHref().toString());
+                                            String fileName = sd.getId()+"-"+DataHelper.lastPath(link.getHref().toString());
                                             File localFile = DataHelper.getImageFile(folderName, fileName, context);
                                             String localPath = null;
                                             if (!localFile.exists()) {
