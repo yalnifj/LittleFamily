@@ -341,7 +341,7 @@ public class DBHelper extends SQLiteOpenHelper {
 				COL_AGE, COL_BIRTH_DATE, COL_BIRTH_PLACE, COL_NATIONALITY, COL_FAMILY_SEARCH_ID, COL_LAST_SYNC,
 				COL_ID, COL_ALIVE, COL_ACTIVE, COL_HAS_PARENTS, COL_HAS_CHILDREN, COL_HAS_SPOUSES, COL_HAS_MEDIA, COL_TREE_LEVEL
 		};
-		String selection = COL_TREE_LEVEL + "<=?";
+		String selection = COL_TREE_LEVEL + "<=? and "+COL_ACTIVE+"='Y'";
 		String[] selectionArgs = {"0"};
 		String tables = TABLE_LITTLE_PERSON;
 
@@ -366,7 +366,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			COL_AGE, COL_BIRTH_DATE, COL_BIRTH_PLACE, COL_NATIONALITY, COL_FAMILY_SEARCH_ID, COL_LAST_SYNC,
 			"p."+COL_ID, COL_ALIVE, COL_ACTIVE, "r."+COL_TYPE, COL_HAS_PARENTS, COL_HAS_CHILDREN, COL_HAS_SPOUSES, COL_HAS_MEDIA, COL_TREE_LEVEL
 		};
-		String selection = "(r."+COL_ID1 + " LIKE ? or r."+COL_ID2+" LIKE ?) and p.active='Y'";
+		String selection = "(r."+COL_ID1 + " LIKE ? or r."+COL_ID2+" LIKE ?) and p."+COL_ACTIVE+"='Y'";
 
 		String[] selectionArgs = { String.valueOf(id), String.valueOf(id) };
 		String tables = TABLE_LITTLE_PERSON + " p join " + TABLE_RELATIONSHIP + " r on r."+COL_ID1+"=p."+COL_ID
@@ -404,7 +404,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 COL_AGE, COL_BIRTH_DATE, COL_BIRTH_PLACE, COL_NATIONALITY, COL_FAMILY_SEARCH_ID, COL_LAST_SYNC,
                 "p."+COL_ID, COL_ALIVE, COL_ACTIVE, COL_HAS_PARENTS, COL_HAS_CHILDREN, COL_HAS_SPOUSES, COL_HAS_MEDIA, COL_TREE_LEVEL
         };
-        String selection = "r."+COL_ID2+" LIKE ? and r."+COL_TYPE+"=? and p.active='Y'";
+        String selection = "r."+COL_ID2+" LIKE ? and r."+COL_TYPE+"=? and p."+COL_ACTIVE+"='Y'";
 
         String[] selectionArgs = { String.valueOf(id), String.valueOf(RelationshipType.PARENTCHILD.getId()) };
         String tables = TABLE_LITTLE_PERSON + " p join " + TABLE_RELATIONSHIP + " r on r."+COL_ID1+"=p."+COL_ID;
@@ -430,7 +430,7 @@ public class DBHelper extends SQLiteOpenHelper {
 				COL_AGE, COL_BIRTH_DATE, COL_BIRTH_PLACE, COL_NATIONALITY, COL_FAMILY_SEARCH_ID, COL_LAST_SYNC,
 				"p."+COL_ID, COL_ALIVE, COL_ACTIVE, COL_HAS_PARENTS, COL_HAS_CHILDREN, COL_HAS_SPOUSES, COL_HAS_MEDIA, COL_TREE_LEVEL
 		};
-		String selection = "r."+COL_ID1+" LIKE ? and r."+COL_TYPE+"=? and p.active='Y'";
+		String selection = "r."+COL_ID1+" LIKE ? and r."+COL_TYPE+"=? and p."+COL_ACTIVE+"='Y'";
 
 		String[] selectionArgs = { String.valueOf(id), String.valueOf(RelationshipType.PARENTCHILD.getId()) };
 		String tables = TABLE_LITTLE_PERSON + " p join " + TABLE_RELATIONSHIP + " r on r."+COL_ID2+"=p."+COL_ID;
@@ -458,7 +458,7 @@ public class DBHelper extends SQLiteOpenHelper {
 				COL_AGE, COL_BIRTH_DATE, COL_BIRTH_PLACE, COL_NATIONALITY, COL_FAMILY_SEARCH_ID, COL_LAST_SYNC,
 				"p."+COL_ID, COL_ALIVE, COL_ACTIVE, COL_HAS_PARENTS, COL_HAS_CHILDREN, COL_HAS_SPOUSES, COL_HAS_MEDIA, COL_TREE_LEVEL
 		};
-		String selection = "(r."+COL_ID1+" LIKE ? or r."+COL_ID2+" LIKE ?) and r."+COL_TYPE+"=? and p.active='Y'";
+		String selection = "(r."+COL_ID1+" LIKE ? or r."+COL_ID2+" LIKE ?) and r."+COL_TYPE+"=? and p."+COL_ACTIVE+"='Y'";
 
 		String[] selectionArgs = { String.valueOf(id), String.valueOf(id), String.valueOf(RelationshipType.SPOUSE.getId()) };
 		String tables = TABLE_LITTLE_PERSON + " p join " + TABLE_RELATIONSHIP + " r on r."+COL_ID1+"=p."+COL_ID+" or r."+COL_ID2+"=p."+COL_ID;
