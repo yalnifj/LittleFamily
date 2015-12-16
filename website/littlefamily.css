@@ -20,6 +20,21 @@ section {
 .navbar .selected {
     font-weight: bold;
 }
+
+.beta {
+	font-weight: bold;
+}
+header {
+	margin-top: 0px;
+	background: url(wood_back.png) no-repeat center center fixed;
+	background-size: cover;
+	color: #DDDDDD;
+}
+header .header-content, section .container, section .container-fluid{
+	width: 85%;
+	margin-left: auto;
+	margin-right: auto;
+}
 .header-content {
     margin-top: 50px;
     padding: 20px;
@@ -29,6 +44,11 @@ section {
     margin-bottom: 20px;
     width: 100%;
     max-width: 400px;
+}
+.logo-text-img {
+	margin-top: 33%;
+	width: 100%;
+	max-width: 500px;
 }
 .bg-dark {
     background-color: darkblue;
@@ -42,8 +62,13 @@ section {
     position: relative;
 }
 
+.bg-primary {
+	background-color: #9ac745;
+	color: #333333;
+}
+
 .bg-primary .to-top {
-    color: white;
+
 }
 
 .portfolio-box {
@@ -230,6 +255,10 @@ section {
     margin-bottom: 20px;
 }
 
+.embed-responsive {
+	margin: 30px;
+}
+
 @media(min-width:768px) {
     .portfolio-box .portfolio-box-caption .portfolio-box-caption-content .project-category {
         font-size: 16px;
@@ -241,6 +270,11 @@ section {
 }
 
 @media(max-width:767px) {
+	header .header-content, section .container, section .container-fluid{
+		width: 100%;
+		margin-left: auto;
+		margin-right: auto;
+	}
     .contact-section {
         text-align: center;
         margin-bottom: 50px;
@@ -248,4 +282,7 @@ section {
     .small-show {
         display: block;
     }
+	.logo-text-img {
+		margin-top: 20px;
+	}
 }
