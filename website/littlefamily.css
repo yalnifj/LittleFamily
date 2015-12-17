@@ -21,6 +21,11 @@ section {
     font-weight: bold;
 }
 
+.small-margin {
+	display: inline-block;
+	margin-top: 3px;
+}
+
 .beta {
 	font-weight: bold;
 }
@@ -48,7 +53,7 @@ header .header-content, section .container, section .container-fluid{
 .logo-text-img {
 	margin-top: 33%;
 	width: 100%;
-	max-width: 500px;
+	max-width: 600px;
 }
 .bg-dark {
     background-color: darkblue;
@@ -284,5 +289,8 @@ header .header-content, section .container, section .container-fluid{
     }
 	.logo-text-img {
 		margin-top: 20px;
+	}
+	header h3 {
+		font-size: 20px;
 	}
 }
