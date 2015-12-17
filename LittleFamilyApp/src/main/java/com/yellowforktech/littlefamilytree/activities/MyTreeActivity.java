@@ -188,7 +188,7 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
 		dm = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(dm);
 
-        treeBackground = new AnimatedBitmapSprite(BitmapFactory.decodeResource(getResources(), com.yellowforktech.littlefamilytree.R.drawable.tree_background));
+        treeBackground = new AnimatedBitmapSprite(BitmapFactory.decodeResource(getResources(), R.drawable.wood_back));
         treeBackground.setWidth(treeView.getWidth());
         treeBackground.setHeight(treeView.getHeight());
         treeView.setBackgroundSprite(treeBackground);
