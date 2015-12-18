@@ -31,7 +31,7 @@ section {
 }
 header {
 	margin-top: 0px;
-	background: url(wood_back.png) no-repeat center center fixed;
+	background: url(wood_back.png) no-repeat center center scroll;
 	background-size: cover;
 	color: #DDDDDD;
 }
@@ -272,6 +272,10 @@ header .header-content, section .container, section .container-fluid{
     .portfolio-box .portfolio-box-caption .portfolio-box-caption-content .project-name {
         font-size: 22px;
     }
+
+    .small-title {
+        display: none;
+    }
 }
 
 @media(max-width:767px) {
@@ -288,9 +292,12 @@ header .header-content, section .container, section .container-fluid{
         display: block;
     }
 	.logo-text-img {
-		margin-top: 20px;
+		margin-top: 0px;
 	}
 	header h3 {
 		font-size: 20px;
 	}
+	.large-title {
+        display: none;
+    }
 }

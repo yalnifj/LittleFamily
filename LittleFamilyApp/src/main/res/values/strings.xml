@@ -57,7 +57,7 @@ Please wait...</string>
     <string name="title_activity_choose_remote_service">ChooseRemoteService</string>
     <string name="choose_remote_service">Choose the online FamilyTree:</string>
     <string name="remote_service_explanation">LittleFamily connects to an online FamilyTree service to get its data.  You will be asked to login to your online FamilyTree through one of the provided services.  LittleFamily will then allow you to play and interact with your FamilyTree in a new and unique way.</string>
-    <string name="choose_service_below">Choose from one of the support online FamilyTree services below:</string>
+    <string name="choose_service_below">Choose from one of the supported online FamilyTree services below:</string>
     <string name="title_activity_splash">SplashActivity</string>
     <string name="title_activity_puzzle_game">PuzzleGameActivity</string>
     <string name="title_activity_home">HomeActivity</string>
