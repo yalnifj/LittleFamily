@@ -110,7 +110,6 @@ public class ScaledSpritedClippedSurfaceView extends SpritedClippedSurfaceView {
     @Override
     public void doMove(float oldX, float oldY, float newX, float newY) {
         boolean selectedMoved = false;
-        moved = true;
         if (selectedSprites.size() > 0) {
             for (Sprite s : selectedSprites) {
                 selectedMoved |= s.onMove(oldX+clipX*scale, oldY+clipY*scale, newX+clipX*scale, newY+clipY*scale);
@@ -120,6 +119,9 @@ public class ScaledSpritedClippedSurfaceView extends SpritedClippedSurfaceView {
             backgroundSprite.onMove(oldX, oldY, newX, newY);
             clipX -= (newX-oldX);
             clipY -= (newY-oldY);
+            if (Math.abs(clipX) > 8 || Math.abs(clipY) > 8 ) {
+                moved = true;
+            }
 
             if (clipX < 0) clipX = 0;
             if (clipX*scale + getWidth() >= maxWidth*scale) {

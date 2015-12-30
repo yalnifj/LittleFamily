@@ -29,7 +29,9 @@ public class TouchEventGameSprite extends AnimatedBitmapSprite {
     @Override
     public boolean onMove(float oldX, float oldY, float newX, float newY) {
         super.onMove(oldX, oldY, newX, newY);
-        moved = true;
+        if (Math.abs(newX - oldX) > 8 || Math.abs(newY - oldY) > 8 ) {
+            moved = true;
+        }
         return false;
     }
 
