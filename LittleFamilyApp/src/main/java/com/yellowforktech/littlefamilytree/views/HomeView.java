@@ -2,15 +2,17 @@ package com.yellowforktech.littlefamilytree.views;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 
+import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.LittleFamilyActivity;
 import com.yellowforktech.littlefamilytree.sprites.Sprite;
 import com.yellowforktech.littlefamilytree.sprites.TouchEventGameSprite;
+import com.yellowforktech.littlefamilytree.util.ImageHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +37,8 @@ public class HomeView extends ScaledSpritedClippedSurfaceView {
         activitySprites = new ArrayList<>();
         random = new Random();
         timer = 0L;
-        lockBitmap = BitmapFactory.decodeResource(context.getResources(), android.R.drawable.ic_menu_manage);
+        DisplayMetrics dm = getContext().getResources().getDisplayMetrics();
+        lockBitmap = ImageHelper.loadBitmapFromResource(context, R.drawable.settings, 0, (int) (30 * dm.density), (int) (30 * dm.density));
         lockSprite = new TouchEventGameSprite(lockBitmap, LittleFamilyActivity.TOPIC_START_SETTINGS);
     }
 
@@ -44,7 +47,8 @@ public class HomeView extends ScaledSpritedClippedSurfaceView {
         activitySprites = new ArrayList<>();
         random = new Random();
         timer = 0L;
-        lockBitmap = BitmapFactory.decodeResource(context.getResources(), android.R.drawable.ic_menu_manage);
+        DisplayMetrics dm = getContext().getResources().getDisplayMetrics();
+        lockBitmap = ImageHelper.loadBitmapFromResource(context, R.drawable.settings, 0, (int)(30*dm.density), (int)(30*dm.density));
         lockSprite = new TouchEventGameSprite(lockBitmap, LittleFamilyActivity.TOPIC_START_SETTINGS);
         lockSprite.setIgnoreAlpha(true);
     }
