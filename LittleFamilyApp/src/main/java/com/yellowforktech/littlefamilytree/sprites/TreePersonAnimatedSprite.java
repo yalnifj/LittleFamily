@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Build;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.HapticFeedbackConstants;
 
@@ -65,9 +66,11 @@ public class TreePersonAnimatedSprite extends Sprite {
     protected List<Bitmap> activityButtons;
     protected List<Bitmap> spActivityButtons;
 	protected boolean showSpouse;
+    protected DisplayMetrics dm;
 
     public TreePersonAnimatedSprite(TreeNode personNode, MyTreeActivity activity, Bitmap leftLeaf, Bitmap rightLeaf, boolean showSpouse) {
         super();
+        dm = activity.getResources().getDisplayMetrics();
 		this.showSpouse = showSpouse;
         this.node = personNode;
         this.activity = activity;
@@ -75,8 +78,8 @@ public class TreePersonAnimatedSprite extends Sprite {
         this.rightLeaf = rightLeaf;
         this.selectable = true;
         this.setHeight(leftLeaf.getHeight());
-        this.detailWidth = 400;
-        this.detailHeight = 300;
+        this.detailWidth = (int) (activity.getButtonSize()*4);
+        this.detailHeight = (int) (activity.getButtonSize()*3);
 
         if (showSpouse) {
             this.setWidth(leftLeaf.getWidth() + rightLeaf.getWidth());
@@ -100,7 +103,7 @@ public class TreePersonAnimatedSprite extends Sprite {
             String thumbnailFile = dollConfig.getThumbnail();
             try {
                 InputStream is = activity.getAssets().open(thumbnailFile);
-                dressUpBtn = ImageHelper.loadBitmapFromStream(is, 0, MyTreeActivity.buttonSize, MyTreeActivity.buttonSize);
+                dressUpBtn = ImageHelper.loadBitmapFromStream(is, 0, activity.getButtonSize(), activity.getButtonSize());
                 if (node.getPerson().getGender() == GenderType.Female && showSpouse) {
                     spDressUpBtn = dressUpBtn;
                 }
@@ -132,7 +135,7 @@ public class TreePersonAnimatedSprite extends Sprite {
             String thumbnailFile = dollConfig.getThumbnail();
             try {
                 InputStream is = activity.getAssets().open(thumbnailFile);
-                Bitmap spThumb = ImageHelper.loadBitmapFromStream(is, 0, MyTreeActivity.buttonSize, MyTreeActivity.buttonSize);
+                Bitmap spThumb = ImageHelper.loadBitmapFromStream(is, 0, activity.getButtonSize(), activity.getButtonSize());
                 if (node.getSpouse().getGender()==GenderType.Female) {
                     spDressUpBtn = spThumb;
                 } else {
@@ -149,7 +152,7 @@ public class TreePersonAnimatedSprite extends Sprite {
 
         textPaint = new Paint();
         textPaint.setColor(Color.WHITE);
-        textPaint.setTextSize(32);
+        textPaint.setTextSize(26*dm.density);
         textPaint.setTextAlign(Paint.Align.CENTER);
 
         openPaint = new Paint();
@@ -178,8 +181,8 @@ public class TreePersonAnimatedSprite extends Sprite {
     @Override
     public void doStep() {
         if (state==STATE_ANIMATING_OPEN_LEFT || state==STATE_ANIMATING_OPEN_RIGHT) {
-            dWidth += 30;
-            dHeight += 30;
+            dWidth += 15*dm.density;
+            dHeight += 15*dm.density;
             if (dWidth > detailWidth) dWidth = detailWidth;
             if (dHeight > detailHeight) dHeight = detailHeight;
             if (dWidth==detailWidth && dHeight==detailHeight) {
@@ -225,8 +228,8 @@ public class TreePersonAnimatedSprite extends Sprite {
             }
         }
         if (state==STATE_ANIMATING_CLOSED_LEFT || state==STATE_ANIMATING_CLOSED_RIGHT) {
-            dWidth -= 30;
-            dHeight -= 30;
+            dWidth -= 15*dm.density;
+            dHeight -= 15*dm.density;
             if (dWidth < 0) dWidth = 0;
             if (dHeight < 0) dHeight = 0;
             if (dWidth==0 && dHeight==0) {
@@ -332,9 +335,9 @@ public class TreePersonAnimatedSprite extends Sprite {
                 }
                 String name = detailPerson.getName();
                 if (name == null) name = detailPerson.getGivenName();
-                canvas.drawText(name, getX() + leftLeaf.getWidth() + detailWidth / 2, getY() + 30, textPaint);
+                canvas.drawText(name, getX() + leftLeaf.getWidth() + detailWidth / 2, getY() + textPaint.getTextSize(), textPaint);
                 String relationship = node.getAncestralRelationship(detailPerson, activity);
-                canvas.drawText(relationship, getX() + leftLeaf.getWidth() + detailWidth / 2, getY() + 70, textPaint);
+                canvas.drawText(relationship, getX() + leftLeaf.getWidth() + detailWidth / 2, getY() + textPaint.getTextSize()*2, textPaint);
 
                 if (activityButtons==null) {
                     activityButtons = new ArrayList<>();
@@ -346,16 +349,16 @@ public class TreePersonAnimatedSprite extends Sprite {
                     if (dressUpBtn != null) activityButtons.add(dressUpBtn);
                 }
 
-                float bx = getX() + leftLeaf.getWidth() + 20;
-                float by = getY() + detailHeight - MyTreeActivity.buttonSize * 2;
+                float bx = getX() + leftLeaf.getWidth() + 10*dm.density;
+                float by = getY() + detailHeight - (10*dm.density + activity.getButtonSize() * 2);
                 int count = 1;
                 for (Bitmap button : activityButtons) {
                     if (button!=null) {
                         canvas.drawBitmap(button, bx, by, null);
-                        bx += button.getWidth() + 20;
+                        bx += button.getWidth() + 10*dm.density;
                         if (count % 3 == 0) {
-                            bx = getX() + leftLeaf.getWidth() + 20;
-                            by += MyTreeActivity.buttonSize;
+                            bx = getX() + leftLeaf.getWidth() + 10*dm.density;
+                            by += activity.getButtonSize();
                         }
                         count++;
                     }
@@ -366,9 +369,9 @@ public class TreePersonAnimatedSprite extends Sprite {
                 }
                 String name = detailPerson.getName();
                 if (name == null) name = detailPerson.getGivenName();
-                canvas.drawText(name, getX() + getWidth() + detailWidth / 2, getY() + 30, textPaint);
+                canvas.drawText(name, getX() + getWidth() + detailWidth / 2, getY() + textPaint.getTextSize(), textPaint);
                 String relationship = node.getAncestralRelationship(detailPerson, activity);
-                canvas.drawText(relationship, getX() + getWidth() + detailWidth / 2, getY() + 70, textPaint);
+                canvas.drawText(relationship, getX() + getWidth() + detailWidth / 2, getY() + textPaint.getTextSize()*2, textPaint);
 
                 if (spActivityButtons==null) {
                     spActivityButtons = new ArrayList<>();
@@ -380,16 +383,16 @@ public class TreePersonAnimatedSprite extends Sprite {
                     if (spDressUpBtn != null) spActivityButtons.add(spDressUpBtn);
                 }
 
-                float bx = getX() + getWidth() + 20;
-                float by = getY() + detailHeight - MyTreeActivity.buttonSize * 2;
+                float bx = getX() + getWidth() + 10*dm.density;
+                float by = getY() + detailHeight - (10*dm.density + activity.getButtonSize() * 2);
                 int count = 1;
                 for (Bitmap button : spActivityButtons) {
                     if (button!=null) {
                         canvas.drawBitmap(button, bx, by, null);
-                        bx += button.getWidth() + 20;
+                        bx += button.getWidth() + 10*dm.density;
                         if (count % 3 == 0) {
-                            bx = getX() + getWidth() + 20;
-                            by += MyTreeActivity.buttonSize;
+                            bx = getX() + getWidth() + 10*dm.density;
+                            by += activity.getButtonSize();
                         }
                         count++;
                     }
@@ -438,7 +441,9 @@ public class TreePersonAnimatedSprite extends Sprite {
 
     @Override
     public boolean onMove(float oldX, float oldY, float newX, float newY) {
-        moved = true;
+        if (Math.abs(newX - oldX) > 6*dm.density || Math.abs(newY - oldY) > 6*dm.density ) {
+            moved = true;
+        }
         return false;
     }
 
@@ -463,7 +468,7 @@ public class TreePersonAnimatedSprite extends Sprite {
                     dHeight = detailHeight;
                     if (state == STATE_OPEN_LEFT) {
                         float bx = getX() + leftLeaf.getWidth() + 20;
-                        float by = getY() + detailHeight - MyTreeActivity.buttonSize * 2;
+                        float by = getY() + detailHeight - activity.getButtonSize() * 2;
                         int count = 1;
                         for (Bitmap button : activityButtons) {
                             if (button!=null) {
@@ -476,7 +481,7 @@ public class TreePersonAnimatedSprite extends Sprite {
                                 }
                                 bx += button.getWidth() + 20;
                                 if (count % 3 == 0) {
-                                    by += MyTreeActivity.buttonSize;
+                                    by += activity.getButtonSize();
                                     bx = getX() + leftLeaf.getWidth() + 20;
                                 }
                                 count++;
@@ -490,7 +495,7 @@ public class TreePersonAnimatedSprite extends Sprite {
                             state = STATE_ANIMATING_OPEN_LEFT;
                         } else {
                             float bx = getX() + getWidth() + 20;
-                            float by = getY() + detailHeight - MyTreeActivity.buttonSize * 2;
+                            float by = getY() + detailHeight - activity.getButtonSize() * 2;
                             int count = 1;
                             for (Bitmap button : spActivityButtons) {
                                 if (button!=null) {
@@ -504,7 +509,7 @@ public class TreePersonAnimatedSprite extends Sprite {
                                     bx += button.getWidth() + 20;
                                     if (count % 3 == 0) {
                                         bx = getX() + getWidth() + 20;
-                                        by += MyTreeActivity.buttonSize;
+                                        by += activity.getButtonSize();
                                     }
                                     count++;
                                 }

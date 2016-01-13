@@ -39,7 +39,7 @@ public class HomeView extends ScaledSpritedClippedSurfaceView {
         timer = 0L;
         DisplayMetrics dm = getContext().getResources().getDisplayMetrics();
         lockBitmap = ImageHelper.loadBitmapFromResource(context, R.drawable.settings, 0, (int) (30 * dm.density), (int) (30 * dm.density));
-        lockSprite = new TouchEventGameSprite(lockBitmap, LittleFamilyActivity.TOPIC_START_SETTINGS);
+        lockSprite = new TouchEventGameSprite(lockBitmap, LittleFamilyActivity.TOPIC_START_SETTINGS, dm);
     }
 
     public HomeView(Context context, AttributeSet attrs) {
@@ -49,7 +49,7 @@ public class HomeView extends ScaledSpritedClippedSurfaceView {
         timer = 0L;
         DisplayMetrics dm = getContext().getResources().getDisplayMetrics();
         lockBitmap = ImageHelper.loadBitmapFromResource(context, R.drawable.settings, 0, (int)(30*dm.density), (int)(30*dm.density));
-        lockSprite = new TouchEventGameSprite(lockBitmap, LittleFamilyActivity.TOPIC_START_SETTINGS);
+        lockSprite = new TouchEventGameSprite(lockBitmap, LittleFamilyActivity.TOPIC_START_SETTINGS, dm);
         lockSprite.setIgnoreAlpha(true);
     }
 

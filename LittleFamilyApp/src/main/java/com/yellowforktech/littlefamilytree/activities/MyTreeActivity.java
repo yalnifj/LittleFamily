@@ -36,7 +36,7 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
     public static final String TOPIC_NEXT_CLUE = "nextClue";
     public static final String TOPIC_PERSON_SELECTED = "personSelected";
     public static final String DATA_TREE_NODE = "dataTreeNode";
-    public static final int buttonSize = 100;
+    private int buttonSize = 100;
     private LittlePerson selectedPerson;
     private DataService dataService;
 
@@ -105,6 +105,10 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
             bubbleBtn = ImageHelper.loadBitmapFromResource(this, com.yellowforktech.littlefamilytree.R.drawable.bubble, 0, buttonSize, buttonSize);
         }
         return bubbleBtn;
+    }
+
+    public int getButtonSize() {
+        return buttonSize;
     }
 
     @Override
@@ -187,6 +191,7 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
 		
 		dm = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(dm);
+        this.buttonSize = (int) (75 * dm.density);
 
         treeBackground = new AnimatedBitmapSprite(BitmapFactory.decodeResource(getResources(), R.drawable.wood_back));
         treeBackground.setWidth(treeView.getWidth());
@@ -254,7 +259,7 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
             sprite.setY(y);
 
             if (node.isHasParents()) {
-                TouchEventGameSprite upArrow = new TouchEventGameSprite(this.vineArrow, TOPIC_NAVIGATE_UP_TREE);
+                TouchEventGameSprite upArrow = new TouchEventGameSprite(this.vineArrow, TOPIC_NAVIGATE_UP_TREE, dm);
                 upArrow.setX(sprite.getX() + sprite.getWidth() / 2 - upArrow.getWidth() / 2);
                 upArrow.setY(y - vineArrow.getHeight());
                 upArrow.setData(DATA_TREE_NODE, node);

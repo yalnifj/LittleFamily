@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 
@@ -25,16 +26,19 @@ public class TreeSpriteSurfaceView extends SpritedClippedSurfaceView {
     private ScaleGestureDetector mScaleDetector;
     protected float scale = 0.5f;
     protected boolean moved;
+    protected DisplayMetrics dm;
 
     protected TouchStateAnimatedBitmapSprite searchSprite;
 
     public TreeSpriteSurfaceView(Context context) {
         super(context);
+        dm = context.getResources().getDisplayMetrics();
         setupScaleGestureDetector();
     }
 
     public TreeSpriteSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        dm = context.getResources().getDisplayMetrics();
         setupScaleGestureDetector();
     }
 
@@ -163,7 +167,6 @@ public class TreeSpriteSurfaceView extends SpritedClippedSurfaceView {
     @Override
     public void doMove(float oldX, float oldY, float newX, float newY) {
         boolean selectedMoved = false;
-        moved = true;
         if (selectedSprites.size() > 0) {
             for (Sprite s : selectedSprites) {
                 selectedMoved |= s.onMove(oldX+clipX*scale, oldY+clipY*scale, newX+clipX*scale, newY+clipY*scale);
@@ -173,6 +176,10 @@ public class TreeSpriteSurfaceView extends SpritedClippedSurfaceView {
             backgroundSprite.onMove(oldX, oldY, newX, newY);
             clipX -= (newX-oldX);
             clipY -= (newY-oldY);
+
+            if (Math.abs(clipX) > 6*dm.density || Math.abs(clipY) > 6*dm.density ) {
+                moved = true;
+            }
 
             if (clipX < 0) clipX = 0;
             if (clipX + getWidth() > maxWidth*scale) clipX = (int) (maxWidth*scale - getWidth());

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 
@@ -18,6 +19,7 @@ public class ScaledSpritedClippedSurfaceView extends SpritedClippedSurfaceView {
     protected float maxScale = 1.5f;
     protected float minScale = 0.25f;
     protected boolean moved;
+    protected DisplayMetrics dm;
 
     public float getScale() {
         return scale;
@@ -45,11 +47,13 @@ public class ScaledSpritedClippedSurfaceView extends SpritedClippedSurfaceView {
 
     public ScaledSpritedClippedSurfaceView(Context context) {
         super(context);
+        dm = context.getResources().getDisplayMetrics();
         setupScaleGestureDetector();
     }
 
     public ScaledSpritedClippedSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        dm = context.getResources().getDisplayMetrics();
         setupScaleGestureDetector();
     }
 
@@ -119,7 +123,7 @@ public class ScaledSpritedClippedSurfaceView extends SpritedClippedSurfaceView {
             backgroundSprite.onMove(oldX, oldY, newX, newY);
             clipX -= (newX-oldX);
             clipY -= (newY-oldY);
-            if (Math.abs(clipX) > 8 || Math.abs(clipY) > 8 ) {
+            if (Math.abs(clipX) > 6*dm.density || Math.abs(clipY) > 6*dm.density ) {
                 moved = true;
             }
 

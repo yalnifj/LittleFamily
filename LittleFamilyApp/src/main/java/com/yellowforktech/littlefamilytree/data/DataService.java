@@ -516,6 +516,7 @@ public class DataService implements AuthTask.Listener {
             person.setGivenName(updated.getGivenName());
             person.setName(updated.getName());
             person.setNationality(updated.getNationality());
+            person.setOccupation(updated.getOccupation());
             person.updateAge();
             getDBHelper().persistLittlePerson(person);
 

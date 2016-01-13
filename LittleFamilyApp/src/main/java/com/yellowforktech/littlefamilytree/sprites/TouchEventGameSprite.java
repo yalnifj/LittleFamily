@@ -1,6 +1,7 @@
 package com.yellowforktech.littlefamilytree.sprites;
 
 import android.graphics.Bitmap;
+import android.util.DisplayMetrics;
 import android.view.HapticFeedbackConstants;
 
 import com.yellowforktech.littlefamilytree.events.EventQueue;
@@ -11,11 +12,13 @@ import com.yellowforktech.littlefamilytree.events.EventQueue;
 public class TouchEventGameSprite extends AnimatedBitmapSprite {
     protected boolean moved;
     protected String eventTopic;
+    protected DisplayMetrics dm;
 
-    public TouchEventGameSprite(Bitmap bitmap, String eventTopic) {
+    public TouchEventGameSprite(Bitmap bitmap, String eventTopic, DisplayMetrics dm) {
         super(bitmap);
         this.eventTopic = eventTopic;
         this.selectable = true;
+        this.dm = dm;
     }
 
     public String getEventTopic() {
@@ -29,7 +32,7 @@ public class TouchEventGameSprite extends AnimatedBitmapSprite {
     @Override
     public boolean onMove(float oldX, float oldY, float newX, float newY) {
         super.onMove(oldX, oldY, newX, newY);
-        if (Math.abs(newX - oldX) > 8 || Math.abs(newY - oldY) > 8 ) {
+        if (Math.abs(newX - oldX) > 6*dm.density || Math.abs(newY - oldY) > 6*dm.density ) {
             moved = true;
         }
         return false;

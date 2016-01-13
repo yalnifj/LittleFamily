@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.util.DisplayMetrics;
 
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.events.EventQueue;
@@ -28,6 +29,7 @@ public class PersonLeavesButton extends Sprite {
     protected int stepsPerFrame;
     protected int steps;
     protected Context context;
+    protected DisplayMetrics dm;
 
     public PersonLeavesButton(String eventTopic, List<LittlePerson> people, List<Bitmap> bitmaps, Context context) {
         this.eventTopic = eventTopic;
@@ -38,6 +40,7 @@ public class PersonLeavesButton extends Sprite {
         stepsPerFrame = 4;
         width = bitmaps.get(0).getWidth();
         height = bitmaps.get(0).getHeight();
+        dm = context.getResources().getDisplayMetrics();
     }
 
     @Override
@@ -124,7 +127,9 @@ public class PersonLeavesButton extends Sprite {
 
     @Override
     public boolean onMove(float oldX, float oldY, float newX, float newY) {
-        moved = true;
+        if (Math.abs(newX - oldX) > 6*dm.density || Math.abs(newY - oldY) > 6*dm.density ) {
+            moved = true;
+        }
         return false;
     }
 

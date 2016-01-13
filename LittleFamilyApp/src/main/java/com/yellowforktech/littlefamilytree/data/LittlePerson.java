@@ -46,6 +46,7 @@ public class LittlePerson implements Serializable {
     private Boolean hasMedia;
 
     private Integer treeLevel;
+    private String occupation;
 
     @Override
     public String toString() {
@@ -175,6 +176,11 @@ public class LittlePerson implements Serializable {
         Fact nFact = fsPerson.getFirstFactOfType(FactType.Nationality);
         if (nFact!=null) {
             nationality = nFact.getValue();
+        }
+
+        Fact oFact = fsPerson.getFirstFactOfType(FactType.Occupation);
+        if (oFact!=null) {
+            occupation = oFact.getValue();
         }
     }
 
@@ -367,6 +373,14 @@ public class LittlePerson implements Serializable {
 
     public void setTreeLevel(Integer treeLevel) {
         this.treeLevel = treeLevel;
+    }
+
+    public String getOccupation() {
+        return occupation;
+    }
+
+    public void setOccupation(String occupation) {
+        this.occupation = occupation;
     }
 
     @Override

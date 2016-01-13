@@ -118,7 +118,7 @@ public class HomeActivity extends LittleFamilyActivity {
 				} else {
 					photo = ImageHelper.loadBitmapFromResource(this, selectedPerson.getDefaultPhotoResource(), 0, (int)(30*dm.density), (int)(30*dm.density));
 				}
-				TouchEventGameSprite profileSprite = new TouchEventGameSprite(photo, LittleFamilyActivity.TOPIC_START_PROFILE);
+				TouchEventGameSprite profileSprite = new TouchEventGameSprite(photo, LittleFamilyActivity.TOPIC_START_PROFILE, dm);
 				profileSprite.setSelectable(true);
 				homeView.setProfileSprite(profileSprite);
 			}
@@ -264,7 +264,7 @@ public class HomeActivity extends LittleFamilyActivity {
             }
 
             Bitmap couchBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_familyroom_couch);
-            TouchEventGameSprite couch = new TouchEventGameSprite(couchBm, TOPIC_ANIMATE_CAT);
+            TouchEventGameSprite couch = new TouchEventGameSprite(couchBm, TOPIC_ANIMATE_CAT, dm);
             couch.setX(555 * dm.density);
             couch.setY(575 * dm.density);
             homeView.addSprite(couch);
@@ -544,7 +544,7 @@ public class HomeActivity extends LittleFamilyActivity {
             homeView.addSprite(kettle);
 
             Bitmap bubbles1bm = BitmapFactory.decodeResource(getResources(), R.drawable.bubbles1);
-            TouchEventGameSprite bubbles = new TouchEventGameSprite(bubbles1bm, TOPIC_START_BUBBLES);
+            TouchEventGameSprite bubbles = new TouchEventGameSprite(bubbles1bm, TOPIC_START_BUBBLES, dm);
             bubbles.getBitmaps().get(0).add(BitmapFactory.decodeResource(getResources(), R.drawable.bubbles2));
             bubbles.getBitmaps().get(0).add(BitmapFactory.decodeResource(getResources(), R.drawable.bubbles3));
             bubbles.getBitmaps().get(0).add(BitmapFactory.decodeResource(getResources(), R.drawable.bubbles4));

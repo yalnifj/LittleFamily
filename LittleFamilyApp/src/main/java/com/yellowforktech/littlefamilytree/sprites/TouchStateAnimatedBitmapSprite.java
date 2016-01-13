@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.media.MediaPlayer;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.HapticFeedbackConstants;
 
@@ -37,10 +38,12 @@ public class TouchStateAnimatedBitmapSprite extends AnimatedBitmapSprite {
     protected int loops;
     protected boolean moved;
     protected MediaPlayer mediaPlayer;
+    protected DisplayMetrics dm;
 
     public TouchStateAnimatedBitmapSprite(Context context) {
         audio = new HashMap<>();
         this.context = context;
+        this.dm = context.getResources().getDisplayMetrics();
         stateTransitions = new HashMap<>();
         stateTransitionEvents = new HashMap<>();
         touchRectangles = new HashMap<>();
@@ -50,6 +53,7 @@ public class TouchStateAnimatedBitmapSprite extends AnimatedBitmapSprite {
         super(bitmap);
         audio = new HashMap<>();
         this.context = context;
+        this.dm = context.getResources().getDisplayMetrics();
         stateTransitions = new HashMap<>();
         stateTransitionEvents = new HashMap<>();
         touchRectangles = new HashMap<>();
@@ -59,6 +63,7 @@ public class TouchStateAnimatedBitmapSprite extends AnimatedBitmapSprite {
         super(bitmaps);
         audio = new HashMap<>();
         this.context = context;
+        this.dm = context.getResources().getDisplayMetrics();
         stateTransitions = new HashMap<>();
     }
 
@@ -174,7 +179,7 @@ public class TouchStateAnimatedBitmapSprite extends AnimatedBitmapSprite {
     @Override
     public boolean onMove(float oldX, float oldY, float newX, float newY) {
         super.onMove(oldX, oldY, newX, newY);
-        if (Math.abs(newX - oldX) > 8 || Math.abs(newY - oldY) > 8 ) {
+        if (Math.abs(newX - oldX) > 6*dm.density || Math.abs(newY - oldY) > 6*dm.density ) {
             moved = true;
         }
         return false;

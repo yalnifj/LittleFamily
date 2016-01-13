@@ -1,6 +1,7 @@
 package com.yellowforktech.littlefamilytree.sprites;
 
 import android.graphics.Bitmap;
+import android.util.DisplayMetrics;
 
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 
@@ -20,8 +21,8 @@ public class DraggablePersonSprite extends TouchEventGameSprite {
 	protected int thresholdX = 1;
 	protected int thresholdY = 1;
 
-    public DraggablePersonSprite(Bitmap bitmap, LittlePerson person, int maxWidth, int maxHeight, String eventTopic) {
-        super(bitmap, eventTopic);
+    public DraggablePersonSprite(Bitmap bitmap, LittlePerson person, int maxWidth, int maxHeight, String eventTopic, DisplayMetrics dm) {
+        super(bitmap, eventTopic, dm);
         this.person = person;
         selectable = true;
         this.maxHeight = maxHeight;
