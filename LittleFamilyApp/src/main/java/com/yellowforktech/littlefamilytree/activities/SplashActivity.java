@@ -2,13 +2,16 @@ package com.yellowforktech.littlefamilytree.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.data.DataService;
@@ -31,6 +34,8 @@ public class SplashActivity extends Activity implements EventListener {
     private boolean startingIntent;
 	private boolean canContinue;
 	private int counter=0;
+    private ImageView quietModeImageView;
+    private MediaPlayer introPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +44,7 @@ public class SplashActivity extends Activity implements EventListener {
 
         plantView = (SpritedSurfaceView) findViewById(R.id.plantView);
 
-        //ErrorLogger logger = ErrorLogger.getInstance(this);
-        //if (!logger.isAlive()) logger.start();
+        quietModeImageView = (ImageView) findViewById(R.id.quietMode);
     }
 
     @Override
@@ -48,16 +52,6 @@ public class SplashActivity extends Activity implements EventListener {
         super.onStart();
 		
 		startingIntent=false;
-
-        MediaPlayer introPlayer = MediaPlayer.create(this, R.raw.intro);
-        introPlayer.start();
-        introPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                mp.release();
-				canContinue=true;
-            }
-        });
 
         dataService = DataService.getInstance();
         dataService.setContext(this);
@@ -80,8 +74,8 @@ public class SplashActivity extends Activity implements EventListener {
         TouchStateAnimatedBitmapSprite plant = new TouchStateAnimatedBitmapSprite(this);
         plant.getBitmaps().put(0, plants);
         plant.getBitmaps().put(1, plants);
-        plant.setWidth((int) (100*dm.density));
-        plant.setHeight((int) (150*dm.density));
+        plant.setWidth((int) (100 * dm.density));
+        plant.setHeight((int) (150 * dm.density));
         plant.setX(0);
         plant.setY(0);
         plant.setStepsPerFrame(5);
@@ -89,6 +83,24 @@ public class SplashActivity extends Activity implements EventListener {
         plant.setStateTransition(1, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
         plant.setStateTransitionEvent(1, "ChooseFamilyMember");
         plantView.addSprite(plant);
+
+        Boolean quietMode = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("quiet_mode", false);
+        if (!quietMode) {
+            quietModeImageView.setImageResource(R.drawable.quiet_mode_off);
+            introPlayer = MediaPlayer.create(this, R.raw.intro);
+            introPlayer.setVolume(0.5f, 0.5f);
+            introPlayer.start();
+            introPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    mp.release();
+                    canContinue = true;
+                }
+            });
+        } else {
+            quietModeImageView.setImageResource(R.drawable.quiet_mode_on);
+            canContinue = true;
+        }
     }
 
     @Override
@@ -122,5 +134,23 @@ public class SplashActivity extends Activity implements EventListener {
         if ((canContinue||counter>4) && !dataService.isAuthenticating() && !startingIntent) {
             gotoChooseFamilyMember(null);
         }
+    }
+
+    public void toggleQuietMode(View view) {
+        Boolean quietMode = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("quiet_mode", false);
+        if (quietMode) {
+            quietMode = false;
+            quietModeImageView.setImageResource(R.drawable.quiet_mode_off);
+        } else {
+            quietMode = true;
+            quietModeImageView.setImageResource(R.drawable.quiet_mode_on);
+            if (introPlayer!=null) {
+                introPlayer.stop();
+            }
+        }
+
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        editor.putBoolean("quiet_mode", quietMode);
+        editor.commit();
     }
 }

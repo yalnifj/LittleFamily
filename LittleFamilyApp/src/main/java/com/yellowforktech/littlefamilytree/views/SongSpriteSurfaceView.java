@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.media.MediaPlayer;
+import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 
@@ -702,10 +703,15 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
             //-- play or pause
             if (!playing) {
                 playing = true;
-                pianoPlayer.start();
-                drumsPlayer.start();
-                flutePlayer.start();
-                violinPlayer.start();
+                Boolean quietMode = PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("quiet_mode", false);
+                if (!quietMode) {
+                    pianoPlayer.start();
+                    drumsPlayer.start();
+                    flutePlayer.start();
+                    violinPlayer.start();
+                } else {
+                    // TODO - Show words on screen
+                }
             }
             else {
                 pianoPlayer.pause();

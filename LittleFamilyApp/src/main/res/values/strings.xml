@@ -125,5 +125,6 @@ Please wait...</string>
 
     <string name="ask_for_help">Ask an adult for help.</string>
     <string name="title_activity_flying">Flying Activity</string>
+    <string name="quiet_mode">Quiet Mode:</string>
 
 </resources>

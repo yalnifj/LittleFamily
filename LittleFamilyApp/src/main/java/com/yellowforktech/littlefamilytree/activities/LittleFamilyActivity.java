@@ -262,24 +262,34 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
 
     }
 
-    public void speak(String message) {
+    public void speak(final String message) {
         Log.d("LittleFamilyActivity", "Speaking: " + message);
-        if (tts!=null) {
+        Boolean quietMode = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("quiet_mode", false);
+        if (tts!=null && !quietMode) {
             if (Build.VERSION.SDK_INT > 20) {
                 tts.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
             }
             else {
                 tts.speak(message, TextToSpeech.QUEUE_FLUSH, null);
             }
+        } else {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(LittleFamilyActivity.this, message, Toast.LENGTH_LONG).show();
+                }
+            });
         }
     }
 
     public void playCompleteSound() {
-        if (successPlayer !=null) successPlayer.start();
+        Boolean quietMode = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("quiet_mode", false);
+        if (successPlayer !=null && !quietMode) successPlayer.start();
     }
 
     public void playBuzzSound() {
-        if (buzzPlayer !=null) buzzPlayer.start();
+        Boolean quietMode = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("quiet_mode", false);
+        if (buzzPlayer !=null && !quietMode) buzzPlayer.start();
     }
 
     public void onHomeButtonPressed(View view) {

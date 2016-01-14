@@ -10,6 +10,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.media.MediaPlayer;
+import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.view.HapticFeedbackConstants;
 import android.view.SurfaceHolder;
@@ -194,9 +195,12 @@ public class ScratchView extends SpritedSurfaceView {
         mX = x;
         mY = y;
         try {
-            mediaPlayer = MediaPlayer.create(context, com.yellowforktech.littlefamilytree.R.raw.erasing);
-            mediaPlayer.start();
-            mediaPlayer.setLooping(true);
+            Boolean quietMode = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("quiet_mode", false);
+            if (!quietMode) {
+                mediaPlayer = MediaPlayer.create(context, com.yellowforktech.littlefamilytree.R.raw.erasing);
+                mediaPlayer.start();
+                mediaPlayer.setLooping(true);
+            }
         } catch (Exception e) {
             // just let things go on
         }
@@ -241,7 +245,7 @@ public class ScratchView extends SpritedSurfaceView {
         mPath.reset();
 
         try {
-            mediaPlayer.stop();
+            if (mediaPlayer!=null) mediaPlayer.stop();
         } catch (Exception e) {
             // just let things go on
         }

@@ -3,6 +3,7 @@ package com.yellowforktech.littlefamilytree.sprites;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.MediaPlayer;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.yellowforktech.littlefamilytree.R;
@@ -71,17 +72,20 @@ public class BirdSprite extends AnimatedBitmapSprite {
 
         if (stateChanged && state==2 && visible) {
             try {
-				if (tweet==null || !tweet.isPlaying()) {
-                	tweet = MediaPlayer.create(context, R.raw.bird);
-         	       	tweet.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-          	        @Override
-    	            public void onCompletion(MediaPlayer mp) {
-          	              mp.release();
-						  tweet = null;
-      	            }
-  	              });
-          	      tweet.start();
-				}
+                Boolean quietMode = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("quiet_mode", false);
+                if (!quietMode) {
+                    if (tweet == null || !tweet.isPlaying()) {
+                        tweet = MediaPlayer.create(context, R.raw.bird);
+                        tweet.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                            @Override
+                            public void onCompletion(MediaPlayer mp) {
+                                mp.release();
+                                tweet = null;
+                            }
+                        });
+                        tweet.start();
+                    }
+                }
             } catch (Exception e) {
                 // just let things go on
                 Log.e(getClass().getSimpleName(), "Error playing audio", e);

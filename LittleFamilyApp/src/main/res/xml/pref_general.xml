@@ -40,6 +40,9 @@
         android:key="tts_voice_test"
         android:summary="@string/pref_summary_tts_voice_test"/>
 
+    <CheckBoxPreference android:title="@string/pref_title_quiet_mode" android:key="quiet_mode" android:defaultValue="false"
+        android:summary="@string/pref_summary_quiet_mode" />
+
     <Preference android:title="@string/title_activity_parents_guide" android:key="parents_guide">
     </Preference>
 

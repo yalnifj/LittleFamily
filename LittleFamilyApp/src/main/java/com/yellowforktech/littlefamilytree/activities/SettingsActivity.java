@@ -215,6 +215,7 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
         bindPreferenceSummaryToValue(findPreference("sync_cellular"));
         bindPreferenceSummaryToValue(findPreference("sync_delay"));
         bindPreferenceSummaryToValue(findPreference("tts_voice"));
+        bindPreferenceSummaryToValue(findPreference("quiet_mode"));
         //bindPreferenceSummaryToValue(findPreference("tts_voice_test"));
         Preference versionPref = findPreference("version");
         if (versionPref!=null) {
@@ -313,7 +314,7 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
 
         // Trigger the listener immediately with the preference's
         // current value.
-        if (preference.getKey().equals("sync_background") || preference.getKey().equals("sync_cellular")) {
+        if (preference.getKey().equals("sync_background") || preference.getKey().equals("sync_cellular") || preference.getKey().equals("quiet_mode")) {
             sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
                     PreferenceManager
                             .getDefaultSharedPreferences(preference.getContext())
@@ -416,6 +417,7 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
             bindPreferenceSummaryToValue(findPreference("sync_cellular"));
             bindPreferenceSummaryToValue(findPreference("sync_delay"));
             bindPreferenceSummaryToValue(findPreference("tts_voice"));
+            bindPreferenceSummaryToValue(findPreference("quiet_mode"));
 
             Preference versionPref = findPreference("version");
             if (versionPref!=null) {

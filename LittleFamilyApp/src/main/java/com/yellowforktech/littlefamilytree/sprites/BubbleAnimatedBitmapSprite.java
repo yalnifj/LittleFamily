@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.media.MediaPlayer;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.yellowforktech.littlefamilytree.R;
@@ -202,14 +203,17 @@ public class BubbleAnimatedBitmapSprite extends BouncingAnimatedBitmapSprite {
                 state = 1;
 
                 try {
-                    mediaPlayer = MediaPlayer.create(activity, R.raw.pop);
-                    mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                        @Override
-                        public void onCompletion(MediaPlayer mp) {
-                            mp.release();
-                        }
-                    });
-                    mediaPlayer.start();
+                    Boolean quietMode = PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("quiet_mode", false);
+                    if (!quietMode) {
+                        mediaPlayer = MediaPlayer.create(activity, R.raw.pop);
+                        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                            @Override
+                            public void onCompletion(MediaPlayer mp) {
+                                mp.release();
+                            }
+                        });
+                        mediaPlayer.start();
+                    }
                 } catch (Exception e) {
                     // just let things go on
                     Log.e(getClass().getSimpleName(), "Error playing sound", e);
@@ -217,15 +221,18 @@ public class BubbleAnimatedBitmapSprite extends BouncingAnimatedBitmapSprite {
             } else if (person!=null) {
                 stepCount = 10;
 				try {
-                    mediaPlayer = MediaPlayer.create(activity, R.raw.nopop);
-                    mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-							@Override
-							public void onCompletion(MediaPlayer mp) {
-								mp.release();
+                    Boolean quietMode = PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("quiet_mode", false);
+                    if (!quietMode) {
+                        mediaPlayer = MediaPlayer.create(activity, R.raw.nopop);
+                        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                            @Override
+                            public void onCompletion(MediaPlayer mp) {
+                                mp.release();
                                 view.sayFindText();
-							}
-						});
-                    mediaPlayer.start();
+                            }
+                        });
+                        mediaPlayer.start();
+                    }
                 } catch (Exception e) {
                     // just let things go on
                     Log.e(getClass().getSimpleName(), "Error playing sound", e);

@@ -90,5 +90,7 @@
     <string name="pref_title_version">Version</string>
     <string name="pref_summary_visit_web">Visit the Little Family Tree Website</string>
     <string name="pref_title_website">Website</string>
+    <string name="pref_title_quiet_mode">Quiet Mode</string>
+    <string name="pref_summary_quiet_mode">Can also be toggled on the first loading screen.</string>
 
 </resources>

@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.media.MediaPlayer;
+import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.HapticFeedbackConstants;
@@ -95,14 +96,17 @@ public class TouchStateAnimatedBitmapSprite extends AnimatedBitmapSprite {
             stateChanged = false;
             if (audio.containsKey(state)) {
                 try {
-                    mediaPlayer = MediaPlayer.create(context, audio.get(state));
-                    mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                        @Override
-                        public void onCompletion(MediaPlayer mp) {
-                            mp.release();
-                        }
-                    });
-                    mediaPlayer.start();
+                    Boolean quietMode = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("quiet_mode", false);
+                    if (!quietMode) {
+                        mediaPlayer = MediaPlayer.create(context, audio.get(state));
+                        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                            @Override
+                            public void onCompletion(MediaPlayer mp) {
+                                mp.release();
+                            }
+                        });
+                        mediaPlayer.start();
+                    }
                 } catch (Exception e) {
                     // just let things go on
                     Log.e(getClass().getSimpleName(), "Error playing audio", e);
