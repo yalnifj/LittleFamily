@@ -1,0 +1,42 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="fill_parent"
+    android:layout_height="fill_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="0dp"
+    tools:context="com.yellowforktech.littlefamilytree.activities.HeritageDressUpActivity"
+    android:background="@drawable/dressup_background">
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/topbar_height"
+        android:id="@+id/topBarFragment"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        tools:layout="@layout/fragment_top_bar" />
+    <view
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        class="com.yellowforktech.littlefamilytree.views.DressUpView"
+        android:id="@+id/dress_up_view"
+        android:layout_below="@+id/topBarFragment"
+        android:layout_centerHorizontal="true" />
+
+    <ScrollView
+        android:layout_height="fill_parent"
+        android:layout_width="150dp"
+        android:layout_marginTop="40dp"
+        android:id="@+id/scrollView"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="false"
+        >
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_height="wrap_content"
+            android:layout_width="150dp"
+            android:id="@+id/dollLayout"
+            ></LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

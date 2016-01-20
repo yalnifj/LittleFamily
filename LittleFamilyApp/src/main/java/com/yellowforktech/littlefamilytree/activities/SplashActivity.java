@@ -144,7 +144,7 @@ public class SplashActivity extends Activity implements EventListener {
         } else {
             quietMode = true;
             quietModeImageView.setImageResource(R.drawable.quiet_mode_on);
-            if (introPlayer!=null) {
+            if (introPlayer!=null && introPlayer.isPlaying()) {
                 introPlayer.stop();
             }
         }

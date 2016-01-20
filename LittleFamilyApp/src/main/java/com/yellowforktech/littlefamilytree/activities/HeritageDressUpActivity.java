@@ -9,9 +9,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.SurfaceHolder;
 import android.view.View;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Space;
@@ -38,7 +38,7 @@ public class HeritageDressUpActivity extends LittleFamilyActivity implements Dre
 
     private DollConfig dollConfig;
     private DressUpView dressUpView;
-    private HorizontalScrollView dollScroller;
+    private View dollScroller;
     private LinearLayout dollLayout;
     private LittlePerson person;
     private DressUpDolls dressUpDolls;
@@ -63,7 +63,10 @@ public class HeritageDressUpActivity extends LittleFamilyActivity implements Dre
         SurfaceHolder sfhTrackHolder = dressUpView.getHolder();
         sfhTrackHolder.setFormat(PixelFormat.TRANSPARENT);
 
-        dollScroller = (HorizontalScrollView) findViewById(R.id.horizontalScrollView);
+        dollScroller = findViewById(R.id.horizontalScrollView);
+        if (dollScroller==null) {
+            dollScroller = findViewById(R.id.scrollView);
+        }
         dollLayout = (LinearLayout) findViewById(R.id.dollLayout);
 
         setupTopBar();
@@ -168,13 +171,16 @@ public class HeritageDressUpActivity extends LittleFamilyActivity implements Dre
                     place.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 }
                 String placeTxt = allPlaces.get(index);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                params.gravity = Gravity.CENTER_HORIZONTAL;
                 place.setText(placeTxt);
+                place.setLayoutParams(params);
                 ll.addView(place);
 
                 dollLayout.addView(ll);
 
                 Space spacer = new Space(HeritageDressUpActivity.this);
-                spacer.setMinimumWidth(15);
+                spacer.setMinimumHeight(15);
                 dollLayout.addView(spacer);
             }
 

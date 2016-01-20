@@ -1,6 +1,7 @@
 package com.yellowforktech.littlefamilytree.views;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -67,7 +68,12 @@ public class DressUpView extends SpritedSurfaceView {
                 if (clothes != null) {
                     factored = false;
                     int x = 0;
-                    int y = (int) (doll.getHeight());
+                    int y = doll.getHeight();
+                    boolean portrait = (Configuration.ORIENTATION_PORTRAIT==context.getResources().getConfiguration().orientation);
+                    if (!portrait) {
+                        x = (int) (doll.getWidth()*1.5);
+                        y = 10;
+                    }
                     for (int c = 0; c < clothes.length; c++) {
                         DollClothing dc = clothes[c];
                         dc.setPlaced(false);
@@ -83,7 +89,8 @@ public class DressUpView extends SpritedSurfaceView {
                             dc.setOutline(outlineBitmap);
                             dc.setX(x);
                             dc.setY(y);
-                            x = (int) (x + bm.getWidth());
+                            if (portrait) x = (int) (x + bm.getWidth());
+                            else y = y + bm.getHeight();
                         } catch (IOException e) {
                             Log.e("DressUpView", "Error drawing image", e);
                         }
@@ -142,6 +149,58 @@ public class DressUpView extends SpritedSurfaceView {
                                     }
                                     if (dc.getY() + dc.getBitmap().getHeight() * factor > getHeight()) {
                                         dc.setY(getHeight() - (int) (dc.getBitmap().getHeight() * factor));
+                                    }
+                                }
+                                //-- draw outline of selected
+                                if (dc == selected) {
+                                    Rect cr3 = new Rect();
+                                    int left = (int) (dc.getSnapX() * factor) + offset;
+                                    int top = (int) (dc.getSnapY() * factor);
+                                    cr3.set(left, top,
+                                            (int) (left + dc.getOutline().getWidth() * factor),
+                                            (int) (top + dc.getOutline().getHeight() * factor)
+                                    );
+                                    canvas.drawBitmap(dc.getOutline(), null, cr3, null);
+                                }
+                                Rect cr2 = new Rect();
+                                cr2.set(dc.getX(), dc.getY(), (int) (dc.getX() + dc.getBitmap().getWidth() * factor), (int) (dc.getY() + dc.getBitmap().getHeight() * factor));
+                                canvas.drawBitmap(dc.getBitmap(), null, cr2, null);
+                            }
+                        }
+                        factored = true;
+                    }
+                } else {
+                    factor = (this.getHeight() * 0.80f) / doll.getHeight();
+                    Rect r2 = new Rect();
+                    int w = (int) (doll.getWidth() * factor);
+                    offset = 0;
+                    if (w < this.getWidth()) {
+                        offset = ((this.getWidth() / 2) - w) / 2;
+                    }
+                    r2.set(offset, 0, w + offset, (int) (doll.getHeight() * factor));
+                    canvas.drawBitmap(doll, null, r2, null);
+
+                    if (textPaint!=null) {
+                        textPaint.setTextSize(getHeight() * 0.10f);
+                        canvas.drawText(dollConfig.getOriginalPlace(), getWidth() / 2, r2.bottom + textPaint.getTextSize(), textPaint);
+                    }
+
+                    if (clothing != null) {
+                        for (int c = 0; c < clothing.length; c++) {
+                            DollClothing dc = clothing[c];
+                            if (dc.getBitmap() != null) {
+                                if (!factored) {
+                                    dc.setX((int) (dc.getX() * factor));
+                                    dc.setY((int) (dc.getY() * factor));
+                                    if (dc.getY() + dc.getBitmap().getHeight() * factor > getHeight()) {
+                                        dc.setY(dc.getY() - getHeight());
+                                        if (dc.getY() < 0) {
+                                            dc.setY(0);
+                                        }
+                                        dc.setX(dc.getX() + (int) (dc.getBitmap().getWidth() * factor));
+                                    }
+                                    if (dc.getX() + dc.getBitmap().getWidth() * factor > getWidth()) {
+                                        dc.setX(getWidth() - (int) (dc.getBitmap().getWidth() * factor));
                                     }
                                 }
                                 //-- draw outline of selected
