@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -64,6 +65,16 @@ public class WaterColorImageView extends View {
 
     private void setupColors() {
         dm = getContext().getResources().getDisplayMetrics();
+
+        boolean portrait = getHeight() > getWidth();
+
+        if (portrait) {
+            Matrix matrix = new Matrix();
+            matrix.postRotate(90);
+            float ratio = ((float)watercolors.getWidth()) / watercolors.getHeight();
+            Bitmap scaledBitmap = Bitmap.createScaledBitmap(watercolors, getHeight(), (int) (getHeight() / ratio), true);
+            watercolors = Bitmap.createBitmap(scaledBitmap , 0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix, true);
+        }
 
         float r = getRatio();
 
@@ -129,6 +140,16 @@ public class WaterColorImageView extends View {
         wh.set((int) (410*dm.density * r), (int) (83*dm.density * r), (int) (465*dm.density * r), (int) (140*dm.density * r));
         colorRects.add(wh);
         colors.add(0);
+
+        if (portrait) {
+            for (Rect rect : colorRects) {
+                int left = (int) (rect.left*Math.cos(90) - rect.top*Math.sin(90));
+                int top = (int) (rect.left*Math.sin(90) + rect.top*Math.cos(90));
+                int right = (int) (rect.right*Math.cos(90) - rect.bottom*Math.sin(90));
+                int bottom = (int) (rect.right*Math.sin(90) + rect.bottom*Math.cos(90));
+                rect.set(left, top, right, bottom);
+            }
+        }
 
         activeColor = colors.size()-1;
     }

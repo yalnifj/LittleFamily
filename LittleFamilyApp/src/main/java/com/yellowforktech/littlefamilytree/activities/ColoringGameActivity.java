@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -60,8 +61,10 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Random
         colorPicker = (WaterColorImageView) findViewById(R.id.colorPicker);
         colorPicker.setActivity(this);
         colorPicker.registerListener(layeredImage);
-		
-		maxBrushSize = getWindowManager().getDefaultDisplay().getWidth()/8;
+
+        Point size = new Point();
+        getWindowManager().getDefaultDisplay().getSize(size);
+		maxBrushSize = Math.min(size.x, size.y) / 8;
 
         seekBar = (SeekBar) findViewById(R.id.seekBar);
         seekBar.setOnSeekBarChangeListener(this);
@@ -70,6 +73,7 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Random
         brushSizeView = (BrushSizeView) findViewById(R.id.brushSize);
         brushSizeView.setMaxSize(maxBrushSize);
         brushSizeView.setMinSize(minBrushSize);
+        brushSizeView.setBrushSize(maxBrushSize/2);
         seekBar.setProgress(maxBrushSize/2);
 
         Intent intent = getIntent();

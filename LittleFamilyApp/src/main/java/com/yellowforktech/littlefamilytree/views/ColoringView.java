@@ -10,7 +10,6 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.yellowforktech.littlefamilytree.R;
@@ -243,9 +242,8 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
 
     public void setBrushSize(float brushSize) {
         this.brushSize = brushSize;
-        DisplayMetrics dm = context.getResources().getDisplayMetrics();
-        mPaint.setStrokeWidth(brushSize*dm.density);
-        noPaint.setStrokeWidth(brushSize*dm.density);
+        mPaint.setStrokeWidth(brushSize);
+        noPaint.setStrokeWidth(brushSize);
     }
 
     protected void touch_start(float x, float y) {
