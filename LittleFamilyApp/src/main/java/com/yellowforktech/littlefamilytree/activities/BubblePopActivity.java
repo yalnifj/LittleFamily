@@ -1,6 +1,7 @@
 package com.yellowforktech.littlefamilytree.activities;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import com.yellowforktech.littlefamilytree.R;
@@ -54,6 +55,12 @@ public class BubblePopActivity extends LittleFamilyActivity implements ParentsLo
         ParentsLoaderTask loader = new ParentsLoaderTask(this, this);
         loader.execute(que.peek());
         bubbleView.resume();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
     }
 
     @Override

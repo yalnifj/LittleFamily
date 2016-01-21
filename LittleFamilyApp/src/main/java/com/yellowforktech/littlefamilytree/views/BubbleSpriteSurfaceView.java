@@ -49,6 +49,7 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
     private int bubbleAddWait = 5;
     private int bubbleStep = 0;
     private int popped = 0;
+    private boolean reorder = false;
     private AnimatedBitmapSprite fatherSpot;
     private AnimatedBitmapSprite motherSpot;
     private AnimatedBitmapSprite childSpot;
@@ -129,23 +130,8 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
     }
 
     public void nextBubble() {
-        synchronized (sprites) {
-            int firstbubble = -1;
-            //-- move popped bubbles behind unpopped bubbles
-            for(int i=0; i<sprites.size()-1; i++) {
-                Sprite s1 = sprites.get(i);
-                if (s1 instanceof BubbleAnimatedBitmapSprite) {
-                    if (firstbubble<0 && s1.getState()==0) firstbubble = i;
-
-                    if (firstbubble>=0 && s1.getState()==3 && i>firstbubble) {
-                        sprites.set(i, sprites.get(firstbubble));
-                        sprites.set(firstbubble, s1);
-                        firstbubble++;
-                    }
-                }
-            }
-        }
         popped++;
+        reorder = true;
         if (popped>=random.size()) {
             for(BubbleCompleteListener l : listeners) {
                 l.onBubbleComplete();
@@ -248,14 +234,41 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
                 bubbleStep++;
             }
         }
+
+        if (reorder) {
+            synchronized (sprites) {
+                int index = sprites.indexOf(childSpot);
+
+                int bubbleIndex = -1;
+                //-- move popped bubbles behind unpopped bubbles
+                for(int i=sprites.size()-1; i>index; i--) {
+                    Sprite s1 = sprites.get(i);
+                    if (s1 instanceof BubbleAnimatedBitmapSprite) {
+                        BubbleAnimatedBitmapSprite bubble = (BubbleAnimatedBitmapSprite) s1;
+                        if (bubble.getPerson()!=null && bubble.getState()==3) {
+                            bubbleIndex = i;
+                            break;
+                        }
+                    }
+                }
+                if (bubbleIndex > index) {
+                    Sprite s1 = sprites.remove(bubbleIndex);
+                    sprites.add(index+1, s1);
+                }
+                reorder = false;
+            }
+        }
     }
 
     public void createSprites() {
+        int screenwidth = Math.min(getWidth(), getHeight());
+        boolean portrait = true;
+        if (getWidth() > getHeight()) portrait = false;
         spotBm = BitmapFactory.decodeResource(getResources(), com.yellowforktech.littlefamilytree.R.drawable.bubble_spot);
         spotHBm = BitmapFactory.decodeResource(getResources(), com.yellowforktech.littlefamilytree.R.drawable.bubble_spot_h);
         spotDownBm = BitmapFactory.decodeResource(getResources(), com.yellowforktech.littlefamilytree.R.drawable.bubble_spot_down);
         spotDownHBm = BitmapFactory.decodeResource(getResources(), com.yellowforktech.littlefamilytree.R.drawable.bubble_spot_down_h);
-        int spotWidth = getWidth()/5;
+        int spotWidth = screenwidth/5;
         if (spotWidth < spotBm.getWidth()) spotWidth = spotBm.getWidth();
         float spotRatio = (float)spotBm.getWidth() / spotBm.getHeight();
         int spotHeight = (int) (spotWidth / spotRatio);
@@ -269,6 +282,7 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
         fatherSpot.getBitmaps().put(1, highlighted);
         int fx = (int) ((getWidth()/2)-(spotWidth*1.3f));
         int fy = getHeight()/10;
+        if (!portrait) fy = 0;
         fatherSpot.setX(fx);
         fatherSpot.setY(fy);
         addSprite(fatherSpot);
@@ -279,6 +293,7 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
         motherSpot.setHeight(spotHeight);
         int mx = (int) ((getWidth()/2)+(spotWidth*0.3f));
         int my = getHeight()/10;
+        if (!portrait) my = 0;
         motherSpot.setX(mx);
         motherSpot.setY(my);
         addSprite(motherSpot);
@@ -291,32 +306,33 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
         childSpot.getBitmaps().put(1, highlightedDown);
         int cx = (int) ((getWidth()/2)-(spotWidth/2));
         int cy = spotHeight+getHeight()/10;
+        if (!portrait) cy = spotHeight;
         childSpot.setX(cx);
         childSpot.setY(cy);
         addSprite(childSpot);
 
         Bitmap sinkBm = BitmapFactory.decodeResource(getResources(), com.yellowforktech.littlefamilytree.R.drawable.sink);
         AnimatedBitmapSprite sink = new AnimatedBitmapSprite(sinkBm);
-        int swidth = (int) (getWidth()-(20*dm.density));
+        int swidth = (int) (screenwidth-(20*dm.density));
         float r = (float) sinkBm.getWidth() / sinkBm.getHeight();
-        int sheight  = (int)(swidth / r);
+        int sheight  = (int)(swidth / r) / 2;
         sink.setWidth(swidth);
         sink.setHeight(sheight);
-        sink.setX(10*dm.density);
+        sink.setX((getWidth()/2) - swidth/2);
         sink.setY(getHeight()-sheight);
         addSprite(sink);
 
         Bitmap faucet1bm = BitmapFactory.decodeResource(getResources(), com.yellowforktech.littlefamilytree.R.drawable.faucet1);
         TouchStateAnimatedBitmapSprite faucet = new TouchStateAnimatedBitmapSprite(faucet1bm, activity);
         float fr = (float) faucet1bm.getWidth() / (float) faucet1bm.getHeight();
-        int fheight  = (int)(getHeight()/2 - sink.getHeight()*0.75f);
+        int fheight  = (int)(sink.getHeight()*4f);
         int fwidth = (int) (fheight * fr);
         float scale = (float) fheight / faucet1bm.getHeight();
 		//faucet.setScale((float)fheight/faucet1bm.getHeight());
         faucet.setWidth(fwidth);
         faucet.setHeight(fheight);
         faucet.setX(sink.getX() + sink.getWidth() / 2);
-        faucet.setY(getHeight()/2);
+        faucet.setY(sink.getY() + sheight/3 - fheight);
         List<Bitmap> turning = new ArrayList<>(2);
         turning.add(BitmapFactory.decodeResource(getResources(), com.yellowforktech.littlefamilytree.R.drawable.faucet2));
         turning.add(faucet1bm);
@@ -386,7 +402,7 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
         Random rand = new Random();
         int count = rand.nextInt(8) + 4;
         for (int b = 0; b < count; b++) {
-            BubbleAnimatedBitmapSprite bubble = new BubbleAnimatedBitmapSprite(bubbleBm, getWidth(), getHeight(), activity, this, (int) (spotWidth*0.8));
+            BubbleAnimatedBitmapSprite bubble = new BubbleAnimatedBitmapSprite(bubbleBm, screenwidth, getHeight(), activity, this, (int) (spotWidth*0.8));
             bubble.getBitmaps().put(1, popping);
             int width = (int) (bubbleBm.getWidth() * bubbleScale * (0.5 + rand.nextFloat()));
             bubble.setWidth(width);
@@ -396,14 +412,14 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
             float speed = 5.0f - rand.nextFloat()*10.0f;
             bubble.setSpeed(speed);
             bubble.setY(rand.nextInt(getHeight()-bubble.getHeight()));
-            bubble.setX(rand.nextInt(getWidth()-bubble.getWidth()));
+            bubble.setX(rand.nextInt(screenwidth-bubble.getWidth()));
             addSprite(bubble);
         }
 		
 		if (random!=null) {
             count = 0;
 			for (LittlePerson person : random) {
-                BubbleAnimatedBitmapSprite bubble = new BubbleAnimatedBitmapSprite(bubbleBm, getWidth(), getHeight(), activity, this, (int) (spotWidth*0.8));
+                BubbleAnimatedBitmapSprite bubble = new BubbleAnimatedBitmapSprite(bubbleBm, screenwidth, getHeight(), activity, this, (int) (spotWidth*0.8));
                 bubble.getBitmaps().put(1, popping);
                 int slope = 5 - rand.nextInt(10);
                 bubble.setSlope(slope);
@@ -412,7 +428,7 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
 				bubble.setWidth(spotWidth);
 				bubble.setHeight(spotWidth);
                 bubble.setY(rand.nextInt(getHeight() - bubble.getHeight()));
-                bubble.setX(rand.nextInt(getWidth() - bubble.getWidth()));
+                bubble.setX(rand.nextInt(screenwidth - bubble.getWidth()));
                 bubble.setPerson(person);
                 if (parents.size() > 0 && parents.get(0) == person) {
                     bubble.setMx((int) (fatherSpot.getX() + (fatherSpot.getWidth()/2)));
@@ -449,8 +465,10 @@ public class BubbleSpriteSurfaceView extends SpritedSurfaceView implements Event
 
     @Override
     public void doDraw(Canvas canvas) {
-        if (!spritesCreated) {
-            createSprites();
+        synchronized (sprites) {
+            if (!spritesCreated) {
+                createSprites();
+            }
         }
 
         if (backgroundBitmap!=null) {
