@@ -67,8 +67,11 @@ public class WaterColorImageView extends View {
         dm = getContext().getResources().getDisplayMetrics();
 
         boolean portrait = getHeight() > getWidth();
+        int owidth = watercolors.getWidth();
+        int oheight = watercolors.getHeight();
 
         if (portrait) {
+            //-- rotate the bitmap
             Matrix matrix = new Matrix();
             matrix.postRotate(90);
             float ratio = ((float)watercolors.getWidth()) / watercolors.getHeight();
@@ -142,11 +145,13 @@ public class WaterColorImageView extends View {
         colors.add(0);
 
         if (portrait) {
+            //-- rotate and resize the rectangles
+            float r2 = ((float) watercolors.getWidth()) / oheight;
             for (Rect rect : colorRects) {
-                int left = (int) (rect.left*Math.cos(90) - rect.top*Math.sin(90));
-                int top = (int) (rect.left*Math.sin(90) + rect.top*Math.cos(90));
-                int right = (int) (rect.right*Math.cos(90) - rect.bottom*Math.sin(90));
-                int bottom = (int) (rect.right*Math.sin(90) + rect.bottom*Math.cos(90));
+                int left = (int) ((oheight - rect.bottom) * r2);
+                int top = (int) (rect.left*r2);
+                int right = (int) ((oheight - rect.top) * r2);
+                int bottom = (int) (rect.right*r2);
                 rect.set(left, top, right, bottom);
             }
         }
@@ -205,6 +210,8 @@ public class WaterColorImageView extends View {
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_MOVE:
                 touch_up(x, y);
                 invalidate();
                 break;
