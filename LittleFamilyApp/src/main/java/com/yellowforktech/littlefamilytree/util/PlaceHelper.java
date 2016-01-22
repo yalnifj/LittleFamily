@@ -95,7 +95,7 @@ public class PlaceHelper {
 
     public static String getPlaceCountry(String p) {
         String place = PlaceHelper.getTopPlace(p);
-        if (place == null) return UNKNOWN;
+        if (place == null || place.trim().isEmpty()) return UNKNOWN;
         if (place.equalsIgnoreCase("United Kingdom")) {
             place = getTopPlace(p, 2);
         }

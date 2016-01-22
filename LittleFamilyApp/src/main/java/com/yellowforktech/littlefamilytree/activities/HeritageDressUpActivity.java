@@ -157,6 +157,7 @@ public class HeritageDressUpActivity extends LittleFamilyActivity implements Dre
             for(int index=0; index < allDolls.size(); index++) {
                 LinearLayout ll = new LinearLayout(HeritageDressUpActivity.this);
                 ll.setOrientation(LinearLayout.VERTICAL);
+                ll.setMinimumWidth((int) (95*dm.density));
                 ImageView dollImage = new ImageView(HeritageDressUpActivity.this);
                 DollConfig dc = allDolls.get(index);
                 if (dc!=null) {
