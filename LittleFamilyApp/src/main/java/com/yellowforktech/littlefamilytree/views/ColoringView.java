@@ -180,10 +180,11 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
                         Rect dst = new Rect();
                         dst.set(0, 0, w, h);
                         shareCanvas.drawRect(0, 0, w, h, background);
-                        shareCanvas.drawBitmap(originalBitmap, null, dst, paint2);
+                        if (originalBitmap!=null && !originalBitmap.isRecycled())
+                            shareCanvas.drawBitmap(originalBitmap, null, dst, paint2);
                         if (!showOriginal) {
                             shareCanvas.drawBitmap(mBitmap, null, dst, mBitmapPaint);
-                            if (outlineBitmap != null) {
+                            if (outlineBitmap != null && !outlineBitmap.isRecycled()) {
                                 shareCanvas.drawBitmap(outlineBitmap, null, dst, paint2);
                             }
 
@@ -220,7 +221,7 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
                     }
                 }
 
-                ColoringImageFilterTask task = new ColoringImageFilterTask(this);
+                ColoringImageFilterTask task = new ColoringImageFilterTask(this, context);
                 task.execute(originalBitmap);
             }
 
