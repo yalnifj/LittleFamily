@@ -220,7 +220,7 @@ public class DataService implements AuthTask.Listener {
     public boolean hasData() throws Exception {
         //-- check succesful login
         waitForAuth();
-        if (remoteService.getSessionId() == null) return false;
+        //if (remoteService.getSessionId() == null) return false;
         //-- check for people
         LittlePerson person = getDBHelper().getFirstPerson();
         if (person!=null) return true;
