@@ -208,13 +208,12 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
 
     public void setImageBitmap(Bitmap bm)
     {
-        originalBitmap = bm;
-
         loaded = false;
         complete = false;
 
         if (bm!=null) {
             synchronized (originalBitmap) {
+                originalBitmap = bm;
                 if (mBitmap != null) {
                     synchronized (mBitmap) {
                         mBitmap = null;
@@ -256,7 +255,7 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
     public void doMove(float oldX, float oldY, float x, float y) {
         super.doMove(oldX, oldY, x, y);
 		if (!loaded || mBitmap==null) return;
-        mPath.quadTo(mX, mY, (x + mX)/2, (y + mY)/2);
+        mPath.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2);
 
         synchronized (mBitmap) {
             // commit the path to our offscreen
@@ -309,11 +308,13 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
 
     @Override
     public void onComplete(Bitmap result) {
-        this.outlineBitmap = result;
-        loaded = true;
-        complete = false;
-        for(ColoringCompleteListener l : listeners) {
-            l.onColoringReady();
+        synchronized (originalBitmap) {
+            this.outlineBitmap = result;
+            loaded = true;
+            complete = false;
+            for (ColoringCompleteListener l : listeners) {
+                l.onColoringReady();
+            }
         }
     }
 
