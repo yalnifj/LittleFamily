@@ -86,11 +86,16 @@ public class DressUpView extends SpritedSurfaceView {
                         try {
                             cis = context.getAssets().open(dc.getFilename());
                             Bitmap bm = BitmapFactory.decodeStream(cis);
-                            GPUImage outlineImage = new GPUImage(context);
-                            outlineImage.setFilter(filterGroup);
-                            Bitmap outlineBitmap = outlineImage.getBitmapWithFilterApplied(bm);
-                            dc.setBitmap(bm);
-                            dc.setOutline(outlineBitmap);
+                            try {
+                                GPUImage outlineImage = new GPUImage(context);
+                                outlineImage.setFilter(filterGroup);
+                                Bitmap outlineBitmap = outlineImage.getBitmapWithFilterApplied(bm);
+                                dc.setBitmap(bm);
+                                dc.setOutline(outlineBitmap);
+                            } catch(Exception e) {
+                                Log.e("DressUpView", "Error using OpenGL", e);
+                                dc.setOutline(bm);
+                            }
                             dc.setX(x);
                             dc.setY(y);
                             if (portrait) x = (int) (x + bm.getWidth());
@@ -239,15 +244,17 @@ public class DressUpView extends SpritedSurfaceView {
 
     protected void touch_start(float x, float y) {
         super.touch_start(x, y);
-        if (doll!=null) {
+        if (doll!=null && clothing != null) {
             for (int c = clothing.length-1; c >=0; c--) {
                 DollClothing dc = clothing[c];
-                Rect rect = new Rect();
-                rect.set(dc.getX(), dc.getY(), (int)(dc.getX()+dc.getBitmap().getWidth()*factor), (int)(dc.getY()+dc.getBitmap().getHeight()*factor));
-                if (rect.contains((int)x, (int)y)) {
-                    selected = dc;
-                    selected.setPlaced(false);
-                    break;
+                if (dc!=null && dc.getBitmap()!=null) {
+                    Rect rect = new Rect();
+                    rect.set(dc.getX(), dc.getY(), (int) (dc.getX() + dc.getBitmap().getWidth() * factor), (int) (dc.getY() + dc.getBitmap().getHeight() * factor));
+                    if (rect.contains((int) x, (int) y)) {
+                        selected = dc;
+                        selected.setPlaced(false);
+                        break;
+                    }
                 }
             }
         }

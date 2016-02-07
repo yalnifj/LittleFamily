@@ -112,7 +112,9 @@ public class PagerContainer extends FrameLayout implements ViewPager.OnPageChang
         public void handleMessage(Message msg) {
             if (getViewPager().beginFakeDrag())
             {
-                getViewPager().fakeDragBy(0f);
+                if (getViewPager().getChildCount()>0) {
+                    getViewPager().fakeDragBy(0f);
+                }
                 getViewPager().endFakeDrag();
             }
         }
