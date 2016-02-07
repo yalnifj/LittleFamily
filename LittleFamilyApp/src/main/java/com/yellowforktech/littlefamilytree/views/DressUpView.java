@@ -11,9 +11,9 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
 
-import com.jabistudio.androidjhlabs.filter.util.AndroidUtils;
 import com.yellowforktech.littlefamilytree.data.DollClothing;
-import com.yellowforktech.littlefamilytree.filters.AlphaOutlineFilter;
+import com.yellowforktech.littlefamilytree.filters.GPUImageAlphaMaskFilter;
+import com.yellowforktech.littlefamilytree.filters.GPUImageAlphaSobelEdgeDetection;
 import com.yellowforktech.littlefamilytree.games.DollConfig;
 import com.yellowforktech.littlefamilytree.sprites.Sprite;
 
@@ -21,6 +21,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import jp.co.cyberagent.android.gpuimage.GPUImage;
+import jp.co.cyberagent.android.gpuimage.GPUImageFilterGroup;
 
 /**
  * Created by jfinlay on 4/17/2015.
@@ -54,8 +57,10 @@ public class DressUpView extends SpritedSurfaceView {
 
     public void setDollConfig(DollConfig dollConfig) {
         this.dollConfig = dollConfig;
-        AlphaOutlineFilter filter = new AlphaOutlineFilter(Color.RED);
-        //BlurFilter blurFilter = new BlurFilter();
+        GPUImageFilterGroup filterGroup = new GPUImageFilterGroup();
+        filterGroup.addFilter(new GPUImageAlphaMaskFilter());
+        filterGroup.addFilter(new GPUImageAlphaSobelEdgeDetection());
+        filterGroup.addFilter(new GPUImageAlphaMaskFilter(0.2f, new float[]{1f, 0f, 0f}));
 
         synchronized (dollConfig) {
 
@@ -81,10 +86,9 @@ public class DressUpView extends SpritedSurfaceView {
                         try {
                             cis = context.getAssets().open(dc.getFilename());
                             Bitmap bm = BitmapFactory.decodeStream(cis);
-                            int[] src = AndroidUtils.bitmapToIntArray(bm);
-                            int[] dst = filter.filter(src, bm.getWidth(), bm.getHeight());
-                            //dst = blurFilter.filter(dst, bm.getWidth(), bm.getHeight());
-                            Bitmap outlineBitmap = Bitmap.createBitmap(dst, bm.getWidth(), bm.getHeight(), Bitmap.Config.ARGB_8888);
+                            GPUImage outlineImage = new GPUImage(context);
+                            outlineImage.setFilter(filterGroup);
+                            Bitmap outlineBitmap = outlineImage.getBitmapWithFilterApplied(bm);
                             dc.setBitmap(bm);
                             dc.setOutline(outlineBitmap);
                             dc.setX(x);
