@@ -120,6 +120,7 @@ public class TreeSpriteSurfaceView extends SpritedClippedSurfaceView {
     protected void touch_start(float x, float y) {
         mX = x;
         mY = y;
+        this.onTouchStartTime = System.currentTimeMillis();
 
         if (searchSprite.inSprite(x, y)) {
             searchSprite.onSelect(x, y);
@@ -147,7 +148,7 @@ public class TreeSpriteSurfaceView extends SpritedClippedSurfaceView {
             s.onRelease(x + clipX * scale, y + clipY * scale);
         }
         selectedSprites.clear();
-        if (!moved) {
+        if (!moved || (System.currentTimeMillis() - onTouchStartTime) < 100) {
             for (Sprite s : sprites) {
                 if (s.getState() == TreePersonAnimatedSprite.STATE_OPEN_LEFT)
                     s.setState(TreePersonAnimatedSprite.STATE_ANIMATING_CLOSED_LEFT);
@@ -177,7 +178,7 @@ public class TreeSpriteSurfaceView extends SpritedClippedSurfaceView {
             clipX -= (newX-oldX);
             clipY -= (newY-oldY);
 
-            if (Math.abs(clipX) > 6*dm.density || Math.abs(clipY) > 6*dm.density ) {
+            if (Math.abs(clipX) > 8*dm.density || Math.abs(clipY) > 8*dm.density ) {
                 moved = true;
             }
 

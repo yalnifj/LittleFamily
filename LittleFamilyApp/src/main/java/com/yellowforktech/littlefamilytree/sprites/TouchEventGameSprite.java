@@ -32,7 +32,7 @@ public class TouchEventGameSprite extends AnimatedBitmapSprite {
     @Override
     public boolean onMove(float oldX, float oldY, float newX, float newY) {
         super.onMove(oldX, oldY, newX, newY);
-        if (Math.abs(newX - oldX) > 6*dm.density || Math.abs(newY - oldY) > 6*dm.density ) {
+        if (Math.abs(newX - oldX) > 8*dm.density || Math.abs(newY - oldY) > 8*dm.density ) {
             moved = true;
         }
         return false;
@@ -42,7 +42,9 @@ public class TouchEventGameSprite extends AnimatedBitmapSprite {
     public void onRelease(float x, float y) {
         super.onRelease(x, y);
 
-        if (!moved) {
+        long pressTime = (System.currentTimeMillis() - onSelectStartTime);
+        boolean inside = inSprite(x, y);
+        if (!moved || (inside && pressTime > 600)) {
             if (surfaceView!=null) {
                 surfaceView.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
             }

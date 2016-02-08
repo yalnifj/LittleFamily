@@ -16,7 +16,8 @@ public abstract class AbstractTouchAnimatedSurfaceView extends SurfaceView imple
     protected Context context;
     protected AnimationThread animationThread;
     protected long animationDelay = 1000/FPS;
-    protected float touchTolerance = 4;
+    protected float touchTolerance = 8;
+    protected long onTouchStartTime;
 
     public AbstractTouchAnimatedSurfaceView(Context context) {
         super(context);
@@ -74,6 +75,7 @@ public abstract class AbstractTouchAnimatedSurfaceView extends SurfaceView imple
     protected float mX, mY;
 
     protected void touch_start(float x, float y) {
+        onTouchStartTime = System.currentTimeMillis();
         mX = x;
         mY = y;
     }

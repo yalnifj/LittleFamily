@@ -35,6 +35,7 @@ public class AnimatedBitmapSprite extends Sprite implements BitmapSequenceLoader
     protected int loadingState;
     protected boolean flipHoriz;
     protected boolean flipVert;
+    protected long onSelectStartTime;
 
     public AnimatedBitmapSprite() {
         super();
@@ -289,6 +290,7 @@ public class AnimatedBitmapSprite extends Sprite implements BitmapSequenceLoader
     @Override
     public void onSelect(float x, float y) {
         selected = true;
+        onSelectStartTime = System.currentTimeMillis();
     }
 
     @Override
