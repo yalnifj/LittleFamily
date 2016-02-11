@@ -169,12 +169,14 @@ public class ScratchView extends SpritedSurfaceView {
         if (w==0) w=600;
 		if (h==0) h=600;
 
-        float ratio = (float) (imageBitmap.getWidth()) / imageBitmap.getHeight();
-        if ( w < h ) {
-			h = (int) (w / ratio);
-		} else {
-			w = (int)(h * ratio);
-		}
+        if (imageBitmap != null) {
+            float ratio = (float) (imageBitmap.getWidth()) / imageBitmap.getHeight();
+            if (w < h) {
+                h = (int) (w / ratio);
+            } else {
+                w = (int) (h * ratio);
+            }
+        }
 
         mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         mCanvas = new Canvas(mBitmap);

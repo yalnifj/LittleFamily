@@ -322,6 +322,7 @@ public class GedcomParser {
                     part.setValue(sufx);
                     form.addPart(part);
                 }
+                name.addNameForm(form);
             }
         }
         return name;
