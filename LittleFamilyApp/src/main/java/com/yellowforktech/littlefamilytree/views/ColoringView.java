@@ -212,7 +212,7 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
         complete = false;
 
         if (bm!=null) {
-            synchronized (originalBitmap) {
+            synchronized (bm) {
                 originalBitmap = bm;
                 if (mBitmap != null) {
                     synchronized (mBitmap) {
