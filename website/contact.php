@@ -6,7 +6,7 @@
     $fsLevel = !empty($_REQUEST['fsLevel']) ? $_REQUEST['fsLevel'] : 'no fsLevel';
     $message = !empty($_REQUEST['message']) ? $_REQUEST['message'] : 'no message';
 
-    $toEmail = 'yalnifj@gmail.com';
+    $toEmail = 'service@yellowforktech.com';
     $msg = "Little Family Tree Contact Form Submission\r\n".
         "Name: $fromName\r\n".
         "Email: $fromEmail\r\n".

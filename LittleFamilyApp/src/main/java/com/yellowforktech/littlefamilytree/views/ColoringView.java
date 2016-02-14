@@ -227,6 +227,8 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
 			synchronized(sprites) {
 				sprites.clear();
 			}
+        } else {
+
         }
     }
 

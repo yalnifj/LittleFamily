@@ -123,7 +123,11 @@ public class ScratchGameActivity extends LittleFamilyActivity implements Scratch
         if (photo==null) {
             //-- could not find any images, fallback to a default image
             imageBitmap = ImageHelper.loadBitmapFromResource(this, selectedPerson.getDefaultPhotoResource(), 0, width, height);
-            setupCanvas();
+            if (imageBitmap != null) {
+                setupCanvas();
+            } else {
+                mediaChooser.loadRandomImage();
+            }
         } else {
             imagePath = photo.getLocalPath();
             if (imagePath != null) {

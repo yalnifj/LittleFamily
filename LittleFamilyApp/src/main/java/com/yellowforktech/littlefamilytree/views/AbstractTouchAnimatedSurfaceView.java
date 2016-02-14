@@ -182,7 +182,11 @@ public abstract class AbstractTouchAnimatedSurfaceView extends SurfaceView imple
                     }
                 } finally {
                     if (canvas!=null) {
-                        holder.unlockCanvasAndPost(canvas);
+                        try {
+                            holder.unlockCanvasAndPost(canvas);
+                        } catch (Exception e) {
+                            Log.e("AnimationThread", "Error unlocking canvas", e);
+                        }
                     }
                 }
                 long calctime = System.currentTimeMillis() - starttime;

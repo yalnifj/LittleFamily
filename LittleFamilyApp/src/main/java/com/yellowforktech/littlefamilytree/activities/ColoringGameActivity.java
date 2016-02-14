@@ -191,7 +191,11 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Random
             imagePath = photo.getLocalPath();
             if (imagePath != null) {
                 imageBitmap = ImageHelper.loadBitmapFromFile(imagePath, 0, width, height, true);
-                setupCanvas();
+                if (imageBitmap != null) {
+                    setupCanvas();
+                } else {
+                    mediaChooser.loadRandomImage();
+                }
             } else {
                 mediaChooser.loadRandomImage();
             }
