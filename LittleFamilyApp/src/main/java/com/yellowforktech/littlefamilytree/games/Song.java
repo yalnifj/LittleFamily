@@ -11,8 +11,11 @@ public class Song {
     private int fluteTrack;
     private int violinTrack;
     private int voiceTrack;
+    private String words;
 
-    private List<Long> timings;
+    private List<Long> danceTimings;
+    private List<Long> wordTimings;
+    private SongPersonAttribute attributor;
 
     public int getDrumTrack() {
         return drumTrack;
@@ -38,14 +41,6 @@ public class Song {
         this.pianoTrack = pianoTrack;
     }
 
-    public List<Long> getTimings() {
-        return timings;
-    }
-
-    public void setTimings(List<Long> timings) {
-        this.timings = timings;
-    }
-
     public int getViolinTrack() {
         return violinTrack;
     }
@@ -60,5 +55,37 @@ public class Song {
 
     public void setVoiceTrack(int voiceTrack) {
         this.voiceTrack = voiceTrack;
+    }
+
+    public String getWords() {
+        return words;
+    }
+
+    public void setWords(String words) {
+        this.words = words;
+    }
+
+    public List<Long> getDanceTimings() {
+        return danceTimings;
+    }
+
+    public void setDanceTimings(List<Long> danceTimings) {
+        this.danceTimings = danceTimings;
+    }
+
+    public List<Long> getWordTimings() {
+        return wordTimings;
+    }
+
+    public void setWordTimings(List<Long> wordTimings) {
+        this.wordTimings = wordTimings;
+    }
+
+    public SongPersonAttribute getAttributor() {
+        return attributor;
+    }
+
+    public void setAttributor(SongPersonAttribute attributor) {
+        this.attributor = attributor;
     }
 }
