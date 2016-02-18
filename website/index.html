@@ -90,17 +90,17 @@
 -->
                     <p>
                         <a class="small-margin" href="https://play.google.com/store/apps/details?id=com.yellowforktech.littlefamilytree.com.yellowforktech.littlefamilytree.littlefamilytree1">
-                            <img alt="Android app on Google Play" width="180"
+                            <img alt="Android app on Google Play" width="180" height="53"
                                  src="googel-play-badge.png" />
                         </a>
 
                         <a class="small-margin" href="http://www.amazon.com/gp/product/B014FPGQJO">
-                            <img alt="Android app on Amazon App Store" width="180"
+                            <img alt="Android app on Amazon App Store" width="180" height="53"
                                  src="amazon-underground-app-us-black.png" />
                         </a>
 						
 			<a class="small-margin" href="https://itunes.apple.com/us/app/little-family-tree/id1077188098?ls=1&mt=8">
-                            <img alt="iOS App on the iTunes App Store" width="180"
+                            <img alt="iOS App on the iTunes App Store" width="180" height="53"
                                  src="iosAppStoreBadge.png" />
                         </a>
 						
@@ -328,7 +328,8 @@
             <label for="email">Email address</label>
             <input type="email" class="form-control" id="email" placeholder="Email" onchange="validateEmail();"/>
           </div>
-            <div class="form-group">
+            <div class="row">
+             <div class="form-group col col-sm-5" style="margin-left: 5px;">
                 <label>Expertise with family history</label>
                 <br />
                 <label class="radio-inline">
@@ -341,7 +342,7 @@
                     <input type="radio" name="fhLevel" id="fhLevel3" value="Expert" /> Expert
                 </label>
             </div>
-            <div class="form-group">
+            <div class="form-group col col-sm-4">
                 <label>Expertise with FamilySearch</label>
                 <br />
                 <label class="radio-inline">
@@ -354,17 +355,34 @@
                     <input type="radio" name="fsLevel" id="fsLevel3" value="Expert" /> Expert
                 </label>
             </div>
-		  <div class="form-group">
-            <label for="reason">Reason for contacting us:</label>
-            <select name="reason" class="form-control" id="reason">
-			  <option>I need help</option>
-			  <option>I have some feedback to share</option>
-			  <option>I found a bug</option>
-			  <option>Kudos!</option>
-			  <option>Complaint</option>
-			  <option>I want to be a beta tester</option>
-			</select>
           </div>
+            <div class="row">
+            <div class="form-group col col-sm-5" style="margin-left: 5px;">
+                <label>Platform</label>
+                <br />
+                <label class="radio-inline">
+                    <input type="radio" name="platform" id="platform1" value="Android" /> Android
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="platform" id="platform2" value="iOS" /> iPhone/iPad
+                </label>
+            </div>
+                <div class="form-group col col-sm-6">
+                    <label for="deviceDetails">Device model</label>
+                    <input type="text" class="form-control" id="deviceDetails" placeholder="iPhone 5s / Galaxy S3 / etc." />
+                </div>
+            </div>
+                  <div class="form-group">
+                    <label for="reasoning">Reason for contacting us:</label>
+                    <select name="reasoning" class="form-control" id="reasoning">
+                      <option>I need help</option>
+                      <option>I have some feedback to share</option>
+                      <option>I found a bug</option>
+                      <option>Kudos!</option>
+                      <option>Complaint</option>
+                    </select>
+                  </div>
+
 		  <div id="messageGroup" class="form-group">
             <label for="message">Message</label>
             <textarea rows="6" class="form-control" name="message" id="message" placeholder="Enter your message"></textarea>
@@ -718,11 +736,13 @@
 	    $('#ajaxError').hide();
         if (validateName() && validateEmail() && validateMessage()) {
             $.post('contact.php', {
-                reason: $('#reason').val(),
+                reasoning: $('#reasoning').val(),
                 name: $('#name').val(),
                 email: $('#email').val(),
                 fhLevel: $("input:radio[name ='fhLevel']:checked").val(),
                 fsLevel: $("input:radio[name ='fsLevel']:checked").val(),
+                platform: $("input:radio[name ='platform']:checked").val(),
+                device: $('#deviceDetails').val(),
                 message: $('#message').val()
             }, function(data) {
                 if (data=='success') {
