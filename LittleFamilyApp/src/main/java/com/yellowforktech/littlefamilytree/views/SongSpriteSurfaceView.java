@@ -101,10 +101,9 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
     private Song song;
 
     private long lastSongTime = 0;
-    private int danceTimeSlot = 0;
     private int dancer = 0;
-    private int wordTimeSlot = 0;
     private int wordNumber = 0;
+    private int wordChange = 0;
     private List<String> words;
     private List<TextSprite> textSprites;
 
@@ -189,8 +188,6 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
         spritesCreated = false;
     }
 
-    private int wordChange = 0;
-
     @Override
     public void doStep() {
         if (selPerson1!=null) {
@@ -228,33 +225,49 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
                     textSprites.clear();
                     Paint textPaint = new Paint();
                     textPaint.setColor(Color.WHITE);
-                    textPaint.setTextSize(playButton.getHeight() * 0.75f);
-                    float tx = 10 * dm.density;
-                    float ty = playButton.getY() + playButton.getHeight() + 20*dm.density;
-                    for (int w = wordChange; w < wordChange + 4; w++) {
+                    textPaint.setTextSize(playButton.getHeight() * 0.5f);
+                    float tx = 20 * dm.density;
+                    float ty = playButton.getY() + playButton.getHeight()*2 + 20*dm.density;
+                    for (int w = wordChange; w < wordChange + 5; w++) {
+                        if (w >= words.size()) break;
                         String word = words.get(w);
-                        String[] wordParts = word.split("-");
-                        if (wordParts.length > 1) {
-
-                        } else {
-                            TextSprite ts = new TextSprite();
-                            ts.setText(word);
-                            ts.setX(tx);
-                            ts.setY(ty);
-                            ts.setHeight(playButton.getHeight());
-                            Rect bounds = new Rect();
-                            textPaint.getTextBounds(word,0,word.length(),bounds);
-                            ts.setWidth(bounds.width());
-                            tx += bounds.width() + 10 * dm.density;
+                        if (word.startsWith("_")) {
+                            if (dancer < onStage.size()) {
+                                DraggablePersonSprite ds = onStage.get(dancer);
+                                LittlePerson person = ds.getPerson();
+                                word = word.replace("_", song.getAttributor().getAttributeFromPerson(person));
+                            }
                         }
+                        if (w>wordChange && word.charAt(0)=='-') {
+                            tx -= 9 * dm.density;
+                        }
+                        TextSprite ts = new TextSprite();
+                        ts.setText(word);
+                        ts.setX(tx);
+                        ts.setY(ty);
+                        ts.setHeight((int) (playButton.getHeight()*0.6f));
+                        ts.setTextPaint(textPaint);
+                        Rect bounds = new Rect();
+                        textPaint.getTextBounds(word,0,word.length(),bounds);
+                        ts.setWidth(bounds.width());
+                        sprites.add(ts);
+                        textSprites.add(ts);
+                        tx += bounds.width() + 10 * dm.density;
+
                     }
+                    wordChange += Math.max(textSprites.size(), 5);
                 }
+            }
+
+            if (wordNumber < song.getWordTimings().size() && time > song.getWordTimings().get(wordNumber)) {
+                wordNumber++;
             }
 
 			if (time > song.getDanceTimings().get(0) && time < song.getDanceTimings().get(0) + 500) {
 				DraggablePersonSprite ds = onStage.get(0);
+                dancer = 0;
 				ds.setTargetX(stage.getWidth()/2 - (int)(50*dm.density));
-				ds.setTargetHeight((int)(100*dm.density));
+				ds.setTargetHeight((int)(50*dm.density));
 				ds.setTargetY((int) (selPerson1.getY() + selPerson1.getHeight()));
 				ds.setMoving(true);
 			}
@@ -263,10 +276,11 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 				DraggablePersonSprite ds = onStage.get(0);
 				ds.setTargetX((int)selPerson1.getX());
 				ds.setTargetHeight(womanHeight);
-				ds.setTargetY((int)(selPerson1.getY()));
+				ds.setTargetY((int) (selPerson1.getY()));
 				ds.setMoving(true);
 				
 				ds = onStage.get(1);
+                dancer = 1;
 				ds.setTargetX(stage.getWidth()/2 - (int)(50*dm.density));
 				ds.setTargetHeight((int)(100*dm.density));
 				ds.setTargetY((int)(selPerson1.getY()+selPerson1.getHeight()));
@@ -277,10 +291,11 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 				DraggablePersonSprite ds = onStage.get(1);
 				ds.setTargetX((int)selPerson2.getX());
 				ds.setTargetHeight(womanHeight);
-				ds.setTargetY((int)(selPerson2.getY()));
+				ds.setTargetY((int) (selPerson2.getY()));
 				ds.setMoving(true);
 
 				ds = onStage.get(2);
+                dancer = 2;
 				ds.setTargetX(stage.getWidth()/2 - (int)(50*dm.density));
 				ds.setTargetHeight((int)(100*dm.density));
 				ds.setTargetY((int) (selPerson1.getY() + selPerson1.getHeight()));
@@ -291,10 +306,11 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 				DraggablePersonSprite ds = onStage.get(2);
 				ds.setTargetX((int)selPerson3.getX());
 				ds.setTargetHeight(womanHeight);
-				ds.setTargetY((int)(selPerson3.getY()));
+				ds.setTargetY((int) (selPerson3.getY()));
 				ds.setMoving(true);
 
 				ds = onStage.get(3);
+                dancer = 3;
 				ds.setTargetX(stage.getWidth()/2 - (int)(50*dm.density));
 				ds.setTargetHeight((int)(100*dm.density));
 				ds.setTargetY((int) (selPerson1.getY() + selPerson1.getHeight()));
@@ -313,7 +329,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
                     LittlePerson p = ds.getPerson();
                     family.remove(p);
                     finishedPeople.add(p);
-                    ds.setTargetX(-100);
+                    ds.setTargetX((int) (-100*dm.density));
                     ds.setMoving(true);
                 }
 			}
@@ -321,6 +337,11 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
                 resetSong();
                 synchronized (sprites) {
                     onStage.clear();
+                    for (TextSprite ts : textSprites) {
+                        sprites.remove(ts);
+                    }
+                    textSprites.clear();
+
                 }
                 if (family.size()<8) activity.loadMorePeople();
                 reorderPeople();
@@ -692,10 +713,9 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 	public void resetSong() {
 		playing = false;
 		playSteps = 0;
-        danceTimeSlot = 0;
-        wordTimeSlot = 0;
         dancer = 0;
         wordNumber = 0;
+        wordChange = 0;
 		name1Spoken=false;
 		name2Spoken=false;
 		name3Spoken=false;

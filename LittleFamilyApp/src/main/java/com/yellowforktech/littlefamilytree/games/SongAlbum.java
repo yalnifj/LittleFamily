@@ -19,7 +19,7 @@ public class SongAlbum {
         song.setFluteTrack(R.raw.flute_allinourfamilytree);
         song.setPianoTrack(R.raw.piano_allinourfamilytree);
         song.setViolinTrack(R.raw.violin_allinourfamilytree);
-        song.setWords("We are a fam-i-ly. We are a fam-i-ly. We have _.  We have _. We have _. We have _. They're all in our fami-ly tree. They're all in our fam-i-ly.");
+        song.setWords("We are a fam -i -ly. We are a fam -i -ly. We have _.  We have _. We have _. We have _. They're all in our fami -ly tree. They're all in our fam -i -ly.");
         List<Long> wordTimings = new ArrayList<>();
         wordTimings.add(500L);
         wordTimings.add(1170L);
