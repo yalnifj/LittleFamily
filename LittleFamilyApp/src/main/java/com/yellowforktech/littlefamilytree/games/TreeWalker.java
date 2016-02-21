@@ -2,15 +2,15 @@ package com.yellowforktech.littlefamilytree.games;
 
 import android.content.Context;
 
-import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.tasks.ChildrenLoaderTask;
 import com.yellowforktech.littlefamilytree.activities.tasks.ParentsLoaderTask;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 
-import org.gedcomx.types.GenderType;
-
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by jfinlay on 9/3/2015.
@@ -18,6 +18,8 @@ import java.util.List;
 public class TreeWalker {
     private List<LittlePerson> people;
     private List<LittlePerson> parents;
+    private LinkedList<LittlePerson> loadQueue;
+    private Set<Integer> usedPeople;
     private Context context;
     private LittlePerson selectedPerson;
     private Listener listener;
@@ -27,6 +29,8 @@ public class TreeWalker {
         this.selectedPerson = person;
         this.listener = listener;
         people = new ArrayList<>();
+        usedPeople = new HashSet<>();
+        loadQueue = new LinkedList<>();
     }
 
     public List<LittlePerson> getParents() {
@@ -47,11 +51,11 @@ public class TreeWalker {
         public void onComplete(ArrayList<LittlePerson> family) {
             if (family!=null && family.size()>0) {
                 for (LittlePerson parent : family) {
-                    if (parent.getGender() == GenderType.Female)
-                        parent.setRelationship(context.getResources().getString(R.string.mother));
-                    else
-                        parent.setRelationship(context.getResources().getString(R.string.father));
-                    people.add(parent);
+                    if (!usedPeople.contains(parent.getId())) {
+                        people.add(parent);
+                        usedPeople.add(parent.getId());
+                        loadQueue.add(parent);
+                    }
                 }
 
                 parents = family;
@@ -72,13 +76,14 @@ public class TreeWalker {
         public void onComplete(ArrayList<LittlePerson> family) {
             if (family!=null && family.size()>0) {
                 for (LittlePerson child : family) {
-                    if (child.getGender() == GenderType.Female)
-                        child.setRelationship(context.getResources().getString(R.string.daughter));
-                    else
-                        child.setRelationship(context.getResources().getString(R.string.son));
-                    people.add(child);
+                    if (!usedPeople.contains(child.getId())) {
+                        people.add(child);
+                        usedPeople.add(child.getId());
+                        if (child.getTreeLevel() <= 2) {
+                            loadQueue.add(child);
+                        }
+                    }
                 }
-                //view.setFamily(people);
             }
             if (parents==null || parents.size()==0) {
                 if (listener!=null) {
@@ -95,11 +100,13 @@ public class TreeWalker {
         public void onComplete(ArrayList<LittlePerson> family) {
             if (family!=null && family.size()>0) {
                 for (LittlePerson child : family) {
-                    if (child.getGender() == GenderType.Female)
-                        child.setRelationship(context.getResources().getString(R.string.sister));
-                    else
-                        child.setRelationship(context.getResources().getString(R.string.brother));
-                    people.add(child);
+                    if (!usedPeople.contains(child.getId())) {
+                        people.add(child);
+                        usedPeople.add(child.getId());
+                        if (child.getTreeLevel() <= 2) {
+                            loadQueue.add(child);
+                        }
+                    }
                 }
             }
 
@@ -119,11 +126,11 @@ public class TreeWalker {
             count++;
             if (family!=null && family.size()>0) {
                 for (LittlePerson child : family) {
-                    if (child.getGender() == GenderType.Female)
-                        child.setRelationship(context.getResources().getString(R.string.grand)+" "+context.getResources().getString(R.string.mother));
-                    else
-                        child.setRelationship(context.getResources().getString(R.string.grand)+" "+context.getResources().getString(R.string.father));
-                    people.add(child);
+                    if (!usedPeople.contains(child.getId())) {
+                        people.add(child);
+                        usedPeople.add(child.getId());
+                        loadQueue.add(child);
+                    }
                 }
                 parents = family;
             }
@@ -131,18 +138,27 @@ public class TreeWalker {
             if (count<8 && people.size()<4) {
                 loadMorePeople();
             }
-            //view.setFamily(people);
-            if (listener!=null) {
+            else if (listener!=null) {
                 listener.onComplete(people);
             }
         }
     };
 
     public void loadMorePeople() {
-        ParentsLoaderTask gptask = new ParentsLoaderTask(grandParentListener, context);
-        LittlePerson[] people = new LittlePerson[parents.size()];
-        people = parents.toArray(people);
-        gptask.execute(people);
+        if (loadQueue.size()>0){
+            LittlePerson person = loadQueue.poll();
+            if (person.getTreeLevel() <= 2) {
+                ChildrenLoaderTask ctask = new ChildrenLoaderTask(siblingListener, context, false);
+                ctask.execute(person);
+            } else {
+                ParentsLoaderTask gptask = new ParentsLoaderTask(grandParentListener, context);
+                gptask.execute(person);
+            }
+        } else {
+            //-- no more people in the queue so start over
+            usedPeople.clear();
+            loadFamilyMembers();
+        }
     }
 
     public interface Listener {

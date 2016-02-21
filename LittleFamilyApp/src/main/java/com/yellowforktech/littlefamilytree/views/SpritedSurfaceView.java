@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.LruCache;
 import android.view.SurfaceHolder;
 
@@ -90,11 +91,16 @@ public class SpritedSurfaceView extends AbstractTouchAnimatedSurfaceView {
     @Override
     public void doStep() {
         synchronized (sprites) {
-            Iterator<Sprite> i = sprites.iterator();
-            while (i.hasNext()) {
-                Sprite s = i.next();
-                s.doStep();
-                if (s.isRemoveMe()) i.remove();
+            try {
+                Iterator<Sprite> i = sprites.iterator();
+                while (i.hasNext()) {
+                    Sprite s = i.next();
+                    s.doStep();
+                    if (s.isRemoveMe()) i.remove();
+                }
+            } catch(Exception e) {
+                Log.e("SpritedSurfaceView", "error stepping sprites", e);
+                return;
             }
         }
 		

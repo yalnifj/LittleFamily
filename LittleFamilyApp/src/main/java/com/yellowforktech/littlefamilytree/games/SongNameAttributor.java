@@ -7,7 +7,7 @@ import com.yellowforktech.littlefamilytree.data.LittlePerson;
  */
 public class SongNameAttributor implements SongPersonAttribute {
     @Override
-    public String getAttributeFromPerson(LittlePerson person) {
+    public String getAttributeFromPerson(LittlePerson person, int number) {
         return person.getGivenName();
     }
 }
