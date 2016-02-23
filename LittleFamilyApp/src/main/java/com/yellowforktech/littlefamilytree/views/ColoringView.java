@@ -45,6 +45,7 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
     private boolean showOriginal = false;
     private boolean noColor = true;
     private Paint background;
+    private boolean showOutline = true;
 
     private float brushSize = 25;
 
@@ -184,7 +185,7 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
                             shareCanvas.drawBitmap(originalBitmap, null, dst, paint2);
                         if (!showOriginal) {
                             shareCanvas.drawBitmap(mBitmap, null, dst, mBitmapPaint);
-                            if (outlineBitmap != null && !outlineBitmap.isRecycled()) {
+                            if (showOutline && outlineBitmap != null && !outlineBitmap.isRecycled()) {
                                 shareCanvas.drawBitmap(outlineBitmap, null, dst, paint2);
                             }
 
@@ -246,6 +247,14 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
         this.brushSize = brushSize;
         mPaint.setStrokeWidth(brushSize);
         noPaint.setStrokeWidth(brushSize);
+    }
+
+    public boolean isShowOutline() {
+        return showOutline;
+    }
+
+    public void setShowOutline(boolean showOutline) {
+        this.showOutline = showOutline;
     }
 
     protected void touch_start(float x, float y) {
