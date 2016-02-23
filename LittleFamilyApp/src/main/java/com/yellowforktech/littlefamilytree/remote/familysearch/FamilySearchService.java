@@ -293,9 +293,8 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
                     Feed feed = serializer.read(Feed.class, result.getData());
                     if (feed.getEntries() != null && feed.getEntries().size() > 0) {
                         for (Entry e : feed.getEntries()) {
-                            if (entry==null) {
+                            if (entry==null || e.getUpdated().after(entry.getUpdated()) {
                                 entry = e;
-                                break;
                             }
                         }
                         Log.i(TAG, "getLastChangeForPerson " + feed.getEntries().size() + ": " + personId);
