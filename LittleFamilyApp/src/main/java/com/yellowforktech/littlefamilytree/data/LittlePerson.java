@@ -11,6 +11,7 @@ import org.gedcomx.conclusion.PlaceReference;
 import org.gedcomx.types.FactType;
 import org.gedcomx.types.GenderType;
 import org.gedcomx.types.NamePartType;
+import org.gedcomx.types.NameType;
 
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -72,17 +73,35 @@ public class LittlePerson implements Serializable {
             setGender(GenderType.Unknown);
         }
         Name name = null;
+        Name nickName = null;
         if (fsPerson.getNames()!=null) {
             for (Name n : fsPerson.getNames()) {
                 if (n!=null) {
                     if (name == null || (n.getPreferred() != null && n.getPreferred())) {
                         name = n;
                     }
+                    if (nickName==null && n.getKnownType()== NameType.Nickname) {
+                        nickName = n;
+                    }
                 }
             }
         }
         //-- get preferred given name
-        if (name!=null) {
+        if (nickName!=null) {
+            List<NameForm> forms = name.getNameForms();
+            if (forms!=null && forms.size()>0) {
+                List<NamePart> parts = forms.get(0).getParts();
+                if (parts!=null) {
+                    for (NamePart p : parts) {
+                        if (p.getKnownType()== NamePartType.Given) {
+                            givenName = p.getValue();
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        if (givenName==null && name!=null) {
             List<NameForm> forms = name.getNameForms();
             if (forms!=null && forms.size()>0) {
                 List<NamePart> parts = forms.get(0).getParts();

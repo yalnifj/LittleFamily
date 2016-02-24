@@ -51,9 +51,13 @@ header .header-content, section .container, section .container-fluid{
     max-width: 400px;
 }
 .logo-text-img {
-	margin-top: 33%;
+	margin-top: 10%;
 	width: 100%;
 	max-width: 600px;
+}
+.subtitle {
+    margin-top: 5px;
+    margin-bottom: 30px;
 }
 .bg-dark {
     background-color: darkblue;
@@ -276,10 +280,14 @@ header .header-content, section .container, section .container-fluid{
     .small-title {
         display: none;
     }
+
+    .fb-page.small {
+        display: none;
+    }
 }
 
 @media(max-width:767px) {
-	header .header-content, section .container, section .container-fluid{
+     header .header-content, section .container, section .container-fluid {
 		width: 100%;
 		margin-left: auto;
 		margin-right: auto;
@@ -297,7 +305,10 @@ header .header-content, section .container, section .container-fluid{
 	header h3 {
 		font-size: 20px;
 	}
-	.large-title {
+    .large-title {
+        display: none;
+    }
+    .fb-page.large {
         display: none;
     }
 }
