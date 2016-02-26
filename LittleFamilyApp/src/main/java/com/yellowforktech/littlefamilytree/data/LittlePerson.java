@@ -72,6 +72,7 @@ public class LittlePerson implements Serializable {
         } else {
             setGender(GenderType.Unknown);
         }
+        Boolean living = fsPerson.getLiving();
         Name name = null;
         Name nickName = null;
         if (fsPerson.getNames()!=null) {
@@ -87,7 +88,7 @@ public class LittlePerson implements Serializable {
             }
         }
         //-- get preferred given name
-        if (nickName!=null) {
+        if (living!=null && living==true && nickName!=null) {
             List<NameForm> forms = name.getNameForms();
             if (forms!=null && forms.size()>0) {
                 List<NamePart> parts = forms.get(0).getParts();
@@ -181,7 +182,6 @@ public class LittlePerson implements Serializable {
             }
         }
 
-        Boolean living = fsPerson.getLiving();
         if (living==null && age!=null && age > 105) {
             living = false;
             fsPerson.setLiving(false);
