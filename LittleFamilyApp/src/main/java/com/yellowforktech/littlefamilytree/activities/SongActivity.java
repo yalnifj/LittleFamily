@@ -3,6 +3,7 @@ package com.yellowforktech.littlefamilytree.activities;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.view.SurfaceHolder;
 
 import com.yellowforktech.littlefamilytree.R;
@@ -30,6 +31,7 @@ public class SongActivity extends LittleFamilyActivity implements TreeWalker.Lis
 
         Intent intent = getIntent();
         selectedPerson = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
+        view.setPlayer(selectedPerson);
 
         treeWalker = new TreeWalker(this, selectedPerson, this);
 
@@ -41,6 +43,14 @@ public class SongActivity extends LittleFamilyActivity implements TreeWalker.Lis
         super.onStart();
         DataService.getInstance().registerNetworkStateListener(this);
         treeWalker.loadFamilyMembers();
+    }
+
+    @Override
+    public void onInit(int code) {
+        super.onInit(code);
+        if (code == TextToSpeech.SUCCESS) {
+            speak(getString(R.string.choose_a_song));
+        }
     }
 
     @Override

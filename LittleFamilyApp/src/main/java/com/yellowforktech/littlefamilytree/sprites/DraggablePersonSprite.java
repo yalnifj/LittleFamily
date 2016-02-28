@@ -183,7 +183,8 @@ public class DraggablePersonSprite extends TouchEventGameSprite {
     public void onRelease(float x, float y) {
         if (moved) {
 			moving = true;
-        }
-        super.onRelease(x, y);
+        } else {
+			super.onRelease(x, y);
+		}
     }
 }

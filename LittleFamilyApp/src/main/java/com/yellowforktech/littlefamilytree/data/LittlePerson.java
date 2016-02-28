@@ -89,7 +89,7 @@ public class LittlePerson implements Serializable {
         }
         //-- get preferred given name
         if (living!=null && living==true && nickName!=null) {
-            List<NameForm> forms = name.getNameForms();
+            List<NameForm> forms = nickName.getNameForms();
             if (forms!=null && forms.size()>0) {
                 List<NamePart> parts = forms.get(0).getParts();
                 if (parts!=null) {

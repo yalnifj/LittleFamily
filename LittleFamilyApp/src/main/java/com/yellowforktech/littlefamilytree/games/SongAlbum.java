@@ -1,6 +1,9 @@
 package com.yellowforktech.littlefamilytree.games;
 
+import android.content.Context;
+
 import com.yellowforktech.littlefamilytree.R;
+import com.yellowforktech.littlefamilytree.data.LittlePerson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,11 +14,17 @@ import java.util.List;
 public class SongAlbum {
     private List<Song> songs;
     private int currentSong = 0;
+    private LittlePerson selectedPerson;
+    private Context context;
 
-    public SongAlbum() {
+    public SongAlbum(LittlePerson person, Context context) {
         songs = new ArrayList<>();
+        this.selectedPerson = person;
+        this.context = context;
+
         addFamilyTreeSong();
         addMyHistorySong();
+        addThisIsMyHistorySong();
     }
 
     public Song nextSong() {
@@ -162,6 +171,74 @@ public class SongAlbum {
         song.setDanceTimings(timings);
 
         song.setAttributor(new SongDatePlaceAttributor());
+
+        songs.add(song);
+    }
+
+    private void addThisIsMyHistorySong() {
+        Song song = new Song();
+        song.setDrumTrack(R.raw.drums_thisismyfamily);
+        song.setFluteTrack(R.raw.flute_thisismyfamily);
+        song.setPianoTrack(R.raw.piano_thisismyfamily);
+        song.setViolinTrack(R.raw.guitar_thisismyfamily);
+        song.setVoiceTrack(R.raw.voice_thisismyfamily);
+        song.setWords("This is my fam -i -ly. They mean so much to me. Here is my _. My _ is here too. Here is my _. My _ is here too. This is my fam -i -ly.");
+        List<Long> wordTimings = new ArrayList<>();
+        //wordTimings.add(100L);//this
+        //wordTimings.add(300L);//this
+        wordTimings.add(700L);//is
+        wordTimings.add(1170L);//my
+        wordTimings.add(1750L);//fam
+        wordTimings.add(2360L);//i
+        wordTimings.add(2980L);//ly
+        wordTimings.add(4400L);//they
+        wordTimings.add(5000L);//mean
+        wordTimings.add(5450L);//so
+        wordTimings.add(6000L);//much
+        wordTimings.add(6600L);//to
+        wordTimings.add(7100L);//me
+        wordTimings.add(8700L);//here
+        wordTimings.add(9270L);//is
+        wordTimings.add(9770L);//my
+        wordTimings.add(10400L);//_
+        wordTimings.add(13100L);//my
+        wordTimings.add(13800L);//_
+        wordTimings.add(15700L);//is
+        wordTimings.add(16300L);//here
+        wordTimings.add(16800L);//too.
+
+        wordTimings.add(18400L);//here
+        wordTimings.add(18900L);//is
+        wordTimings.add(19400L);//my
+        wordTimings.add(20100L);//_
+        wordTimings.add(22800L);//my
+        wordTimings.add(23400L);//_
+        wordTimings.add(25300L);//is
+        wordTimings.add(25950L);//here
+        wordTimings.add(26500L);//too.
+
+        wordTimings.add(28170L);//this
+        wordTimings.add(28760L);//is
+        wordTimings.add(29280L);//my
+        wordTimings.add(29770L);//fam
+        wordTimings.add(30500L);//i
+        wordTimings.add(31070L);//ly
+        wordTimings.add(32300L);//
+
+        song.setWordTimings(wordTimings);
+
+        List<Long> timings = new ArrayList<>(12);
+        timings.add(8700L);
+        timings.add(13300L);
+        timings.add(18300L);
+        timings.add(22800L);
+        timings.add(28000L);
+        timings.add(32500L);
+        timings.add(34000L);
+
+        song.setDanceTimings(timings);
+
+        song.setAttributor(new SongRelationshipAttributor(selectedPerson, context));
 
         songs.add(song);
     }

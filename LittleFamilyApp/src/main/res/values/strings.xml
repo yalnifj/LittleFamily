@@ -68,6 +68,7 @@ Please wait...</string>
     <string name="he">He</string>
     <string name="she">She</string>
 	<string name="you">You</string>
+    <string name="self">Self</string>
     <string name="you_are">You are %1$s.</string>
     <string name="you_born_in">You were born in %1$s.</string>
     <string name="you_born_on">You were born on %1$s.</string>
@@ -126,5 +127,8 @@ Please wait...</string>
     <string name="ask_for_help">Ask an adult for help.</string>
     <string name="title_activity_flying">Flying Activity</string>
     <string name="quiet_mode">Quiet Mode:</string>
+
+    <string name="choose_a_song">Choose a song</string>
+    <string name="choose_dancers">Place your dancers on stage</string>
 
 </resources>
