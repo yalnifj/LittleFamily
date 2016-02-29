@@ -125,7 +125,11 @@ public class PuzzleGameActivity extends LittleFamilyActivity implements RandomMe
             imagePath = photo.getLocalPath();
             if (imagePath != null) {
                 imageBitmap = ImageHelper.loadBitmapFromFile(imagePath, 0, width, height, true);
-                setupGame();
+                if (imageBitmap != null) {
+                    setupGame();
+                } else {
+                    mediaChooser.loadRandomImage();
+                }
             } else {
                 mediaChooser.loadRandomImage();
             }

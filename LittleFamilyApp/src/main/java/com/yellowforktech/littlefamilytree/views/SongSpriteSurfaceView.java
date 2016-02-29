@@ -278,9 +278,16 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
                         textSprites.add(ts);
                         tx += bounds.width() + 10 * dm.density;
                         if (tx > stage.getWidth()) {
-                            tx -= bounds.width() + 10 * dm.density;
-                            textSprites.remove(ts);
-                            sprites.remove(ts);
+                            if (textSprites.size()>1) {
+                                tx -= bounds.width() + 10 * dm.density;
+                                textSprites.remove(ts);
+                                sprites.remove(ts);
+                            } else {
+                                Paint smallerPaint = new Paint();
+                                smallerPaint.setColor(Color.WHITE);
+                                smallerPaint.setTextSize(playButton.getHeight() * 0.4f);
+                                ts.setTextPaint(smallerPaint);
+                            }
                             break;
                         }
                     }
