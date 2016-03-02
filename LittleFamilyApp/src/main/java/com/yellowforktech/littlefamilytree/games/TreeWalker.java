@@ -79,7 +79,7 @@ public class TreeWalker {
                     if (!usedPeople.contains(child.getId())) {
                         people.add(child);
                         usedPeople.add(child.getId());
-                        if (child.getTreeLevel() <= 2) {
+                        if (child.getTreeLevel()!=null && child.getTreeLevel() <= 2) {
                             loadQueue.add(child);
                         }
                     }
@@ -103,7 +103,7 @@ public class TreeWalker {
                     if (!usedPeople.contains(child.getId())) {
                         people.add(child);
                         usedPeople.add(child.getId());
-                        if (child.getTreeLevel() <= 2) {
+                        if (child.getTreeLevel()!=null && child.getTreeLevel() <= 3) {
                             loadQueue.add(child);
                         }
                     }
@@ -147,7 +147,7 @@ public class TreeWalker {
     public void loadMorePeople() {
         if (loadQueue.size()>0){
             LittlePerson person = loadQueue.poll();
-            if (person.getTreeLevel() <= 2) {
+            if (person.getTreeLevel() <= 3) {
                 ChildrenLoaderTask ctask = new ChildrenLoaderTask(siblingListener, context, false);
                 ctask.execute(person);
             } else {

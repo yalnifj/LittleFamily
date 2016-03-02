@@ -7,6 +7,7 @@ import android.speech.tts.TextToSpeech;
 import android.view.SurfaceHolder;
 
 import com.yellowforktech.littlefamilytree.R;
+import com.yellowforktech.littlefamilytree.activities.tasks.WaitTask;
 import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.games.TreeWalker;
@@ -49,7 +50,16 @@ public class SongActivity extends LittleFamilyActivity implements TreeWalker.Lis
     public void onInit(int code) {
         super.onInit(code);
         if (code == TextToSpeech.SUCCESS) {
-            speak(getString(R.string.choose_a_song));
+            WaitTask waiter = new WaitTask(new WaitTask.WaitTaskListener() {
+                @Override
+                public void onProgressUpdate(Integer progress) { }
+
+                @Override
+                public void onComplete(Integer progress) {
+                    speak(getString(R.string.choose_a_song));
+                }
+            });
+            waiter.execute(1500L);
         }
     }
 

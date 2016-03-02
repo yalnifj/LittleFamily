@@ -1,7 +1,9 @@
 package com.yellowforktech.littlefamilytree.util;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Created by Parents on 3/24/2015.
@@ -35,7 +37,17 @@ public class PlaceHelper {
 
     private static String[] canadaStates = {"alberta","british columbia","manitoba","new brunswick","newfoundland",
             "newfoundland and labrador","nova scotia","ontario","prince edward island","quebec","saskatchewan"};
-	
+
+    private static Map<String, String> synonyns = new HashMap<>();
+    static {
+        synonyns.put("holland","Netherlands");
+        synonyns.put("prussia","Germany");
+        synonyns.put("eng","England");
+        synonyns.put("great britain","England");
+        synonyns.put("gb","England");
+        synonyns.put("northern ireland","Ireland");
+    }
+
 	private static String[] tribes = {
 		"cherokee", "apache", "navajo", "iriquois"
 	};
@@ -96,16 +108,19 @@ public class PlaceHelper {
     public static String getPlaceCountry(String p) {
         String place = PlaceHelper.getTopPlace(p);
         if (place == null || place.trim().isEmpty()) return UNKNOWN;
-        if (place.equalsIgnoreCase("United Kingdom")) {
-            place = getTopPlace(p, 2);
-        }
         if (!place.equalsIgnoreCase("United States") && PlaceHelper.isInUS(place))
             return "United States";
 
-        if (place.equalsIgnoreCase("Eng") || place.equalsIgnoreCase("Great Britain") || place.equalsIgnoreCase("gb") || place.toLowerCase().endsWith("england")) return "England";
-        if (place.equalsIgnoreCase("Holland")) return "Netherlands";
-        if (place.equalsIgnoreCase("Northern Ireland")) return "Ireland";
+        if (place.equalsIgnoreCase("United Kingdom")) {
+            place = getTopPlace(p, 2);
+        }
+
         if (Arrays.binarySearch(canadaStates, place.toLowerCase())>=0) return "Canada";
+
+        if (synonyns.containsKey(place.toLowerCase())) {
+            place = synonyns.get(place.toLowerCase());
+        }
+
         return place;
     }
 }

@@ -120,6 +120,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
     private List<TextSprite> textSprites;
     private Paint textPaint;
     private Paint textHiPaint;
+    private float xOffset;
 
     public SongSpriteSurfaceView(Context context) {
         super(context);
@@ -242,7 +243,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
                         sprites.remove(ts);
                     }
                     textSprites.clear();
-                    float tx = 10;
+                    float tx = xOffset + 10 * dm.density;
                     float ty = playButton.getY() + playButton.getHeight()*2 + 20*dm.density;
                     for (int w = wordChange; w < wordChange + 4; w++) {
                         if (w >= words.size()) break;
@@ -328,8 +329,8 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
                 if (currentSongTime > song.getDanceTimings().get(0) && currentSongTime < song.getDanceTimings().get(0) + 500) {
                     DraggablePersonSprite ds = onStage.get(0);
                     dancer = 0;
-                    ds.setTargetX(stage.getWidth() / 2 - (int) (50 * dm.density));
-                    ds.setTargetHeight((int) (50 * dm.density));
+                    ds.setTargetX((int) (xOffset + stage.getWidth() / 2 - (int) (50 * dm.density)));
+                    ds.setTargetHeight((int) (ds.getHeight() * 1.5));
                     ds.setTargetY((int) (selPerson1.getY() + selPerson1.getHeight()));
                     ds.setMoving(true);
                 }
@@ -343,8 +344,8 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 
                     ds = onStage.get(1);
                     dancer = 1;
-                    ds.setTargetX(stage.getWidth() / 2 - (int) (50 * dm.density));
-                    ds.setTargetHeight((int) (100 * dm.density));
+                    ds.setTargetX((int) (xOffset + stage.getWidth() / 2 - (int) (50 * dm.density)));
+                    ds.setTargetHeight((int) (ds.getHeight() * 1.5));
                     ds.setTargetY((int) (selPerson1.getY() + selPerson1.getHeight()));
                     ds.setMoving(true);
                 }
@@ -358,8 +359,8 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 
                     ds = onStage.get(2);
                     dancer = 2;
-                    ds.setTargetX(stage.getWidth() / 2 - (int) (50 * dm.density));
-                    ds.setTargetHeight((int) (100 * dm.density));
+                    ds.setTargetX((int) (xOffset + stage.getWidth() / 2 - (int) (50 * dm.density)));
+                    ds.setTargetHeight((int) (ds.getHeight() * 1.5));
                     ds.setTargetY((int) (selPerson1.getY() + selPerson1.getHeight()));
                     ds.setMoving(true);
                 }
@@ -373,8 +374,8 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 
                     ds = onStage.get(3);
                     dancer = 3;
-                    ds.setTargetX(stage.getWidth() / 2 - (int) (50 * dm.density));
-                    ds.setTargetHeight((int) (100 * dm.density));
+                    ds.setTargetX((int) (xOffset + stage.getWidth() / 2 - (int) (50 * dm.density)));
+                    ds.setTargetHeight((int) (ds.getHeight() * 1.5));
                     ds.setTargetY((int) (selPerson1.getY() + selPerson1.getHeight()));
                     ds.setMoving(true);
                 }
@@ -421,7 +422,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
         if (rotation==0 && rotateDir==-1) {
             if (growButton==song1Button) growButton = song2Button;
             else if (growButton==song2Button) growButton = song3Button;
-            else if (growButton==null || growButton==song3Button) growButton = song1Button;
+            else growButton = song1Button;
         }
         if (rotation < -10) {
             rotateDir = 1;
@@ -451,35 +452,39 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 
 
             maxHeight = this.getHeight();
-            int width = (int) (getWidth() * 0.17f);
+            float stageWidth = Math.min(this.getWidth(), this.getHeight());
+
+            int width = (int) (stageWidth * 0.17f);
             if (width > 250) width = 250;
 
-            stage = ImageHelper.loadBitmapFromResource(context, R.drawable.stage, 0, getWidth() - width, getHeight());
+            stage = ImageHelper.loadBitmapFromResource(context, R.drawable.stage, 0, (int) (stageWidth - (10*dm.density + width)), getHeight());
+
+            xOffset = (this.getWidth() - (width + stage.getWidth()))/2f;
 
             manWidth = stage.getWidth() / 7;
             womanWidth = (int) (manWidth + 4 * dm.density);
 
             Bitmap song1Bm = ImageHelper.loadBitmapFromResource(activity, R.drawable.song1, 0, (int) (width * 1.7), (int) (width * 1.7));
             song1Button = new TouchEventGameSprite(song1Bm, TOPIC_CHOOSE_SONG1, dm);
-            song1Button.setX(15 * dm.density);
+            song1Button.setX(xOffset + 15 * dm.density);
             song1Button.setY(stage.getHeight() - (50 * dm.density + song1Bm.getHeight()));
             addSprite(song1Button);
 
             Bitmap song2Bm = ImageHelper.loadBitmapFromResource(activity, R.drawable.song2, 0, (int) (width * 1.7), (int) (width * 1.7));
             song2Button = new TouchEventGameSprite(song2Bm, TOPIC_CHOOSE_SONG2, dm);
-            song2Button.setX((stage.getWidth() / 2) - (song2Bm.getWidth() / 2) + 5*dm.density);
+            song2Button.setX(xOffset + (stage.getWidth() / 2) - (song2Bm.getWidth() / 2) + 5*dm.density);
             song2Button.setY(stage.getHeight() - (20 * dm.density + song1Bm.getHeight()));
             addSprite(song2Button);
 
             Bitmap song3Bm = ImageHelper.loadBitmapFromResource(activity, R.drawable.song3, 0, (int) (width * 1.7), (int) (width * 1.7));
             song3Button = new TouchEventGameSprite(song3Bm, TOPIC_CHOOSE_SONG3, dm);
-            song3Button.setX(stage.getWidth() - (song3Bm.getWidth() + 15 * dm.density));
+            song3Button.setX(xOffset + stage.getWidth() - (song3Bm.getWidth() + 15 * dm.density));
             song3Button.setY(stage.getHeight() - (55 * dm.density + song1Bm.getHeight()));
             addSprite(song3Button);
 
             Bitmap drumsBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.drums, 0, (int) (width * 1.7), (int) (width * 1.7));
             drumKit = new TouchStateAnimatedBitmapSprite(drumsBm, activity);
-            drumKit.setX(10 * dm.density);
+            drumKit.setX(xOffset + 10 * dm.density);
             drumKit.setY(stage.getHeight() - (55 * dm.density + drumsBm.getHeight()));
             drumKit.setResources(getResources());
             drumKit.setStateTransitionEvent(0, TOPIC_TOGGLE_DRUMS);
@@ -490,7 +495,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 
             Bitmap gPianoBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.piano, 0, (int) (width * 1.7), (int) (width * 1.7));
             gPiano = new TouchStateAnimatedBitmapSprite(gPianoBm, activity);
-            gPiano.setX(getWidth() - (15 * dm.density + width + gPianoBm.getWidth()));
+            gPiano.setX(xOffset + getWidth() - (15 * dm.density + width + gPianoBm.getWidth()));
             gPiano.setY(stage.getHeight() - (35 * dm.density + gPianoBm.getHeight()));
             gPiano.setResources(getResources());
             gPiano.setStateTransitionEvent(0, TOPIC_TOGGLE_PIANO);
@@ -500,7 +505,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 
             Bitmap violinBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.violin, 0, (int) (width * 1.8), (int) (width * 1.8));
             violin = new TouchStateAnimatedBitmapSprite(violinBm, activity);
-            violin.setX(stage.getWidth() / 2 - violinBm.getWidth() / 3f);
+            violin.setX(xOffset + stage.getWidth() / 2 - violinBm.getWidth() / 3f);
             violin.setY(stage.getHeight() - (violinBm.getHeight()));
             violin.setResources(getResources());
             violin.setStateTransitionEvent(0, TOPIC_TOGGLE_VIOLIN);
@@ -511,7 +516,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 
             Bitmap bassBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.bass, 0, (int) (width * 1.5), (int) (width * 1.5));
             bass = new TouchStateAnimatedBitmapSprite(bassBm, activity);
-            bass.setX(stage.getWidth() / 2 - bassBm.getWidth());
+            bass.setX(xOffset + stage.getWidth() / 2 - bassBm.getWidth());
             bass.setY(stage.getHeight() - (20 * dm.density + bassBm.getHeight()));
             bass.setResources(getResources());
             bass.setStateTransitionEvent(0, TOPIC_TOGGLE_BASS);
@@ -522,7 +527,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 
             Bitmap clarinetBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.clarinet, 0, (int) (width * 1.5), (int) (width * 1.5));
             clarinet = new TouchStateAnimatedBitmapSprite(clarinetBm, activity);
-            clarinet.setX(stage.getWidth() / 2 - clarinetBm.getWidth());
+            clarinet.setX(xOffset + stage.getWidth() / 2 - clarinetBm.getWidth());
             clarinet.setY(stage.getHeight() - (20 * dm.density + clarinetBm.getHeight()));
             clarinet.setResources(getResources());
             clarinet.setStateTransitionEvent(0, TOPIC_TOGGLE_FLUTE);
@@ -533,7 +538,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 
             Bitmap guitarBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.guitar, 0, (int) (width * 1.5), (int) (width * 1.5));
             guitar = new TouchStateAnimatedBitmapSprite(guitarBm, activity);
-            guitar.setX(stage.getWidth() / 2 - guitarBm.getWidth());
+            guitar.setX(xOffset + stage.getWidth() / 2 - guitarBm.getWidth());
             guitar.setY(stage.getHeight() - (20 * dm.density + guitarBm.getHeight()));
             guitar.setResources(getResources());
             guitar.setStateTransitionEvent(0, TOPIC_TOGGLE_GUITAR);
@@ -545,7 +550,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
             Bitmap man = ImageHelper.loadBitmapFromResource(activity, R.drawable.man_silhouette, 0,
                     manWidth, manWidth);
             selPerson1 = new AnimatedBitmapSprite(man);
-            selPerson1.setX(width);
+            selPerson1.setX(xOffset + width);
             selPerson1.setY(stage.getHeight() / 2 - width / 2);
             addSprite(selPerson1);
             manWidth = selPerson1.getWidth();
@@ -574,7 +579,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
             dropRect.set(0, (int) ((int) selPerson1.getY() - (70 * dm.density)), stage.getWidth(), (int) ((int) selPerson4.getY() + selPerson4.getHeight() + (70 * dm.density)));
 
             if (family != null) {
-                float x = getWidth() * 0.82f;
+                float x = xOffset + stage.getWidth() + 10 * dm.density;
                 float y = 10 * dm.density;
                 for (LittlePerson person : family) {
                     Bitmap photo = null;
@@ -605,7 +610,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
             List<Bitmap> pauseList = new ArrayList<>(1);
             pauseList.add(pause);
             playButton.getBitmaps().put(1, pauseList);
-            playButton.setX(stage.getWidth() / 2 - width);
+            playButton.setX(xOffset + stage.getWidth() / 2 - width);
             playButton.setY(50 * dm.density);
             playButton.setStateTransitionEvent(0, TOPIC_PLAY_SONG);
             playButton.setStateTransitionEvent(1, TOPIC_PLAY_SONG);
@@ -614,7 +619,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 
             Bitmap reset = ImageHelper.loadBitmapFromResource(context, android.R.drawable.ic_menu_revert, 0, width, width);
             resetButton = new TouchStateAnimatedBitmapSprite(reset, context);
-            resetButton.setX(stage.getWidth() / 2);
+            resetButton.setX(xOffset + stage.getWidth() / 2);
             resetButton.setY(50 * dm.density);
             resetButton.setStateTransitionEvent(0, TOPIC_PLAY_RESET);
             resetButton.setIgnoreAlpha(true);
@@ -634,7 +639,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 	
 	private void reorderPeople() {
         synchronized (sprites) {
-            float x = getWidth() * 0.82f;
+            float x = xOffset + stage.getWidth() + 10 * dm.density;
             float y = 10 * dm.density;
             int width = (int) (getWidth() * 0.17f);
             if (width > 250) width = 250;
@@ -809,7 +814,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
             createSprites();
         }
         synchronized (sprites) {
-            canvas.drawBitmap(stage, 0, 5, null);
+            canvas.drawBitmap(stage, xOffset, 5, null);
 
             for (Sprite s : sprites) {
                 if (s.getX() + s.getWidth() >= 0 && s.getX() <= getWidth() && s.getY() + s.getHeight() >= 0 && s.getY() <= getHeight()) {

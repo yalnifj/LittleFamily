@@ -31,7 +31,7 @@ public class ParentsGuideDialog extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_parentsguide, container, false);
         mPager = (ViewPager) v.findViewById(R.id.pgPager);
-        mPager.setAdapter(new ParentsGuidPagerAdapter(getFragmentManager()));
+        mPager.setAdapter(new ParentsGuidPagerAdapter(getChildFragmentManager()));
         nextBtn = (ImageButton) v.findViewById(R.id.nextBtn);
         prevBtn = (ImageButton) v.findViewById(R.id.prevBtn);
         okBtn = (Button) v.findViewById(R.id.okBtn);
