@@ -340,8 +340,10 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
         complete = false;
         this.name = name;
         this.relationship = relationship;
-        synchronized (bitmap) {
-            this.bitmap = bitmap;
+        if (bitmap != null) {
+            synchronized (bitmap) {
+                this.bitmap = bitmap;
+            }
         }
 		starCount = 0;
 		synchronized(sprites) {

@@ -31,18 +31,19 @@ public class ColoringImageFilterTask extends AsyncTask<Bitmap, Integer, Bitmap> 
         filterGroup.addFilter(new GPUImageAlphaSobelEdgeDetection());
         filterGroup.addFilter(new GPUImageAlphaMaskFilter(0.7f, new float[]{0f, 0f, 0f}));
 
+        long starttime = System.currentTimeMillis();
+        GPUImage outlineImage = new GPUImage(context);
+        outlineImage.setFilter(filterGroup);
+
         Bitmap orig = params[0];
         Bitmap outlineBitmap = null;
         if (orig!=null && !orig.isRecycled()) {
             synchronized (orig) {
-                long starttime = System.currentTimeMillis();
-                GPUImage outlineImage = new GPUImage(context);
-                outlineImage.setFilter(filterGroup);
                 outlineBitmap = outlineImage.getBitmapWithFilterApplied(orig);
-                long endtime = System.currentTimeMillis();
-                Log.d(this.getClass().getSimpleName(), "Creating outline image took "+(endtime-starttime)+"ms");
             }
         }
+        long endtime = System.currentTimeMillis();
+        Log.d(this.getClass().getSimpleName(), "Creating outline image took "+(endtime-starttime)+"ms");
         return outlineBitmap;
     }
 

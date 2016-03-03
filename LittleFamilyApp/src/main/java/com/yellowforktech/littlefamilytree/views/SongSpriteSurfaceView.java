@@ -495,7 +495,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 
             Bitmap gPianoBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.piano, 0, (int) (width * 1.7), (int) (width * 1.7));
             gPiano = new TouchStateAnimatedBitmapSprite(gPianoBm, activity);
-            gPiano.setX(xOffset + getWidth() - (15 * dm.density + width + gPianoBm.getWidth()));
+            gPiano.setX(xOffset + stage.getWidth() - (15 * dm.density + gPianoBm.getWidth()));
             gPiano.setY(stage.getHeight() - (35 * dm.density + gPianoBm.getHeight()));
             gPiano.setResources(getResources());
             gPiano.setStateTransitionEvent(0, TOPIC_TOGGLE_PIANO);

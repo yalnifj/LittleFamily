@@ -9,7 +9,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="@string/title_guide_home"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_marginBottom="10dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,14 +31,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/guide_home_activity"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_marginLeft="10dp" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/textView33"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:text="@string/title_guide_follow_the_stars"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 

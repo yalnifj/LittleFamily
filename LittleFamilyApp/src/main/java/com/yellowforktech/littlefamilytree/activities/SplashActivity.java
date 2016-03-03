@@ -88,15 +88,17 @@ public class SplashActivity extends Activity implements EventListener {
         if (!quietMode) {
             quietModeImageView.setImageResource(R.drawable.quiet_mode_off);
             introPlayer = MediaPlayer.create(this, R.raw.intro);
-            introPlayer.setVolume(0.5f, 0.5f);
-            introPlayer.start();
-            introPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    mp.release();
-                    canContinue = true;
-                }
-            });
+            if (introPlayer != null) {
+                introPlayer.setVolume(0.4f, 0.4f);
+                introPlayer.start();
+                introPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        mp.release();
+                        canContinue = true;
+                    }
+                });
+            }
         } else {
             quietModeImageView.setImageResource(R.drawable.quiet_mode_on);
             canContinue = true;

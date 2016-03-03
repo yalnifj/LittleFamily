@@ -11,6 +11,7 @@ public class PuzzleGame {
     private int rows = 2;
     private int cols = 2;
     private PuzzlePiece[][] board;
+    private int counter = 0;
 
     public PuzzleGame(int rows, int cols) {
         setupLevel(rows, cols);
@@ -20,6 +21,7 @@ public class PuzzleGame {
         this.rows = rows;
         this.cols = cols;
         board = new PuzzlePiece[rows][cols];
+        counter = 0;
 
         fillBoard();
         randomizeBoard();
@@ -34,6 +36,7 @@ public class PuzzleGame {
     }
 
     public void randomizeBoard() {
+        counter++;
         Random rand = new Random();
         for(int r=0; r<rows; r++) {
             for (int c = 0; c < cols; c++) {
@@ -49,7 +52,7 @@ public class PuzzleGame {
                 }
             }
         }
-        if (isCompleted()) randomizeBoard();
+        if (counter < 3 && isCompleted()) randomizeBoard();
     }
 
     public boolean isCompleted() {

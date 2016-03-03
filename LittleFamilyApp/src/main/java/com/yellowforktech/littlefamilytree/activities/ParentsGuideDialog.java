@@ -1,5 +1,6 @@
 package com.yellowforktech.littlefamilytree.activities;
 
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -49,12 +50,26 @@ public class ParentsGuideDialog extends DialogFragment {
                 mPager.setCurrentItem(mPager.getCurrentItem() - 1, true);
             }
         });
+
+        okBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ParentsGuideActivity activity = (ParentsGuideActivity)getActivity();
+                activity.dismiss(okBtn);
+            }
+        });
         return v;
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        Point size = new Point();
+        getActivity().getWindowManager().getDefaultDisplay().getSize(size);
+        int width = Math.min(size.x, size.y);
+        int height = (int) (width * 1.3);
+        if (height > size.y) height = size.y;
+        getDialog().getWindow().setLayout(width, height);
     }
 
     @Override

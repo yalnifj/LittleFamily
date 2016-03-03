@@ -24,7 +24,8 @@
             android:layout_marginTop="5dp"
             android:layout_weight="10"
             android:text="@string/guide_choosing_player"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_marginRight="5dp" />
 
         <ImageView
             android:id="@+id/imageView12"
