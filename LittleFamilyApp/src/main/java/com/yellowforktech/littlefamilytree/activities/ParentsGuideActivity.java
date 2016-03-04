@@ -3,6 +3,7 @@ package com.yellowforktech.littlefamilytree.activities;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
@@ -30,5 +31,10 @@ public class ParentsGuideActivity extends FragmentActivity {
         intent.putExtra(OK, true);
         setResult(Activity.RESULT_OK, intent);
         finish();
+    }
+
+    public void launchWebsite(View view) {
+        Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse("http://www.littlefamilytree.com"));
+        startActivity(intent);
     }
 }

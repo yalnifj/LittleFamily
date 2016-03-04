@@ -58,11 +58,37 @@
             android:text="@string/guide_follow_stars"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
-        <ImageView
-            android:id="@+id/imageView14"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="5dp"
-            android:src="@drawable/star1" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2">
+
+            <ImageView
+                android:id="@+id/imageView14"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/star1"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/star1"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/imageView14"
+                android:layout_toEndOf="@+id/imageView14" />
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/star1"
+                android:layout_alignParentTop="true"
+                android:layout_toLeftOf="@+id/imageView14"
+                android:layout_toStartOf="@+id/imageView14" />
+        </RelativeLayout>
+
     </LinearLayout>
 </LinearLayout>

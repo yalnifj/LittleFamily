@@ -28,6 +28,15 @@ public class ParentsGuideDialog extends DialogFragment {
     private ImageButton prevBtn;
     private Button okBtn;
 
+    private int[] pages = {
+            R.layout.fragment_pg_welcome,
+            R.layout.fragment_pg_photos,
+            R.layout.fragment_pg_playtogether,
+            R.layout.fragment_pg_chooseplayer,
+            R.layout.fragment_pg_home,
+            R.layout.fragment_pg_settings
+    };
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_parentsguide, container, false);
@@ -56,6 +65,31 @@ public class ParentsGuideDialog extends DialogFragment {
             public void onClick(View v) {
                 ParentsGuideActivity activity = (ParentsGuideActivity)getActivity();
                 activity.dismiss(okBtn);
+            }
+        });
+
+        mPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 0) {
+                    prevBtn.setVisibility(View.INVISIBLE);
+                } else {
+                    prevBtn.setVisibility(View.VISIBLE);
+                }
+                if (position == pages.length - 1) {
+                    nextBtn.setVisibility(View.INVISIBLE);
+                    okBtn.setVisibility(View.VISIBLE);
+                } else {
+                    nextBtn.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
             }
         });
         return v;
@@ -95,14 +129,6 @@ public class ParentsGuideDialog extends DialogFragment {
      * sequence.
      */
     private class ParentsGuidPagerAdapter extends FragmentStatePagerAdapter {
-        private int[] pages = {
-                R.layout.fragment_pg_welcome,
-                R.layout.fragment_pg_photos,
-                R.layout.fragment_pg_playtogether,
-                R.layout.fragment_pg_chooseplayer,
-                R.layout.fragment_pg_home,
-                R.layout.fragment_pg_settings
-        };
 
         public ParentsGuidPagerAdapter(FragmentManager fm) {
             super(fm);
