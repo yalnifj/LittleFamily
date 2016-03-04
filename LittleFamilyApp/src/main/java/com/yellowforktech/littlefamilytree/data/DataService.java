@@ -28,10 +28,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
+import java.util.PriorityQueue;
 
 /**
  * Created by jfinlay on 2/18/2015.
@@ -50,7 +49,7 @@ public class DataService implements AuthTask.Listener {
     private DBHelper dbHelper = null;
     private Context context = null;
 
-    private Queue<ThreadPerson> syncQ;
+    private PriorityQueue<ThreadPerson> syncQ;
     private boolean running = true;
     private int QDepth;
     private Object cellLock = new Object();
@@ -71,7 +70,7 @@ public class DataService implements AuthTask.Listener {
     }
 
     private DataService() {
-        syncQ = new LinkedList<>();
+        syncQ = new PriorityQueue<>();
         listeners = new ArrayList<>();
     }
 
@@ -249,7 +248,7 @@ public class DataService implements AuthTask.Listener {
         return (info != null && info.isConnected() && info.getType() == ConnectivityManager.TYPE_MOBILE);
     }
 
-    private class ThreadPerson {
+    private class ThreadPerson implements Comparable<ThreadPerson> {
         LittlePerson person;
         int depth;
 
@@ -258,6 +257,15 @@ public class DataService implements AuthTask.Listener {
             if (tp instanceof  ThreadPerson)
                 return ((ThreadPerson)tp).person.equals(person);
             return false;
+        }
+
+        @Override
+        public int compareTo(ThreadPerson another) {
+            if (person==null && another.person==null) return 0;
+            if (person.getTreeLevel()==null && another.person.getTreeLevel()==null) return 0;
+            if (person.getTreeLevel()!=null && another.person.getTreeLevel()==null) return -1;
+            if (person.getTreeLevel()==null && another.person.getTreeLevel()!=null) return 1;
+            return person.getTreeLevel().compareTo(another.person.getTreeLevel());
         }
     }
 
@@ -716,7 +724,7 @@ public class DataService implements AuthTask.Listener {
         int syncDelay = Integer.parseInt(syncDelayStr);
         cal.add(Calendar.HOUR, -1 * syncDelay);
         if (person.isHasParents()==null || person.getLastSync().before(cal.getTime()) || person.getTreeLevel()==null
-                || (person.getTreeLevel()<=1 && person.isHasChildren()==null)) {
+                || (person.getTreeLevel()<=2 && person.isHasChildren()==null)) {
             synchronized (syncQ) {
                 ThreadPerson tp = new ThreadPerson();
                 tp.person = person;
