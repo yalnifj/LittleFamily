@@ -68,7 +68,12 @@ public class HeritageCalculatorTask extends AsyncTask<LittlePerson, Integer, Arr
                     //List<LittlePerson> parents = dataService.getParents(path.getTreePath().get(path.getTreePath().size() - 1));
                     //-- only use the database for speed
                     LittlePerson pathPerson = path.getTreePath().get(path.getTreePath().size() - 1);
-                    List<LittlePerson> parents = dataService.getDBHelper().getParentsForPerson(pathPerson.getId());
+                    List<LittlePerson> parents = null;
+					if (pathPerson.getTreeLevel() != null && pathPerson.getTreeLevel() < 4) {
+						parents = dataService.getParents(pathPerson);
+					} else {
+						parents = dataService.getDBHelper().getParentsForPerson(pathPerson.getId());
+					}
                     if (parents != null && parents.size()>0) {
                         for (LittlePerson parent : parents) {
                             HeritagePath ppath = new HeritagePath();
