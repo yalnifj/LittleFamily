@@ -1,6 +1,8 @@
 package com.yellowforktech.littlefamilytree.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -34,6 +36,9 @@ public class SongActivity extends LittleFamilyActivity implements TreeWalker.Lis
         selectedPerson = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
         view.setPlayer(selectedPerson);
 
+        Bitmap starBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.star1);
+        view.setStarBitmap(starBitmap);
+
         treeWalker = new TreeWalker(this, selectedPerson, this);
 
         setupTopBar();
@@ -50,6 +55,7 @@ public class SongActivity extends LittleFamilyActivity implements TreeWalker.Lis
     public void onInit(int code) {
         super.onInit(code);
         if (code == TextToSpeech.SUCCESS) {
+            tts.setSpeechRate(1.2f);
             WaitTask waiter = new WaitTask(new WaitTask.WaitTaskListener() {
                 @Override
                 public void onProgressUpdate(Integer progress) { }

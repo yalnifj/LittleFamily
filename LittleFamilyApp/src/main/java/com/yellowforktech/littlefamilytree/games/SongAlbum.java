@@ -203,27 +203,27 @@ public class SongAlbum {
         wordTimings.add(10400L);//_
         wordTimings.add(13100L);//my
         wordTimings.add(13800L);//_
-        wordTimings.add(15700L);//is
-        wordTimings.add(16300L);//here
-        wordTimings.add(16800L);//too.
+        wordTimings.add(15200L);//is
+        wordTimings.add(15800L);//here
+        wordTimings.add(16300L);//too.
 
-        wordTimings.add(18400L);//here
-        wordTimings.add(18900L);//is
-        wordTimings.add(19400L);//my
-        wordTimings.add(20100L);//_
-        wordTimings.add(22800L);//my
-        wordTimings.add(23400L);//_
-        wordTimings.add(25300L);//is
-        wordTimings.add(25950L);//here
-        wordTimings.add(26500L);//too.
+        wordTimings.add(17900L);//here
+        wordTimings.add(18400L);//is
+        wordTimings.add(18900L);//my
+        wordTimings.add(19600L);//_
+        wordTimings.add(22300L);//my
+        wordTimings.add(22600L);//_
+        wordTimings.add(24300L);//is
+        wordTimings.add(24950L);//here
+        wordTimings.add(25500L);//too.
 
-        wordTimings.add(28170L);//this
-        wordTimings.add(28760L);//is
-        wordTimings.add(29280L);//my
-        wordTimings.add(29770L);//fam
-        wordTimings.add(30500L);//i
-        wordTimings.add(31070L);//ly
-        wordTimings.add(32300L);//
+        wordTimings.add(27170L);//this
+        wordTimings.add(27760L);//is
+        wordTimings.add(28380L);//my
+        wordTimings.add(28770L);//fam
+        wordTimings.add(29500L);//i
+        wordTimings.add(30070L);//ly
+        wordTimings.add(31300L);//
 
         song.setWordTimings(wordTimings);
 
@@ -231,10 +231,10 @@ public class SongAlbum {
         timings.add(8700L);
         timings.add(13300L);
         timings.add(18300L);
-        timings.add(22800L);
-        timings.add(28000L);
-        timings.add(32500L);
-        timings.add(34000L);
+        timings.add(22300L);
+        timings.add(27500L);
+        timings.add(31500L);
+        timings.add(33000L);
 
         song.setDanceTimings(timings);
 
