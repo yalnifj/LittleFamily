@@ -37,4 +37,9 @@ public class ParentsGuideActivity extends FragmentActivity {
         Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse("http://www.littlefamilytree.com"));
         startActivity(intent);
     }
+
+    public void launchKidHeritage(View view) {
+        Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse("http://www.myheritagebook.com"));
+        startActivity(intent);
+    }
 }
