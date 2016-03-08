@@ -1,10 +1,11 @@
-package com.yellowforktech.littlefamilytree.remote.familysearch;
+package com.yellowforktech.littlefamilytree.remote.familygraph;
 
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.familygraph.android.FamilyGraph;
 import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.remote.RemoteResult;
 import com.yellowforktech.littlefamilytree.remote.RemoteService;
@@ -45,42 +46,39 @@ import java.util.Map;
 /**
  * Created by Parents on 12/29/2014.
  */
-public class FamilySearchService extends RemoteServiceBase implements RemoteService {
-    protected static final String SESSION_ID = "sessionid";
-    //private static final String FS_IDENTITY_PATH = "https://sandbox.familysearch.org/identity/v2/login";
-    //private static final String FS_IDENTITY_PATH = "https://api.familysearch.org/identity/v2/login";
+public class MyHeritageService extends RemoteServiceBase implements RemoteService {
+    protected static final String CLIENT_ID = "0d9d29c39d0ded7bd6a9e334e5f673a7";
+    protected static final String CLIENT_SECRET = "9021b2dcdb4834bd12a491349f61cb27";
 
-    //private static final String FS_PLATFORM_PATH = "https://sandbox.familysearch.org/platform/";
-    private static final String FS_PLATFORM_PATH = "https://familysearch.org/platform/";
+    private static final String FS_PLATFORM_PATH = "https://familygraph.myheritage.com/";
 
-    //private static final String FS_OAUTH2_PATH = "https://sandbox.familysearch.org/cis-web/oauth2/v3/token";
-    private static final String FS_OAUTH2_PATH = "https://ident.familysearch.org/cis-web/oauth2/v3/token";
+    private static final String OAUTH2_PATH = "https://accounts.myheritage.com/oauth2/token";
 
-    private static final String FS_APP_KEY = "a0T3000000BM5hcEAD";
-    private static final String TAG = FamilySearchService.class.getSimpleName();
+    private static final String TAG = MyHeritageService.class.getSimpleName();
 
     private String sessionId = null;
     private Person currentPerson = null;
     private Map<String, Person> personCache;
     private int delayCount = 0;
 
-    private static FamilySearchService ourInstance = new FamilySearchService();
+    private FamilyGraph familyGraph;
 
-    public static FamilySearchService getInstance() {
-        return ourInstance;
+    public MyHeritageService() {
+        personCache = new HashMap<>();
+        familyGraph = new FamilyGraph(CLIENT_ID);
     }
 
-    private FamilySearchService() {
-        personCache = new HashMap<>();
+    public FamilyGraph getFamilyGraph() {
+        return familyGraph;
     }
 
     @Override
     public RemoteResult authenticate(String username, String password) throws RemoteServiceSearchException {
         //-- OAuth2
-        Uri action = Uri.parse(FS_OAUTH2_PATH);
+        Uri action = Uri.parse(OAUTH2_PATH);
         Bundle params = new Bundle();
         params.putString("grant_type", "password");
-        params.putString("client_id", FS_APP_KEY);
+        params.putString("client_id", CLIENT_ID);
         params.putString("username", username);
         params.putString("password", password);
         Bundle headers = new Bundle();
@@ -115,47 +113,10 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
         return authenticate(username, password);
     }
 
-    /*
-    @Override
-    public RemoteResult authWithToken(String encodedAuthToken) throws RemoteServiceSearchException {
-        if (encodedAuthToken==null) {
-            throw new RemoteServiceSearchException("Unable to authenticate with FamilySearch", 401);
-        }
-         OAuth1
-        Uri action = Uri.parse(FS_IDENTITY_PATH);
-        Bundle params = new Bundle();
-        params.putString("key", FS_APP_KEY);
-        Bundle headers = new Bundle();
-        headers.putString("Authorization", "Basic " + encodedAuthToken);
-
-        RemoteResult data = getRestDataNoRetry(METHOD_GET, action, params, headers);
-        if (data!=null) {
-            if (data.isSuccess()) {
-                Serializer serializer = new Persister();
-                try {
-                    Identity session = serializer.read(Identity.class, data.getData());
-                    this.sessionId = session.getSession().id;
-                    Log.i(TAG, "session: " + sessionId);
-                } catch (Exception e) {
-                    Log.e(TAG, "error", e);
-                }
-            } else {
-                this.sessionId = null;
-            }
-        }
-
-        return data;
-    }
-    */
-
     @Override
     public String getSessionId() {
         return sessionId;
     }
-
-    //public String createEncodedAuthToken(String username, String password) {
-    //    return Base64.encodeToString((username + ":" + password).getBytes(), Base64.NO_WRAP);
-    //}
 
     public String createEncodedAuthToken(String username, String password) {
         return username+":"+password;
@@ -164,7 +125,7 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
     @Override
     public Person getCurrentPerson() throws RemoteServiceSearchException {
         if (sessionId==null) {
-            throw new RemoteServiceSearchException("Not Authenticated with FamilySearch.", 0);
+            throw new RemoteServiceSearchException("Not Authenticated with MyHeritage.", 0);
         }
         if (currentPerson==null) {
             Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/current-person");
@@ -203,7 +164,7 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
     @Override
     public Person getPerson(String personId, boolean checkCache) throws RemoteServiceSearchException {
         if (sessionId==null) {
-            throw new RemoteServiceSearchException("Not Authenticated with FamilySearch.", 0);
+            throw new RemoteServiceSearchException("Not Authenticated with MyHeritage.", 0);
         }
         if (!checkCache || personCache.get(personId)==null) {
             Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+personId);
@@ -268,7 +229,7 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
     @Override
     public Entry getLastChangeForPerson(String personId) throws RemoteServiceSearchException {
         if (sessionId==null) {
-            throw new RemoteServiceSearchException("Not Authenticated with FamilySearch.", 0);
+            throw new RemoteServiceSearchException("Not Authenticated with MyHeritage.", 0);
         }
 
         Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+personId+"/changes");
@@ -319,7 +280,7 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
     @Override
     public Link getPersonPortrait(String personId, boolean checkCache) throws RemoteServiceSearchException {
         if (sessionId==null) {
-            throw new RemoteServiceSearchException("Not Authenticated with FamilySearch.", 0);
+            throw new RemoteServiceSearchException("Not Authenticated with MyHeritage.", 0);
         }
 
         Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+personId+"/portraits");
@@ -362,11 +323,11 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
     @Override
     public List<Relationship> getCloseRelatives(boolean checkCache) throws RemoteServiceSearchException {
         if (sessionId==null) {
-            throw new RemoteServiceSearchException("Not Authenticated with FamilySearch.", 0);
+            throw new RemoteServiceSearchException("Not Authenticated with MyHeritage.", 0);
         }
 
         if (getCurrentPerson()==null) {
-            throw new RemoteServiceSearchException("Unable to get current person from FamilySearch", 0);
+            throw new RemoteServiceSearchException("Unable to get current person from MyHeritage", 0);
         }
 
         return getCloseRelatives(currentPerson.getId(), checkCache);
@@ -375,7 +336,7 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
 	@Override
     public List<Relationship> getCloseRelatives(String personId, boolean checkCache) throws RemoteServiceSearchException {
         if (sessionId==null) {
-            throw new RemoteServiceSearchException("Not Authenticated with FamilySearch.", 0);
+            throw new RemoteServiceSearchException("Not Authenticated with MyHeritage.", 0);
         }
 
         Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons-with-relationships");
@@ -412,7 +373,7 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
 
     public List<Relationship> getParents(String personId, boolean checkCache) throws RemoteServiceSearchException {
         if (sessionId==null) {
-            throw new RemoteServiceSearchException("Not Authenticated with FamilySearch.", 0);
+            throw new RemoteServiceSearchException("Not Authenticated with MyHeritage.", 0);
         }
 
         Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+personId+"/parent-relationships");
@@ -448,7 +409,7 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
 
     public List<Relationship> getChildren(String personId, boolean checkCache) throws RemoteServiceSearchException {
         if (sessionId==null) {
-            throw new RemoteServiceSearchException("Not Authenticated with FamilySearch.", 0);
+            throw new RemoteServiceSearchException("Not Authenticated with MyHeritage.", 0);
         }
 
         Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+personId+"/child-relationships");
@@ -484,7 +445,7 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
 
     public List<Relationship> getSpouses(String personId, boolean checkCache) throws RemoteServiceSearchException {
         if (sessionId==null) {
-            throw new RemoteServiceSearchException("Not Authenticated with FamilySearch.", 0);
+            throw new RemoteServiceSearchException("Not Authenticated with MyHeritage.", 0);
         }
 
         Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+personId+"/spouse-relationships");
@@ -520,7 +481,7 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
 
     public Map<Integer, Person> getPedigree(String personId) throws RemoteServiceSearchException {
         if (sessionId==null) {
-            throw new RemoteServiceSearchException("Not Authenticated with FamilySearch.", 0);
+            throw new RemoteServiceSearchException("Not Authenticated with MyHeritage.", 0);
         }
 
         Map<Integer, Person> tree = new HashMap<>();
@@ -569,7 +530,7 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
     @Override
     public List<SourceDescription> getPersonMemories(String personId, boolean checkCache) throws RemoteServiceSearchException {
         if (sessionId==null) {
-            throw new RemoteServiceSearchException("Not Authenticated with FamilySearch.", 0);
+            throw new RemoteServiceSearchException("Not Authenticated with MyHeritage.", 0);
         }
 
         Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+personId+"/memories");
@@ -609,7 +570,7 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
         if (data.getStatusCode()==401 && sessionId!=null) {
             try {
                 String encodedAuthToken = null;
-                encodedAuthToken = DataService.getInstance().getEncryptedProperty(DataService.SERVICE_TYPE_FAMILYSEARCH + DataService.SERVICE_TOKEN);
+                encodedAuthToken = DataService.getInstance().getEncryptedProperty(DataService.SERVICE_TYPE_MYHERITAGE + DataService.SERVICE_TOKEN);
                 RemoteResult res = authWithToken(encodedAuthToken);
                 if (res.isSuccess()) {
                     return true;
@@ -719,6 +680,6 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
 
     @Override
     public String getPersonUrl(String remoteId) {
-        return "https://familysearch.org/tree/#view=ancestor&person="+remoteId;
+        return "https://MyHeritage.org/tree/#view=ancestor&person="+remoteId;
     }
 }

@@ -20,7 +20,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
-    <ImageButton
+    <ImageView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/familySearchButton"
@@ -29,17 +29,27 @@
         android:layout_below="@+id/textView4"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="15dp" />
 
-    <ImageButton
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/myheritageButton"
+        android:layout_below="@+id/familySearchButton"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/myheritage_logo"
+        android:onClick="chooseMyHeritage"
+        android:layout_marginTop="15dp" />
+
+    <ImageView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/pgvButton"
-        android:layout_below="@+id/familySearchButton"
+        android:layout_below="@+id/myheritageButton"
         android:layout_centerHorizontal="true"
         android:src="@drawable/pgv_logo"
         android:onClick="choosePGV"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="15dp" />
 
     <TextView
         android:layout_width="wrap_content"

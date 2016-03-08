@@ -16,41 +16,41 @@
     <string name="calculating_heritage">Calculating your heritage.
 Please wait...</string>
     <string name="choose_culture">Choose a culture to dress up...</string>
-	<string name="you_are_percent">You are %1$s percent from %2$s from your %3$s.</string>
+    <string name="you_are_percent">You are %1$s percent from %2$s from your %3$s.</string>
     <string name="name_born_in">%1$s, was born in %2$s.</string>
     <string name="name_born_in_date">%1$s, was born in %2$s on %3$s.</string>
-	<string name="father">Father</string>
-	<string name="mother">Mother</string>
-	<string name="husband">Husband</string>
-	<string name="wife">Wife</string>
-	<string name="grand">Grand</string>
-	<string name="great">Great</string>
-	<string name="son">Son</string>
-	<string name="daughter">Daughter</string>
-	<string name="brother">Brother</string>
-	<string name="sister">Sister</string>
-	<string name="inlaw">In-Law</string>
-	<string name="parent">Parent</string>
+    <string name="father">Father</string>
+    <string name="mother">Mother</string>
+    <string name="husband">Husband</string>
+    <string name="wife">Wife</string>
+    <string name="grand">Grand</string>
+    <string name="great">Great</string>
+    <string name="son">Son</string>
+    <string name="daughter">Daughter</string>
+    <string name="brother">Brother</string>
+    <string name="sister">Sister</string>
+    <string name="inlaw">In-Law</string>
+    <string name="parent">Parent</string>
     <string name="cousin">Cousin</string>
     <string name="aunt">Aunt</string>
     <string name="uncle">Uncle</string>
     <string name="niece">Niece</string>
     <string name="nephew">Nephew</string>
     <string name="unknown">Unknown</string>
-	
-	<string name="great3">Third</string>
-	<string name="great4">Fourth</string>
-	<string name="great5">Fifth</string>
-	<string name="great6">Sixth</string>
-	<string name="great7">Seventh</string>
-	<string name="great8">Eighth</string>
-	<string name="great9">Nineth</string>
-	<string name="great10">Tenth</string>
-	<string name="great11">Eleventh</string>
-	<string name="great12">Twelvth</string>
-	<string name="great13">Thirteenth</string>
-	<string name="great14">Fourteenth</string>
-	
+
+    <string name="great3">Third</string>
+    <string name="great4">Fourth</string>
+    <string name="great5">Fifth</string>
+    <string name="great6">Sixth</string>
+    <string name="great7">Seventh</string>
+    <string name="great8">Eighth</string>
+    <string name="great9">Nineth</string>
+    <string name="great10">Tenth</string>
+    <string name="great11">Eleventh</string>
+    <string name="great12">Twelvth</string>
+    <string name="great13">Thirteenth</string>
+    <string name="great14">Fourteenth</string>
+
     <string name="play">Play!</string>
     <string name="player_greeting">Hi, %1$s!</string>
     <string name="what_game">What would you like to play?</string>
@@ -67,7 +67,7 @@ Please wait...</string>
     <string name="born_in_on">%1$s was born in %2$s on %3$s.</string>
     <string name="he">He</string>
     <string name="she">She</string>
-	<string name="you">You</string>
+    <string name="you">You</string>
     <string name="self">Self</string>
     <string name="you_are">You are %1$s.</string>
     <string name="you_born_in">You were born in %1$s.</string>
@@ -107,12 +107,12 @@ Please wait...</string>
     <string name="guide_more_settings">From the settings you can manage your connection to your online family tree and change synchronization settings.  You can also choose to hide people from your online tree so that they do not show up in Little Family Tree.</string>
     <string name="ok_got_it">OK.  Got It!</string>
 
-<!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="gender">Gender</string>
     <string name="relationship">Relationship</string>
     <string name="birthDate">Birth Date</string>
-	<string name="birthYear">Birth Year</string>
+    <string name="birthYear">Birth Year</string>
     <string name="birthPlace">Birth Place</string>
     <string name="living">Living</string>
     <string name="nationality">Nationality</string>
@@ -134,5 +134,6 @@ Please wait...</string>
     <string name="visit_web_desc">Visit our website for more details, videos, and tutorials about the games in Little Family Tree.</string>
     <string name="title_guide_more">More Family History For Children</string>
     <string name="guide_kidsheritage">Teach your children more about their heritage with their own personal heritage book. Use coupon code LTFAMTR316 for free shipping!</string>
+    <string name="title_activity_my_heritage_login">MyHeritage Login</string>
 
 </resources>

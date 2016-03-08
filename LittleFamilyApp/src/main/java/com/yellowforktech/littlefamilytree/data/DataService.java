@@ -14,6 +14,7 @@ import com.yellowforktech.littlefamilytree.remote.AES;
 import com.yellowforktech.littlefamilytree.remote.RemoteResult;
 import com.yellowforktech.littlefamilytree.remote.RemoteService;
 import com.yellowforktech.littlefamilytree.remote.RemoteServiceSearchException;
+import com.yellowforktech.littlefamilytree.remote.familygraph.MyHeritageService;
 import com.yellowforktech.littlefamilytree.remote.familysearch.FamilySearchService;
 import com.yellowforktech.littlefamilytree.remote.phpgedview.PGVService;
 
@@ -39,6 +40,7 @@ public class DataService implements AuthTask.Listener {
     public static final String SERVICE_TYPE = "service_type";
     public static final String SERVICE_TYPE_PHPGEDVIEW = PGVService.class.getSimpleName();
     public static final String SERVICE_TYPE_FAMILYSEARCH = FamilySearchService.class.getSimpleName();
+    public static final String SERVICE_TYPE_MYHERITAGE = MyHeritageService.class.getSimpleName();
     public static final String SERVICE_TOKEN = "Token";
     public static final String SERVICE_BASEURL = "BaseUrl";
     public static final String SERVICE_DEFAULTPERSONID = "DefaultPersonId";
@@ -122,10 +124,12 @@ public class DataService implements AuthTask.Listener {
                 //serviceType = getDBHelper().getProperty(SERVICE_TYPE);
                 serviceType = PreferenceManager.getDefaultSharedPreferences(context).getString(SERVICE_TYPE, null);
                 if (serviceType != null) {
-                    if (serviceType.equals(PGVService.class.getSimpleName())) {
+                    if (serviceType.equals(SERVICE_TYPE_PHPGEDVIEW)) {
                         String baseUrl = getDBHelper().getProperty(serviceType + SERVICE_BASEURL);
                         String defaultPersonId = getDBHelper().getProperty(serviceType + SERVICE_DEFAULTPERSONID);
                         remoteService = new PGVService(baseUrl, defaultPersonId);
+                    } else if (serviceType.equals(SERVICE_TYPE_MYHERITAGE)) {
+                        remoteService = new MyHeritageService();
                     } else {
                         remoteService = FamilySearchService.getInstance();
                     }
