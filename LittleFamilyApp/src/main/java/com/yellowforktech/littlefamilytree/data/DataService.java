@@ -807,6 +807,9 @@ public class DataService implements AuthTask.Listener {
                 person = DataHelper.buildLittlePerson(fsPerson, context, remoteService, true);
                 person.setTreeLevel(0);
                 getDBHelper().persistLittlePerson(person);
+            } else if (person.getTreeLevel()==null){
+                person.setTreeLevel(0);
+                getDBHelper().persistLittlePerson(person);
             }
             fireNetworkStateChanged(DataNetworkState.REMOTE_FINISHED);
         } else {

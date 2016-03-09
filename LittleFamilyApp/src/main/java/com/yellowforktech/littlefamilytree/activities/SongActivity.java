@@ -65,7 +65,7 @@ public class SongActivity extends LittleFamilyActivity implements TreeWalker.Lis
                     speak(getString(R.string.choose_a_song));
                 }
             });
-            waiter.execute(1500L);
+            waiter.execute(1000L);
         }
     }
 

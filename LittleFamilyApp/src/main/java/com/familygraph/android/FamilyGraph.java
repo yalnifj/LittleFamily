@@ -43,8 +43,8 @@ import java.net.MalformedURLException;
 public class FamilyGraph {
 
     // Strings used in the authorization flow
-    public static final String REDIRECT_URI = "fgconnect://success";
-    public static final String CANCEL_URI = "fgconnect://cancel";
+    public static final String REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
+    public static final String CANCEL_URI = "urn:ietf:wg:oauth:2.0:oob";
     public static final String TOKEN = "access_token";
     public static final String BEARER_TOKEN = "bearer_token";
     public static final String EXPIRES = "expires_in";
