@@ -60,31 +60,17 @@
                     android:layout_weight="0" />
             </LinearLayout>
 
-            <LinearLayout
+            <ImageButton
+                android:id="@+id/outlineBtn"
+                android:src="@drawable/grandma_outline"
+                android:scaleType="fitCenter"
+                android:layout_weight="2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_weight="0">
+                android:onClick="toggleOutline"
+                android:visibility="visible"
+                />
 
-                <ImageButton
-                    android:id="@+id/shareBtn"
-                    android:src="@android:drawable/ic_menu_camera"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:onClick="shareImage"
-                    android:visibility="visible"
-                    style="@android:style/Widget.Holo.Button"
-                    android:layout_weight="1" />
-
-                <ImageButton
-                    android:id="@+id/nextBtn"
-                    android:src="@android:drawable/ic_media_next"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:onClick="nextImage"
-                    style="@android:style/Widget.Holo.Button"
-                    android:layout_weight="1"/>
-            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

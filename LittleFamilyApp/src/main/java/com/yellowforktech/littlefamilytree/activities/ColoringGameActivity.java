@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
@@ -45,6 +46,9 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Random
 	private ShareAction shareAction = new ShareAction();
     private SeekBar seekBar;
     private BrushSizeView brushSizeView;
+    private ImageButton toggleOutlineBtn;
+
+    private boolean showOutline = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +77,10 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Random
         brushSizeView = (BrushSizeView) findViewById(R.id.brushSize);
         brushSizeView.setMaxSize(maxBrushSize);
         brushSizeView.setMinSize(minBrushSize);
-        brushSizeView.setBrushSize(maxBrushSize/2);
-        seekBar.setProgress(maxBrushSize/2);
+        brushSizeView.setBrushSize(maxBrushSize / 2);
+        seekBar.setProgress(maxBrushSize / 2);
+
+        toggleOutlineBtn = (ImageButton) findViewById(R.id.outlineBtn);
 
         Intent intent = getIntent();
         people = (List<LittlePerson>) intent.getSerializableExtra(ChooseFamilyMember.FAMILY);
@@ -113,6 +119,21 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Random
     protected void onStop() {
         super.onStop();
         DataService.getInstance().unregisterNetworkStateListener(this);
+    }
+
+    @Override
+    public void setupTopBar() {
+        if (findViewById(R.id.topBarFragment)!=null) {
+            topBar = (TopBarFragment) getSupportFragmentManager().findFragmentById(R.id.topBarFragment);
+            if (topBar == null) {
+                topBar = TopBarFragment.newInstance(selectedPerson, R.layout.fragment_top_bar_coloring);
+                getSupportFragmentManager().beginTransaction().replace(R.id.topBarFragment, topBar).commit();
+            } else {
+                if (selectedPerson != null) {
+                    topBar.getArguments().putSerializable(TopBarFragment.ARG_PERSON, selectedPerson);
+                }
+            }
+        }
     }
 
     public void nextImage(View view) {
@@ -167,6 +188,16 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Random
         waiter.execute(3000L);
     }
 
+    public void toggleOutline(View view) {
+        showOutline = !showOutline;
+        layeredImage.setShowOutline(showOutline);
+        if (showOutline) {
+            toggleOutlineBtn.setImageResource(R.drawable.grandma_outline);
+        } else {
+            toggleOutlineBtn.setImageResource(R.drawable.grandma);
+        }
+    }
+
     @Override
     public void onColoringReady() {
         hideLoadingDialog();
@@ -175,6 +206,7 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Random
     @Override
     public void onMediaLoaded(Media media) {
         photo = media;
+        if (!showOutline) toggleOutline(toggleOutlineBtn);
         selectedPerson = mediaChooser.getSelectedPerson();
         int width = layeredImage.getWidth() / 2;
         int height = layeredImage.getHeight() / 2;

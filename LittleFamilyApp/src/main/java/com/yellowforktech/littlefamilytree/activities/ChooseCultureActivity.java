@@ -1,5 +1,6 @@
 package com.yellowforktech.littlefamilytree.activities;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -177,22 +178,39 @@ public class ChooseCultureActivity extends LittleFamilyActivity implements Herit
                 culturePeople = new HashMap<>();
                 titleView.setText(R.string.choose_culture);
 
+                double totalLevel = 0;
+                double countLevel = 0;
                 for(HeritagePath path : paths) {
                     String place = path.getPlace();
                     if (cultures.get(place)==null) {
                         cultures.put(place, path);
                         List<LittlePerson> pl = new ArrayList<>();
-                        pl.add(path.getTreePath().get(path.getTreePath().size()-1));
+                        LittlePerson ancestor = path.getTreePath().get(path.getTreePath().size() - 1);
+                        if (ancestor.getTreeLevel()!=null && ancestor.isHasParents()==null) {
+                            totalLevel += ancestor.getTreeLevel();
+                            countLevel++;
+                        }
+                        pl.add(ancestor);
                         culturePeople.put(place, pl);
                     } else {
                         Double percent = cultures.get(place).getPercent() + path.getPercent();
                         if (cultures.get(place).getTreePath().size() <= path.getTreePath().size()) {
                             cultures.get(place).setPercent(percent);
-                            culturePeople.get(place).add(path.getTreePath().get(path.getTreePath().size()-1));
+                            LittlePerson ancestor = path.getTreePath().get(path.getTreePath().size()-1);
+                            if (ancestor.getTreeLevel()!=null && ancestor.isHasParents()==null) {
+                                totalLevel += ancestor.getTreeLevel();
+                                countLevel++;
+                            }
+                            culturePeople.get(place).add(ancestor);
                         } else {
                             path.setPercent(percent);
                             cultures.put(place, path);
-                            culturePeople.get(place).add(0, path.getTreePath().get(path.getTreePath().size() - 1));
+                            LittlePerson ancestor = path.getTreePath().get(path.getTreePath().size()-1);
+                            if (ancestor.getTreeLevel()!=null && ancestor.isHasParents()==null) {
+                                totalLevel += ancestor.getTreeLevel();
+                                countLevel++;
+                            }
+                            culturePeople.get(place).add(0, ancestor);
                         }
                     }
                 }
@@ -216,6 +234,14 @@ public class ChooseCultureActivity extends LittleFamilyActivity implements Herit
 
                 if (uniquepaths.size()>0) {
                     setSelectedPath(uniquepaths.get(0));
+                }
+
+                if (countLevel > 0 && cultures.size() < 3 && totalLevel / countLevel < 6) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ChooseCultureActivity.this);
+                    builder.setMessage(R.string.low_tree_level);
+                    builder.setPositiveButton("OK", null);
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
                 }
             }
         });

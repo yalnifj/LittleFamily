@@ -136,4 +136,6 @@ Please wait...</string>
     <string name="guide_kidsheritage">Teach your children more about their heritage with their own personal heritage book. Use coupon code LTFAMTR316 for free shipping!</string>
     <string name="title_activity_my_heritage_login">MyHeritage Login</string>
 
+    <string name="low_tree_level">The game is still loading data.  As more data is loaded, the calculations will get more accurate.  Please try again in a few minutes.  You may continue to play while more data is loaded in the background.</string>
+
 </resources>
