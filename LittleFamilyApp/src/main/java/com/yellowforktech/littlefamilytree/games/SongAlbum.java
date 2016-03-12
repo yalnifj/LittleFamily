@@ -99,6 +99,13 @@ public class SongAlbum {
 
         song.setAttributor(new SongNameAttributor());
 
+        List<InstrumentType> instruments = new ArrayList<>(4);
+        instruments.add(InstrumentType.Drums);
+        instruments.add(InstrumentType.Flute);
+        instruments.add(InstrumentType.Violin);
+        instruments.add(InstrumentType.Piano);
+        song.setInstruments(instruments);
+
         songs.add(song);
     }
 
@@ -172,6 +179,13 @@ public class SongAlbum {
 
         song.setAttributor(new SongDatePlaceAttributor());
 
+        List<InstrumentType> instruments = new ArrayList<>(4);
+        instruments.add(InstrumentType.Drums);
+        instruments.add(InstrumentType.Bass);
+        instruments.add(InstrumentType.Violin);
+        instruments.add(InstrumentType.Piano);
+        song.setInstruments(instruments);
+
         songs.add(song);
     }
 
@@ -213,7 +227,7 @@ public class SongAlbum {
         wordTimings.add(19600L);//_
         wordTimings.add(22300L);//my
         wordTimings.add(22600L);//_
-        wordTimings.add(24300L);//is
+        wordTimings.add(24400L);//is
         wordTimings.add(24950L);//here
         wordTimings.add(25500L);//too.
 
@@ -239,6 +253,13 @@ public class SongAlbum {
         song.setDanceTimings(timings);
 
         song.setAttributor(new SongRelationshipAttributor(selectedPerson, context));
+
+        List<InstrumentType> instruments = new ArrayList<>(4);
+        instruments.add(InstrumentType.Drums);
+        instruments.add(InstrumentType.Flute);
+        instruments.add(InstrumentType.Guitar);
+        instruments.add(InstrumentType.Piano);
+        song.setInstruments(instruments);
 
         songs.add(song);
     }

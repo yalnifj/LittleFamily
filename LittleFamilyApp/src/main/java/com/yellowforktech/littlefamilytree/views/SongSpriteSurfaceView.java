@@ -17,6 +17,7 @@ import com.yellowforktech.littlefamilytree.activities.SongActivity;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.events.EventListener;
 import com.yellowforktech.littlefamilytree.events.EventQueue;
+import com.yellowforktech.littlefamilytree.games.InstrumentType;
 import com.yellowforktech.littlefamilytree.games.Song;
 import com.yellowforktech.littlefamilytree.games.SongAlbum;
 import com.yellowforktech.littlefamilytree.sprites.AnimatedBitmapSprite;
@@ -281,7 +282,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
                         if (w==wordChange) ts.setTextPaint(textHiPaint);
                         else ts.setTextPaint(textPaint);
                         Rect bounds = new Rect();
-                        textPaint.getTextBounds(word,0,word.length(),bounds);
+                        textPaint.getTextBounds(word, 0, word.length(), bounds);
                         ts.setWidth(bounds.width());
                         sprites.add(ts);
                         textSprites.add(ts);
@@ -927,10 +928,32 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
             sprites.remove(song2Button);
             sprites.remove(song3Button);
 
-            sprites.add(drumKit);
-            sprites.add(clarinet);
-            sprites.add(violin);
-            sprites.add(gPiano);
+            for(InstrumentType type : song.getInstruments()) {
+                switch (type) {
+                    case Drums:
+                        sprites.add(drumKit);
+                        break;
+                    case Flute:
+                        sprites.add(clarinet);
+                        break;
+                    case Violin:
+                        sprites.add(violin);
+                        break;
+                    case Piano:
+                        sprites.add(gPiano);
+                        break;
+                    case Bass:
+                        sprites.add(bass);
+                        break;
+                    case Guitar:
+                        sprites.add(guitar);
+                        break;
+                    default:
+                        //-- do nothing
+                        break;
+                }
+            }
+
             sprites.add(playButton);
             sprites.add(resetButton);
             songReady = true;
@@ -948,6 +971,9 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
             sprites.remove(clarinet);
             sprites.remove(violin);
             sprites.remove(gPiano);
+            sprites.remove(guitar);
+            sprites.remove(bass);
+
             sprites.remove(playButton);
             sprites.remove(resetButton);
             songReady = false;
@@ -1035,18 +1061,18 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 			}
 		}
         else if (topic.equalsIgnoreCase(TOPIC_CHOOSE_SONG1)) {
-            showInstruments();
             song = album.getSongs().get(0);
+            showInstruments();
             resetSong();
         }
         else if (topic.equalsIgnoreCase(TOPIC_CHOOSE_SONG2)) {
-            showInstruments();
             song = album.getSongs().get(1);
+            showInstruments();
             resetSong();
         }
         else if (topic.equalsIgnoreCase(TOPIC_CHOOSE_SONG3)) {
-            showInstruments();
             song = album.getSongs().get(2);
+            showInstruments();
             resetSong();
         }
     }

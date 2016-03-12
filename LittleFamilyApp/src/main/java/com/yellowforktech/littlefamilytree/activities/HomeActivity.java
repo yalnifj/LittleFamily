@@ -753,6 +753,7 @@ public class HomeActivity extends LittleFamilyActivity {
 
             Bitmap pianoBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_music_piano);
             TouchStateAnimatedBitmapSprite piano = new TouchStateAnimatedBitmapSprite(pianoBm, this);
+            piano.setResources(getResources());
             piano.setX(625 * dm.density);
             piano.setY(225 * dm.density);
             List<Integer> pstate1 = new ArrayList<>(3);
@@ -769,6 +770,10 @@ public class HomeActivity extends LittleFamilyActivity {
             piano.setStateTransition(3, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
             piano.getBitmapIds().put(4, pstate2);
             piano.setStateTransition(4, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
+            piano.getBitmapIds().put(5, pstate1);
+            piano.setStateTransition(5, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
+            piano.getBitmapIds().put(6, pstate2);
+            piano.setStateTransition(6, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
 			piano.setStateTransitionEvent(0, TOPIC_START_SONG);
             piano.getAudio().put(1, R.raw.piano);
             homeView.addSprite(piano);

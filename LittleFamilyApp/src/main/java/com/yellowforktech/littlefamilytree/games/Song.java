@@ -17,6 +17,8 @@ public class Song {
     private List<Long> wordTimings;
     private SongPersonAttribute attributor;
 
+    private List<InstrumentType> instruments;
+
     public int getDrumTrack() {
         return drumTrack;
     }
@@ -87,5 +89,13 @@ public class Song {
 
     public void setAttributor(SongPersonAttribute attributor) {
         this.attributor = attributor;
+    }
+
+    public List<InstrumentType> getInstruments() {
+        return instruments;
+    }
+
+    public void setInstruments(List<InstrumentType> instruments) {
+        this.instruments = instruments;
     }
 }
