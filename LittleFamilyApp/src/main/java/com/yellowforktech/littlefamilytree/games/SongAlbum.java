@@ -226,7 +226,7 @@ public class SongAlbum {
         wordTimings.add(18900L);//my
         wordTimings.add(19600L);//_
         wordTimings.add(22300L);//my
-        wordTimings.add(22600L);//_
+        wordTimings.add(22700L);//_
         wordTimings.add(24400L);//is
         wordTimings.add(24950L);//here
         wordTimings.add(25500L);//too.
