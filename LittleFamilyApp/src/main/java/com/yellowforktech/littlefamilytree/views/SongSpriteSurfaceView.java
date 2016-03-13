@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import com.google.android.gms.internal.*;
 
 /**
  * Created by kids on 6/17/15.
@@ -318,7 +319,11 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
                         if (speakPerson < onStage.size()) {
                             DraggablePersonSprite ds = onStage.get(speakPerson);
                             LittlePerson person = ds.getPerson();
-                            activity.speak(song.getAttributor().getAttributeFromPerson(person, speakPerson));
+							String attr = song.getAttributor().getAttributeFromPerson(person, speakPerson);attractive
+							if (attr.matches("\\d{4}}")) {
+								attr = attr.substring(0,2) + " " + attr.substring(2);
+							}
+                            activity.speak(attr);
                             speakPerson++;
                         }
                     }
