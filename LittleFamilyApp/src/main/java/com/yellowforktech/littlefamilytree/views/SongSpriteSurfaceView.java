@@ -327,7 +327,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
                         if (speakPerson < onStage.size()) {
                             DraggablePersonSprite ds = onStage.get(speakPerson);
                             LittlePerson person = ds.getPerson();
-							String attr = song.getAttributor().getAttributeFromPerson(person, speakPerson);attractive
+							String attr = song.getAttributor().getAttributeFromPerson(person, speakPerson);
 							if (attr.matches("\\d{4}}")) {
 								attr = attr.substring(0,2) + " " + attr.substring(2);
 							}
