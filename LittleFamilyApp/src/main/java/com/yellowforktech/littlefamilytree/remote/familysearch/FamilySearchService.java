@@ -61,10 +61,7 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
 
     private String sessionId = null;
     private Person currentPerson = null;
-    private Map<String, List<Relationship>> closeRelatives = null;
     private Map<String, Person> personCache;
-    private Map<String, Link> linkCache;
-    private Map<String, List<SourceDescription>> memories = null;
     private int delayCount = 0;
 
     private static FamilySearchService ourInstance = new FamilySearchService();
@@ -75,9 +72,6 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
 
     private FamilySearchService() {
         personCache = new HashMap<>();
-        linkCache = new HashMap<>();
-		closeRelatives = new HashMap<>();
-        memories = new HashMap<>();
     }
 
     @Override
@@ -324,9 +318,6 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
 
     @Override
     public Link getPersonPortrait(String personId, boolean checkCache) throws RemoteServiceSearchException {
-        if (checkCache && linkCache.containsKey(personId)) {
-            return linkCache.get(personId);
-        }
         if (sessionId==null) {
             throw new RemoteServiceSearchException("Not Authenticated with FamilySearch.", 0);
         }
@@ -348,7 +339,6 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
                             List<Link> links = sd.getLinks();
                             for (Link link : links) {
                                 if (link.getRel() != null && link.getRel().equals("image-thumbnail")) {
-                                    linkCache.put(personId, link);
                                     return link;
                                 }
                             }
@@ -366,7 +356,6 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
                 }
             }
         }
-        linkCache.put(personId, null);
         return null;
     }
 
@@ -389,38 +378,36 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
             throw new RemoteServiceSearchException("Not Authenticated with FamilySearch.", 0);
         }
 
-        if (!checkCache || closeRelatives.get(personId)==null) {
-            Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons-with-relationships");
-            Bundle headers = new Bundle();
-            headers.putString("Authorization", "Bearer " + sessionId);
-            headers.putString("Accept", "application/x-gedcomx-v1+xml");
-            Bundle params = new Bundle();
-            params.putString("person", personId);
+        Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons-with-relationships");
+        Bundle headers = new Bundle();
+        headers.putString("Authorization", "Bearer " + sessionId);
+        headers.putString("Accept", "application/x-gedcomx-v1+xml");
+        Bundle params = new Bundle();
+        params.putString("person", personId);
 
-            RemoteResult result = getRestData(METHOD_GET, uri, params, headers);
-            if (result!=null) {
-                if (result.isSuccess()) {
-                    Serializer serializer = GedcomxSerializer.create();
-                    try {
-                        Gedcomx doc = serializer.read(Gedcomx.class, result.getData());
-                        if (doc.getRelationships() != null && doc.getRelationships().size() > 0) {
-                            List<Relationship> relatives = new ArrayList<>(doc.getRelationships());
-                            closeRelatives.put(personId, relatives);
-                            Log.i(TAG, "getCloseRelatives " + doc.getRelationships().size() + ": " + personId);
-                        }
-                    } catch (Exception e) {
-                        Log.e(TAG, "error", e);
+        RemoteResult result = getRestData(METHOD_GET, uri, params, headers);
+        if (result!=null) {
+            if (result.isSuccess()) {
+                Serializer serializer = GedcomxSerializer.create();
+                try {
+                    Gedcomx doc = serializer.read(Gedcomx.class, result.getData());
+                    if (doc.getRelationships() != null && doc.getRelationships().size() > 0) {
+                        List<Relationship> relatives = new ArrayList<>(doc.getRelationships());
+                        Log.i(TAG, "getCloseRelatives " + doc.getRelationships().size() + ": " + personId);
+                        return relatives;
                     }
-                } else {
-                    //-- check status and retry if possible
-                    if (handleStatusCodes(result)) {
-                        return getCloseRelatives(personId, checkCache);
-                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "error", e);
+                }
+            } else {
+                //-- check status and retry if possible
+                if (handleStatusCodes(result)) {
+                    return getCloseRelatives(personId, checkCache);
                 }
             }
         }
 
-        return closeRelatives.get(personId);
+        return null;
     }
 
     public List<Relationship> getParents(String personId, boolean checkCache) throws RemoteServiceSearchException {
@@ -585,38 +572,36 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
             throw new RemoteServiceSearchException("Not Authenticated with FamilySearch.", 0);
         }
 
-        if (!checkCache || memories.get(personId)==null){
-            Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+personId+"/memories");
-            Bundle headers = new Bundle();
-            headers.putString("Authorization", "Bearer " + sessionId);
-            headers.putString("Accept", "application/x-gedcomx-v1+xml");
+        Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+personId+"/memories");
+        Bundle headers = new Bundle();
+        headers.putString("Authorization", "Bearer " + sessionId);
+        headers.putString("Accept", "application/x-gedcomx-v1+xml");
 
-            Bundle params = new Bundle();
-            params.putString("type", "photo"); //-- limit to photos for now
+        Bundle params = new Bundle();
+        params.putString("type", "photo"); //-- limit to photos for now
 
-            RemoteResult result = getRestData(METHOD_GET, uri, params, headers);
-            if (result!=null) {
-                if (result.isSuccess()) {
-                    Serializer serializer = GedcomxSerializer.create();
-                    try {
-                        Gedcomx doc = serializer.read(Gedcomx.class, result.getData());
-                        if (doc.getSourceDescriptions() != null && doc.getSourceDescriptions().size() > 0) {
-                            memories.put(personId, doc.getSourceDescriptions());
-                            Log.i(TAG, "getPersonMemories found " + doc.getSourceDescriptions().size() + " photos for " + personId);
-                        }
-                    } catch (Exception e) {
-                        Log.e(TAG, "error", e);
+        RemoteResult result = getRestData(METHOD_GET, uri, params, headers);
+        if (result!=null) {
+            if (result.isSuccess()) {
+                Serializer serializer = GedcomxSerializer.create();
+                try {
+                    Gedcomx doc = serializer.read(Gedcomx.class, result.getData());
+                    if (doc.getSourceDescriptions() != null && doc.getSourceDescriptions().size() > 0) {
+                        Log.i(TAG, "getPersonMemories found " + doc.getSourceDescriptions().size() + " photos for " + personId);
+                        return doc.getSourceDescriptions();
                     }
-                } else {
-                    //-- check status and retry if possible
-                    if (handleStatusCodes(result)) {
-                        return getPersonMemories(personId, checkCache);
-                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "error", e);
+                }
+            } else {
+                //-- check status and retry if possible
+                if (handleStatusCodes(result)) {
+                    return getPersonMemories(personId, checkCache);
                 }
             }
         }
 
-        return memories.get(personId);
+        return null;
     }
 
     private boolean handleStatusCodes(RemoteResult data) throws RemoteServiceSearchException {

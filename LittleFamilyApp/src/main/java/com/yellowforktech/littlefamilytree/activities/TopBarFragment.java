@@ -27,6 +27,7 @@ import com.yellowforktech.littlefamilytree.util.ImageHelper;
 public class TopBarFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     public static final String ARG_PERSON = "person";
+    public static final String ARG_LAYOUT = "layout";
 
     private LittlePerson person;
 
@@ -35,6 +36,7 @@ public class TopBarFragment extends Fragment {
     private ImageView homeButton;
     private ImageView profileButton;
     private Context context;
+    private int layoutResource;
 
     /**
      * Use this factory method to create a new instance of
@@ -43,11 +45,19 @@ public class TopBarFragment extends Fragment {
      * @param param1 Parameter 1.
      * @return A new instance of fragment TopBarFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static TopBarFragment newInstance(LittlePerson param1) {
         TopBarFragment fragment = new TopBarFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_PERSON, param1);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static TopBarFragment newInstance(LittlePerson param1, int layoutResource) {
+        TopBarFragment fragment = new TopBarFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_PERSON, param1);
+        args.putSerializable(ARG_LAYOUT, layoutResource);
         fragment.setArguments(args);
         return fragment;
     }
@@ -65,12 +75,17 @@ public class TopBarFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        layoutResource = com.yellowforktech.littlefamilytree.R.layout.fragment_top_bar;
         if (getArguments() != null) {
             person = (LittlePerson) getArguments().getSerializable(ARG_PERSON);
+            Integer resId = (Integer) getArguments().getSerializable(ARG_LAYOUT);
+            if (resId != null) {
+                layoutResource = resId;
+            }
         }
 
         // Inflate the layout for this fragment
-        View view = inflater.inflate(com.yellowforktech.littlefamilytree.R.layout.fragment_top_bar, container, false);
+        View view = inflater.inflate(layoutResource, container, false);
         homeButton = (ImageView) view.findViewById(com.yellowforktech.littlefamilytree.R.id.homeButton);
         profileButton = (ImageView) view.findViewById(com.yellowforktech.littlefamilytree.R.id.profileButton);
 

@@ -26,6 +26,7 @@ public class ParentsGuideFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         layoutId = getArguments().getInt(ARG_PAGE);
+
     }
 
     @Override

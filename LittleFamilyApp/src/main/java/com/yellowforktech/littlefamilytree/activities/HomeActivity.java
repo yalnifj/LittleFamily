@@ -198,7 +198,7 @@ public class HomeActivity extends LittleFamilyActivity {
             birdSprite.setSelectable(true);
             birdSprite.setIgnoreAlpha(true);
             homeView.addSprite(birdSprite);
-            //homeView.addActivitySprite(birdSprite);
+            homeView.addActivitySprite(birdSprite);
 
             Bitmap flowerBm2 = BitmapFactory.decodeResource(getResources(), R.drawable.house_flowers_a1);
             TouchStateAnimatedBitmapSprite flower1 = new TouchStateAnimatedBitmapSprite(flowerBm2, this);
@@ -753,12 +753,28 @@ public class HomeActivity extends LittleFamilyActivity {
 
             Bitmap pianoBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_music_piano);
             TouchStateAnimatedBitmapSprite piano = new TouchStateAnimatedBitmapSprite(pianoBm, this);
+            piano.setResources(getResources());
             piano.setX(625 * dm.density);
             piano.setY(225 * dm.density);
-            List<Bitmap> pstate1 = new ArrayList<>(1);
-            pstate1.add(pianoBm);
-            piano.getBitmaps().put(1, pstate1);
-			piano.setStateTransitionEvent(1, TOPIC_START_SONG);
+            List<Integer> pstate1 = new ArrayList<>(3);
+            pstate1.add(R.drawable.house_music_piano1);
+            pstate1.add(R.drawable.house_music_piano2);
+            pstate1.add(R.drawable.house_music_piano3);
+            piano.getBitmapIds().put(1, pstate1);
+            piano.setStateTransition(1, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
+            List<Integer> pstate2 = new ArrayList<>(pstate1);
+            Collections.reverse(pstate2);
+            piano.getBitmapIds().put(2, pstate2);
+            piano.setStateTransition(2, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
+            piano.getBitmapIds().put(3, pstate1);
+            piano.setStateTransition(3, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
+            piano.getBitmapIds().put(4, pstate2);
+            piano.setStateTransition(4, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
+            piano.getBitmapIds().put(5, pstate1);
+            piano.setStateTransition(5, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
+            piano.getBitmapIds().put(6, pstate2);
+            piano.setStateTransition(6, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
+			piano.setStateTransitionEvent(0, TOPIC_START_SONG);
             piano.getAudio().put(1, R.raw.piano);
             homeView.addSprite(piano);
 			homeView.addActivitySprite(piano);

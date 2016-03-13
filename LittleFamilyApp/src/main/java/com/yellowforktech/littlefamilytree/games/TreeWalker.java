@@ -79,7 +79,8 @@ public class TreeWalker {
                     if (!usedPeople.contains(child.getId())) {
                         people.add(child);
                         usedPeople.add(child.getId());
-                        if (child.getTreeLevel()!=null && child.getTreeLevel() <= 2) {
+                        if ((child.isHasChildren()==null || child.isHasChildren()==true)
+                                && child.getTreeLevel()!=null && child.getTreeLevel() <= 2) {
                             loadQueue.add(child);
                         }
                     }
@@ -87,6 +88,7 @@ public class TreeWalker {
             }
             if (parents==null || parents.size()==0) {
                 if (listener!=null) {
+                    count = 0;
                     listener.onComplete(people);
                 }
             }
@@ -103,7 +105,8 @@ public class TreeWalker {
                     if (!usedPeople.contains(child.getId())) {
                         people.add(child);
                         usedPeople.add(child.getId());
-                        if (child.getTreeLevel()!=null && child.getTreeLevel() <= 3) {
+                        if ((child.isHasChildren()==null || child.isHasChildren()==true)
+                                && child.getTreeLevel()!=null && child.getTreeLevel() <= 2) {
                             loadQueue.add(child);
                         }
                     }
@@ -119,8 +122,9 @@ public class TreeWalker {
         public void onStatusUpdate(String message) { }
     };
 
+    int count = 0;
     private ParentsLoaderTask.Listener grandParentListener = new ParentsLoaderTask.Listener() {
-        int count = 0;
+
         @Override
         public void onComplete(ArrayList<LittlePerson> family) {
             count++;
@@ -139,6 +143,7 @@ public class TreeWalker {
                 loadMorePeople();
             }
             else if (listener!=null) {
+                count = 0;
                 listener.onComplete(people);
             }
         }
@@ -147,7 +152,7 @@ public class TreeWalker {
     public void loadMorePeople() {
         if (loadQueue.size()>0){
             LittlePerson person = loadQueue.poll();
-            if (person.getTreeLevel() <= 3) {
+            if (person.getTreeLevel() != null && person.getTreeLevel() <= 3) {
                 ChildrenLoaderTask ctask = new ChildrenLoaderTask(siblingListener, context, false);
                 ctask.execute(person);
             } else {

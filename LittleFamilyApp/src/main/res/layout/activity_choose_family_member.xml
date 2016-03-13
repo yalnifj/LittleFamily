@@ -21,7 +21,7 @@
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="39dp"
+                android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="@string/title_activity_choose_family_member"
                 android:id="@+id/textView"
@@ -31,6 +31,14 @@
                 android:paddingLeft="10dp"
                 android:paddingTop="5dp"
                 android:layout_weight="1"/>
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title_activity_parents_guide"
+                android:id="@+id/parentsGuideBtn"
+                android:onClick="onParentsGuideClicked" />
 
             <Button
                 style="?android:attr/buttonStyleSmall"

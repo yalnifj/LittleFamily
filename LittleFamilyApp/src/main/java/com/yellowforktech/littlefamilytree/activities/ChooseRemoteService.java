@@ -29,6 +29,11 @@ public class ChooseRemoteService extends LittleFamilyActivity {
         startActivityForResult(intent, REMOTE_SERVICE_LOGIN);
     }
 
+    public void chooseMyHeritage(View view) {
+        Intent intent = new Intent( this, MyHeritageLoginActivity.class );
+        startActivityForResult(intent, REMOTE_SERVICE_LOGIN);
+    }
+
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch(requestCode) {

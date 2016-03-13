@@ -122,6 +122,11 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
         }
     }
 
+    public void onParentsGuideClicked(View view) {
+        Intent intent = new Intent( this, ParentsGuideActivity.class );
+        startActivity(intent);
+    }
+
 
     int familyCount = 0;
     @Override

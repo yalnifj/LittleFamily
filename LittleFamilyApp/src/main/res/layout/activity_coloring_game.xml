@@ -51,30 +51,16 @@
                 android:layout_weight="2" />
         </LinearLayout>
 
-        <LinearLayout
+        <ImageButton
+            android:id="@+id/outlineBtn"
+            android:src="@drawable/grandma_outline"
+            android:scaleType="fitCenter"
+            android:layout_weight="2"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:orientation="vertical"
-            android:layout_weight="0">
-            <ImageButton
-                android:id="@+id/nextBtn"
-                android:src="@android:drawable/ic_media_next"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:onClick="nextImage"
-                style="@android:style/Widget.Holo.Button"
-                android:layout_weight="1"/>
-
-            <ImageButton
-                android:id="@+id/shareBtn"
-                android:src="@android:drawable/ic_menu_camera"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:onClick="shareImage"
-                android:visibility="visible"
-                style="@android:style/Widget.Holo.Button"
-                android:layout_weight="1" />
-        </LinearLayout>
+            android:layout_height="match_parent"
+            android:onClick="toggleOutline"
+            android:visibility="visible"
+            />
     </LinearLayout>
 
 </LinearLayout>

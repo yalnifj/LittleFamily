@@ -14,6 +14,7 @@ import com.yellowforktech.littlefamilytree.remote.AES;
 import com.yellowforktech.littlefamilytree.remote.RemoteResult;
 import com.yellowforktech.littlefamilytree.remote.RemoteService;
 import com.yellowforktech.littlefamilytree.remote.RemoteServiceSearchException;
+import com.yellowforktech.littlefamilytree.remote.familygraph.MyHeritageService;
 import com.yellowforktech.littlefamilytree.remote.familysearch.FamilySearchService;
 import com.yellowforktech.littlefamilytree.remote.phpgedview.PGVService;
 
@@ -28,10 +29,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
+import java.util.PriorityQueue;
 
 /**
  * Created by jfinlay on 2/18/2015.
@@ -40,6 +40,7 @@ public class DataService implements AuthTask.Listener {
     public static final String SERVICE_TYPE = "service_type";
     public static final String SERVICE_TYPE_PHPGEDVIEW = PGVService.class.getSimpleName();
     public static final String SERVICE_TYPE_FAMILYSEARCH = FamilySearchService.class.getSimpleName();
+    public static final String SERVICE_TYPE_MYHERITAGE = MyHeritageService.class.getSimpleName();
     public static final String SERVICE_TOKEN = "Token";
     public static final String SERVICE_BASEURL = "BaseUrl";
     public static final String SERVICE_DEFAULTPERSONID = "DefaultPersonId";
@@ -50,7 +51,7 @@ public class DataService implements AuthTask.Listener {
     private DBHelper dbHelper = null;
     private Context context = null;
 
-    private Queue<ThreadPerson> syncQ;
+    private PriorityQueue<ThreadPerson> syncQ;
     private boolean running = true;
     private int QDepth;
     private Object cellLock = new Object();
@@ -71,7 +72,7 @@ public class DataService implements AuthTask.Listener {
     }
 
     private DataService() {
-        syncQ = new LinkedList<>();
+        syncQ = new PriorityQueue<>();
         listeners = new ArrayList<>();
     }
 
@@ -123,10 +124,12 @@ public class DataService implements AuthTask.Listener {
                 //serviceType = getDBHelper().getProperty(SERVICE_TYPE);
                 serviceType = PreferenceManager.getDefaultSharedPreferences(context).getString(SERVICE_TYPE, null);
                 if (serviceType != null) {
-                    if (serviceType.equals(PGVService.class.getSimpleName())) {
+                    if (serviceType.equals(SERVICE_TYPE_PHPGEDVIEW)) {
                         String baseUrl = getDBHelper().getProperty(serviceType + SERVICE_BASEURL);
                         String defaultPersonId = getDBHelper().getProperty(serviceType + SERVICE_DEFAULTPERSONID);
                         remoteService = new PGVService(baseUrl, defaultPersonId);
+                    } else if (serviceType.equals(SERVICE_TYPE_MYHERITAGE)) {
+                        remoteService = new MyHeritageService();
                     } else {
                         remoteService = FamilySearchService.getInstance();
                     }
@@ -249,7 +252,7 @@ public class DataService implements AuthTask.Listener {
         return (info != null && info.isConnected() && info.getType() == ConnectivityManager.TYPE_MOBILE);
     }
 
-    private class ThreadPerson {
+    private class ThreadPerson implements Comparable<ThreadPerson> {
         LittlePerson person;
         int depth;
 
@@ -258,6 +261,15 @@ public class DataService implements AuthTask.Listener {
             if (tp instanceof  ThreadPerson)
                 return ((ThreadPerson)tp).person.equals(person);
             return false;
+        }
+
+        @Override
+        public int compareTo(ThreadPerson another) {
+            if (person==null && another.person==null) return 0;
+            if (person.getTreeLevel()==null && another.person.getTreeLevel()==null) return 0;
+            if (person.getTreeLevel()!=null && another.person.getTreeLevel()==null) return -1;
+            if (person.getTreeLevel()==null && another.person.getTreeLevel()!=null) return 1;
+            return person.getTreeLevel().compareTo(another.person.getTreeLevel());
         }
     }
 
@@ -716,7 +728,7 @@ public class DataService implements AuthTask.Listener {
         int syncDelay = Integer.parseInt(syncDelayStr);
         cal.add(Calendar.HOUR, -1 * syncDelay);
         if (person.isHasParents()==null || person.getLastSync().before(cal.getTime()) || person.getTreeLevel()==null
-                || (person.getTreeLevel()<=1 && person.isHasChildren()==null)) {
+                || (person.getTreeLevel()<=2 && person.isHasChildren()==null)) {
             synchronized (syncQ) {
                 ThreadPerson tp = new ThreadPerson();
                 tp.person = person;
@@ -793,6 +805,9 @@ public class DataService implements AuthTask.Listener {
             person = getPersonByRemoteId(fsPerson.getId());
             if (person==null) {
                 person = DataHelper.buildLittlePerson(fsPerson, context, remoteService, true);
+                person.setTreeLevel(0);
+                getDBHelper().persistLittlePerson(person);
+            } else if (person.getTreeLevel()==null){
                 person.setTreeLevel(0);
                 getDBHelper().persistLittlePerson(person);
             }

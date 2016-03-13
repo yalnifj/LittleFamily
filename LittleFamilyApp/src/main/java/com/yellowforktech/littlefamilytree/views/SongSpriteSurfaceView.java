@@ -10,12 +10,14 @@ import android.media.MediaPlayer;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.SongActivity;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.events.EventListener;
 import com.yellowforktech.littlefamilytree.events.EventQueue;
+import com.yellowforktech.littlefamilytree.games.InstrumentType;
 import com.yellowforktech.littlefamilytree.games.Song;
 import com.yellowforktech.littlefamilytree.games.SongAlbum;
 import com.yellowforktech.littlefamilytree.sprites.AnimatedBitmapSprite;
@@ -43,8 +45,6 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 	public static final String TOPIC_TOGGLE_DRUMS = "toggleDrums";
 	public static final String TOPIC_TOGGLE_FLUTE = "toggleFlute";
 	public static final String TOPIC_TOGGLE_VIOLIN = "toggleViolin";
-    public static final String TOPIC_TOGGLE_BASS = "toggleBass";
-    public static final String TOPIC_TOGGLE_GUITAR = "toggleGuitar";
     public static final String TOPIC_CHOOSE_SONG1 = "chooseSong1";
     public static final String TOPIC_CHOOSE_SONG2 = "chooseSong2";
     public static final String TOPIC_CHOOSE_SONG3 = "chooseSong3";
@@ -99,9 +99,9 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
     protected MediaPlayer violinPlayer;
     protected MediaPlayer voicePlayer;
 	protected boolean pianoOn = true;
-	protected boolean drumsOn = false;
+	protected boolean drumsOn = true;
 	protected boolean fluteOn = true;
-	protected boolean violinOn = false;
+	protected boolean violinOn = true;
 
     private boolean inSeats = false;
     private boolean playing = false;
@@ -122,6 +122,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
     private Paint textPaint;
     private Paint textHiPaint;
     private float xOffset;
+    private boolean songReady = false;
 
     public SongSpriteSurfaceView(Context context) {
         super(context);
@@ -156,8 +157,6 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 		EventQueue.getInstance().unSubscribe(TOPIC_TOGGLE_FLUTE, this);
 		EventQueue.getInstance().unSubscribe(TOPIC_TOGGLE_VIOLIN, this);
 		EventQueue.getInstance().unSubscribe(TOPIC_TOGGLE_DRUMS, this);
-        EventQueue.getInstance().unSubscribe(TOPIC_TOGGLE_GUITAR, this);
-        EventQueue.getInstance().unSubscribe(TOPIC_TOGGLE_BASS, this);
         EventQueue.getInstance().unSubscribe(TOPIC_CHOOSE_SONG1, this);
         EventQueue.getInstance().unSubscribe(TOPIC_CHOOSE_SONG2, this);
         EventQueue.getInstance().unSubscribe(TOPIC_CHOOSE_SONG3, this);
@@ -173,8 +172,6 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 		EventQueue.getInstance().subscribe(TOPIC_TOGGLE_FLUTE, this);
 		EventQueue.getInstance().subscribe(TOPIC_TOGGLE_VIOLIN, this);
 		EventQueue.getInstance().subscribe(TOPIC_TOGGLE_DRUMS, this);
-        EventQueue.getInstance().subscribe(TOPIC_TOGGLE_GUITAR, this);
-        EventQueue.getInstance().subscribe(TOPIC_TOGGLE_BASS, this);
         EventQueue.getInstance().subscribe(TOPIC_CHOOSE_SONG1, this);
         EventQueue.getInstance().subscribe(TOPIC_CHOOSE_SONG2, this);
         EventQueue.getInstance().subscribe(TOPIC_CHOOSE_SONG3, this);
@@ -246,11 +243,14 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
                     textSprites.clear();
                     float tx = xOffset + 10 * dm.density;
                     float ty = playButton.getY() + playButton.getHeight()*2 + 20*dm.density;
+                    int replaceCount = 0;
                     for (int w = wordChange; w < wordChange + 4; w++) {
                         if (w >= words.size()) break;
                         String word = words.get(w);
+                        String origWord = word;
                         if (word.isEmpty()) continue;
                         if (word.startsWith("_")) {
+                            if (replaceCount > 0) break;
                             DraggablePersonSprite ds = null;
                             if (nextPerson < onStage.size()) {
                                 ds = onStage.get(nextPerson);
@@ -260,12 +260,15 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
                             if (ds != null) {
                                 LittlePerson person = ds.getPerson();
                                 word = word.replace("_", song.getAttributor().getAttributeFromPerson(person, nextPerson));
+                                Log.d("SongSpriteSurfaceView", "word "+word+" speakPerson="+speakPerson+" nextPerson="+nextPerson);
                                 nextPerson++;
                             }
+                            replaceCount++;
                         }
                         if (w>wordChange && word.startsWith("-")) {
                             tx -= 9 * dm.density;
                         }
+                        Log.d("SongSpriteSurfaceView", word);
                         TextSprite ts = new TextSprite();
                         ts.setText(word);
                         ts.setX(tx);
@@ -274,7 +277,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
                         if (w==wordChange) ts.setTextPaint(textHiPaint);
                         else ts.setTextPaint(textPaint);
                         Rect bounds = new Rect();
-                        textPaint.getTextBounds(word,0,word.length(),bounds);
+                        textPaint.getTextBounds(word, 0, word.length(), bounds);
                         ts.setWidth(bounds.width());
                         sprites.add(ts);
                         textSprites.add(ts);
@@ -284,6 +287,9 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
                                 tx -= bounds.width() + 10 * dm.density;
                                 textSprites.remove(ts);
                                 sprites.remove(ts);
+                                if (origWord.startsWith("_")) {
+                                    nextPerson--;
+                                }
                             } else {
                                 Paint smallerPaint = new Paint();
                                 smallerPaint.setColor(Color.WHITE);
@@ -297,8 +303,10 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
                     textSpriteNum = 0;
 
                     float xdiff = (stage.getWidth() - tx)/2;
-                    for (TextSprite ts : textSprites) {
-                        ts.setX(ts.getX()+xdiff);
+                    if (textSprites.size() > 0 && textSprites.get(0).getX() + xdiff > 0) {
+                        for (TextSprite ts : textSprites) {
+                            ts.setX(ts.getX() + xdiff);
+                        }
                     }
                 }
             }
@@ -325,6 +333,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 							}
                             activity.speak(attr);
                             speakPerson++;
+                            Log.d("SongSpriteSurfaceView", "speak speakPerson="+speakPerson+" nextPerson="+nextPerson);
                         }
                     }
                 }
@@ -334,8 +343,8 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
                 if (currentSongTime > song.getDanceTimings().get(0) && currentSongTime < song.getDanceTimings().get(0) + 500) {
                     DraggablePersonSprite ds = onStage.get(0);
                     dancer = 0;
-                    ds.setTargetX((int) (xOffset + stage.getWidth() / 2 - (int) (50 * dm.density)));
-                    ds.setTargetHeight((int) (ds.getHeight() * 1.5));
+                    ds.setTargetX((int) (xOffset + stage.getWidth() / 2 - (int) (ds.getHeight() * 1.25 / 2.0)));
+                    ds.setTargetHeight((int) (ds.getHeight() * 1.25));
                     ds.setTargetY((int) (selPerson1.getY() + selPerson1.getHeight()));
                     ds.setMoving(true);
                 }
@@ -349,8 +358,8 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 
                     ds = onStage.get(1);
                     dancer = 1;
-                    ds.setTargetX((int) (xOffset + stage.getWidth() / 2 - (int) (50 * dm.density)));
-                    ds.setTargetHeight((int) (ds.getHeight() * 1.5));
+                    ds.setTargetX((int) (xOffset + stage.getWidth() / 2 - (int) (ds.getHeight() * 1.25 / 2.0)));
+                    ds.setTargetHeight((int) (ds.getHeight() * 1.25));
                     ds.setTargetY((int) (selPerson1.getY() + selPerson1.getHeight()));
                     ds.setMoving(true);
                 }
@@ -364,8 +373,8 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 
                     ds = onStage.get(2);
                     dancer = 2;
-                    ds.setTargetX((int) (xOffset + stage.getWidth() / 2 - (int) (50 * dm.density)));
-                    ds.setTargetHeight((int) (ds.getHeight() * 1.5));
+                    ds.setTargetX((int) (xOffset + stage.getWidth() / 2 - (int) (ds.getHeight() * 1.25 / 2.0)));
+                    ds.setTargetHeight((int) (ds.getHeight() * 1.25));
                     ds.setTargetY((int) (selPerson1.getY() + selPerson1.getHeight()));
                     ds.setMoving(true);
                 }
@@ -379,8 +388,8 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 
                     ds = onStage.get(3);
                     dancer = 3;
-                    ds.setTargetX((int) (xOffset + stage.getWidth() / 2 - (int) (50 * dm.density)));
-                    ds.setTargetHeight((int) (ds.getHeight() * 1.5));
+                    ds.setTargetX((int) (xOffset + stage.getWidth() / 2 - (int) (ds.getHeight() * 1.25 / 2.0)));
+                    ds.setTargetHeight((int) (ds.getHeight() * 1.25));
                     ds.setTargetY((int) (selPerson1.getY() + selPerson1.getHeight()));
                     ds.setMoving(true);
                 }
@@ -424,10 +433,12 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
         if (rotation > 10) {
             rotateDir = -1;
         }
-        if (rotation==0 && rotateDir==-1) {
+        if (!songReady && rotation==0 && rotateDir==-1) {
             if (growButton==song1Button) growButton = song2Button;
             else if (growButton==song2Button) growButton = song3Button;
             else growButton = song1Button;
+            Rect sr = new Rect((int)growButton.getX(), (int)growButton.getY(), (int)(growButton.getX()+growButton.getWidth()),(int)(growButton.getY()+growButton.getHeight()));
+            addStars(sr, false, 2);
         }
         if (rotation < -10) {
             rotateDir = 1;
@@ -487,50 +498,48 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
             song3Button.setY(stage.getHeight() - (55 * dm.density + song1Bm.getHeight()));
             addSprite(song3Button);
 
-            Bitmap drumsBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.drums, 0, (int) (width * 1.7), (int) (width * 1.7));
+            Bitmap drumsBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.drums, 0, (int) (width * 1.6), (int) (width * 1.6));
             drumKit = new TouchStateAnimatedBitmapSprite(drumsBm, activity);
             drumKit.setX(xOffset + 10 * dm.density);
             drumKit.setY(stage.getHeight() - (55 * dm.density + drumsBm.getHeight()));
             drumKit.setResources(getResources());
             drumKit.setStateTransitionEvent(0, TOPIC_TOGGLE_DRUMS);
             drumKit.setStateTransitionEvent(1, TOPIC_TOGGLE_DRUMS);
-            drumKit.addBitmap(1, ImageHelper.loadBitmapFromResource(activity, R.drawable.drums_off, 0, (int) (width * 1.7), (int) (width * 1.7)));
-            drumKit.setState(1);
+            drumKit.addBitmap(1, ImageHelper.loadBitmapFromResource(activity, R.drawable.drums_off, 0, (int) (width * 1.6), (int) (width * 1.6)));
             //addSprite(drumKit);
 
-            Bitmap gPianoBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.piano, 0, (int) (width * 1.7), (int) (width * 1.7));
+            Bitmap gPianoBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.piano, 0, (int) (width * 1.6), (int) (width * 1.6));
             gPiano = new TouchStateAnimatedBitmapSprite(gPianoBm, activity);
             gPiano.setX(xOffset + stage.getWidth() - (15 * dm.density + gPianoBm.getWidth()));
             gPiano.setY(stage.getHeight() - (35 * dm.density + gPianoBm.getHeight()));
             gPiano.setResources(getResources());
             gPiano.setStateTransitionEvent(0, TOPIC_TOGGLE_PIANO);
             gPiano.setStateTransitionEvent(1, TOPIC_TOGGLE_PIANO);
-            gPiano.addBitmap(1, ImageHelper.loadBitmapFromResource(activity, R.drawable.piano_off, 0, (int) (width * 1.7), (int) (width * 1.7)));
+            gPiano.addBitmap(1, ImageHelper.loadBitmapFromResource(activity, R.drawable.piano_off, 0, (int) (width * 1.6), (int) (width * 1.6)));
             //addSprite(gPiano);
 
-            Bitmap violinBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.violin, 0, (int) (width * 1.8), (int) (width * 1.8));
+            Bitmap violinBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.violin, 0, (int) (width * 1.6), (int) (width * 1.6));
             violin = new TouchStateAnimatedBitmapSprite(violinBm, activity);
-            violin.setX(xOffset + stage.getWidth() / 2 - violinBm.getWidth() / 3f);
+            violin.setX(xOffset + stage.getWidth() / 2 - violinBm.getWidth() / 4f);
             violin.setY(stage.getHeight() - (violinBm.getHeight()));
             violin.setResources(getResources());
             violin.setStateTransitionEvent(0, TOPIC_TOGGLE_VIOLIN);
             violin.setStateTransitionEvent(1, TOPIC_TOGGLE_VIOLIN);
-            violin.addBitmap(1, ImageHelper.loadBitmapFromResource(activity, R.drawable.violin_off, 0, (int) (width * 1.8), (int) (width * 1.8)));
-            violin.setState(1);
+            violin.addBitmap(1, ImageHelper.loadBitmapFromResource(activity, R.drawable.violin_off, 0, (int) (width * 1.6), (int) (width * 1.6)));
             //addSprite(violin);
 
-            Bitmap bassBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.bass, 0, (int) (width * 1.5), (int) (width * 1.5));
+            Bitmap bassBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.bass, 0, (int) (width * 1.8), (int) (width * 1.8));
             bass = new TouchStateAnimatedBitmapSprite(bassBm, activity);
-            bass.setX(xOffset + stage.getWidth() / 2 - bassBm.getWidth());
+            bass.setX(xOffset + stage.getWidth() / 2 - (bassBm.getWidth()*1.25f));
             bass.setY(stage.getHeight() - (20 * dm.density + bassBm.getHeight()));
             bass.setResources(getResources());
-            bass.setStateTransitionEvent(0, TOPIC_TOGGLE_BASS);
-            bass.setStateTransitionEvent(1, TOPIC_TOGGLE_BASS);
+            bass.setStateTransitionEvent(0, TOPIC_TOGGLE_FLUTE);
+            bass.setStateTransitionEvent(1, TOPIC_TOGGLE_FLUTE);
             bass.setIgnoreAlpha(true);
-            bass.addBitmap(1, ImageHelper.loadBitmapFromResource(activity, R.drawable.bass_off, 0, (int) (width * 1.5), (int) (width * 1.5)));
+            bass.addBitmap(1, ImageHelper.loadBitmapFromResource(activity, R.drawable.bass_off, 0, (int) (width * 1.8), (int) (width * 1.8)));
             //addSprite(bass);
 
-            Bitmap clarinetBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.clarinet, 0, (int) (width * 1.5), (int) (width * 1.5));
+            Bitmap clarinetBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.clarinet, 0, (int) (width * 1.4), (int) (width * 1.4));
             clarinet = new TouchStateAnimatedBitmapSprite(clarinetBm, activity);
             clarinet.setX(xOffset + stage.getWidth() / 2 - clarinetBm.getWidth());
             clarinet.setY(stage.getHeight() - (20 * dm.density + clarinetBm.getHeight()));
@@ -538,18 +547,18 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
             clarinet.setStateTransitionEvent(0, TOPIC_TOGGLE_FLUTE);
             clarinet.setStateTransitionEvent(1, TOPIC_TOGGLE_FLUTE);
             clarinet.setIgnoreAlpha(true);
-            clarinet.addBitmap(1, ImageHelper.loadBitmapFromResource(activity, R.drawable.clarinet_off, 0, (int) (width * 1.5), (int) (width * 1.5)));
+            clarinet.addBitmap(1, ImageHelper.loadBitmapFromResource(activity, R.drawable.clarinet_off, 0, (int) (width * 1.4), (int) (width * 1.4)));
             //addSprite(clarinet);
 
-            Bitmap guitarBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.guitar, 0, (int) (width * 1.5), (int) (width * 1.5));
+            Bitmap guitarBm = ImageHelper.loadBitmapFromResource(activity, R.drawable.guitar, 0, (int) (width * 1.6), (int) (width * 1.6));
             guitar = new TouchStateAnimatedBitmapSprite(guitarBm, activity);
-            guitar.setX(xOffset + stage.getWidth() / 2 - guitarBm.getWidth());
+            guitar.setX(xOffset + stage.getWidth() / 2);
             guitar.setY(stage.getHeight() - (20 * dm.density + guitarBm.getHeight()));
             guitar.setResources(getResources());
-            guitar.setStateTransitionEvent(0, TOPIC_TOGGLE_GUITAR);
-            guitar.setStateTransitionEvent(1, TOPIC_TOGGLE_GUITAR);
+            guitar.setStateTransitionEvent(0, TOPIC_TOGGLE_VIOLIN);
+            guitar.setStateTransitionEvent(1, TOPIC_TOGGLE_VIOLIN);
             guitar.setIgnoreAlpha(true);
-            guitar.addBitmap(1, ImageHelper.loadBitmapFromResource(activity, R.drawable.guitar_off, 0, (int) (width * 1.5), (int) (width * 1.5)));
+            guitar.addBitmap(1, ImageHelper.loadBitmapFromResource(activity, R.drawable.guitar_off, 0, (int) (width * 1.6), (int) (width * 1.6)));
             //addSprite(guitar);
 
             Bitmap man = ImageHelper.loadBitmapFromResource(activity, R.drawable.man_silhouette, 0,
@@ -728,7 +737,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 					DraggablePersonSprite ds = (DraggablePersonSprite) s;
                     if (!onStage.contains(ds)) {
                         if (moved && onStage.size()<4 && dropRect.contains((int) s.getX(), (int) (s.getY() - clipY))) {
-                            dropReady = true;
+                            if (songReady) dropReady = true;
                         } else {
                             ds.setTarget(null);
                         }
@@ -916,12 +925,41 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
             sprites.remove(song2Button);
             sprites.remove(song3Button);
 
-            sprites.add(drumKit);
-            sprites.add(clarinet);
-            sprites.add(violin);
-            sprites.add(gPiano);
+            for(InstrumentType type : song.getInstruments()) {
+                switch (type) {
+                    case Drums:
+                        sprites.add(drumKit);
+                        drumKit.setState(drumsOn?0:1);
+                        break;
+                    case Flute:
+                        sprites.add(clarinet);
+                        clarinet.setState(fluteOn ? 0 : 1);
+                        break;
+                    case Violin:
+                        sprites.add(violin);
+                        violin.setState(violinOn ? 0 : 1);
+                        break;
+                    case Piano:
+                        sprites.add(gPiano);
+                        gPiano.setState(pianoOn ? 0 : 1);
+                        break;
+                    case Bass:
+                        sprites.add(bass);
+                        bass.setState(fluteOn ? 0 : 1);
+                        break;
+                    case Guitar:
+                        sprites.add(guitar);
+                        guitar.setState(violinOn ? 0 : 1);
+                        break;
+                    default:
+                        //-- do nothing
+                        break;
+                }
+            }
+
             sprites.add(playButton);
             sprites.add(resetButton);
+            songReady = true;
         }
     }
 
@@ -936,8 +974,12 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
             sprites.remove(clarinet);
             sprites.remove(violin);
             sprites.remove(gPiano);
+            sprites.remove(guitar);
+            sprites.remove(bass);
+
             sprites.remove(playButton);
             sprites.remove(resetButton);
+            songReady = false;
         }
     }
 
@@ -994,7 +1036,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 			if (!fluteOn) {
 				flutePlayer.setVolume(0,0);
 			} else {
-				flutePlayer.setVolume(0.3f,0.3f);
+				flutePlayer.setVolume(1f,1f);
 			}
 		}
 		else if (topic.equals(TOPIC_TOGGLE_VIOLIN)) {
@@ -1002,7 +1044,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 			if (!violinOn) {
 				violinPlayer.setVolume(0,0);
 			} else {
-				violinPlayer.setVolume(0.5f,0.5f);
+				violinPlayer.setVolume(1f,1f);
 			}
 		}
 		else if (topic.equals(TOPIC_TOGGLE_PIANO)) {
@@ -1022,18 +1064,18 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 			}
 		}
         else if (topic.equalsIgnoreCase(TOPIC_CHOOSE_SONG1)) {
-            showInstruments();
             song = album.getSongs().get(0);
+            showInstruments();
             resetSong();
         }
         else if (topic.equalsIgnoreCase(TOPIC_CHOOSE_SONG2)) {
-            showInstruments();
             song = album.getSongs().get(1);
+            showInstruments();
             resetSong();
         }
         else if (topic.equalsIgnoreCase(TOPIC_CHOOSE_SONG3)) {
-            showInstruments();
             song = album.getSongs().get(2);
+            showInstruments();
             resetSong();
         }
     }

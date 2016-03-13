@@ -28,14 +28,16 @@
         android:layout_height="wrap_content"
         android:id="@+id/prevBtn"
         android:layout_gravity="left|bottom"
-        android:src="@android:drawable/ic_media_previous" />
+        android:src="@android:drawable/ic_media_previous"
+        android:visibility="invisible" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="OK.  Got It!"
+        android:text="@string/close"
         android:id="@+id/okBtn"
-        android:layout_gravity="center_horizontal|bottom" />
+        android:layout_gravity="center_horizontal|bottom"
+        android:visibility="invisible" />
 
     <ImageView
         android:layout_width="wrap_content"
