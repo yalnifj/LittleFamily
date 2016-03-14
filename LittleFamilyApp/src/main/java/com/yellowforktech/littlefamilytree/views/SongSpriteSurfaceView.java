@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import com.google.android.gms.internal.*;
 
 /**
  * Created by kids on 6/17/15.
@@ -328,7 +327,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
                             DraggablePersonSprite ds = onStage.get(speakPerson);
                             LittlePerson person = ds.getPerson();
 							String attr = song.getAttributor().getAttributeFromPerson(person, speakPerson);
-							if (attr.matches("\\d{4}}")) {
+							if (attr.matches("\\d[1-9]\\d{2}") ) {
 								attr = attr.substring(0,2) + " " + attr.substring(2);
 							}
                             activity.speak(attr);
@@ -488,7 +487,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 
             Bitmap song2Bm = ImageHelper.loadBitmapFromResource(activity, R.drawable.song2, 0, (int) (width * 1.7), (int) (width * 1.7));
             song2Button = new TouchEventGameSprite(song2Bm, TOPIC_CHOOSE_SONG2, dm);
-            song2Button.setX(xOffset + (stage.getWidth() / 2) - (song2Bm.getWidth() / 2) + 5*dm.density);
+            song2Button.setX(xOffset + (stage.getWidth() / 2) - (song2Bm.getWidth() / 2) + 5 * dm.density);
             song2Button.setY(stage.getHeight() - (20 * dm.density + song1Bm.getHeight()));
             addSprite(song2Button);
 

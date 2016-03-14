@@ -36,7 +36,7 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
     public static final String TOPIC_NEXT_CLUE = "nextClue";
     public static final String TOPIC_PERSON_SELECTED = "personSelected";
     public static final String DATA_TREE_NODE = "dataTreeNode";
-    private int buttonSize = 100;
+    private int buttonSize = 75;
     private LittlePerson selectedPerson;
     private DataService dataService;
 
@@ -58,6 +58,7 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
     private Bitmap pencilBtn;
     private Bitmap paintBtn;
     private Bitmap bubbleBtn;
+    private Bitmap songBtn;
     private int maxX = 0;
     private int maxY = 0;
     private TouchEventGameSprite touchedArrow;
@@ -105,6 +106,13 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
             bubbleBtn = ImageHelper.loadBitmapFromResource(this, com.yellowforktech.littlefamilytree.R.drawable.bubble, 0, buttonSize, buttonSize);
         }
         return bubbleBtn;
+    }
+
+    public Bitmap getSongBtn() {
+        if (songBtn==null || songBtn.isRecycled()) {
+            songBtn = ImageHelper.loadBitmapFromResource(this, R.drawable.house_music_piano, 0, buttonSize, buttonSize);
+        }
+        return songBtn;
     }
 
     public int getButtonSize() {

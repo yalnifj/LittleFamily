@@ -118,7 +118,8 @@
         <activity
             android:name=".activities.SongActivity"
             android:label="@string/title_activity_song"
-            android:parentActivityName=".activities.HomeActivity">
+            android:parentActivityName=".activities.HomeActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.yellowforktech.littlefamilytree.activities.HomeActivity" />

@@ -198,7 +198,7 @@ public class HomeActivity extends LittleFamilyActivity {
             birdSprite.setSelectable(true);
             birdSprite.setIgnoreAlpha(true);
             homeView.addSprite(birdSprite);
-            homeView.addActivitySprite(birdSprite);
+            //homeView.addActivitySprite(birdSprite);
 
             Bitmap flowerBm2 = BitmapFactory.decodeResource(getResources(), R.drawable.house_flowers_a1);
             TouchStateAnimatedBitmapSprite flower1 = new TouchStateAnimatedBitmapSprite(flowerBm2, this);
