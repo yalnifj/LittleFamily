@@ -1107,6 +1107,21 @@ public class DataService implements AuthTask.Listener {
         return spouses;
     }
 
+    public List<LittlePerson> getChildrenForCouple(LittlePerson person1, LittlePerson person2) throws Exception {
+        List<LittlePerson> children1 = getChildren(person1);
+        List<LittlePerson> children2 = getChildren(person2);
+        List<LittlePerson> children = new ArrayList<>();
+        for (LittlePerson child1 : children1) {
+            for (LittlePerson child2 : children2) {
+                if (child1.equals(child2)) {
+                    children.add(child1);
+                    break;
+                }
+            }
+        }
+        return children;
+    }
+
     public List<Media> getMediaForPerson(LittlePerson person) throws Exception {
         List<Media> media = null;
         if (person.isHasMedia()==null) {
