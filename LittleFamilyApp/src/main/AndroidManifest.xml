@@ -129,7 +129,13 @@
             android:label="@string/title_activity_parents_guide"></activity>
         <activity
             android:name=".activities.FlyingActivity"
-            android:label="@string/title_activity_flying"></activity>
+            android:label="@string/title_activity_flying"
+            android:parentActivityName=".activities.HomeActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.yellowforktech.littlefamilytree.activities.HomeActivity" />
+        </activity>
         <activity
             android:name=".activities.MyHeritageLoginActivity"
             android:label="@string/title_activity_my_heritage_login"></activity>
