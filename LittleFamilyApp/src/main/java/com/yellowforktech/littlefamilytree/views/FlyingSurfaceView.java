@@ -32,7 +32,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
     private SensorManager mSensorManager;
     protected Sensor rotation;
     protected int mLastAccuracy;
-    protected float xRad, yRad, zRad;
+    protected float pitch, roll;
     protected Paint textPaint;
     private DisplayMetrics dm;
 
@@ -106,7 +106,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
     @Override
     public void resume() {
         super.resume();
-        mSensorManager.registerListener(this, rotation, SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(this, rotation, SensorManager.SENSOR_DELAY_GAME);
     }
 
     @Override
@@ -115,9 +115,24 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
             return;
         }
         if (event.sensor == rotation) {
-            xRad = event.values[0];
-            yRad = event.values[1];
-            zRad = event.values[2];
+            float[] rotationMatrix = new float[9];
+            SensorManager.getRotationMatrixFromVector(rotationMatrix, event.values);
+            // By default, remap the axes as if the front of the
+            // device screen was the instrument panel.
+            int worldAxisForDeviceAxisX = SensorManager.AXIS_X;
+            int worldAxisForDeviceAxisY = SensorManager.AXIS_Z;
+
+            float[] adjustedRotationMatrix = new float[9];
+            SensorManager.remapCoordinateSystem(rotationMatrix, worldAxisForDeviceAxisX,
+                    worldAxisForDeviceAxisY, adjustedRotationMatrix);
+
+            // Transform rotation matrix into azimuth/pitch/roll
+            float[] orientation = new float[3];
+            SensorManager.getOrientation(adjustedRotationMatrix, orientation);
+
+            // Convert radians to degrees
+            pitch = orientation[1] * -57;
+            roll = orientation[2] * -57;
         }
     }
 
@@ -192,17 +207,17 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
         super.doStep();
 
         if (spritesCreated) {
-            if (Math.abs(yRad) > 0.05) {
+            if (Math.abs(roll) > 3) {
                 float x = bird.getX();
-                x += yRad * 50;
+                x += roll;
                 if (x + bird.getWidth() > getWidth()) x = getWidth() - bird.getWidth();
                 if (x < 0) x = 0;
                 bird.setX(x);
             }
 
-            if (Math.abs(xRad - 0.2) > 0.05) {
+            if (Math.abs(pitch) > 3) {
                 float y = bird.getY();
-                y += (xRad - 0.2) * 60;
+                y += pitch;
                 if (y + bird.getHeight() + nestHeight > getHeight())
                     y = getHeight() - (bird.getHeight() + nestHeight);
                 if (y < getHeight() * 2 / 3) y = getHeight() * 0.66f;
@@ -247,9 +262,9 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
         }
         super.doDraw(canvas);
 
+        canvas.drawText(String.format("pitch: %.2f", pitch), 0, 40, textPaint);
+        canvas.drawText(String.format("roll: %.2f", roll), 0, 80, textPaint);
         /*
-        canvas.drawText(String.format("xRad: %.2f", xRad), 0, 40, textPaint);
-        canvas.drawText(String.format("yRad: %.2f", yRad), 0, 80, textPaint);
         canvas.drawText(String.format("zRad: %.2f", zRad), 0, 120, textPaint);
         */
     }
