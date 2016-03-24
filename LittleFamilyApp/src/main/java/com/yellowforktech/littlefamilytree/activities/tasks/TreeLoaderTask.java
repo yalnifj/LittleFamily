@@ -141,9 +141,16 @@ public class TreeLoaderTask extends AsyncTask<LittlePerson, Integer, TreeNode> {
     protected void addChildren(TreeNode node, int depth) throws Exception {
         if (depth>1) return;
         LittlePerson person = node.getPerson();
-        List<LittlePerson> children = dataService.getChildren(person);
-        if (children!=null) {
-            node.setChildren(children);
+        if (node.getSpouse() != null) {
+            List<LittlePerson> children = dataService.getChildrenForCouple(person, node.getSpouse());
+            if (children != null) {
+                node.setChildren(children);
+            }
+        } else {
+            List<LittlePerson> children = dataService.getChildren(person);
+            if (children != null) {
+                node.setChildren(children);
+            }
         }
     }
 

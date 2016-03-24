@@ -319,7 +319,13 @@ public class ImageHelper {
     public static File getDataFolder(Context context) {
         File dataDir = null;
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            dataDir = new File(Environment.getExternalStorageDirectory(), "LittleFamilyData");
+            dataDir = new File(Environment.getExternalStorageDirectory(), ".LittleFamilyTreeData");
+
+            File oldDataDir = new File(Environment.getExternalStorageDirectory(), "LittleFamilyData");
+            if (oldDataDir!=null && oldDataDir.isDirectory()) {
+                oldDataDir.renameTo(dataDir);
+            }
+
             if(!dataDir.isDirectory()) {
                 dataDir.mkdirs();
             }

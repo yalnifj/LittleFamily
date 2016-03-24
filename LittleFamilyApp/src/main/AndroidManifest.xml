@@ -28,23 +28,23 @@
         <activity
             android:name=".activities.ChooseFamilyMember"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"></activity>
+            android:label="@string/app_name" />
         <activity
             android:name=".activities.FSLoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_fslogin"
-            android:windowSoftInputMode="adjustResize"></activity>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.PGVLoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_pgvlogin"
-            android:windowSoftInputMode="adjustResize"></activity>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.MatchGameActivity"
-            android:label="@string/title_activity_match_game"></activity>
+            android:label="@string/title_activity_match_game" />
         <activity
             android:name=".activities.ChooseGameActivity"
-            android:label="@string/title_activity_choose_game"></activity>
+            android:label="@string/title_activity_choose_game" />
         <activity
             android:name=".activities.ScratchGameActivity"
             android:label="@string/title_activity_scratch_game"
@@ -80,10 +80,10 @@
         </activity>
         <activity
             android:name=".activities.ChooseRemoteService"
-            android:label="@string/title_activity_choose_remote_service"></activity>
+            android:label="@string/title_activity_choose_remote_service" />
         <activity
             android:name=".activities.SettingsActivity"
-            android:label="@string/title_activity_settings"></activity>
+            android:label="@string/title_activity_settings" />
         <activity
             android:name=".activities.PuzzleGameActivity"
             android:label="@string/title_activity_puzzle_game"
@@ -94,7 +94,7 @@
         </activity>
         <activity
             android:name=".activities.HomeActivity"
-            android:label="@string/title_activity_home"></activity>
+            android:label="@string/title_activity_home" />
         <activity
             android:name=".activities.MyTreeActivity"
             android:label="@string/title_activity_my_tree"
@@ -114,7 +114,7 @@
         </activity>
         <activity
             android:name=".activities.PersonSearchActivity"
-            android:label="@string/title_activity_person_search"></activity>
+            android:label="@string/title_activity_person_search" />
         <activity
             android:name=".activities.SongActivity"
             android:label="@string/title_activity_song"
@@ -126,13 +126,28 @@
         </activity>
         <activity
             android:name=".activities.ParentsGuideActivity"
-            android:label="@string/title_activity_parents_guide"></activity>
+            android:label="@string/title_activity_parents_guide" />
         <activity
             android:name=".activities.FlyingActivity"
-            android:label="@string/title_activity_flying"></activity>
+            android:label="@string/title_activity_flying"
+            android:parentActivityName=".activities.HomeActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.yellowforktech.littlefamilytree.activities.HomeActivity" />
+        </activity>
         <activity
             android:name=".activities.MyHeritageLoginActivity"
-            android:label="@string/title_activity_my_heritage_login"></activity>
+            android:label="@string/title_activity_my_heritage_login" />
+        <activity
+            android:name=".activities.BirthdayCardActivity"
+            android:label="@string/title_activity_birthday_card"
+            android:parentActivityName=".activities.HomeActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.yellowforktech.littlefamilytree.activities.HomeActivity" />
+        </activity>
     </application>
 
 </manifest>
