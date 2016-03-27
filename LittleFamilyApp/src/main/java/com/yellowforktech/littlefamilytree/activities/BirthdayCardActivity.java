@@ -1,7 +1,9 @@
 package com.yellowforktech.littlefamilytree.activities;
 
 import android.content.Intent;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.view.SurfaceHolder;
 
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.data.DataService;
@@ -19,6 +21,9 @@ public class BirthdayCardActivity extends LittleFamilyActivity {
 
         view = (BirthdayCardSurfaceView) findViewById(R.id.view);
         view.setActivity(this);
+        view.setZOrderOnTop(true);    // necessary
+        SurfaceHolder sfhTrackHolder = view.getHolder();
+        sfhTrackHolder.setFormat(PixelFormat.TRANSPARENT);
 
         Intent intent = getIntent();
         selectedPerson = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);

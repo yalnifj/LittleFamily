@@ -44,6 +44,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     public static final String TOPIC_START_SETTINGS = "startSettings";
 	public static final String TOPIC_START_SONG = "startSong";
     public static final String TOPIC_START_FLYING = "startFlying";
+    public static final String TOPIC_START_BIRTHDAY_CARD = "startBirthdayCard";
 	public static final String TOPIC_START_PROFILE = "startProfile";
     protected TextToSpeech tts;
     protected MediaPlayer successPlayer;
@@ -98,6 +99,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         EventQueue.getInstance().subscribe(TOPIC_START_SETTINGS, this);
         EventQueue.getInstance().subscribe(TOPIC_START_SONG, this);
         EventQueue.getInstance().subscribe(TOPIC_START_FLYING, this);
+        EventQueue.getInstance().subscribe(TOPIC_START_BIRTHDAY_CARD, this);
 		EventQueue.getInstance().subscribe(TOPIC_START_PROFILE, this);
     }
 
@@ -123,6 +125,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         EventQueue.getInstance().unSubscribe(TOPIC_START_SETTINGS, this);
         EventQueue.getInstance().unSubscribe(TOPIC_START_SONG, this);
         EventQueue.getInstance().unSubscribe(TOPIC_START_FLYING, this);
+        EventQueue.getInstance().unSubscribe(TOPIC_START_BIRTHDAY_CARD, this);
 		EventQueue.getInstance().unSubscribe(TOPIC_START_PROFILE, this);
     }
 
@@ -360,6 +363,9 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
             case TOPIC_START_FLYING:
                 startFlyingGame(person);
                 break;
+            case TOPIC_START_BIRTHDAY_CARD:
+                startBirthdayCardGame(person);
+                break;
 			case TOPIC_START_PROFILE:
 				onProfileButtonPressed(null);
 				break;
@@ -450,6 +456,12 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
 
     public void startFlyingGame(LittlePerson person) {
         Intent intent = new Intent( this, FlyingActivity.class );
+        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
+        startActivity(intent);
+    }
+
+    public void startBirthdayCardGame(LittlePerson person) {
+        Intent intent = new Intent( this, BirthdayCardActivity.class );
         intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
         startActivity(intent);
     }

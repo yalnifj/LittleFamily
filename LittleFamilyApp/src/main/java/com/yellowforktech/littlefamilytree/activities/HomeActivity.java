@@ -638,10 +638,33 @@ public class HomeActivity extends LittleFamilyActivity {
             homeView.addSprite(adultBed);
 
             Bitmap adultVanityBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_adult_vanity);
-            AnimatedBitmapSprite adultVanity = new AnimatedBitmapSprite(adultVanityBm);
-            adultVanity.setX(675*dm.density);
+            TouchStateAnimatedBitmapSprite adultVanity = new TouchStateAnimatedBitmapSprite(adultVanityBm, this);
+            adultVanity.setX(673*dm.density);
             adultVanity.setY(400*dm.density);
+            List<Integer> animatingVanity = new ArrayList<>(12);
+            animatingVanity.add(R.drawable.house_adult_vanity1);
+            animatingVanity.add(R.drawable.house_adult_vanity2);
+            animatingVanity.add(R.drawable.house_adult_vanity3);
+            animatingVanity.add(R.drawable.house_adult_vanity4);
+            animatingVanity.add(R.drawable.house_adult_vanity5);
+            animatingVanity.add(R.drawable.house_adult_vanity6);
+            animatingVanity.add(R.drawable.house_adult_vanity7);
+            animatingVanity.add(R.drawable.house_adult_vanity8);
+            animatingVanity.add(R.drawable.house_adult_vanity9);
+            animatingVanity.add(R.drawable.house_adult_vanity10);
+            animatingVanity.add(R.drawable.house_adult_vanity11);
+            animatingVanity.add(R.drawable.house_adult_vanity12);
+            adultVanity.getBitmapIds().put(1, animatingVanity);
+            adultVanity.setStateTransition(1, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
+            List<Integer> opening3 = new ArrayList<>(2);
+            opening3.add(R.drawable.house_adult_vanity12);
+            opening3.add(R.drawable.house_adult_vanity12);
+            adultVanity.getBitmapIds().put(2, opening3);
+            adultVanity.setStateTransition(2, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP3);
+            adultVanity.setStateTransitionEvent(2, TOPIC_START_BIRTHDAY_CARD);
+            adultVanity.setResources(getResources());
             homeView.addSprite(adultVanity);
+            homeView.addActivitySprite(adultVanity);
 
             Bitmap lightABm = BitmapFactory.decodeResource(getResources(), R.drawable.house_light_a1);
             TouchStateAnimatedBitmapSprite lightA = new TouchStateAnimatedBitmapSprite(lightABm, this);

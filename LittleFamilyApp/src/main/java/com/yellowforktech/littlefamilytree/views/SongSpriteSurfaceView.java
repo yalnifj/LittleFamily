@@ -122,6 +122,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
     private Paint textHiPaint;
     private float xOffset;
     private boolean songReady = false;
+    private int songNum = 0;
 
     public SongSpriteSurfaceView(Context context) {
         super(context);
@@ -846,7 +847,17 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 			for (Sprite s : onStage) {
                 if (s.getX() + s.getWidth() >= 0 && s.getX() <= getWidth() && s.getY() + s.getHeight() >= 0 && s.getY() <= getHeight()) {
                     canvas.save();
-                    if (playing) canvas.rotate(rotation, s.getX()+s.getWidth()/2, s.getY()+s.getHeight()/2);
+                    if (playing) {
+                        if (songNum==0) {
+                            canvas.rotate(rotation, s.getX() + s.getWidth() / 2, s.getY() + s.getHeight() / 2);
+                        } else if (songNum==1) {
+                            canvas.translate(0f, rotation / 100);
+                            canvas.scale(1.0f, 1.0f + (float)(rotation) / 150.0f);
+                        } else if (songNum==2) {
+                            canvas.translate(rotation / 150, 0f);
+                            canvas.scale(1.0f + (float)(rotation) / 150.0f, 1.0f);
+                        }
+                    }
                     s.doDraw(canvas);
                     canvas.restore();
                 }
@@ -1064,16 +1075,19 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 		}
         else if (topic.equalsIgnoreCase(TOPIC_CHOOSE_SONG1)) {
             song = album.getSongs().get(0);
+            songNum = 0;
             showInstruments();
             resetSong();
         }
         else if (topic.equalsIgnoreCase(TOPIC_CHOOSE_SONG2)) {
             song = album.getSongs().get(1);
+            songNum = 1;
             showInstruments();
             resetSong();
         }
         else if (topic.equalsIgnoreCase(TOPIC_CHOOSE_SONG3)) {
             song = album.getSongs().get(2);
+            songNum = 2;
             showInstruments();
             resetSong();
         }
