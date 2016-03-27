@@ -266,6 +266,23 @@ public class DBHelper extends SQLiteOpenHelper {
         return person;
     }
 	
+	public  List<LittlePerson> getNext30Next30Birthdays() {
+        SQLiteDatabase db = getReadableDatabase();
+		
+		List<LittlePerson> people = new ArrayList<LittlePerson>();
+
+        Cursor c = db.rawQuery("select p.* from " + TABLE_LITTLE_PERSON + " p "+
+							   " where p.active='Y' order by SUBSTR(CAST("+COL_BIRTH_DATE+" to TEXT), -7) LIMIT 30", null);
+        while (c.moveToNext()) {
+            LittlePerson person = personFromCursor(c);
+			people.add(person);
+        }
+
+        c.close();
+
+        return people;
+    }
+	
     public void deletePersonById(int id) {
         if (id>0) {
             SQLiteDatabase db = getWritableDatabase();
