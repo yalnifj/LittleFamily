@@ -89,10 +89,14 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
             vanityTop = ImageHelper.loadBitmapFromResource(context, R.drawable.vanity_top, 0, (int) (vanityWidth * .83f), (int)vanityHeight);
             vanityBottom = ImageHelper.loadBitmapFromResource(context, R.drawable.vanity_bottom, 0, (int) (vanityWidth), (int)vanityHeight);
 
-            xOffset = (this.getWidth() - (vanityBottom.getWidth() + vanityTop.getWidth())) / 2;
-            if (xOffset < 0) {
+            if (portrait) {
+                xOffset = (this.getWidth() - vanityBottom.getWidth()) / 2;
+            } else {
                 xOffset = 0;
             }
+            //if (xOffset < 0) {
+            //    xOffset = 0;
+            //}
             yOffset = 10;
 
             spritesCreated = true;
