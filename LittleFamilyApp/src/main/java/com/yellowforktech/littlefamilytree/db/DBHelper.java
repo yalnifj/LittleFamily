@@ -271,15 +271,15 @@ public class DBHelper extends SQLiteOpenHelper {
 		
 		List<LittlePerson> people = new ArrayList<LittlePerson>();
 
-        Cursor c = db.rawQuery("select a.* from (select p.*, cast(((strftime('%s','now') - p." + COL_BIRTH_DATE + ") / 31536000000) as int) as yeardiff "+
+        Cursor c = db.rawQuery("select a.* from (select p.*, strftime('%s','now') as todaysecs, "+
+								" cast(((strftime('%s','now') - (86400 + (p." + COL_BIRTH_DATE + " / 1000))) / 31557600) as int) as yeardiff "+
 								" from " + TABLE_LITTLE_PERSON + " p "+
-							   	" where p.active='Y' and p."+COL_BIRTH_DATE+" is not null) a " +
-								//" where a."+COL_BIRTH_DATE + " + (a.yeardiff * 31536000000) > strftime('%s','now') "+
-								" order by a."+COL_BIRTH_DATE + " + (a.yeardiff * 31536000000) "+
+							   	" where p.active='Y' and p."+COL_BIRTH_DATE+" is not null and p."+COL_TREE_LEVEL+" < 5 ) a " +
+								" order by a."+COL_BIRTH_DATE + " + (a.yeardiff * 31557600000) + (86400000 * 2 * a."+COL_TREE_LEVEL+") "+
 								" LIMIT 30", null);
         while (c.moveToNext()) {
             LittlePerson person = personFromCursor(c);
-			Log.d("getNext30Birthdays", "Person "+person.getName()+" birthdate="+person.getBirthDate()+" yeardiff="+c.getLong(c.getColumnIndex("yeardiff")));
+			Log.d("getNext30Birthdays", "Person "+person.getName()+" birthdate="+person.getBirthDate()+" todaysecs="+c.getLong(c.getColumnIndex("todaysecs"))+" birthmillis="+c.getLong(c.getColumnIndex(COL_BIRTH_DATE))+" yeardiff="+c.getLong(c.getColumnIndex("yeardiff")));
 			people.add(person);
         }
 

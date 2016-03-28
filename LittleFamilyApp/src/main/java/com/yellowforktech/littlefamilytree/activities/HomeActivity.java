@@ -115,7 +115,8 @@ public class HomeActivity extends LittleFamilyActivity {
 				Bitmap photo = null;
 				if (selectedPerson.getPhotoPath() != null) {
 					photo = ImageHelper.loadBitmapFromFile(selectedPerson.getPhotoPath(), ImageHelper.getOrientation(selectedPerson.getPhotoPath()), (int) (40*dm.density), (int) (30*dm.density), false);
-				} else {
+				}
+                if (photo==null){
 					photo = ImageHelper.loadBitmapFromResource(this, selectedPerson.getDefaultPhotoResource(), 0, (int)(30*dm.density), (int)(30*dm.density));
 				}
 				TouchEventGameSprite profileSprite = new TouchEventGameSprite(photo, LittleFamilyActivity.TOPIC_START_PROFILE, dm);

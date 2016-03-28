@@ -8,6 +8,7 @@ import android.util.DisplayMetrics;
 
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.LittleFamilyActivity;
+import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.events.EventListener;
 import com.yellowforktech.littlefamilytree.sprites.DraggablePersonSprite;
 import com.yellowforktech.littlefamilytree.util.ImageHelper;
@@ -21,6 +22,8 @@ import java.util.List;
 public class BirthdayCardSurfaceView extends SpritedSurfaceView implements EventListener {
 
     private LittleFamilyActivity activity;
+
+    private List<LittlePerson> birthdayPeople;
 
     private List<DraggablePersonSprite> peopleSprites;
 
@@ -58,6 +61,14 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
         activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
     }
 
+    public List<LittlePerson> getBirthdayPeople() {
+        return birthdayPeople;
+    }
+
+    public void setBirthdayPeople(List<LittlePerson> birthdayPeople) {
+        this.birthdayPeople = birthdayPeople;
+    }
+
     @Override
     public void onEvent(String topic, Object o) {
 
@@ -89,14 +100,7 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
             vanityTop = ImageHelper.loadBitmapFromResource(context, R.drawable.vanity_top, 0, (int) (vanityWidth * .83f), (int)vanityHeight);
             vanityBottom = ImageHelper.loadBitmapFromResource(context, R.drawable.vanity_bottom, 0, (int) (vanityWidth), (int)vanityHeight);
 
-            if (portrait) {
-                xOffset = (this.getWidth() - vanityBottom.getWidth()) / 2;
-            } else {
-                xOffset = 0;
-            }
-            //if (xOffset < 0) {
-            //    xOffset = 0;
-            //}
+            xOffset = (this.getWidth() - vanityBottom.getWidth()) / 2;
             yOffset = 10;
 
             spritesCreated = true;
@@ -110,13 +114,8 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
             createSprites();
         }
         synchronized (sprites) {
-            if (portrait) {
-                canvas.drawBitmap(vanityTop, xOffset + (vanityBottom.getWidth() - vanityTop.getWidth()) / 2, yOffset, null);
-                canvas.drawBitmap(vanityBottom, xOffset, yOffset + vanityTop.getHeight() - 3, null);
-            } else {
-                canvas.drawBitmap(vanityBottom, xOffset, yOffset, null);
-                canvas.drawBitmap(vanityTop, xOffset + vanityBottom.getWidth(), yOffset, null);
-            }
+            canvas.drawBitmap(vanityTop, xOffset + (vanityBottom.getWidth() - vanityTop.getWidth()) / 2, yOffset, null);
+            canvas.drawBitmap(vanityBottom, xOffset, yOffset + vanityTop.getHeight() - 3, null);
         }
     }
 }
