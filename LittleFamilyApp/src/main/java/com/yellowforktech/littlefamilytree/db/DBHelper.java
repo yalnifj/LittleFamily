@@ -266,15 +266,20 @@ public class DBHelper extends SQLiteOpenHelper {
         return person;
     }
 	
-	public  List<LittlePerson> getNext30Next30Birthdays() {
+	public  List<LittlePerson> getNext30Birthdays() {
         SQLiteDatabase db = getReadableDatabase();
 		
 		List<LittlePerson> people = new ArrayList<LittlePerson>();
 
-        Cursor c = db.rawQuery("select p.* from " + TABLE_LITTLE_PERSON + " p "+
-							   " where p.active='Y' order by SUBSTR(CAST("+COL_BIRTH_DATE+" to TEXT), -7) LIMIT 30", null);
+        Cursor c = db.rawQuery("select a.* from (select p.*, cast(((strftime('%s','now') - " + COL_BIRTH_DATE + ") / 31536000000) as int) as yeardiff "+
+								" from " + TABLE_LITTLE_PERSON + " p "+
+							   	" where p.active='Y' and p."+COL_BIRTH_DATE+" is not null) a " +
+								" where a."+COL_BIRTH_DATE + " + (a.yeardiff * 31536000000) > strftime('%s','now') "+
+								" order by a."+COL_BIRTH_DATE + " + (a.yeardiff * 31536000000) "+
+								" LIMIT 30", null);
         while (c.moveToNext()) {
             LittlePerson person = personFromCursor(c);
+			Log.d("getNext30Birthdays", "Person "+person.getName()+" birthdate="+person.getBirthDate()+" yeardiff="+c.getLong(c.getColumnIndex("yeardiff")));
 			people.add(person);
         }
 
