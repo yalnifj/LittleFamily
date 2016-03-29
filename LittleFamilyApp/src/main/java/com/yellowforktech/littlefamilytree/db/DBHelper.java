@@ -272,7 +272,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		List<LittlePerson> people = new ArrayList<LittlePerson>();
 
         Cursor c = db.rawQuery("select a.* from (select p.*, strftime('%s','now') as todaysecs, "+
-								" cast(((strftime('%s','now') - (86400 + (p." + COL_BIRTH_DATE + " / 1000))) / 31557600) as int) as yeardiff "+
+								" cast(((strftime('%s','now') - (172800 + (p." + COL_BIRTH_DATE + " / 1000))) / 31557600) as int) as yeardiff "+
 								" from " + TABLE_LITTLE_PERSON + " p "+
 							   	" where p.active='Y' and p."+COL_BIRTH_DATE+" is not null and p."+COL_TREE_LEVEL+" < 5 ) a " +
 								" order by a."+COL_BIRTH_DATE + " + (a.yeardiff * 31557600000) + (86400000 * 2 * a."+COL_TREE_LEVEL+") "+

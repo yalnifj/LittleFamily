@@ -173,6 +173,10 @@ header .header-content, section .container, section .container-fluid{
     background-size: cover;
 }
 
+#song-box {
+    background-image: url("game_icons/puzzle_background.png");
+}
+
 #parentsguide-box {
     background-image: url("game_icons/parentsguide_background.png");
     background-size: cover;
@@ -217,6 +221,12 @@ header .header-content, section .container, section .container-fluid{
 #treespy {
     position: relative;
     top: 15%;
+    width: 90px;
+}
+
+#song {
+    position: relative;
+    top: 20%;
     width: 90px;
 }
 

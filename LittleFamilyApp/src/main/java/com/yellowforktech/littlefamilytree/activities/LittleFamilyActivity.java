@@ -57,6 +57,10 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     protected AdultsAuthDialog adultAuthDialog;
 	protected SettingsAction settingsAction = new SettingsAction();
 
+    public LittlePerson getSelectedPerson() {
+        return selectedPerson;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

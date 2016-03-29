@@ -1,0 +1,64 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.yellowforktech.littlefamilytree.activities.TopBarFragment"
+    android:orientation="horizontal"
+    >
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/profileButton"
+        android:src="@drawable/girl"
+        android:onClick="onProfileButtonPressed"
+        android:layout_weight="1"
+        />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"></LinearLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/settingsBtn"
+        android:src="@drawable/settings"
+        android:onClick="onSettingsButtonPressed"
+        android:layout_weight="1"
+ />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"></LinearLayout>
+
+    <ImageView
+        android:id="@+id/shareBtn"
+        android:src="@android:drawable/ic_menu_camera"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:onClick="shareImage"
+        android:layout_weight="1"
+        />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"></LinearLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/homeButton"
+        android:src="@drawable/home"
+        android:onClick="onHomeButtonPressed"
+        android:layout_weight="1"
+        />
+</LinearLayout>

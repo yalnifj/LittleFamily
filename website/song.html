@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Little Family Tree - Sing-A-Long Game</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="littlefamily.css">
+
+    <link rel="shortcut icon" type="image/png" href="littlefamilytree_icon_small.png" />
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        .row {
+            margin-bottom: 20px;
+        }
+        .guide-image {
+            width: 100%;
+            max-width: 500px;
+        }
+    </style>
+</head>
+<body>
+<nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="socialbuttons">
+            <a class="socialmedia" href="http://www.facebook.com/LittleFamilyTree" title="Visit Little Family Tree on Facebook"><i class="fa fa-facebook-square"></i></a>
+        </div>
+        <div class="navbar-header">
+            <a class="navbar-brand page-scroll" href="index.html">
+                <img class="icon" src="home.png" border="0" height="45" />
+                <!-- Little Family Tree -->
+            </a>
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-left">
+
+                <li>
+                    <a class="page-scroll" href="index.html">Home</a>
+                </li>
+                <!--
+                <li>
+                    <a class="page-scroll" href="index.html#video">Video</a>
+                </li>
+                -->
+                <li>
+                    <a class="page-scroll" href="parentsguide.html">Parent's Guide</a>
+                </li>
+                <li>
+                    <a class="page-scroll selected" href="index.html#games">Games</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="index.html#partners">Partners</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="index.html#about">About Us</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="localevents.html">Local Event Resources</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+<div class="content-start container">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 text-center">
+            <h2 class="section-heading"><img src="game_icons/house_music_piano.png" />Sing-A-Long Game</h2>
+            <hr class="primary">
+            <p>&nbsp;</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 col-lg-offset-1">
+            <p>
+                This game chooses a random picture from your close relatives and cuts it up into a
+                simple puzzle to put back together.  Move the pieces around by touching and dragging
+                them to a new place on the screen.  When a piece is in the correct place it is no
+                longer movable.
+            </p>
+            <p>
+                A thumbnail of the completed picture is displayed on the bottom left corner of the
+                screen. Touching this thumbnail will show you what picture looks like with the
+                puzzle is completed.  It only remains up while you are touching the thumbnail.
+            </p>
+            <p>
+                When all of the pieces are in the correct spot, the game will speak the name of the
+                person to whom the picture was attached in the tree and then it will choose a new
+                random picture.
+            </p>
+            <p>
+                As you complete puzzles, the number of pieces will increase with each new puzzle.
+                This will continue as long as you wish to continue playing.  If you leave and come
+                back to the game, it will return to the beginning with only 4 pieces to place.
+            </p>
+        </div>
+        <div class="col-sm-4 text-center">
+            <div class="game-video embed-responsive embed-responsive-16by9">
+                <iframe class="embed-responsive-item" width="380" height="285" src="https://www.youtube.com/embed/QxnTXDLJi24?rel=0" frameborder="0" allowfullscreen></iframe>
+            </div>
+            <a href="Screenshot_puzzle.png"><img class="guide-image" src="Screenshot_puzzle.png" border="0"/></a>
+        </div>
+    </div>
+    <div class="row">
+        <p>&nbsp;<!-- footer --></p>
+    </div>
+</div>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<!-- Plugin JavaScript -->
+<script src="jquery.easing.min.js"></script>
+
+<script>
+    function randomNumber(max) {
+        return Math.floor((Math.random() * max));
+    }
+
+    $(document).ready(function() {
+        // jQuery for page scrolling feature - requires jQuery Easing plugin
+        $('a.page-scroll').bind('click', function(event) {
+            var $anchor = $(this);
+            $('html, body').stop().animate({
+                scrollTop: ($($anchor.attr('href')).offset().top - 50)
+            }, 1250, 'easeInOutExpo');
+            event.preventDefault();
+        });
+    });
+</script>
+</body>
+</html>
