@@ -852,10 +852,10 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
                             canvas.rotate(rotation, s.getX() + s.getWidth() / 2, s.getY() + s.getHeight() / 2);
                         } else if (songNum==1) {
                             canvas.translate(0f, rotation / 100);
-                            canvas.scale(1.0f, 1.0f + (float)(rotation) / 200.0f);
+                            canvas.scale(1.0f, 1.0f + (float)(rotation) / 250.0f);
                         } else if (songNum==2) {
                             canvas.translate(rotation / 200, 0f);
-                            canvas.scale(1.0f + (float)(rotation) / 200.0f, 1.0f);
+                            canvas.scale(1.0f + (float)(rotation) / 250.0f, 1.0f);
                         }
                     }
                     s.doDraw(canvas);

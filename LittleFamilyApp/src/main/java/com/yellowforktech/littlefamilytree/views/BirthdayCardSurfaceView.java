@@ -94,7 +94,34 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
         hats.add("hat5.png");
         hats.add("hat6.png");
         stickerMap.put("hats", hats);
-
+        List<String> balloons = new ArrayList<>(6);
+        balloons.add("balloons1.png");
+        balloons.add("balloons2.png");
+        balloons.add("balloons3.png");
+        balloons.add("balloons4.png");
+        stickerMap.put("balloons", balloons);
+        List<String> cakes = new ArrayList<>(6);
+        cakes.add("cake1.png");
+        cakes.add("cake2.png");
+        cakes.add("cake3.png");
+        cakes.add("cake4.png");
+        cakes.add("cake5.png");
+        cakes.add("cake6.png");
+        stickerMap.put("cakes", cakes);
+        List<String> confetti = new ArrayList<>(6);
+        confetti.add("confetti1.png");
+        confetti.add("confetti2.png");
+        confetti.add("confetti3.png");
+        confetti.add("confetti4.png");
+        confetti.add("confetti5.png");
+        stickerMap.put("confetti", confetti);
+        List<String> words = new ArrayList<>(6);
+        words.add("word1.png");
+        words.add("word2.png");
+        words.add("word3.png");
+        words.add("word4.png");
+        words.add("word5.png");
+        stickerMap.put("words", words);
     }
 
     public LittleFamilyActivity getActivity() {
@@ -142,7 +169,7 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
                 vanityWidth = this.getWidth() / 2f;
             }
 
-            vanityTop = ImageHelper.loadBitmapFromResource(context, R.drawable.vanity_top, 0, (int) (vanityWidth * .83f), (int)vanityHeight);
+            vanityTop = ImageHelper.loadBitmapFromResource(context, R.drawable.vanity_top, 0, (int) (vanityWidth * .89f), (int)vanityHeight);
             vanityBottom = ImageHelper.loadBitmapFromResource(context, R.drawable.vanity_bottom, 0, (int) (vanityWidth), (int)vanityHeight);
 
             xOffset = (this.getWidth() - vanityBottom.getWidth()) / 2;
@@ -178,8 +205,8 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
                     birthdayPhoto = ImageHelper.loadBitmapFromResource(activity, birthdayPerson.getDefaultPhotoResource(), 0, width, width);
                 }
                 AnimatedBitmapSprite birthdayPersonSprite = new AnimatedBitmapSprite(birthdayPhoto);
-                birthdayPersonSprite.setX(xOffset + (vanityTop.getWidth() / 2) + 104*dm.density);
-                birthdayPersonSprite.setY(yOffset + (vanityTop.getHeight() / 2) - 11*dm.density);
+                birthdayPersonSprite.setX(xOffset + (vanityTop.getWidth() / 2) + 105*dm.density);
+                birthdayPersonSprite.setY(yOffset + (vanityTop.getHeight() / 2) - 6*dm.density);
                 sprites.add(birthdayPersonSprite);
 
                 LittlePerson person = activity.getSelectedPerson();
@@ -191,8 +218,8 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
                     photo = ImageHelper.loadBitmapFromResource(activity, person.getDefaultPhotoResource(), 0, width, width);
                 }
                 AnimatedBitmapSprite personSprite = new AnimatedBitmapSprite(photo);
-                personSprite.setX(xOffset + (vanityTop.getWidth() / 2) + 104*dm.density + width + 4*dm.density);
-                personSprite.setY(yOffset + (vanityTop.getHeight() / 2) - 11*dm.density);
+                personSprite.setX(xOffset + (vanityTop.getWidth() / 2) + 105*dm.density + width + 4*dm.density);
+                personSprite.setY(yOffset + (vanityTop.getHeight() / 2) - 6*dm.density);
                 sprites.add(personSprite);
 
                 peopleCreated = true;
@@ -307,7 +334,7 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
         }
         synchronized (sprites) {
             canvas.drawBitmap(vanityTop, xOffset + (vanityBottom.getWidth() - vanityTop.getWidth()) / 2, yOffset, null);
-            canvas.drawBitmap(vanityBottom, xOffset, yOffset + vanityTop.getHeight() - 3, null);
+            canvas.drawBitmap(vanityBottom, xOffset, yOffset + vanityTop.getHeight() - 10, null);
 
             for (Sprite s : sprites) {
                 if (s.getX() + s.getWidth() >= 0 && s.getX() <= getWidth() && s.getY() + s.getHeight() >= 0 && s.getY() <= getHeight()) {
@@ -342,9 +369,9 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
             if (peopleRect.contains((int)x, (int) y)) {
                 showPeopleOnMirror();
             } else if (heartsRect.contains((int)x, (int) y)) {
-                showStickersOnMirror("hearts");
+                //showStickersOnMirror("hearts");
             } else if (hatsRect.contains((int)x, (int) y)) {
-                showStickersOnMirror("hats");
+                //showStickersOnMirror("hats");
             }
         }
         moved = false;
