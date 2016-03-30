@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -12,10 +14,12 @@ import android.util.Log;
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.BirthdayCardActivity;
 import com.yellowforktech.littlefamilytree.activities.LittleFamilyActivity;
+import com.yellowforktech.littlefamilytree.activities.tasks.FamilyLoaderTask;
 import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.events.EventListener;
 import com.yellowforktech.littlefamilytree.sprites.AnimatedBitmapSprite;
+import com.yellowforktech.littlefamilytree.sprites.CupcakeSprite;
 import com.yellowforktech.littlefamilytree.sprites.DraggablePersonSprite;
 import com.yellowforktech.littlefamilytree.sprites.DraggableSprite;
 import com.yellowforktech.littlefamilytree.sprites.Sprite;
@@ -25,8 +29,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Created by jfinlay on 3/21/2016.
@@ -35,6 +41,7 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
 
     private LittleFamilyActivity activity;
 
+    private List<LittlePerson> birthdayPeople;
     private LittlePerson birthdayPerson;
 
     private List<DraggableSprite> stickerSprites;
@@ -47,6 +54,9 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
     private DisplayMetrics dm;
     private boolean spritesCreated = false;
     private boolean peopleCreated = false;
+    private boolean cupcakesCreated = false;
+
+    private List<Bitmap> cupcakeBitmaps;
 
     private Bitmap vanityTop;
     private Bitmap vanityBottom;
@@ -60,6 +70,9 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
     private Rect hatsRect;
 
     private boolean moved = false;
+
+    private float clipY = 0;
+    private float maxHeight = 0;
 
     private Map<String, List<String>> stickerMap;
 
@@ -122,6 +135,12 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
         words.add("word4.png");
         words.add("word5.png");
         stickerMap.put("words", words);
+
+        cupcakeBitmaps = new ArrayList<>(4);
+        cupcakeBitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.cupcake1));
+        cupcakeBitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.cupcake2));
+        cupcakeBitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.cupcake3));
+        cupcakeBitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.cupcake4));
     }
 
     public LittleFamilyActivity getActivity() {
@@ -142,6 +161,14 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
         this.birthdayPerson = birthdayPerson;
     }
 
+    public List<LittlePerson> getBirthdayPeople() {
+        return birthdayPeople;
+    }
+
+    public void setBirthdayPeople(List<LittlePerson> birthdayPeople) {
+        this.birthdayPeople = birthdayPeople;
+    }
+
     @Override
     public void onEvent(String topic, Object o) {
 
@@ -150,11 +177,56 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
     @Override
     public void doStep() {
         super.doStep();
+
+        synchronized (sprites) {
+            try {
+                Iterator<DraggableSprite> i = stickerSprites.iterator();
+                while (i.hasNext()) {
+                    Sprite s = i.next();
+                    s.doStep();
+                }
+            } catch(Exception e) {
+                Log.e("BirthdayCardSurfaceView", "error stepping sprites", e);
+                return;
+            }
+        }
+    }
+
+    public void createCupcakes() {
+        synchronized (sprites) {
+            if (birthdayPeople != null) {
+                int width = (int) ((Math.min(this.getWidth(), this.getHeight()) / 3) - 10*dm.density);
+                Random rand = new Random();
+                float x = 10 * dm.density;
+                float y = 10 * dm.density;
+                for(LittlePerson person : birthdayPeople) {
+                    int i = rand.nextInt(cupcakeBitmaps.size());
+                    Bitmap cupcakebm = cupcakeBitmaps.get(i);
+                    float ratio = ((float)cupcakebm.getWidth()) / (float)(cupcakebm.getHeight());
+                    CupcakeSprite cs = new CupcakeSprite(cupcakebm, person, activity, BirthdayCardActivity.TOPIC_BIRTHDAY_PERSON_SELECTED, dm);
+                    cs.setWidth(width);
+                    cs.setHeight((int) (width / ratio));
+                    cs.setX(x);
+                    cs.setY(y);
+                    addSprite(cs);
+
+                    x += cs.getWidth() + 10 * dm.density;
+                    if (x > getWidth()) {
+                        x = 10 * dm.density;
+                        y = y + cs.getHeight() + 10 * dm.density;
+                    }
+                }
+                maxHeight = y;
+
+                cupcakesCreated = true;
+            }
+        }
     }
 
     public void createSprites() {
         synchronized (sprites) {
             sprites.clear();
+            clipY = 0;
 
             if (this.getWidth() > this.getHeight()) {
                 portrait = false;
@@ -169,7 +241,7 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
                 vanityWidth = this.getWidth() / 2f;
             }
 
-            vanityTop = ImageHelper.loadBitmapFromResource(context, R.drawable.vanity_top, 0, (int) (vanityWidth * .89f), (int)vanityHeight);
+            vanityTop = ImageHelper.loadBitmapFromResource(context, R.drawable.vanity_top, 0, (int) (vanityWidth * .885f), (int)vanityHeight);
             vanityBottom = ImageHelper.loadBitmapFromResource(context, R.drawable.vanity_bottom, 0, (int) (vanityWidth), (int)vanityHeight);
 
             xOffset = (this.getWidth() - vanityBottom.getWidth()) / 2;
@@ -178,14 +250,15 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
             float topOffset = xOffset + (vanityBottom.getWidth() - vanityTop.getWidth()) / 2;
 
             wordsRect = new Rect();
-            wordsRect.set((int)topOffset, (int)(yOffset + 5*dm.density), (int)(topOffset+100*dm.density), (int)(yOffset + 50*dm.density));
+            wordsRect.set((int)topOffset, (int)(yOffset + 20*dm.density), (int)(topOffset+90*dm.density), (int)(yOffset + 90*dm.density));
             heartsRect = new Rect();
+            heartsRect.set((int)topOffset, (int)(yOffset + (vanityTop.getHeight() / 2) - 16*dm.density), (int)(topOffset+70*dm.density), (int)(yOffset + (vanityTop.getHeight() / 2) + 37*dm.density));
             cakesRect = new Rect();
             balloonsRect = new Rect();
             confettiRect = new Rect();
             peopleRect = new Rect();
-            peopleRect.set((int)(xOffset + (vanityTop.getWidth() / 2) + 100*dm.density), (int)(yOffset + (vanityTop.getHeight() / 2) - 20*dm.density),
-                    (int)(xOffset+vanityTop.getWidth()), (int)(yOffset + (vanityTop.getHeight() / 2) + 50*dm.density));
+            peopleRect.set((int)(xOffset + (vanityTop.getWidth() / 2) + 100*dm.density), (int)(yOffset + (vanityTop.getHeight() / 2) - 16*dm.density),
+                    (int)(topOffset+vanityTop.getWidth()), (int)(yOffset + (vanityTop.getHeight() / 2) + 37*dm.density));
             hatsRect = new Rect();
 
             spritesCreated = true;
@@ -196,6 +269,7 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
         synchronized (sprites) {
             if (activity!=null && activity.getSelectedPerson()!=null && birthdayPerson!=null) {
                 int width = vanityTop.getWidth() / 13;
+                clipY = 0;
 
                 Bitmap birthdayPhoto = null;
                 if (birthdayPerson.getPhotoPath() != null) {
@@ -205,8 +279,8 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
                     birthdayPhoto = ImageHelper.loadBitmapFromResource(activity, birthdayPerson.getDefaultPhotoResource(), 0, width, width);
                 }
                 AnimatedBitmapSprite birthdayPersonSprite = new AnimatedBitmapSprite(birthdayPhoto);
-                birthdayPersonSprite.setX(xOffset + (vanityTop.getWidth() / 2) + 105*dm.density);
-                birthdayPersonSprite.setY(yOffset + (vanityTop.getHeight() / 2) - 6*dm.density);
+                birthdayPersonSprite.setX(xOffset + (vanityTop.getWidth() / 2) + 106*dm.density);
+                birthdayPersonSprite.setY(yOffset + (vanityTop.getHeight() / 2) - 3*dm.density);
                 sprites.add(birthdayPersonSprite);
 
                 LittlePerson person = activity.getSelectedPerson();
@@ -218,8 +292,8 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
                     photo = ImageHelper.loadBitmapFromResource(activity, person.getDefaultPhotoResource(), 0, width, width);
                 }
                 AnimatedBitmapSprite personSprite = new AnimatedBitmapSprite(photo);
-                personSprite.setX(xOffset + (vanityTop.getWidth() / 2) + 105*dm.density + width + 4*dm.density);
-                personSprite.setY(yOffset + (vanityTop.getHeight() / 2) - 6*dm.density);
+                personSprite.setX(xOffset + (vanityTop.getWidth() / 2) + 106*dm.density + width + 3*dm.density);
+                personSprite.setY(yOffset + (vanityTop.getHeight() / 2) - 3*dm.density);
                 sprites.add(personSprite);
 
                 peopleCreated = true;
@@ -227,7 +301,7 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
         }
     }
 
-    public void showPeopleOnMirror() {
+    public void showPeopleOnMirror(List<LittlePerson> people) {
         synchronized (sprites) {
             for(Sprite s : onMirror) {
                 stickerSprites.remove(s);
@@ -235,12 +309,12 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
             onMirror.clear();
 
             int width = vanityTop.getWidth() / 8;
+            clipY = 0;
 
             if (birthdayPerson!=null) {
                 try {
-                    List<LittlePerson> people = DataService.getInstance().getFamilyMembers(birthdayPerson, false);
-                    int x = (int) (xOffset + (vanityTop.getWidth() / 2) - 95*dm.density);
-                    int y = (int) (yOffset + 10 * dm.density);
+                    int x = (int) (xOffset + (vanityTop.getWidth() / 2) - 35*dm.density);
+                    int y = (int) (yOffset + 15 * dm.density);
                     for(LittlePerson p : people) {
                         Bitmap photo = null;
                         if (p.getPhotoPath() != null) {
@@ -250,8 +324,8 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
                             photo = ImageHelper.loadBitmapFromResource(activity, p.getDefaultPhotoResource(), 0, width, width);
                         }
                         DraggablePersonSprite ds = new DraggablePersonSprite(photo, p, getWidth(), getHeight(), BirthdayCardActivity.TOPIC_PERSON_TOUCHED, dm);
-                        ds.setX(xOffset + (vanityTop.getWidth() / 2) + 104 * dm.density);
-                        ds.setY(yOffset + (vanityTop.getHeight() / 2) - 11 * dm.density);
+                        ds.setX(xOffset + (vanityTop.getWidth() / 2) + 106 * dm.density);
+                        ds.setY(yOffset + (vanityTop.getHeight() / 2) - 3 * dm.density);
                         ds.setWidth(vanityTop.getWidth() / 13);
                         ds.setHeight(vanityTop.getWidth() / 13);
                         ds.setTargetX(x);
@@ -263,8 +337,8 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
                         onMirror.add(ds);
 
                         x += width + 10 * dm.density;
-                        if (x > xOffset + (vanityTop.getWidth() / 2) + 95 * dm.density) {
-                            x = (int) (xOffset + (vanityTop.getWidth() / 2) - 95*dm.density);
+                        if (x > xOffset + (vanityTop.getWidth() / 2) + 90 * dm.density) {
+                            x = (int) (xOffset + (vanityTop.getWidth() / 2) - 45*dm.density);
                             y += width + 10 * dm.density;
                         }
                         if (y > yOffset + vanityTop.getHeight() - 10 * dm.density) {
@@ -287,6 +361,7 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
 
             int x = (int) (xOffset + (vanityTop.getWidth() / 2) - 95*dm.density);
             int y = (int) (yOffset + 10 * dm.density);
+            clipY = 0;
 
             List<String> stickerFiles = stickerMap.get(type);
             for(String stickerFile : stickerFiles) {
@@ -326,26 +401,46 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
     @Override
     public void doDraw(Canvas canvas) {
         canvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
-        if (!spritesCreated) {
-            createSprites();
-        }
-        if (!peopleCreated) {
-            createPeople();
+        if (birthdayPerson == null) {
+            if (!cupcakesCreated) {
+                createCupcakes();
+            }
+        } else {
+            if (!spritesCreated) {
+                createSprites();
+            }
+            if (!peopleCreated) {
+                createPeople();
+            }
         }
         synchronized (sprites) {
-            canvas.drawBitmap(vanityTop, xOffset + (vanityBottom.getWidth() - vanityTop.getWidth()) / 2, yOffset, null);
-            canvas.drawBitmap(vanityBottom, xOffset, yOffset + vanityTop.getHeight() - 10, null);
+            if (vanityTop != null) {
+                canvas.drawBitmap(vanityTop, xOffset + 3*dm.density + (vanityBottom.getWidth() - vanityTop.getWidth()) / 2, yOffset, null);
+            }
+            if (vanityBottom != null) {
+                canvas.drawBitmap(vanityBottom, xOffset, yOffset + vanityTop.getHeight() - 12, null);
+            }
 
+            canvas.translate(0, -clipY);
             for (Sprite s : sprites) {
-                if (s.getX() + s.getWidth() >= 0 && s.getX() <= getWidth() && s.getY() + s.getHeight() >= 0 && s.getY() <= getHeight()) {
+                if (s.getX() + s.getWidth() >= 0 && s.getX() <= getWidth() && s.getY() + s.getHeight() >= clipY && s.getY() <= getHeight() + clipY) {
                     s.doDraw(canvas);
                 }
             }
 
             for (Sprite s : stickerSprites) {
-                if (s.getX() + s.getWidth() >= 0 && s.getX() <= getWidth() && s.getY() + s.getHeight() >= 0 && s.getY() <= getHeight()) {
+                if (s.getX() + s.getWidth() >= 0 && s.getX() <= getWidth() && s.getY() + s.getHeight() >= clipY && s.getY() <= getHeight() + clipY) {
                     s.doDraw(canvas);
                 }
+            }
+
+            if (peopleRect != null) {
+                Paint tempPaint = new Paint();
+                tempPaint.setColor(Color.RED);
+                tempPaint.setStyle(Paint.Style.STROKE);
+                canvas.drawRect(peopleRect, tempPaint);
+                canvas.drawRect(wordsRect, tempPaint);
+                canvas.drawRect(heartsRect, tempPaint);
             }
         }
     }
@@ -360,18 +455,34 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
     @Override
     public void doMove(float oldX, float oldY, float newX, float newY) {
         super.doMove(oldX, oldY, newX, newY);
+        if (Math.abs(newX - oldX) > 8*dm.density || Math.abs(newY - oldY) > 8*dm.density ) {
+            moved = true;
+        }
+        if (birthdayPerson==null) {
+            clipY -= (newY-oldY);
+            if (maxHeight <= getHeight()) {
+                clipY = 0;
+            } else {
+                if (clipY < 0) clipY = 0;
+                else if (clipY + getHeight() > maxHeight) clipY = maxHeight - getHeight();
+            }
+        }
     }
 
     @Override
     protected void touch_up(float x, float y) {
         super.touch_up(x, y);
         if (!moved) {
-            if (peopleRect.contains((int)x, (int) y)) {
-                showPeopleOnMirror();
-            } else if (heartsRect.contains((int)x, (int) y)) {
-                //showStickersOnMirror("hearts");
-            } else if (hatsRect.contains((int)x, (int) y)) {
-                //showStickersOnMirror("hats");
+            if (peopleRect != null) {
+                if (peopleRect.contains((int) x, (int) y)) {
+                    startBirthdayPeopleTask();
+                } else if (wordsRect.contains((int) x, (int) y)) {
+                    showStickersOnMirror("words");
+                } else if (heartsRect.contains((int) x, (int) y)) {
+                    showStickersOnMirror("hearts");
+                } else if (hatsRect.contains((int) x, (int) y)) {
+                    //showStickersOnMirror("hats");
+                }
             }
         }
         moved = false;
@@ -379,5 +490,29 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
 
     public Bitmap getSharingBitmap() {
         return null;
+    }
+
+    private boolean loadingPeople = false;
+    public void startBirthdayPeopleTask() {
+        if (!loadingPeople) {
+            DataService.getInstance().registerNetworkStateListener(activity);
+            FamilyLoaderTask task = new FamilyLoaderTask(new BirthdayFamilyListener(), activity);
+            task.execute(birthdayPerson);
+            loadingPeople = true;
+        }
+    }
+
+    public class BirthdayFamilyListener implements FamilyLoaderTask.Listener {
+        @Override
+        public void onComplete(ArrayList<LittlePerson> family) {
+            DataService.getInstance().unregisterNetworkStateListener(activity);
+            loadingPeople = false;
+            showPeopleOnMirror(family);
+        }
+
+        @Override
+        public void onStatusUpdate(String message) {
+
+        }
     }
 }

@@ -13,16 +13,23 @@ import android.widget.Toast;
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
+import com.yellowforktech.littlefamilytree.events.EventQueue;
+import com.yellowforktech.littlefamilytree.sprites.CupcakeSprite;
+import com.yellowforktech.littlefamilytree.sprites.TouchEventGameSprite;
 import com.yellowforktech.littlefamilytree.util.ImageHelper;
 import com.yellowforktech.littlefamilytree.views.BirthdayCardSurfaceView;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class BirthdayCardActivity extends LittleFamilyActivity {
     public static final String TOPIC_PERSON_TOUCHED = "personTouched";
+    public static final String TOPIC_BIRTHDAY_PERSON_SELECTED = "birthdayPersonSelected";
 
     private BirthdayCardSurfaceView view;
     private List<LittlePerson> people;
@@ -51,26 +58,47 @@ public class BirthdayCardActivity extends LittleFamilyActivity {
         super.onStart();
         DataService.getInstance().registerNetworkStateListener(this);
         try {
-            people = DataService.getInstance().getDBHelper().getNext30Birthdays();
+            people = DataService.getInstance().getDBHelper().getNextBirthdays(15, 4);
             if (people.size()==0) {
                 Log.d("BirthdayCardActivity", "Unable to find birthdays from database");
                 people.add(selectedPerson);
             } else {
                 DataService.getInstance().addToSyncQ(people, 5);
+                Comparator<LittlePerson> comp = new Comparator<LittlePerson>() {
+                    @Override
+                    public int compare(LittlePerson lhs, LittlePerson rhs) {
+                        if (lhs.getBirthDate()!=null && rhs.getBirthDate()!=null) {
+                            Calendar lcal = Calendar.getInstance();
+                            Calendar rcal = Calendar.getInstance();
+                            lcal.setTime(lhs.getBirthDate());
+                            rcal.setTime(rhs.getBirthDate());
+                            if (lcal.get(Calendar.MONTH) != rcal.get(Calendar.MONTH)) {
+                                return lcal.get(Calendar.MONTH) - rcal.get(Calendar.MONTH);
+                            }
+                            return lcal.get(Calendar.DAY_OF_MONTH) - rcal.get(Calendar.DAY_OF_MONTH);
+                        }
+                        return 0;
+                    }
+                };
+                Collections.sort(people, comp);
             }
-            //-- temp set to the next birthday person
-            view.setBirthdayPerson(people.get(0));
         } catch (Exception e) {
             Log.e("BirthdayCardActivity", "Error getting birthday people", e);
             people = new ArrayList<>();
             people.add(selectedPerson);
         }
+        view.setBirthdayPeople(people);
+
+        EventQueue.getInstance().subscribe(TOPIC_BIRTHDAY_PERSON_SELECTED, this);
+        EventQueue.getInstance().subscribe(TOPIC_PERSON_TOUCHED, this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         DataService.getInstance().unregisterNetworkStateListener(this);
+        EventQueue.getInstance().unSubscribe(TOPIC_BIRTHDAY_PERSON_SELECTED, this);
+        EventQueue.getInstance().unSubscribe(TOPIC_PERSON_TOUCHED, this);
     }
 
     @Override
@@ -84,6 +112,23 @@ public class BirthdayCardActivity extends LittleFamilyActivity {
                 if (selectedPerson != null) {
                     topBar.getArguments().putSerializable(TopBarFragment.ARG_PERSON, selectedPerson);
                 }
+            }
+        }
+    }
+
+    @Override
+    public void onEvent(String topic, Object o) {
+        super.onEvent(topic, o);
+        if (topic.equals(TOPIC_BIRTHDAY_PERSON_SELECTED)) {
+            if (o instanceof CupcakeSprite) {
+                LittlePerson person = ((CupcakeSprite) o).getPerson();
+                view.setBirthdayPerson(person);
+            }
+        } else if (topic.equals(TOPIC_PERSON_TOUCHED)) {
+            if (o instanceof TouchEventGameSprite) {
+                TouchEventGameSprite sprite = (TouchEventGameSprite) o;
+                LittlePerson person = (LittlePerson) sprite.getData("person");
+                speak(person.getGivenName());
             }
         }
     }

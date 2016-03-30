@@ -54,7 +54,7 @@ public class TreeLoaderTask extends AsyncTask<LittlePerson, Integer, TreeNode> {
                 TreeNode cn = root.getLeft();
                 if (cn==null) cn = root.getRight();
                 if (cn!=null) {
-                    addChildren(root.getLeft(), 1);
+                    addChildren(cn, 1);
                 }
                 root.setIsChild(true);
             }
