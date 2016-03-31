@@ -15,8 +15,8 @@ public class DraggableSprite extends TouchEventGameSprite {
     protected Sprite target;
 	protected int sw;
 	protected int sh;
-	protected int thresholdX = 1;
-	protected int thresholdY = 1;
+	protected int thresholdX = 8;
+	protected int thresholdY = 8;
 
     public DraggableSprite(Bitmap bitmap, int maxWidth, int maxHeight, String eventTopic, DisplayMetrics dm) {
         super(bitmap, eventTopic, dm);
@@ -117,16 +117,16 @@ public class DraggableSprite extends TouchEventGameSprite {
 				this.width = sw;
 				this.height = sh;
 			} else {
-				float dx = (sx - x)/5;
+				float dx = (sx - x)/6f;
 				if (dx < 0 && dx > -2) dx = -2;
 				if (dx > 0 && dx < 2) dx = 2;
-				float dy = (sy - y)/5;
+				float dy = (sy - y)/6f;
 				if (dy < 0 && dy > -2) dy = -2;
 				if (dy > 0 && dy < 2) dy = 2;
 				x=x+dx;
 				y=y+dy;
-				float dw = (sw - width)/5;
-				float dh = (sh - height)/5;
+				float dw = (sw - width)/6f;
+				float dh = (sh - height)/6f;
 				if (Math.abs(dw) < 1) {
 					this.width=sw;
 				} else {
@@ -169,6 +169,7 @@ public class DraggableSprite extends TouchEventGameSprite {
 		sw = this.width;
 		sh = this.height;
         super.onSelect(x, y);
+		moved = false;
     }
 
     @Override
@@ -178,5 +179,6 @@ public class DraggableSprite extends TouchEventGameSprite {
         } else {
 			super.onRelease(x, y);
 		}
+		moved = false;
     }
 }

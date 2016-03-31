@@ -30,6 +30,7 @@ import java.util.List;
 public class BirthdayCardActivity extends LittleFamilyActivity {
     public static final String TOPIC_PERSON_TOUCHED = "personTouched";
     public static final String TOPIC_BIRTHDAY_PERSON_SELECTED = "birthdayPersonSelected";
+    public static final String TOPIC_CARD_SELECTED = "cardSelected";
 
     private BirthdayCardSurfaceView view;
     private List<LittlePerson> people;
@@ -91,6 +92,7 @@ public class BirthdayCardActivity extends LittleFamilyActivity {
 
         EventQueue.getInstance().subscribe(TOPIC_BIRTHDAY_PERSON_SELECTED, this);
         EventQueue.getInstance().subscribe(TOPIC_PERSON_TOUCHED, this);
+        EventQueue.getInstance().subscribe(TOPIC_CARD_SELECTED, this);
     }
 
     @Override
@@ -99,6 +101,7 @@ public class BirthdayCardActivity extends LittleFamilyActivity {
         DataService.getInstance().unregisterNetworkStateListener(this);
         EventQueue.getInstance().unSubscribe(TOPIC_BIRTHDAY_PERSON_SELECTED, this);
         EventQueue.getInstance().unSubscribe(TOPIC_PERSON_TOUCHED, this);
+        EventQueue.getInstance().unSubscribe(TOPIC_CARD_SELECTED, this);
     }
 
     @Override
@@ -117,18 +120,32 @@ public class BirthdayCardActivity extends LittleFamilyActivity {
     }
 
     @Override
+    public void onInit(int code) {
+        super.onInit(code);
+        speak("Look who has birthdays coming up.  Choose someone to start.");
+    }
+
+    @Override
     public void onEvent(String topic, Object o) {
         super.onEvent(topic, o);
         if (topic.equals(TOPIC_BIRTHDAY_PERSON_SELECTED)) {
             if (o instanceof CupcakeSprite) {
                 LittlePerson person = ((CupcakeSprite) o).getPerson();
                 view.setBirthdayPerson(person);
+                speak("Choose a card to decorate.");
             }
         } else if (topic.equals(TOPIC_PERSON_TOUCHED)) {
             if (o instanceof TouchEventGameSprite) {
                 TouchEventGameSprite sprite = (TouchEventGameSprite) o;
                 LittlePerson person = (LittlePerson) sprite.getData("person");
                 speak(person.getGivenName());
+            }
+        } else  if (topic.equals(TOPIC_CARD_SELECTED)) {
+            if (o instanceof TouchEventGameSprite) {
+                TouchEventGameSprite sprite = (TouchEventGameSprite) o;
+                Bitmap card = sprite.getBitmaps().get(0).get(0);
+                view.setCardBitmap(card);
+                speak("Decorate a birthday card for "+view.getBirthdayPerson().getGivenName());
             }
         }
     }
