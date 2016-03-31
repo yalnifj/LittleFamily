@@ -89,6 +89,19 @@ public class DraggableSprite extends TouchEventGameSprite {
 		this.sw = (int) (h / r);
 	}
 
+	public void setTargetWidthHeight(int w, int h) {
+		this.sw = w;
+		this.sh = h;
+	}
+
+	public int getTargetWidth() {
+		return sw;
+	}
+
+	public int getTargetHeight() {
+		return sh;
+	}
+
 	public boolean isMoving() {
 		return moving;
 	}
@@ -102,14 +115,6 @@ public class DraggableSprite extends TouchEventGameSprite {
 	{
 		super.doStep();
 		if (moving) {
-			/*
-			if (target!=null) {
-				sx = target.getX();
-				sy = target.getY();
-				float r = height/width;
-				sw = (int)((target.getHeight()-5)/r);
-				sh = (target.getHeight()-5);
-			}*/
 			if (x > sx - 3 && x < sx+3 && y>sy-3 && y<sy+3) {
 				this.x = sx;
 				this.y = sy;
