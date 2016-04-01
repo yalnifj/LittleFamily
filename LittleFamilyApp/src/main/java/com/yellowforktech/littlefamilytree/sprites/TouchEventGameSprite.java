@@ -44,7 +44,7 @@ public class TouchEventGameSprite extends AnimatedBitmapSprite {
 
         long pressTime = (System.currentTimeMillis() - onSelectStartTime);
         boolean inside = inSprite(x, y);
-        if (!moved || (inside && pressTime > 600)) {
+        if (!moved || (inside && pressTime < 500)) {
             if (surfaceView!=null) {
                 surfaceView.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
             }

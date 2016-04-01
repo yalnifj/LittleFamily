@@ -515,7 +515,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	
 	public LittlePerson personFromCursor(Cursor c) {
 		LittlePerson person = new LittlePerson();
-		person.setAge(c.getInt( c.getColumnIndexOrThrow(COL_AGE) ));
+		person.setAge(c.getInt(c.getColumnIndexOrThrow(COL_AGE)));
 		if (!c.isNull(c.getColumnIndexOrThrow(COL_BIRTH_DATE))) {
 			long birthtime = c.getLong(c.getColumnIndexOrThrow(COL_BIRTH_DATE));
 			person.setBirthDate(new Date(birthtime));
@@ -541,6 +541,9 @@ public class DBHelper extends SQLiteOpenHelper {
 		person.setId(c.getInt(c.getColumnIndexOrThrow(COL_ID)));
 		person.setName(c.getString(c.getColumnIndexOrThrow(COL_NAME)));
 		person.setPhotoPath(c.getString(c.getColumnIndexOrThrow(COL_PHOTO_PATH)));
+		if (person.getPhotoPath()!=null && !person.getPhotoPath().contains(".LittleFamilyTreeData")) {
+			person.setPhotoPath(person.getPhotoPath().replace("LittleFamilyData", ".LittleFamilyTreeData"));
+		}
         if (!c.isNull(c.getColumnIndexOrThrow(COL_LAST_SYNC))) {
             long synctime = c.getLong(c.getColumnIndexOrThrow(COL_LAST_SYNC));
             person.setLastSync(new Date(synctime));

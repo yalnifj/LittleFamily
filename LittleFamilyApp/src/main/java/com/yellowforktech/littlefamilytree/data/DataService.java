@@ -897,6 +897,15 @@ public class DataService implements AuthTask.Listener {
                     }
                 }
             }
+            if (person.isHasSpouses()==null) {
+                person.setHasSpouses(false);
+            }
+            if (person.isHasParents()==null) {
+                person.setHasParents(false);
+            }
+            if (person.isHasChildren()==null) {
+                person.setHasChildren(false);
+            }
             getDBHelper().persistLittlePerson(person);
         }
         return family;

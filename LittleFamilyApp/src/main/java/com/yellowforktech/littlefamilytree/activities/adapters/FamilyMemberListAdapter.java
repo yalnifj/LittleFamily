@@ -102,11 +102,13 @@ public class FamilyMemberListAdapter extends BaseAdapter {
                 if (width == 0) width = 200;
                 int height = width;
 
+                Bitmap bm = null;
                 if (person.getPhotoPath() != null) {
-                    Bitmap bm = ImageHelper.loadBitmapFromFile(person.getPhotoPath(), ImageHelper.getOrientation(person.getPhotoPath()), width, height, false);
+                    bm = ImageHelper.loadBitmapFromFile(person.getPhotoPath(), ImageHelper.getOrientation(person.getPhotoPath()), width, height, false);
                     bitmaps.put(person.getId(), bm);
-                } else {
-                    Bitmap bm = ImageHelper.loadBitmapFromResource(context, person.getDefaultPhotoResource(), 0, width, height);
+                }
+                if (bm==null) {
+                    bm = ImageHelper.loadBitmapFromResource(context, person.getDefaultPhotoResource(), 0, width, height);
                     bitmaps.put(person.getId(), bm);
                 }
             }

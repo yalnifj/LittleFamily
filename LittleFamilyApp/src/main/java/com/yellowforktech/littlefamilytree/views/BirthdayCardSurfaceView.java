@@ -86,6 +86,7 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
     private ScaleGestureDetector mScaleDetector;
 
     private Bitmap sharingBitmap;
+    private Canvas sharingCanvas;
 
     public BirthdayCardSurfaceView(Context context) {
         super(context);
@@ -450,7 +451,7 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
                         onMirror.add(ds);
 
                         x += tw + 10 * dm.density;
-                        if (x > mirrorRight - 10 * dm.density) {
+                        if (x > mirrorRight - 25 * dm.density) {
                             x = (int) (mirrorLeft + 35*dm.density);
                             y += th + 10 * dm.density;
                         }
@@ -534,10 +535,13 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
     }
 
     public Bitmap getSharingBitmap() {
-        if (sharingBitmap!=null) {
-            Bitmap cardBitmap = Bitmap.createBitmap(sharingBitmap, cardRect.left, cardRect.top, cardRect.width(), cardRect.height());
+        if (sharingBitmap!=null && cardBitmap!=null) {
+            Bitmap cardBitmap = Bitmap.createBitmap(cardRect.width(), cardRect.height(), sharingBitmap.getConfig());
             Canvas copyCanvas = new Canvas(cardBitmap);
-            Bitmap branding = ImageHelper.loadBitmapFromResource(context, R.drawable.logo,0, (int) (cardBitmap.getWidth()*0.4f), (int) (cardBitmap.getHeight()*0.4f));
+            Rect dest = new Rect();
+            dest.set(0,0,cardRect.width(), cardRect.height());
+            copyCanvas.drawBitmap(sharingBitmap, cardRect, dest, null);
+            Bitmap branding = ImageHelper.loadBitmapFromResource(context, R.drawable.logo,0, (int) (cardBitmap.getWidth()*0.25f), (int) (cardBitmap.getHeight()*0.25f));
             //-- add the branding mark
             Rect dst = new Rect();
             dst.set(0, cardBitmap.getHeight() - branding.getHeight(), branding.getWidth(), cardBitmap.getHeight());
@@ -549,15 +553,15 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
 
     public void createSharingBitmap() {
         sharingBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+        sharingCanvas = new Canvas(sharingBitmap);
     }
 
     @Override
     public void doDraw(Canvas canvas) {
         if (sharingBitmap==null) {
             createSharingBitmap();
-            canvas.setBitmap(sharingBitmap);
         }
-        canvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
+        sharingCanvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
         if (birthdayPerson == null) {
             if (!cupcakesCreated) {
                 createCupcakes();
@@ -575,43 +579,30 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
         }
         synchronized (sprites) {
             if (vanityTop != null) {
-                canvas.drawBitmap(vanityTop, xOffset + 3*dm.density + (vanityBottom.getWidth() - vanityTop.getWidth()) / 2, yOffset, null);
+                sharingCanvas.drawBitmap(vanityTop, xOffset + 3*dm.density + (vanityBottom.getWidth() - vanityTop.getWidth()) / 2, yOffset, null);
             }
             if (vanityBottom != null) {
-                canvas.drawBitmap(vanityBottom, xOffset, yOffset + vanityTop.getHeight() - 12, null);
+                sharingCanvas.drawBitmap(vanityBottom, xOffset, yOffset + vanityTop.getHeight() - 12, null);
             }
             if (cardBitmap!=null) {
-                canvas.drawBitmap(cardBitmap, null, cardRect, null);
+                sharingCanvas.drawBitmap(cardBitmap, null, cardRect, null);
             }
 
-            canvas.translate(0, -clipY);
+            sharingCanvas.translate(0, -clipY);
             for (Sprite s : sprites) {
                 if (s.getX() + s.getWidth() >= 0 && s.getX() <= getWidth() && s.getY() + s.getHeight() >= clipY && s.getY() <= getHeight() + clipY) {
-                    s.doDraw(canvas);
+                    s.doDraw(sharingCanvas);
                 }
             }
 
             for (Sprite s : stickerSprites) {
                 if (s.getX() + s.getWidth() >= 0 && s.getX() <= getWidth() && s.getY() + s.getHeight() >= clipY && s.getY() <= getHeight() + clipY) {
-                    s.doDraw(canvas);
+                    s.doDraw(sharingCanvas);
                 }
             }
 
-            /*
-            if (peopleRect != null) {
-                Paint tempPaint = new Paint();
-                tempPaint.setColor(Color.RED);
-                tempPaint.setStrokeWidth(3f);
-                tempPaint.setStyle(Paint.Style.STROKE);
-                canvas.drawRect(peopleRect, tempPaint);
-                canvas.drawRect(wordsRect, tempPaint);
-                canvas.drawRect(heartsRect, tempPaint);
-                canvas.drawRect(balloonsRect, tempPaint);
-                canvas.drawRect(cakesRect, tempPaint);
-                canvas.drawRect(confettiRect, tempPaint);
-                canvas.drawRect(hatsRect, tempPaint);
-            }
-            */
+            canvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
+            canvas.drawBitmap(sharingBitmap, 0, 0, null);
         }
     }
 
@@ -654,7 +645,7 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
                 else if (clipY + getHeight() > maxHeight) clipY = maxHeight - getHeight();
             }
         }
-        else if (selectedSprites.size() > 0) {
+        if (selectedSprites.size() > 0) {
             for (Sprite s : selectedSprites) {
                 boolean selectedMoved = s.onMove(oldX, oldY, newX, newY);
                 moved |= selectedMoved;
@@ -762,10 +753,10 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
                     DraggableSprite ds = (DraggableSprite) s;
                     if (!ds.isMoving()) {
                         float dh = ((float) ds.getHeight()) * scaleDiff;
-                        int newHeight = (int) (ds.getHeight() + dh);
+                        int newHeight = (int) (ds.getHeight() - dh);
                         float dw = ((float) ds.getWidth()) * scaleDiff;
-                        int newWidth = (int) (ds.getWidth() + dw);
-                        if (newWidth > 20 * dm.density && newHeight > 20 * dm.density && newWidth < cardRect.width() / 2 && newHeight < cardRect.width()/2) {
+                        int newWidth = (int) (ds.getWidth() - dw);
+                        if (newWidth > 20 * dm.density && newHeight > 20 * dm.density && newWidth < cardRect.width() / 1.5 && newHeight < cardRect.width()/1.5) {
                             ds.setHeight(newHeight);
                             ds.setWidth(newWidth);
                         }
