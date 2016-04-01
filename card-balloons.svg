@@ -1922,17 +1922,17 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.35"
-     inkscape:cx="237.82506"
+     inkscape:zoom="0.52363281"
+     inkscape:cx="308.19477"
      inkscape:cy="623.94382"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1366"
-     inkscape:window-height="705"
-     inkscape:window-x="1272"
-     inkscape:window-y="248"
-     inkscape:window-maximized="1" />
+     inkscape:window-width="842"
+     inkscape:window-height="734"
+     inkscape:window-x="100"
+     inkscape:window-y="100"
+     inkscape:window-maximized="0" />
   <metadata
      id="metadata14872">
     <rdf:RDF>
@@ -1952,7 +1952,10 @@
     <g
        transform="matrix(0.34721072,0,0,0.34721072,242.05027,80.190786)"
        inkscape:label="Ebene 1"
-       id="layer1-2">
+       id="layer1-2"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\stickers\balloons\balloons1.png"
+       inkscape:export-xdpi="94.050003"
+       inkscape:export-ydpi="94.050003">
       <g
          transform="translate(535.81,685.08)"
          id="g6352">
@@ -2196,7 +2199,10 @@
     <g
        transform="matrix(0.20164481,0,0,0.20164481,378.96966,256.08863)"
        inkscape:label="Layer 1"
-       id="layer1-22">
+       id="layer1-22"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\stickers\balloons\balloons4.png"
+       inkscape:export-xdpi="70.053307"
+       inkscape:export-ydpi="70.053307">
       <path
          d="m 605.07,259.21 c 13.238,37.595 -44.501,41.143 -67.674,55.599 -23.173,14.456 -28.609,28.293 -54.986,39.062 -48.976,19.996 -61.038,26.628 -84.342,25.601 -23.304,-1.0277 -35.357,-9.5814 -39.945,-21.17 -4.587,-11.588 -0.83907,-24.017 16.453,-38.177 17.29207,-14.16 29.401,-7.0893 78.99,-25.605 24.794,-9.2581 41.63,-29.165 62.924,-38.73 21.294,-9.5644 44.304,-12.936 55.494,-12.731 22.38,0.40923 28.949,4.4045 33.086,16.152 z"
          inkscape:connector-curvature="0"
@@ -2366,7 +2372,10 @@
     <g
        transform="matrix(0.27034869,0,0,0.27034869,306.56799,118.70992)"
        inkscape:label="Layer 1"
-       id="layer1-7-1">
+       id="layer1-7-1"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\stickers\balloons\balloons2.png"
+       inkscape:export-xdpi="75.349998"
+       inkscape:export-ydpi="75.349998">
       <g
          transform="matrix(0.63864,0,0,0.63864,-20.883,8.3177)"
          id="g6968-1">
@@ -2464,7 +2473,10 @@
     <g
        transform="matrix(0.19561139,0,0,0.19561139,211.41371,158.58015)"
        inkscape:label="Layer 1"
-       id="layer1-73">
+       id="layer1-73"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\stickers\balloons\balloons3.png"
+       inkscape:export-xdpi="73.980003"
+       inkscape:export-ydpi="73.980003">
       <g
          transform="matrix(1.0886,0,0,1,-0.66607,0)"
          id="g4260">
@@ -2706,8 +2718,11 @@
       </g>
     </g>
     <g
-       transform="translate(1048.4078,-567.80761)"
-       id="g136762">
+       transform="translate(1065.5954,-749.23245)"
+       id="g136762"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\stickers\balloons\balloons5.png"
+       inkscape:export-xdpi="70.053307"
+       inkscape:export-ydpi="70.053307">
       <path
          d="m -737.04399,1225.5339 c -2.66937,7.5809 8.9734,8.2963 13.64612,11.2113 4.67271,2.9149 5.76885,5.7051 11.08764,7.8766 9.87575,4.0321 12.30799,5.3694 17.00712,5.1623 4.69913,-0.2072 7.12956,-1.932 8.05471,-4.2688 0.92494,-2.3367 0.16919,-4.8429 -3.31767,-7.6982 -3.48685,-2.8553 -5.92856,-1.4295 -15.92792,-5.1631 -4.99958,-1.8669 -8.39447,-5.881 -12.6883,-7.8097 -4.29382,-1.9286 -8.93367,-2.6085 -11.19008,-2.5672 -4.51281,0.082 -5.83741,0.8882 -6.67162,3.257 z"
          inkscape:connector-curvature="0"

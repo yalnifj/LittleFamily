@@ -10027,17 +10027,17 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.7"
-     inkscape:cx="353.18898"
-     inkscape:cy="537.63693"
+     inkscape:zoom="0.95321309"
+     inkscape:cx="146.26982"
+     inkscape:cy="617.97725"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1366"
-     inkscape:window-height="705"
-     inkscape:window-x="1272"
-     inkscape:window-y="248"
-     inkscape:window-maximized="1" />
+     inkscape:window-width="954"
+     inkscape:window-height="642"
+     inkscape:window-x="150"
+     inkscape:window-y="150"
+     inkscape:window-maximized="0" />
   <metadata
      id="metadata15968">
     <rdf:RDF>
@@ -10186,7 +10186,10 @@
     </g>
     <g
        transform="translate(892.39041,-696.78631)"
-       id="g16751">
+       id="g16751"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\stickers\words\word4.png"
+       inkscape:export-xdpi="85.662895"
+       inkscape:export-ydpi="85.662895">
       <g
          id="g16675">
         <g
@@ -21766,7 +21769,10 @@
     <g
        inkscape:label="Layer 1"
        id="layer1-0"
-       transform="matrix(0.13965514,0,0,0.13965514,51.606046,219.48726)">
+       transform="matrix(0.13965514,0,0,0.13965514,51.606046,219.48726)"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\stickers\words\word1.png"
+       inkscape:export-xdpi="110.57304"
+       inkscape:export-ydpi="110.57304">
       <rect
          x="-2512.5"
          y="56.332001"

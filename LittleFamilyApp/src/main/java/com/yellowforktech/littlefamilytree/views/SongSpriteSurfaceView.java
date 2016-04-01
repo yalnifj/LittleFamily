@@ -607,7 +607,8 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
                     sprite.setX(x);
                     sprite.setY(y);
                     sprite.setData("person", person);
-                    sprite.setThresholdX((int) (8 * dm.density));
+                    sprite.setThresholdX((int) (3 * dm.density));
+                    sprite.setThresholdY((int) (30 * dm.density));
                     peopleSprites.add(sprite);
                     y = y + sprite.getHeight() + (10 * dm.density);
                     if (y > maxHeight) maxHeight = (int) y;

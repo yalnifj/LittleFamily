@@ -151,7 +151,7 @@ public class DraggableSprite extends TouchEventGameSprite {
     public boolean onMove(float oldX, float oldY, float newX, float newY) {
         float xdiff = newX-oldX;
 		float ydiff = newY-oldY;
-        if (!moved && (Math.abs(xdiff) < thresholdX || Math.abs(ydiff) < thresholdY)) {
+        if (!moved && (Math.abs(xdiff) < thresholdX && Math.abs(ydiff) < thresholdY)) {
             return false;
         }
 

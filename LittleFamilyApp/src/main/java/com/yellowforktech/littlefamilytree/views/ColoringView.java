@@ -126,7 +126,7 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
             //-- draw the cropped bitmap onto the copy
             copyCanvas.drawBitmap(canvasBitmap, src, src, null);
 
-            Bitmap branding = ImageHelper.loadBitmapFromResource(context, R.drawable.little_family_logo,0, (int) (w*0.4f), (int) (h*0.4f));
+            Bitmap branding = ImageHelper.loadBitmapFromResource(context, R.drawable.logo,0, (int) (w*0.4f), (int) (h*0.4f));
             //-- add the branding mark
             Rect dst = new Rect();
             dst.set(0, h - branding.getHeight(), branding.getWidth(), h);

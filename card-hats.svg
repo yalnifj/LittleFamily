@@ -289,17 +289,17 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.4"
-     inkscape:cx="347.36758"
-     inkscape:cy="318.16515"
+     inkscape:zoom="1.0582031"
+     inkscape:cx="342.1346"
+     inkscape:cy="327.76421"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1366"
-     inkscape:window-height="705"
-     inkscape:window-x="1272"
-     inkscape:window-y="248"
-     inkscape:window-maximized="1" />
+     inkscape:window-width="846"
+     inkscape:window-height="664"
+     inkscape:window-x="225"
+     inkscape:window-y="225"
+     inkscape:window-maximized="0" />
   <metadata
      id="metadata162092">
     <rdf:RDF>
@@ -318,7 +318,10 @@
      id="layer1">
     <g
        id="g16050"
-       transform="matrix(1.527273,0,0,1.527273,249.83636,548.92195)">
+       transform="matrix(1.527273,0,0,1.527273,249.83636,548.92195)"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\stickers\hats\hat6.png"
+       inkscape:export-xdpi="171.14761"
+       inkscape:export-ydpi="171.14761">
       <g
          id="imagebot_16">
         <path
@@ -409,7 +412,10 @@
       </g>
     </g>
     <g
-       id="g233437">
+       id="g233437"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\stickers\hats\hat1.png"
+       inkscape:export-xdpi="108.83318"
+       inkscape:export-ydpi="108.83318">
       <path
          d="m 228.70749,740.97793 30.50385,-82.14909 31.10744,81.84677 c -20.53674,10.6172 -41.07454,12.99244 -61.61129,0.30232 z"
          inkscape:connector-curvature="0"
@@ -587,7 +593,10 @@
     <g
        transform="matrix(0.05990707,0,0,0.05990707,359.81284,567.57691)"
        inkscape:label="Layer 1"
-       id="layer1-51">
+       id="layer1-51"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\stickers\hats\hat2.png"
+       inkscape:export-xdpi="183.38026"
+       inkscape:export-ydpi="183.38026">
       <path
          inkscape:transform-center-x="98.98274"
          inkscape:connector-curvature="0"
@@ -663,7 +672,10 @@
     <g
        transform="matrix(0.14529998,0,0,0.14529998,324.98846,656.23515)"
        inkscape:label="Layer 1"
-       id="layer1-4">
+       id="layer1-4"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\stickers\hats\hat5.png"
+       inkscape:export-xdpi="77.042007"
+       inkscape:export-ydpi="77.042007">
       <ellipse
          transform="matrix(0.85269,0,0,0.85269,-295.8,57.364)"
          style="fill:#42a7ea;stroke:#157bbf;stroke-width:28.14599991;stroke-linejoin:round"
@@ -951,7 +963,10 @@
     </g>
     <g
        transform="matrix(0.07160051,0,0,0.07160051,216.3677,780.75554)"
-       id="layer1-16">
+       id="layer1-16"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\stickers\hats\hat4.png"
+       inkscape:export-xdpi="128.92999"
+       inkscape:export-ydpi="128.92999">
       <g
          transform="matrix(3.8656,0,0,3.8656,1706.3,-343.28)"
          id="g4420">
@@ -984,7 +999,10 @@
     </g>
     <g
        transform="matrix(0.18369828,0,0,0.18369828,410.62434,625.80755)"
-       id="layer5">
+       id="layer5"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\assets\stickers\hats\hat3.png"
+       inkscape:export-xdpi="106.28241"
+       inkscape:export-ydpi="106.28241">
       <g
          id="g3806">
         <g
