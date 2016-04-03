@@ -642,7 +642,7 @@ public class HomeActivity extends LittleFamilyActivity {
             TouchStateAnimatedBitmapSprite adultVanity = new TouchStateAnimatedBitmapSprite(adultVanityBm, this);
             adultVanity.setX(673*dm.density);
             adultVanity.setY(400*dm.density);
-            List<Integer> animatingVanity = new ArrayList<>(12);
+            /*List<Integer> animatingVanity = new ArrayList<>(12);
             animatingVanity.add(R.drawable.house_adult_vanity1);
             animatingVanity.add(R.drawable.house_adult_vanity2);
             animatingVanity.add(R.drawable.house_adult_vanity3);
@@ -663,9 +663,10 @@ public class HomeActivity extends LittleFamilyActivity {
             adultVanity.getBitmapIds().put(2, opening3);
             adultVanity.setStateTransition(2, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP3);
             adultVanity.setStateTransitionEvent(2, TOPIC_START_BIRTHDAY_CARD);
+            */
             adultVanity.setResources(getResources());
             homeView.addSprite(adultVanity);
-            homeView.addActivitySprite(adultVanity);
+            //homeView.addActivitySprite(adultVanity);
 
             Bitmap lightABm = BitmapFactory.decodeResource(getResources(), R.drawable.house_light_a1);
             TouchStateAnimatedBitmapSprite lightA = new TouchStateAnimatedBitmapSprite(lightABm, this);
@@ -798,10 +799,10 @@ public class HomeActivity extends LittleFamilyActivity {
             piano.setStateTransition(5, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
             piano.getBitmapIds().put(6, pstate2);
             piano.setStateTransition(6, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP1);
-			piano.setStateTransitionEvent(0, TOPIC_START_SONG);
+			//piano.setStateTransitionEvent(0, TOPIC_START_SONG);
             piano.getAudio().put(1, R.raw.piano);
             homeView.addSprite(piano);
-			homeView.addActivitySprite(piano);
+			//homeView.addActivitySprite(piano);
 
             Bitmap guitarBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_music_guitar);
             TouchStateAnimatedBitmapSprite guitar = new TouchStateAnimatedBitmapSprite(guitarBm, this);
