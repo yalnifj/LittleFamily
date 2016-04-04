@@ -1072,6 +1072,20 @@ public class DataService implements AuthTask.Listener {
         return parents;
     }
 
+    public List<LittlePerson> getParentCouple(LittlePerson child, LittlePerson parent) throws Exception {
+        List<LittlePerson> parents = new ArrayList<>(2);
+        parents.add(parent);
+        List<LittlePerson> allParents = getParents(child);
+        List<LittlePerson> spouses = getSpouses(parent);
+        for(LittlePerson parent2 : spouses) {
+            if (!parent2.equals(parent) && allParents.contains(parent2)) {
+                parents.add(parent2);
+                break;
+            }
+        }
+        return parents;
+    }
+
     public List<LittlePerson> getChildren(LittlePerson person) throws Exception {
         List<LittlePerson> children = getDBHelper().getChildrenForPerson(person.getId());
         if (person.isHasChildren()==null || children==null || children.size()==0) {

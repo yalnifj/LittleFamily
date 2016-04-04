@@ -588,6 +588,7 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
                 sharingCanvas.drawBitmap(cardBitmap, null, cardRect, null);
             }
 
+            sharingCanvas.save();
             sharingCanvas.translate(0, -clipY);
             for (Sprite s : sprites) {
                 if (s.getX() + s.getWidth() >= 0 && s.getX() <= getWidth() && s.getY() + s.getHeight() >= clipY && s.getY() <= getHeight() + clipY) {
@@ -603,6 +604,7 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
 
             canvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
             canvas.drawBitmap(sharingBitmap, 0, 0, null);
+            sharingCanvas.restore();
         }
     }
 
@@ -653,7 +655,7 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
                 if (s instanceof DraggableSprite) {
                     DraggableSprite ds = (DraggableSprite) s;
                     if (cardRect!=null) {
-                        if (cardRect.contains((int) ds.getX(), (int) ds.getY())) {
+                        if (cardRect.contains((int) ds.getX(), (int) ds.getY()) || cardRect.contains((int) ds.getX() + ds.getWidth(), (int) ds.getY()+ds.getHeight())) {
                             overCard = true;
                             if (onMirror.contains(ds)) {
                                 s.setWidth((int) (ds.getTargetWidth() * 1.5f));
@@ -704,7 +706,7 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
         synchronized (sprites) {
             for (Sprite s : selectedSprites) {
                 if (cardRect!=null) {
-                    if (cardRect.contains((int) s.getX(), (int) s.getY())) {
+                    if (cardRect.contains((int) s.getX(), (int) s.getY()) || cardRect.contains((int) s.getX() + s.getWidth(), (int) s.getY()+s.getHeight())) {
                         overCard = true;
                     } else {
                         overCard = false;

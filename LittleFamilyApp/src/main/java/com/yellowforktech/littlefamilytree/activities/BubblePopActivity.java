@@ -52,7 +52,7 @@ public class BubblePopActivity extends LittleFamilyActivity implements ParentsLo
     @Override
     protected void onStart() {
         super.onStart();
-        ParentsLoaderTask loader = new ParentsLoaderTask(this, this);
+        ParentsLoaderTask loader = new ParentsLoaderTask(this, this, true);
         loader.execute(que.peek());
         bubbleView.resume();
     }
@@ -132,7 +132,7 @@ public class BubblePopActivity extends LittleFamilyActivity implements ParentsLo
 
             @Override
             public void onComplete(Integer progress) {
-                ParentsLoaderTask loader = new ParentsLoaderTask(BubblePopActivity.this, BubblePopActivity.this);
+                ParentsLoaderTask loader = new ParentsLoaderTask(BubblePopActivity.this, BubblePopActivity.this, true);
                 loader.execute(que.peek());
             }
         });

@@ -10,7 +10,6 @@ import com.yellowforktech.littlefamilytree.data.TreeNode;
 
 import org.gedcomx.types.GenderType;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -90,11 +89,13 @@ public class TreeLoaderTask extends AsyncTask<LittlePerson, Integer, TreeNode> {
         LittlePerson person = node.getPerson();
         if (person!=null) {
             List<LittlePerson> parents = dataService.getParents(person);
-            if (parents != null && parents.size() > 0) pNode.setPerson(parents.get(0));
-            if (parents.size() > 1) {
-                List<LittlePerson> spList = new ArrayList<>();
-                spList.add(parents.get(1));
-                pNode.setSpouses(spList);
+            if (parents != null && parents.size() > 0) {
+                pNode.setPerson(parents.get(0));
+                List<LittlePerson> couple = dataService.getParentCouple(person, parents.get(0));
+                if (couple!=null) {
+                    couple.remove(parents.get(0));
+                    pNode.setSpouses(couple);
+                }
             }
         }
         addParents(pNode,isInLaw);
@@ -115,10 +116,10 @@ public class TreeLoaderTask extends AsyncTask<LittlePerson, Integer, TreeNode> {
                 List<LittlePerson> sparents = dataService.getParents(spouse);
                 if (sparents != null && sparents.size() > 0) {
                     prNode.setPerson(sparents.get(0));
-                    if (sparents.size() > 1) {
-                        List<LittlePerson> spList = new ArrayList<>();
-                        spList.add(sparents.get(1));
-                        prNode.setSpouses(spList);
+                    List<LittlePerson> scouple = dataService.getParentCouple(spouse, sparents.get(0));
+                    if (scouple!=null) {
+                        scouple.remove(sparents.get(0));
+                        prNode.setSpouses(scouple);
                     }
                 }
             }

@@ -17,12 +17,21 @@ public class ParentsLoaderTask extends AsyncTask<LittlePerson, Integer, ArrayLis
     private Listener listener;
     private Context context;
     private DataService dataService;
+    private boolean primary = false;
 
     public ParentsLoaderTask(Listener listener, Context context) {
         this.listener = listener;
         this.context = context;
         dataService = DataService.getInstance();
         dataService.setContext(context);
+    }
+
+    public ParentsLoaderTask(Listener listener, Context context, boolean isPrimary) {
+        this.listener = listener;
+        this.context = context;
+        dataService = DataService.getInstance();
+        dataService.setContext(context);
+        this.primary = isPrimary;
     }
 
     @Override
@@ -33,7 +42,14 @@ public class ParentsLoaderTask extends AsyncTask<LittlePerson, Integer, ArrayLis
             try {
                 List<LittlePerson> people = dataService.getParents(person);
                 if (people != null) {
-                    familyMembers.addAll(people);
+                    if (!primary) {
+                        familyMembers.addAll(people);
+                    } else {
+                        List<LittlePerson> parents = dataService.getParentCouple(person, people.get(0));
+                        if (parents != null && parents.size()>0) {
+                            familyMembers.addAll(parents);
+                        }
+                    }
                 }
             } catch (Exception e) {
                 Log.e(this.getClass().getSimpleName(), "error", e);
