@@ -327,7 +327,10 @@ public class ImageHelper {
             }
 
             if(!dataDir.isDirectory()) {
-                dataDir.mkdirs();
+                //-- for new installs, don't use .LittleFamilyDataDir
+                //-- for upgrades, continue to use it
+                dataDir = null;
+                //dataDir.mkdirs();
             }
         }
 
