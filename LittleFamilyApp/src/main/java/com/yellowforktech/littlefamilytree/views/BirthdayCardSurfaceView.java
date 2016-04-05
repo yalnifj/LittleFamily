@@ -554,51 +554,52 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
 
     public Bitmap getSharingBitmap() {
         if (sharingBitmap!=null && cardBitmap!=null) {
-            this.invalidate();
+            synchronized (sprites) {
 
-            String filename = "stickers/cards/"+cardsBottoms.get(selectedCard);
-            InputStream cis = null;
-            try {
-                cis = context.getAssets().open(filename);
-                Bitmap cardBottomBm = BitmapFactory.decodeStream(cis);
-                float ratio = (float)(cardRect.width()) / (float)(cardBottomBm.getWidth());
-                int addHeight = (int) (cardBottomBm.getHeight() * ratio);
+                String filename = "stickers/cards/" + cardsBottoms.get(selectedCard);
+                InputStream cis = null;
+                try {
+                    cis = context.getAssets().open(filename);
+                    Bitmap cardBottomBm = BitmapFactory.decodeStream(cis);
+                    float ratio = (float) (cardRect.width()) / (float) (cardBottomBm.getWidth());
+                    int addHeight = (int) (cardBottomBm.getHeight() * ratio);
 
-                Bitmap cardBitmap = Bitmap.createBitmap(cardRect.width(), cardRect.height()+addHeight, sharingBitmap.getConfig());
-                Canvas copyCanvas = new Canvas(cardBitmap);
-                Rect dest = new Rect();
-                dest.set(0, 0, cardRect.width(), cardRect.height());
-                copyCanvas.drawBitmap(sharingBitmap, cardRect, dest, null);
-                Rect bdest = new Rect();
-                bdest.set(0, cardRect.height(), cardRect.width(), cardBitmap.getHeight());
-                copyCanvas.drawBitmap(cardBottomBm, null, bdest, null);
+                    Bitmap cardBitmap = Bitmap.createBitmap(cardRect.width(), cardRect.height() + addHeight, sharingBitmap.getConfig());
+                    Canvas copyCanvas = new Canvas(cardBitmap);
+                    Rect dest = new Rect();
+                    dest.set(0, 0, cardRect.width(), cardRect.height());
+                    copyCanvas.drawBitmap(sharingBitmap, cardRect, dest, null);
+                    Rect bdest = new Rect();
+                    bdest.set(0, cardRect.height(), cardRect.width(), cardBitmap.getHeight());
+                    copyCanvas.drawBitmap(cardBottomBm, null, bdest, null);
 
-                Bitmap branding = ImageHelper.loadBitmapFromResource(context, R.drawable.logo,0, addHeight, addHeight);
-                //-- add the branding mark
-                Rect dst = new Rect();
-                dst.set(0, cardBitmap.getHeight() - branding.getHeight(), branding.getWidth(), branding.getHeight());
-                copyCanvas.drawBitmap(branding, null, dst, null);
+                    Bitmap branding = ImageHelper.loadBitmapFromResource(context, R.drawable.logo, 0, addHeight, addHeight);
+                    //-- add the branding mark
+                    Rect dst = new Rect();
+                    dst.set(0, cardBitmap.getHeight() - branding.getHeight(), branding.getWidth(), cardBitmap.getHeight());
+                    copyCanvas.drawBitmap(branding, null, dst, null);
 
-                Paint textPaint = new Paint();
-                textPaint.setColor(Color.BLACK);
-                textPaint.setTextSize(addHeight / 3);
-                int age = birthdayPerson.getAge();
-                if (birthdayPerson.getBirthDate().after(new Date())) {
-                    age++;
-                }
-                DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
-                String message = "Happy "+age+" Birthday to "+birthdayPerson.getName()+" on "+dateFormat.format(birthdayPerson.getBirthDate());
-                Rect bounds = new Rect();
-                textPaint.getTextBounds(message, 0, message.length(), bounds);
-                if (bounds.width() > cardBitmap.getWidth() - branding.getWidth()) {
+                    Paint textPaint = new Paint();
+                    textPaint.setColor(Color.BLACK);
                     textPaint.setTextSize(addHeight / 4);
-                }
-                float textTop = cardBitmap.getHeight() - (addHeight / 2) - (textPaint.getTextSize() / 2);
-                copyCanvas.drawText(message, branding.getWidth()+5, textTop, textPaint);
+                    int age = birthdayPerson.getAge();
+                    if (birthdayPerson.getBirthDate().after(new Date())) {
+                        age++;
+                    }
+                    DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
+                    String message = "Happy " + age + " Birthday to " + birthdayPerson.getName() + " on " + dateFormat.format(birthdayPerson.getBirthDate());
+                    Rect bounds = new Rect();
+                    textPaint.getTextBounds(message, 0, message.length(), bounds);
+                    if (bounds.width() > cardBitmap.getWidth() - branding.getWidth()) {
+                        textPaint.setTextSize(addHeight / 6);
+                    }
+                    float textTop = cardBitmap.getHeight() - (addHeight / 2) - (textPaint.getTextSize() / 2);
+                    copyCanvas.drawText(message, branding.getWidth() + 10, textTop, textPaint);
 
-                return cardBitmap;
-            } catch (Exception e) {
-                Log.e("BirthdayCard", "Error getting card bottom", e);
+                    return cardBitmap;
+                } catch (Exception e) {
+                    Log.e("BirthdayCard", "Error getting card bottom", e);
+                }
             }
         }
         return null;
