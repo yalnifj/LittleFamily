@@ -39,7 +39,7 @@ public class SongActivity extends LittleFamilyActivity implements TreeWalker.Lis
         Bitmap starBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.star1);
         view.setStarBitmap(starBitmap);
 
-        treeWalker = new TreeWalker(this, selectedPerson, this);
+        treeWalker = new TreeWalker(this, selectedPerson, this, true);
 
         setupTopBar();
     }

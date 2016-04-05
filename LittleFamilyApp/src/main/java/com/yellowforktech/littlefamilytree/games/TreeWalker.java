@@ -23,14 +23,16 @@ public class TreeWalker {
     private Context context;
     private LittlePerson selectedPerson;
     private Listener listener;
+    private boolean reusePeople = false;
 
-    public TreeWalker(Context context, LittlePerson person, Listener listener) {
+    public TreeWalker(Context context, LittlePerson person, Listener listener, boolean reusePeople) {
         this.context = context;
         this.selectedPerson = person;
         this.listener = listener;
         people = new ArrayList<>();
         usedPeople = new HashSet<>();
         loadQueue = new LinkedList<>();
+        this.reusePeople = reusePeople;
     }
 
     public List<LittlePerson> getParents() {
@@ -51,7 +53,7 @@ public class TreeWalker {
         public void onComplete(ArrayList<LittlePerson> family) {
             if (family!=null && family.size()>0) {
                 for (LittlePerson parent : family) {
-                    if (!usedPeople.contains(parent.getId())) {
+                    if ((reusePeople && !people.contains(parent)) || !usedPeople.contains(parent.getId())) {
                         people.add(parent);
                         usedPeople.add(parent.getId());
                         loadQueue.add(parent);
@@ -76,7 +78,7 @@ public class TreeWalker {
         public void onComplete(ArrayList<LittlePerson> family) {
             if (family!=null && family.size()>0) {
                 for (LittlePerson child : family) {
-                    if (!usedPeople.contains(child.getId())) {
+                    if ((reusePeople && !people.contains(child)) || !usedPeople.contains(child.getId())) {
                         people.add(child);
                         usedPeople.add(child.getId());
                         if ((child.isHasChildren()==null || child.isHasChildren()==true)
@@ -102,7 +104,7 @@ public class TreeWalker {
         public void onComplete(ArrayList<LittlePerson> family) {
             if (family!=null && family.size()>0) {
                 for (LittlePerson child : family) {
-                    if (!usedPeople.contains(child.getId())) {
+                    if ((reusePeople && !people.contains(child)) || !usedPeople.contains(child.getId())) {
                         people.add(child);
                         usedPeople.add(child.getId());
                         if ((child.isHasChildren()==null || child.isHasChildren()==true)
@@ -130,7 +132,7 @@ public class TreeWalker {
             count++;
             if (family!=null && family.size()>0) {
                 for (LittlePerson child : family) {
-                    if (!usedPeople.contains(child.getId())) {
+                    if ((reusePeople && !people.contains(child)) || !usedPeople.contains(child.getId())) {
                         people.add(child);
                         usedPeople.add(child.getId());
                         loadQueue.add(child);
@@ -152,12 +154,17 @@ public class TreeWalker {
     public void loadMorePeople() {
         if (loadQueue.size()>0){
             LittlePerson person = loadQueue.poll();
-            if (person.getTreeLevel() != null && person.getTreeLevel() <= 3) {
+            if (person.getTreeLevel() != null && person.getTreeLevel() <= 2) {
                 ChildrenLoaderTask ctask = new ChildrenLoaderTask(siblingListener, context, false);
                 ctask.execute(person);
             } else {
                 ParentsLoaderTask gptask = new ParentsLoaderTask(grandParentListener, context);
                 gptask.execute(person);
+            }
+            if (reusePeople && person.getTreeLevel() != null && person.getTreeLevel() > 5) {
+                if (!loadQueue.contains(selectedPerson)) {
+                    loadQueue.add(0, selectedPerson);
+                }
             }
         } else {
             //-- no more people in the queue so start over

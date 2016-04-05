@@ -26,7 +26,7 @@ public class FlyingActivity extends LittleFamilyActivity implements TreeWalker.L
 
         Intent intent = getIntent();
         selectedPerson = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
-        treeWalker = new TreeWalker(this, selectedPerson, this);
+        treeWalker = new TreeWalker(this, selectedPerson, this, false);
 
         setupTopBar();
     }

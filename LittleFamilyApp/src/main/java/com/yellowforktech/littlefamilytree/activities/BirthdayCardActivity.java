@@ -144,7 +144,8 @@ public class BirthdayCardActivity extends LittleFamilyActivity {
             if (o instanceof TouchEventGameSprite) {
                 TouchEventGameSprite sprite = (TouchEventGameSprite) o;
                 Bitmap card = sprite.getBitmaps().get(0).get(0);
-                view.setCardBitmap(card);
+                Integer cardNum = (Integer) sprite.getData("cardNum");
+                view.setCardBitmap(card, cardNum);
                 speak("Decorate a birthday card for "+view.getBirthdayPerson().getGivenName());
             }
         }

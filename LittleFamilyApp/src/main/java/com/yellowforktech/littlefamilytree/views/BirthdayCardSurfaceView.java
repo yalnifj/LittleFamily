@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -27,7 +29,9 @@ import com.yellowforktech.littlefamilytree.util.ImageHelper;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -59,10 +63,12 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
 
     private List<Bitmap> cupcakeBitmaps;
     private List<String> cards;
+    private List<String> cardsBottoms;
 
     private Bitmap vanityTop;
     private Bitmap vanityBottom;
     private Bitmap cardBitmap;
+    private int selectedCard;
 
     private Rect wordsRect;
     private Rect heartsRect;
@@ -110,6 +116,13 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
         cards.add("card3.png");
         cards.add("card4.png");
         cards.add("card5.png");
+
+        cardsBottoms = new ArrayList<>(5);
+        cardsBottoms.add("card1bottom.png");
+        cardsBottoms.add("card2bottom.png");
+        cardsBottoms.add("card3bottom.png");
+        cardsBottoms.add("card4bottom.png");
+        cardsBottoms.add("card5bottom.png");
 
         stickerMap = new HashMap<>();
         List<String> hearts = new ArrayList<>(6);
@@ -197,8 +210,9 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
         return cardBitmap;
     }
 
-    public void setCardBitmap(Bitmap cardBitmap) {
+    public void setCardBitmap(Bitmap cardBitmap, int cardNum) {
         this.cardBitmap = cardBitmap;
+        this.selectedCard = cardNum;
         synchronized (sprites) {
             for (Sprite s : onMirror) {
                 stickerSprites.remove(s);
@@ -371,7 +385,7 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
             int y = (int) (yOffset + vanityTop.getHeight() + 10 * dm.density);
             clipY = 0;
             int tw = (int) (vanityTop.getWidth() / 5f);
-
+            int count = 0;
             for(String stickerFile : cards) {
                 String filename = "stickers/cards/"+stickerFile;
                 InputStream cis = null;
@@ -391,6 +405,7 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
                     ds.setTargetWidth(tw);
                     ds.setTargetHeight((int) (tw / ratio));
                     ds.setMoving(true);
+                    ds.setData("cardNum", count);
                     stickerSprites.add(ds);
                     onMirror.add(ds);
 
@@ -399,6 +414,7 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
                         x = (int) (xOffset + 115*dm.density);
                         y += tw / ratio + 10 * dm.density;
                     }
+                    count++;
                 } catch (IOException e) {
                     Log.e("BirthdayCardSurfaceView", "Error loading sticker", e);
                 }
@@ -479,6 +495,7 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
 
             int prevTh = 0;
             List<String> stickerFiles = stickerMap.get(type);
+            int count = 0;
             for(String stickerFile : stickerFiles) {
                 String filename = "stickers/"+type+"/"+stickerFile;
                 InputStream cis = null;
@@ -527,6 +544,7 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
                     if (y > yOffset + vanityTop.getHeight() - 10 * dm.density) {
                         break;
                     }
+                    count++;
                 } catch (IOException e) {
                     Log.e("BirthdayCardSurfaceView", "Error loading sticker", e);
                 }
@@ -536,17 +554,52 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
 
     public Bitmap getSharingBitmap() {
         if (sharingBitmap!=null && cardBitmap!=null) {
-            Bitmap cardBitmap = Bitmap.createBitmap(cardRect.width(), cardRect.height(), sharingBitmap.getConfig());
-            Canvas copyCanvas = new Canvas(cardBitmap);
-            Rect dest = new Rect();
-            dest.set(0,0,cardRect.width(), cardRect.height());
-            copyCanvas.drawBitmap(sharingBitmap, cardRect, dest, null);
-            Bitmap branding = ImageHelper.loadBitmapFromResource(context, R.drawable.logo,0, (int) (cardBitmap.getWidth()*0.25f), (int) (cardBitmap.getHeight()*0.25f));
-            //-- add the branding mark
-            Rect dst = new Rect();
-            dst.set(0, cardBitmap.getHeight() - branding.getHeight(), branding.getWidth(), cardBitmap.getHeight());
-            copyCanvas.drawBitmap(branding, null, dst, null);
-            return cardBitmap;
+            this.invalidate();
+
+            String filename = "stickers/cards/"+cardsBottoms.get(selectedCard);
+            InputStream cis = null;
+            try {
+                cis = context.getAssets().open(filename);
+                Bitmap cardBottomBm = BitmapFactory.decodeStream(cis);
+                float ratio = (float)(cardRect.width()) / (float)(cardBottomBm.getWidth());
+                int addHeight = (int) (cardBottomBm.getHeight() * ratio);
+
+                Bitmap cardBitmap = Bitmap.createBitmap(cardRect.width(), cardRect.height()+addHeight, sharingBitmap.getConfig());
+                Canvas copyCanvas = new Canvas(cardBitmap);
+                Rect dest = new Rect();
+                dest.set(0, 0, cardRect.width(), cardRect.height());
+                copyCanvas.drawBitmap(sharingBitmap, cardRect, dest, null);
+                Rect bdest = new Rect();
+                bdest.set(0, cardRect.height(), cardRect.width(), cardBitmap.getHeight());
+                copyCanvas.drawBitmap(cardBottomBm, null, bdest, null);
+
+                Bitmap branding = ImageHelper.loadBitmapFromResource(context, R.drawable.logo,0, addHeight, addHeight);
+                //-- add the branding mark
+                Rect dst = new Rect();
+                dst.set(0, cardBitmap.getHeight() - branding.getHeight(), branding.getWidth(), branding.getHeight());
+                copyCanvas.drawBitmap(branding, null, dst, null);
+
+                Paint textPaint = new Paint();
+                textPaint.setColor(Color.BLACK);
+                textPaint.setTextSize(addHeight / 3);
+                int age = birthdayPerson.getAge();
+                if (birthdayPerson.getBirthDate().after(new Date())) {
+                    age++;
+                }
+                DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
+                String message = "Happy "+age+" Birthday to "+birthdayPerson.getName()+" on "+dateFormat.format(birthdayPerson.getBirthDate());
+                Rect bounds = new Rect();
+                textPaint.getTextBounds(message, 0, message.length(), bounds);
+                if (bounds.width() > cardBitmap.getWidth() - branding.getWidth()) {
+                    textPaint.setTextSize(addHeight / 4);
+                }
+                float textTop = cardBitmap.getHeight() - (addHeight / 2) - (textPaint.getTextSize() / 2);
+                copyCanvas.drawText(message, branding.getWidth()+5, textTop, textPaint);
+
+                return cardBitmap;
+            } catch (Exception e) {
+                Log.e("BirthdayCard", "Error getting card bottom", e);
+            }
         }
         return null;
     }

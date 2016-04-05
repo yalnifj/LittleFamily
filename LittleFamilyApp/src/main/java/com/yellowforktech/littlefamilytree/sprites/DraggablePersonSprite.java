@@ -15,6 +15,7 @@ public class DraggablePersonSprite extends DraggableSprite {
         super(bitmap, maxWidth, maxHeight, eventTopic, dm);
         this.person = person;
         this.setData("person", person);
+        ignoreAlpha = true;
     }
 	
 	public LittlePerson getPerson() {
