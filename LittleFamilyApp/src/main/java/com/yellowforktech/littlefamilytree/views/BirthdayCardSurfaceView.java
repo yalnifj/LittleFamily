@@ -31,7 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -554,6 +554,7 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
 
     public Bitmap getSharingBitmap() {
         if (sharingBitmap!=null && cardBitmap!=null) {
+            this.invalidate();
             synchronized (sprites) {
 
                 String filename = "stickers/cards/" + cardsBottoms.get(selectedCard);
@@ -576,14 +577,18 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
                     Bitmap branding = ImageHelper.loadBitmapFromResource(context, R.drawable.logo, 0, addHeight, addHeight);
                     //-- add the branding mark
                     Rect dst = new Rect();
-                    dst.set(0, cardBitmap.getHeight() - branding.getHeight(), branding.getWidth(), cardBitmap.getHeight());
+                    dst.set((int) (5*dm.density), cardBitmap.getHeight() - branding.getHeight(), (int) (branding.getWidth()+5*dm.density), cardBitmap.getHeight());
                     copyCanvas.drawBitmap(branding, null, dst, null);
 
                     Paint textPaint = new Paint();
                     textPaint.setColor(Color.BLACK);
                     textPaint.setTextSize(addHeight / 4);
                     int age = birthdayPerson.getAge();
-                    if (birthdayPerson.getBirthDate().after(new Date())) {
+                    Calendar now = Calendar.getInstance();
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(birthdayPerson.getBirthDate());
+                    cal.set(Calendar.YEAR, now.get(Calendar.YEAR));
+                    if (cal.after(now)) {
                         age++;
                     }
                     DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
@@ -593,8 +598,8 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
                     if (bounds.width() > cardBitmap.getWidth() - branding.getWidth()) {
                         textPaint.setTextSize(addHeight / 6);
                     }
-                    float textTop = cardBitmap.getHeight() - (addHeight / 2) - (textPaint.getTextSize() / 2);
-                    copyCanvas.drawText(message, branding.getWidth() + 10, textTop, textPaint);
+                    float textTop = cardBitmap.getHeight() - (addHeight / 2);
+                    copyCanvas.drawText(message, branding.getWidth() + 10*dm.density, textTop, textPaint);
 
                     return cardBitmap;
                 } catch (Exception e) {
@@ -612,26 +617,27 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
 
     @Override
     public void doDraw(Canvas canvas) {
-        if (sharingBitmap==null) {
-            createSharingBitmap();
-        }
-        sharingCanvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
-        if (birthdayPerson == null) {
-            if (!cupcakesCreated) {
-                createCupcakes();
-            }
-        } else {
-            if (!spritesCreated) {
-                createSprites();
-            }
-            if (!peopleCreated) {
-                createPeople();
-            }
-            if (!cardsCreated) {
-                createCards();
-            }
-        }
         synchronized (sprites) {
+            if (sharingBitmap==null) {
+                createSharingBitmap();
+            }
+            sharingCanvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
+            if (birthdayPerson == null) {
+                if (!cupcakesCreated) {
+                    createCupcakes();
+                }
+            } else {
+                if (!spritesCreated) {
+                    createSprites();
+                }
+                if (!peopleCreated) {
+                    createPeople();
+                }
+                if (!cardsCreated) {
+                    createCards();
+                }
+            }
+
             if (vanityTop != null) {
                 sharingCanvas.drawBitmap(vanityTop, xOffset + 3*dm.density + (vanityBottom.getWidth() - vanityTop.getWidth()) / 2, yOffset, null);
             }

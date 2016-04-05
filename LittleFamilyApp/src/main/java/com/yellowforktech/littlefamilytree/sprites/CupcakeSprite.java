@@ -12,7 +12,7 @@ import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.util.ImageHelper;
 
 import java.text.DateFormat;
-import java.util.Date;
+import java.util.Calendar;
 
 /**
  * Created by jfinlay on 3/30/2016.
@@ -77,7 +77,11 @@ public class CupcakeSprite extends TouchEventGameSprite {
             }
             if (person.getAge() != null) {
                 int age = person.getAge();
-                if (person.getBirthDate().after(new Date())) {
+                Calendar now = Calendar.getInstance();
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(person.getBirthDate());
+                cal.set(Calendar.YEAR, now.get(Calendar.YEAR));
+                if (cal.after(now)) {
                     age++;
                 }
                 Rect bounds = new Rect();
