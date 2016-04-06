@@ -155,6 +155,11 @@ public class BirthdayCardActivity extends LittleFamilyActivity {
         showAdultAuthDialog(shareAction);
     }
 
+    public void showCupcakes(View view) {
+        this.view.showCupcakes();
+        speak("Look who has birthdays coming up.  Choose someone to start.");
+    }
+
     public class ShareAction implements AdultsAuthDialog.AuthCompleteAction {
         public void doAction(boolean success) {
             if (success) {

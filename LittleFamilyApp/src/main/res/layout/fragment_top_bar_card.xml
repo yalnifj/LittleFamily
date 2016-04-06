@@ -40,9 +40,24 @@
     <ImageView
         android:id="@+id/shareBtn"
         android:src="@android:drawable/ic_menu_camera"
-        android:layout_width="60dp"
+        android:layout_width="70dp"
         android:layout_height="match_parent"
         android:onClick="shareImage"
+        android:layout_weight="1"
+        />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"></LinearLayout>
+
+    <ImageView
+        android:id="@+id/cupcakeBtn"
+        android:src="@drawable/cupcake4"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:onClick="showCupcakes"
         android:layout_weight="1"
         />
 

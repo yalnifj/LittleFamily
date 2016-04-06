@@ -224,6 +224,28 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
         }
     }
 
+    public void showCupcakes() {
+        synchronized (sprites) {
+            sprites.clear();
+            stickerSprites.clear();
+            onMirror.clear();
+
+            cardBitmap = null;
+            cardRect = null;
+            birthdayPerson = null;
+            vanityBottom = null;
+            vanityTop = null;
+
+            spritesCreated = false;
+            peopleCreated = false;
+            cupcakesCreated = false;
+            cardsCreated = false;
+
+            sharingBitmap = null;
+            clipY = 0;
+        }
+    }
+
     @Override
     public void onEvent(String topic, Object o) {
 
