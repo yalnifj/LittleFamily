@@ -44,10 +44,12 @@ public class DollConfig implements Serializable{
     }
 
     public void setOriginalPlace(String originalPlace) {
-        String[] parts = originalPlace.split(" ");
+        String[] parts = originalPlace.split(" +");
         this.originalPlace = "";
         for(String w : parts) {
-            this.originalPlace += w.substring(0,1).toUpperCase()+w.substring(1)+" ";
+            if (!w.isEmpty()) {
+                this.originalPlace += w.substring(0, 1).toUpperCase() + w.substring(1) + " ";
+            }
         }
         this.originalPlace = this.originalPlace.trim();
     }

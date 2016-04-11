@@ -234,25 +234,28 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
     @Override
     protected void touch_start(float x, float y) {
         super.touch_start(x, y);
-        selected = null;
         if (bitmap!=null) {
-            float ratio = (float) bitmap.getWidth() / bitmap.getHeight();
-            if (x <= thumbnailHeight * ratio && y >= getHeight()-thumbnailHeight) {
-                showHint = true;
-                return;
-            }
-        }
-        for(int r=0; r<game.getRows(); r++) {
-            for (int c = 0; c < game.getCols(); c++) {
-                PuzzlePiece pp = game.getPiece(r, c);
-                if (!pp.isInPlace() && !pp.isAnimating()) {
-                    if (x>=pp.getX() && x <= pp.getX()+pieceWidth && y>=pp.getY() && y<=pp.getY()+pieceHeight) {
-                        selected = pp;
-                        pp.setSelected(true);
-                        sRow = r;
-                        sCol = c;
-                        Log.d("PuzzleSurfaceView", "Selecting r=" + r + " c=" + c);
-                        return;
+            synchronized(bitmap) {
+                float ratio = (float) bitmap.getWidth() / bitmap.getHeight();
+                if (x <= thumbnailHeight * ratio && y >= getHeight() - thumbnailHeight) {
+                    showHint = true;
+                    return;
+                }
+
+                selected = null;
+                for (int r = 0; r < game.getRows(); r++) {
+                    for (int c = 0; c < game.getCols(); c++) {
+                        PuzzlePiece pp = game.getPiece(r, c);
+                        if (!pp.isInPlace() && !pp.isAnimating()) {
+                            if (x >= pp.getX() && x <= pp.getX() + pieceWidth && y >= pp.getY() && y <= pp.getY() + pieceHeight) {
+                                selected = pp;
+                                pp.setSelected(true);
+                                sRow = r;
+                                sCol = c;
+                                Log.d("PuzzleSurfaceView", "Selecting r=" + r + " c=" + c);
+                                return;
+                            }
+                        }
                     }
                 }
             }
