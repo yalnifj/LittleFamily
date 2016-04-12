@@ -290,7 +290,7 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
                     x += cs.getWidth() + 10 * dm.density;
                     if (x > getWidth()) {
                         x = 10 * dm.density;
-                        y = y + cs.getHeight() + 10 * dm.density;
+                        y = y + cs.getHeight() + 15 * dm.density;
                     }
                 }
                 maxHeight = y;
