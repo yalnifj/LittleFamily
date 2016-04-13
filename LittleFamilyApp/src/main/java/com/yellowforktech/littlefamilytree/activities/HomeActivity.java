@@ -644,6 +644,7 @@ public class HomeActivity extends LittleFamilyActivity {
             TouchStateAnimatedBitmapSprite adultVanity = new TouchStateAnimatedBitmapSprite(adultVanityBm, this);
             adultVanity.setX(673*dm.density);
             adultVanity.setY(400*dm.density);
+			/*
             List<Integer> animatingVanity = new ArrayList<>(12);
             animatingVanity.add(R.drawable.house_adult_vanity1);
             animatingVanity.add(R.drawable.house_adult_vanity2);
@@ -665,9 +666,10 @@ public class HomeActivity extends LittleFamilyActivity {
             adultVanity.getBitmapIds().put(2, opening3);
             adultVanity.setStateTransition(2, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP3);
             adultVanity.setStateTransitionEvent(2, TOPIC_START_BIRTHDAY_CARD);
-            adultVanity.setResources(getResources());
+            */
+			adultVanity.setResources(getResources());
             homeView.addSprite(adultVanity);
-            homeView.addActivitySprite(adultVanity);
+            //homeView.addActivitySprite(adultVanity);
 
             Bitmap lightABm = BitmapFactory.decodeResource(getResources(), R.drawable.house_light_a1);
             TouchStateAnimatedBitmapSprite lightA = new TouchStateAnimatedBitmapSprite(lightABm, this);
