@@ -84,9 +84,11 @@ public class HomeActivity extends LittleFamilyActivity {
     @Override
     public void onInit(int code) {
         super.onInit(code);
-        String message = String.format(getResources().getString(R.string.player_greeting), selectedPerson.getGivenName());
-        //message += " "+getResources().getString(R.string.what_game);
-        speak(message);
+		if (selectedPerson != null) {
+      	  String message = String.format(getResources().getString(R.string.player_greeting), selectedPerson.getGivenName());
+          //message += " "+getResources().getString(R.string.what_game);
+       	  speak(message);
+		}
     }
 
     private void setupHomeViewSprites() {
