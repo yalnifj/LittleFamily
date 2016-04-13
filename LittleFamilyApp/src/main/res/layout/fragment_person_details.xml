@@ -86,15 +86,24 @@
                             android:layout_height="wrap_content"
                             android:id="@+id/btnSync"
                             android:src="@android:drawable/ic_popup_sync"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginLeft="5dp"
                              />
+
+                        <ImageButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/recordAudio"
+                            android:src="@android:drawable/ic_btn_speak_now"
+                            android:layout_marginLeft="5dp" />
+
                         <ImageButton
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/btnGotoUrl"
                             android:src="@android:drawable/ic_menu_view"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginLeft="5dp"
                             />
+
                         <!--
                         <ImageButton
                             android:layout_width="wrap_content"

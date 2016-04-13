@@ -144,8 +144,7 @@ public class PuzzleGameActivity extends LittleFamilyActivity implements RandomMe
             @Override
             public void onProgressUpdate(Integer progress) {
                 if (progress==40) {
-                    String name = selectedPerson.getGivenName();
-                    speak(name);
+                    sayGivenNameForPerson(selectedPerson);
                 }
             }
 

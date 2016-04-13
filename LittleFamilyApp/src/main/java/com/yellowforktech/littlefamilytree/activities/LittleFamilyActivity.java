@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import android.speech.tts.Voice;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -24,6 +25,7 @@ import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.events.EventListener;
 import com.yellowforktech.littlefamilytree.events.EventQueue;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Set;
@@ -275,6 +277,16 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         if (tts!=null && !quietMode) {
             if (Build.VERSION.SDK_INT > 20) {
                 tts.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
+                tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+                    @Override
+                    public void onStart(String utteranceId) {}
+
+                    @Override
+                    public void onDone(String utteranceId) {}
+
+                    @Override
+                    public void onError(String utteranceId) {}
+                });
             }
             else {
                 tts.speak(message, TextToSpeech.QUEUE_FLUSH, null);
@@ -286,6 +298,52 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
                     Toast.makeText(LittleFamilyActivity.this, message, Toast.LENGTH_LONG).show();
                 }
             });
+        }
+    }
+
+    public void speak(final String message, UtteranceProgressListener listener) {
+        Log.d("LittleFamilyActivity", "Speaking: " + message);
+        Boolean quietMode = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("quiet_mode", false);
+        if (tts!=null && !quietMode) {
+            if (Build.VERSION.SDK_INT > 20) {
+                tts.setOnUtteranceProgressListener(listener);
+                tts.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
+            }
+            else {
+                tts.setOnUtteranceProgressListener(listener);
+                tts.speak(message, TextToSpeech.QUEUE_FLUSH, null);
+            }
+        } else {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(LittleFamilyActivity.this, message, Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+    }
+
+    public void sayGivenNameForPerson(LittlePerson person) {
+        Boolean quietMode = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("quiet_mode", false);
+        if (!quietMode && person.getGivenNameAudioPath()!=null) {
+            final MediaPlayer mPlayer = new MediaPlayer();
+            try {
+                mPlayer.setDataSource(person.getGivenNameAudioPath());
+                mPlayer.prepare();
+                mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        mPlayer.release();
+                    }
+                });
+                mPlayer.start();
+            } catch (IOException e) {
+                Log.e("LittleFamilyScene", "prepare() failed", e);
+            }
+        } else {
+            if (person.getGivenName()!=null) {
+                speak(person.getGivenName());
+            }
         }
     }
 

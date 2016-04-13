@@ -176,8 +176,7 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Random
             @Override
             public void onProgressUpdate(Integer progress) {
                 if (progress==50) {
-                    String name = selectedPerson.getGivenName();
-                    speak(name);
+                    sayGivenNameForPerson(selectedPerson);
                 }
             }
 

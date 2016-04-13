@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Bundle;
+import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.View;
@@ -138,7 +139,7 @@ public class BirthdayCardActivity extends LittleFamilyActivity {
             if (o instanceof TouchEventGameSprite) {
                 TouchEventGameSprite sprite = (TouchEventGameSprite) o;
                 LittlePerson person = (LittlePerson) sprite.getData("person");
-                speak(person.getGivenName());
+                sayGivenNameForPerson(person);
             }
         } else  if (topic.equals(TOPIC_CARD_SELECTED)) {
             if (o instanceof TouchEventGameSprite) {
@@ -146,7 +147,16 @@ public class BirthdayCardActivity extends LittleFamilyActivity {
                 Bitmap card = sprite.getBitmaps().get(0).get(0);
                 Integer cardNum = (Integer) sprite.getData("cardNum");
                 view.setCardBitmap(card, cardNum);
-                speak("Decorate a birthday card for "+view.getBirthdayPerson().getGivenName());
+                speak(getResources().getString(R.string.decorate_a_card), new UtteranceProgressListener() {
+                    @Override
+                    public void onStart(String utteranceId) { }
+                    @Override
+                    public void onDone(String utteranceId) {
+                        sayGivenNameForPerson(view.getBirthdayPerson());
+                    }
+                    @Override
+                    public void onError(String utteranceId) { }
+                });
             }
         }
     }

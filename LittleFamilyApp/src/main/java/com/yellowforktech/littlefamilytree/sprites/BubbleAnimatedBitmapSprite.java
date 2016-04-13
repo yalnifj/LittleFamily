@@ -134,9 +134,7 @@ public class BubbleAnimatedBitmapSprite extends BouncingAnimatedBitmapSprite {
             	setRemoveMe(true);
 			} else {
 				state = 2;
-				if (person.getGivenName()!=null) {
-                    activity.speak(person.getGivenName());
-                }
+				activity.sayGivenNameForPerson(person);
 			}
         }
         if (state==2) {

@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
+import com.yellowforktech.littlefamilytree.data.LocalResource;
 import com.yellowforktech.littlefamilytree.data.Media;
 import com.yellowforktech.littlefamilytree.data.Relationship;
 import com.yellowforktech.littlefamilytree.data.RelationshipType;
@@ -24,7 +25,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class DBHelper extends SQLiteOpenHelper {
-	private static final int DATABASE_VERSION = 4;
+	private static final int DATABASE_VERSION = 5;
 	public static final String UUID_PROPERTY = "UUID";
 	private static final String DATABASE_NAME = "LittleFamily.db";
 
@@ -34,6 +35,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	private static final String TABLE_TAGS = "tags";
     private static final String TABLE_PROPERTIES = "properties";
 	private static final String TABLE_SYNCQ = "syncq";
+	private static final String TABLE_LOCAL_RESOURCES = "localresources";
 	
 	private static final String COL_ID = "id";
 	public static final String COL_NAME = "name";
@@ -94,6 +96,14 @@ public class DBHelper extends SQLiteOpenHelper {
 
 	private static final String CREATE_SYNCQ = "create table "+TABLE_SYNCQ + " ( "
 			+ COL_ID + " integer )";
+
+	private static final String CREATE_LOCAL_RESOURCES = "create table "+TABLE_LOCAL_RESOURCES+" ( " +
+			COL_ID +" integer primary key, " +
+			COL_PERSON_ID+" integer, "+
+			COL_TYPE+" text, "+
+			COL_LOCAL_PATH+" text, " +
+			" foreign key("+COL_PERSON_ID+") references "+TABLE_LITTLE_PERSON+" ("+COL_ID+")"+
+			" )";
 			
 	private Context context;
 
@@ -110,6 +120,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TAGS);
         db.execSQL(CREATE_PROPERTIES);
 		db.execSQL(CREATE_SYNCQ);
+		db.execSQL(CREATE_LOCAL_RESOURCES);
 
 		//-- save a random installation ID
 		//saveProperty(UUID_PROPERTY, UUID.randomUUID().toString());
@@ -140,6 +151,9 @@ public class DBHelper extends SQLiteOpenHelper {
 			if (oldVersion < 4) {
 				String sql = "alter table " + TABLE_LITTLE_PERSON + " add column " + COL_OCCUPATION + " text default NULL";
 				db.execSQL(sql);
+			}
+			if (oldVersion < 5) {
+				db.execSQL(CREATE_LOCAL_RESOURCES);
 			}
 		}
 	}
@@ -219,15 +233,15 @@ public class DBHelper extends SQLiteOpenHelper {
 		String[] projection = {
 			COL_GIVEN_NAME, COL_GENDER, COL_PHOTO_PATH, COL_NAME,
 			COL_AGE, COL_BIRTH_DATE, COL_BIRTH_PLACE, COL_NATIONALITY, COL_FAMILY_SEARCH_ID,
-			COL_ID, COL_LAST_SYNC, COL_ALIVE, COL_ACTIVE, COL_HAS_PARENTS, COL_HAS_CHILDREN,
+			"p."+COL_ID, COL_LAST_SYNC, COL_ALIVE, COL_ACTIVE, COL_HAS_PARENTS, COL_HAS_CHILDREN,
 			COL_HAS_SPOUSES, COL_HAS_MEDIA, COL_TREE_LEVEL, COL_OCCUPATION
 		};
-		String selection = COL_ID + " LIKE ?";
+		String selection = "p."+COL_ID + " LIKE ?";
 		String[] selectionArgs = { String.valueOf(id) };
-		String tables = TABLE_LITTLE_PERSON;
+		String tables = TABLE_LITTLE_PERSON + " p left outer join "+TABLE_LOCAL_RESOURCES+" l on l."+COL_PERSON_ID+"=p."+COL_ID+" and l."+COL_TYPE+"='givenAudio' ";
 		
 		LittlePerson person = null;
-		Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, COL_ID);
+		Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, "p."+COL_ID);
 		while (c.moveToNext()) {
 			person = personFromCursor(c);
 		}
@@ -241,7 +255,8 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         LittlePerson person = null;
 
-        Cursor c = db.rawQuery("select * from " + TABLE_LITTLE_PERSON + " where active='Y' order by " + COL_ID + " LIMIT 1", null);
+        Cursor c = db.rawQuery("select p.*, l."+COL_LOCAL_PATH+" from " + TABLE_LITTLE_PERSON + " p "+
+				"left outer join "+TABLE_LOCAL_RESOURCES+" l on l."+COL_PERSON_ID+"=p."+COL_ID+" and l."+COL_TYPE+"='givenAudio' where active='Y' order by p." + COL_ID + " LIMIT 1", null);
         while (c.moveToNext()) {
             person = personFromCursor(c);
         }
@@ -255,8 +270,9 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         LittlePerson person = null;
 
-        Cursor c = db.rawQuery("select p.* from " + TABLE_LITTLE_PERSON + " p join "+TABLE_TAGS+" t on t."+COL_PERSON_ID+"=p."+COL_ID+
-			" where p.active='Y' order by RANDOM() LIMIT 1", null);
+        Cursor c = db.rawQuery("select p.*, l."+COL_LOCAL_PATH+" from " + TABLE_LITTLE_PERSON + " p join "+TABLE_TAGS+" t on t."+COL_PERSON_ID+"=p."+COL_ID+
+				" left outer join "+TABLE_LOCAL_RESOURCES+" l on l."+COL_PERSON_ID+"=p."+COL_ID+" and l."+COL_TYPE+"='givenAudio'" +
+				" where p.active='Y' order by RANDOM() LIMIT 1", null);
         while (c.moveToNext()) {
             person = personFromCursor(c);
         }
@@ -274,6 +290,7 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor c = db.rawQuery("select a.* from (select p.*, strftime('%s','now') as todaysecs, "+
 								" cast(((strftime('%s','now') - (604800 + (p." + COL_BIRTH_DATE + " / 1000))) / 31557600) as int) as yeardiff "+
 								" from " + TABLE_LITTLE_PERSON + " p "+
+								" left outer join "+TABLE_LOCAL_RESOURCES+" l on l."+COL_PERSON_ID+"=p."+COL_ID+" and l."+COL_TYPE+"='givenAudio' "+
 							   	" where p.active='Y' and p."+COL_BIRTH_DATE+" is not null and p."+COL_TREE_LEVEL+" < "+maxLevel+" ) a " +
 								" order by a."+COL_BIRTH_DATE + " + (a.yeardiff * 31557600000) + (86400000 * 5 * a."+COL_TREE_LEVEL+") "+
 								" LIMIT "+maxNumber, null);
@@ -296,6 +313,9 @@ public class DBHelper extends SQLiteOpenHelper {
             int count = db.delete(TABLE_TAGS, COL_PERSON_ID+" LIKE ?", selectionArgs);
             Log.d("DBHelper", "deleted "+count+" from "+TABLE_TAGS);
 
+			count = db.delete(TABLE_LOCAL_RESOURCES, COL_PERSON_ID+" LIKE ?", selectionArgs);
+			Log.d("DBHelper", "deleted "+count+" from "+TABLE_LOCAL_RESOURCES);
+
             String[] selectionArgs2 = { String.valueOf(id), String.valueOf(id) };
             count = db.delete(TABLE_RELATIONSHIP, COL_ID1+" LIKE ? OR "+COL_ID2+ " LIKE ? ", selectionArgs2);
             Log.d("DBHelper", "deleted "+count+" from "+TABLE_RELATIONSHIP);
@@ -312,12 +332,12 @@ public class DBHelper extends SQLiteOpenHelper {
 		String[] projection = {
 			COL_GIVEN_NAME, COL_GENDER, COL_PHOTO_PATH, COL_NAME,
 			COL_AGE, COL_BIRTH_DATE, COL_BIRTH_PLACE, COL_NATIONALITY, COL_FAMILY_SEARCH_ID, COL_LAST_SYNC,
-			COL_ID, COL_ALIVE, COL_ACTIVE, COL_HAS_PARENTS, COL_HAS_CHILDREN, COL_HAS_SPOUSES, COL_HAS_MEDIA,
-			COL_TREE_LEVEL, COL_OCCUPATION
+			"p."+COL_ID, COL_ALIVE, COL_ACTIVE, COL_HAS_PARENTS, COL_HAS_CHILDREN, COL_HAS_SPOUSES, COL_HAS_MEDIA,
+			COL_TREE_LEVEL, COL_OCCUPATION, "l."+COL_LOCAL_PATH
 		};
 		String selection = COL_FAMILY_SEARCH_ID + " LIKE ?";
 		String[] selectionArgs = { fsid };
-		String tables = TABLE_LITTLE_PERSON;
+		String tables = TABLE_LITTLE_PERSON + " p left outer join "+TABLE_LOCAL_RESOURCES+" l on l."+COL_PERSON_ID+"=p."+COL_ID+" and l."+COL_TYPE+"='givenAudio' ";
 
 		LittlePerson person = null;
 		Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, COL_FAMILY_SEARCH_ID);
@@ -335,8 +355,8 @@ public class DBHelper extends SQLiteOpenHelper {
 		String[] projection = {
 				COL_GIVEN_NAME, COL_GENDER, COL_PHOTO_PATH, COL_NAME,
 				COL_AGE, COL_BIRTH_DATE, COL_BIRTH_PLACE, COL_NATIONALITY, COL_FAMILY_SEARCH_ID, COL_LAST_SYNC,
-				COL_ID, COL_ALIVE, COL_ACTIVE, COL_HAS_PARENTS, COL_HAS_CHILDREN, COL_HAS_SPOUSES, COL_HAS_MEDIA,
-				COL_TREE_LEVEL, COL_OCCUPATION
+				"p."+COL_ID, COL_ALIVE, COL_ACTIVE, COL_HAS_PARENTS, COL_HAS_CHILDREN, COL_HAS_SPOUSES, COL_HAS_MEDIA,
+				COL_TREE_LEVEL, COL_OCCUPATION, "l."+COL_LOCAL_PATH
 		};
 		String selection = "";
 		String[] selectionArgs = new String[params.size()];
@@ -349,36 +369,11 @@ public class DBHelper extends SQLiteOpenHelper {
 				count++;
 			}
 		}
-		String tables = TABLE_LITTLE_PERSON;
+		String tables = TABLE_LITTLE_PERSON + " p left outer join "+TABLE_LOCAL_RESOURCES+" l on l."+COL_PERSON_ID+"=p."+COL_ID+" and l."+COL_TYPE+"='givenAudio' ";
 
 		List<LittlePerson> people = new ArrayList<>();
 		LittlePerson person = null;
 		Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, COL_FAMILY_SEARCH_ID);
-		while (c.moveToNext()) {
-			person = personFromCursor(c);
-			people.add(person);
-		}
-
-		c.close();
-
-		return people;
-	}
-
-	public List<LittlePerson> getCousins() {
-		SQLiteDatabase db = getReadableDatabase();
-		String[] projection = {
-				COL_GIVEN_NAME, COL_GENDER, COL_PHOTO_PATH, COL_NAME,
-				COL_AGE, COL_BIRTH_DATE, COL_BIRTH_PLACE, COL_NATIONALITY, COL_FAMILY_SEARCH_ID, COL_LAST_SYNC,
-				COL_ID, COL_ALIVE, COL_ACTIVE, COL_HAS_PARENTS, COL_HAS_CHILDREN, COL_HAS_SPOUSES, COL_HAS_MEDIA,
-				COL_TREE_LEVEL, COL_OCCUPATION
-		};
-		String selection = COL_TREE_LEVEL + "<=? and "+COL_ACTIVE+"='Y'";
-		String[] selectionArgs = {"0"};
-		String tables = TABLE_LITTLE_PERSON;
-
-		List<LittlePerson> people = new ArrayList<>();
-		LittlePerson person = null;
-		Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, COL_TREE_LEVEL+" ASC,"+COL_AGE+" ASC");
 		while (c.moveToNext()) {
 			person = personFromCursor(c);
 			people.add(person);
@@ -396,13 +391,14 @@ public class DBHelper extends SQLiteOpenHelper {
 			COL_GIVEN_NAME, COL_GENDER, COL_PHOTO_PATH, COL_NAME,
 			COL_AGE, COL_BIRTH_DATE, COL_BIRTH_PLACE, COL_NATIONALITY, COL_FAMILY_SEARCH_ID, COL_LAST_SYNC,
 			"p."+COL_ID, COL_ALIVE, COL_ACTIVE, "r."+COL_TYPE, COL_HAS_PARENTS, COL_HAS_CHILDREN, COL_HAS_SPOUSES,
-			COL_HAS_MEDIA, COL_TREE_LEVEL, COL_OCCUPATION
+			COL_HAS_MEDIA, COL_TREE_LEVEL, COL_OCCUPATION, "l."+COL_LOCAL_PATH
 		};
 		String selection = "(r."+COL_ID1 + " LIKE ? or r."+COL_ID2+" LIKE ?) and p."+COL_ACTIVE+"='Y'";
 
 		String[] selectionArgs = { String.valueOf(id), String.valueOf(id) };
 		String tables = TABLE_LITTLE_PERSON + " p join " + TABLE_RELATIONSHIP + " r on r."+COL_ID1+"=p."+COL_ID
-					+" or r."+COL_ID2+"=p."+COL_ID;
+					+" or r."+COL_ID2+"=p."+COL_ID
+				+ " left outer join "+TABLE_LOCAL_RESOURCES+" l on l."+COL_PERSON_ID+"=p."+COL_ID+" and l."+COL_TYPE+"='givenAudio' ";
 
 		Map<Integer, LittlePerson> personMap = new HashMap<>();
 		Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, "p."+COL_ID);
@@ -435,12 +431,13 @@ public class DBHelper extends SQLiteOpenHelper {
                 COL_GIVEN_NAME, COL_GENDER, COL_PHOTO_PATH, COL_NAME,
                 COL_AGE, COL_BIRTH_DATE, COL_BIRTH_PLACE, COL_NATIONALITY, COL_FAMILY_SEARCH_ID, COL_LAST_SYNC,
                 "p."+COL_ID, COL_ALIVE, COL_ACTIVE, COL_HAS_PARENTS, COL_HAS_CHILDREN, COL_HAS_SPOUSES,
-				COL_HAS_MEDIA, COL_TREE_LEVEL, COL_OCCUPATION
+				COL_HAS_MEDIA, COL_TREE_LEVEL, COL_OCCUPATION, "l."+COL_LOCAL_PATH
         };
         String selection = "r."+COL_ID2+" LIKE ? and r."+COL_TYPE+"=? and p."+COL_ACTIVE+"='Y'";
 
         String[] selectionArgs = { String.valueOf(id), String.valueOf(RelationshipType.PARENTCHILD.getId()) };
-        String tables = TABLE_LITTLE_PERSON + " p join " + TABLE_RELATIONSHIP + " r on r."+COL_ID1+"=p."+COL_ID;
+        String tables = TABLE_LITTLE_PERSON + " p join " + TABLE_RELATIONSHIP + " r on r."+COL_ID1+"=p."+COL_ID
+				+ " left outer join "+TABLE_LOCAL_RESOURCES+" l on l."+COL_PERSON_ID+"=p."+COL_ID+" and l."+COL_TYPE+"='givenAudio' ";
 
         Map<Integer, LittlePerson> personMap = new HashMap<>();
         Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, "p."+COL_ID);
@@ -462,12 +459,13 @@ public class DBHelper extends SQLiteOpenHelper {
 				COL_GIVEN_NAME, COL_GENDER, COL_PHOTO_PATH, COL_NAME,
 				COL_AGE, COL_BIRTH_DATE, COL_BIRTH_PLACE, COL_NATIONALITY, COL_FAMILY_SEARCH_ID, COL_LAST_SYNC,
 				"p."+COL_ID, COL_ALIVE, COL_ACTIVE, COL_HAS_PARENTS, COL_HAS_CHILDREN, COL_HAS_SPOUSES,
-				COL_HAS_MEDIA, COL_TREE_LEVEL, COL_OCCUPATION
+				COL_HAS_MEDIA, COL_TREE_LEVEL, COL_OCCUPATION, "l."+COL_LOCAL_PATH
 		};
 		String selection = "r."+COL_ID1+" LIKE ? and r."+COL_TYPE+"=? and p."+COL_ACTIVE+"='Y'";
 
 		String[] selectionArgs = { String.valueOf(id), String.valueOf(RelationshipType.PARENTCHILD.getId()) };
-		String tables = TABLE_LITTLE_PERSON + " p join " + TABLE_RELATIONSHIP + " r on r."+COL_ID2+"=p."+COL_ID;
+		String tables = TABLE_LITTLE_PERSON + " p join " + TABLE_RELATIONSHIP + " r on r."+COL_ID2+"=p."+COL_ID
+				+ " left outer join "+TABLE_LOCAL_RESOURCES+" l on l."+COL_PERSON_ID+"=p."+COL_ID+" and l."+COL_TYPE+"='givenAudio' ";
 
 		Map<Integer, LittlePerson> personMap = new HashMap<>();
 		Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, "p." + COL_AGE + " desc");
@@ -491,12 +489,13 @@ public class DBHelper extends SQLiteOpenHelper {
 				COL_GIVEN_NAME, COL_GENDER, COL_PHOTO_PATH, COL_NAME,
 				COL_AGE, COL_BIRTH_DATE, COL_BIRTH_PLACE, COL_NATIONALITY, COL_FAMILY_SEARCH_ID, COL_LAST_SYNC,
 				"p."+COL_ID, COL_ALIVE, COL_ACTIVE, COL_HAS_PARENTS, COL_HAS_CHILDREN, COL_HAS_SPOUSES,
-				COL_HAS_MEDIA, COL_TREE_LEVEL, COL_OCCUPATION
+				COL_HAS_MEDIA, COL_TREE_LEVEL, COL_OCCUPATION, "l."+COL_LOCAL_PATH
 		};
 		String selection = "(r."+COL_ID1+" LIKE ? or r."+COL_ID2+" LIKE ?) and r."+COL_TYPE+"=? and p."+COL_ACTIVE+"='Y'";
 
 		String[] selectionArgs = { String.valueOf(id), String.valueOf(id), String.valueOf(RelationshipType.SPOUSE.getId()) };
-		String tables = TABLE_LITTLE_PERSON + " p join " + TABLE_RELATIONSHIP + " r on r."+COL_ID1+"=p."+COL_ID+" or r."+COL_ID2+"=p."+COL_ID;
+		String tables = TABLE_LITTLE_PERSON + " p join " + TABLE_RELATIONSHIP + " r on r."+COL_ID1+"=p."+COL_ID+" or r."+COL_ID2+"=p."+COL_ID
+				+ " left outer join "+TABLE_LOCAL_RESOURCES+" l on l."+COL_PERSON_ID+"=p."+COL_ID+" and l."+COL_TYPE+"='givenAudio' ";
 
 		Map<Integer, LittlePerson> personMap = new HashMap<>();
 		Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, "p." + COL_ID);
@@ -570,6 +569,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			person.setTreeLevel(c.getInt(c.getColumnIndexOrThrow(COL_TREE_LEVEL)));
 		}
 		person.setOccupation(c.getString(c.getColumnIndexOrThrow(COL_OCCUPATION)));
+		person.setGivenNameAudioPath(c.getString(c.getColumnIndexOrThrow(COL_LOCAL_PATH)));
 		person.updateAge();
 
 		return person;
@@ -762,17 +762,6 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-	public Media getRandomMedia() {
-		Media media = null;
-		SQLiteDatabase db = getReadableDatabase();
-		Cursor c = db.rawQuery("select * from " + TABLE_MEDIA+" ORDER BY RANDOM() limit 1", null);
-		while (c.moveToNext()) {
-			media = mediaFromCursor(c);
-		}
-		c.close();
-		return media;
-	}
-
     private Media mediaFromCursor(Cursor c) {
         Media m = new Media();
         m.setFamilySearchId(c.getString(c.getColumnIndexOrThrow(COL_FAMILY_SEARCH_ID)));
@@ -888,6 +877,96 @@ public class DBHelper extends SQLiteOpenHelper {
             tag.setLeft(c.getDouble(c.getColumnIndexOrThrow(COL_BOTTOM)));
         return tag;
     }
+
+	public void persistLocalResource(LocalResource media) {
+		SQLiteDatabase db = getWritableDatabase();
+
+		ContentValues values = new ContentValues();
+		values.put(COL_PERSON_ID, media.getPersonId());
+		values.put(COL_TYPE, media.getType());
+		values.put(COL_LOCAL_PATH, media.getLocalPath());
+
+		// -- add
+		if (media.getId() == 0) {
+			LocalResource existing = getLocalResource(media);
+			if (existing!=null) {
+				media.setId(existing.getId());
+			} else {
+				long rowid = db.insert(TABLE_LOCAL_RESOURCES, null, values);
+				media.setId((int) rowid);
+				Log.d("DBHelper", "persistLocalResource added local resource with id " + rowid);
+			}
+		}
+		// --update
+		else {
+			String selection = COL_ID + " LIKE ?";
+			String[] selectionArgs = { String.valueOf(media.getId()) };
+
+			int count = db.update(TABLE_LOCAL_RESOURCES, values, selection, selectionArgs);
+			Log.d("DBHelper", "persistLocalResource updated " + count + " rows");
+		}
+	}
+
+	public LocalResource getLocalResource(LocalResource media) {
+		SQLiteDatabase db = getReadableDatabase();
+		String[] projection = {
+				COL_ID, COL_PERSON_ID, COL_TYPE, COL_LOCAL_PATH
+		};
+		String selection = COL_PERSON_ID + " = ? and "+COL_TYPE+"=?";
+		String[] selectionArgs = {  };
+		String tables = TABLE_MEDIA;
+
+		LocalResource lr = null;
+		Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, COL_FAMILY_SEARCH_ID);
+		while (c.moveToNext()) {
+			media = localResourceFromCursor(c);
+		}
+
+		c.close();
+
+		return lr;
+	}
+
+	public List<LocalResource> getLocalResourcesForPerson(int personId) {
+		SQLiteDatabase db = getReadableDatabase();
+		String[] projection = {
+				COL_PERSON_ID, COL_LOCAL_PATH, COL_TYPE, COL_ID
+		};
+		String selection = COL_PERSON_ID + " LIKE ?";
+		String[] selectionArgs = { String.valueOf(personId) };
+		String tables = TABLE_LOCAL_RESOURCES;
+
+		List<LocalResource> mediaList = new ArrayList<>();
+		Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, COL_ID);
+		while (c.moveToNext()) {
+			LocalResource media = localResourceFromCursor(c);
+			mediaList.add(media);
+		}
+
+		c.close();
+
+		return mediaList;
+	}
+
+	public void deleteLocalResourceById(int mid) {
+		if (mid > 0) {
+			SQLiteDatabase db = getWritableDatabase();
+			String[] selectionArgs = {String.valueOf(mid)};
+
+			String selection = COL_ID + " LIKE ?";
+			int count = db.delete(TABLE_LOCAL_RESOURCES, selection, selectionArgs);
+			Log.d("DBHelper", "deleted " + count + " from " + TABLE_LOCAL_RESOURCES);
+		}
+	}
+
+	private LocalResource localResourceFromCursor(Cursor c) {
+		LocalResource m = new LocalResource();
+		m.setPersonId(c.getInt(c.getColumnIndexOrThrow(COL_PERSON_ID)));
+		m.setId(c.getInt(c.getColumnIndexOrThrow(COL_ID)));
+		m.setLocalPath(c.getString(c.getColumnIndexOrThrow(COL_LOCAL_PATH)));
+		m.setType(c.getString(c.getColumnIndexOrThrow(COL_TYPE)));
+		return m;
+	}
 
     public void saveProperty(String property, String value) {
         SQLiteDatabase db = getWritableDatabase();

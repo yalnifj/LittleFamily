@@ -234,6 +234,9 @@ public class PersonDetailsDialog extends DialogFragment implements CompoundButto
 						Uri.parse(DataService.getInstance().getRemoteService().getPersonUrl(person.getFamilySearchId())));
 				getActivity().startActivity(browserIntent);
 				break;
+			case R.id.recordAudio:
+
+				break;
 			/*
 			case R.id.btnAttach:
 				break;

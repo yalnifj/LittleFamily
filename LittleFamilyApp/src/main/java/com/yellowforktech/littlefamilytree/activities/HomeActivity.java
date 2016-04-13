@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.speech.tts.UtteranceProgressListener;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
@@ -85,9 +86,17 @@ public class HomeActivity extends LittleFamilyActivity {
     public void onInit(int code) {
         super.onInit(code);
 		if (selectedPerson != null) {
-      	  String message = String.format(getResources().getString(R.string.player_greeting), selectedPerson.getGivenName());
-          //message += " "+getResources().getString(R.string.what_game);
-       	  speak(message);
+      	  String message = String.format(getResources().getString(R.string.player_greeting), "");
+       	  speak(message, new UtteranceProgressListener() {
+              @Override
+              public void onStart(String utteranceId) { }
+              @Override
+              public void onDone(String utteranceId) {
+                  sayGivenNameForPerson(selectedPerson);
+              }
+              @Override
+              public void onError(String utteranceId) { }
+          });
 		}
     }
 
@@ -644,7 +653,6 @@ public class HomeActivity extends LittleFamilyActivity {
             TouchStateAnimatedBitmapSprite adultVanity = new TouchStateAnimatedBitmapSprite(adultVanityBm, this);
             adultVanity.setX(673*dm.density);
             adultVanity.setY(400*dm.density);
-			/*
             List<Integer> animatingVanity = new ArrayList<>(12);
             animatingVanity.add(R.drawable.house_adult_vanity1);
             animatingVanity.add(R.drawable.house_adult_vanity2);
@@ -666,10 +674,9 @@ public class HomeActivity extends LittleFamilyActivity {
             adultVanity.getBitmapIds().put(2, opening3);
             adultVanity.setStateTransition(2, TouchStateAnimatedBitmapSprite.TRANSITION_LOOP3);
             adultVanity.setStateTransitionEvent(2, TOPIC_START_BIRTHDAY_CARD);
-            */
 			adultVanity.setResources(getResources());
             homeView.addSprite(adultVanity);
-            //homeView.addActivitySprite(adultVanity);
+            homeView.addActivitySprite(adultVanity);
 
             Bitmap lightABm = BitmapFactory.decodeResource(getResources(), R.drawable.house_light_a1);
             TouchStateAnimatedBitmapSprite lightA = new TouchStateAnimatedBitmapSprite(lightABm, this);

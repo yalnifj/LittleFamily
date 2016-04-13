@@ -331,7 +331,11 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
 							if (attr.matches("\\d[1-9]\\d{2}") ) {
 								attr = attr.substring(0,2) + " " + attr.substring(2);
 							}
-                            activity.speak(attr);
+                            if (attr.equals(person.getGivenName())) {
+                                activity.sayGivenNameForPerson(person);
+                            } else {
+                                activity.speak(attr);
+                            }
                             speakPerson++;
                             Log.d("SongSpriteSurfaceView", "speak speakPerson="+speakPerson+" nextPerson="+nextPerson);
                         }
@@ -786,7 +790,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
                         DraggablePersonSprite ds = (DraggablePersonSprite) s;
                         peopleSprites.remove(ds);
                         onStage.add(ds);
-                        activity.speak(ds.getPerson().getGivenName());
+                        activity.sayGivenNameForPerson(ds.getPerson());
                         ds.setY(ds.getY() - clipY);
                         ds.setThresholdX(5);
                         ds.setThresholdY(5);
@@ -1000,7 +1004,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
             TouchEventGameSprite sprite = (TouchEventGameSprite) o;
             LittlePerson person = (LittlePerson) sprite.getData("person");
             if (person!=null) {
-                activity.speak(person.getGivenName());
+                activity.sayGivenNameForPerson(person);
             }
         }
         else if (topic.equals(TOPIC_PLAY_SONG)) {

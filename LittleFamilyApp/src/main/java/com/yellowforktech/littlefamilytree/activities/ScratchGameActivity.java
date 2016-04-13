@@ -96,8 +96,7 @@ public class ScratchGameActivity extends LittleFamilyActivity implements Scratch
             @Override
             public void onProgressUpdate(Integer progress) {
                 if (progress==50) {
-                    String name = selectedPerson.getGivenName();
-                    speak(name);
+                    sayGivenNameForPerson(selectedPerson);
                 }
             }
 

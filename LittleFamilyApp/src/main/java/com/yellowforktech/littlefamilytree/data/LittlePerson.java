@@ -49,6 +49,8 @@ public class LittlePerson implements Serializable {
     private Integer treeLevel;
     private String occupation;
 
+    private String givenNameAudioPath;
+
     @Override
     public String toString() {
         return "LittlePerson{" +
@@ -400,6 +402,14 @@ public class LittlePerson implements Serializable {
 
     public void setOccupation(String occupation) {
         this.occupation = occupation;
+    }
+
+    public String getGivenNameAudioPath() {
+        return givenNameAudioPath;
+    }
+
+    public void setGivenNameAudioPath(String givenNameAudioPath) {
+        this.givenNameAudioPath = givenNameAudioPath;
     }
 
     @Override
