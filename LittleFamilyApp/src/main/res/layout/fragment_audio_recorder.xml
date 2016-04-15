@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Large Text"
+        android:id="@+id/personNameLbl"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/audioTypeLbl"
+        android:layout_below="@+id/personNameLbl"
+        android:layout_alignLeft="@+id/personNameLbl"
+        android:layout_alignStart="@+id/personNameLbl" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/audioTypeLbl"
+        android:gravity="center_horizontal"
+        android:id="@+id/linearLayout4">
+
+        <ImageButton
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/playAudioButton"
+            android:src="@android:drawable/ic_media_play" />
+
+        <ImageButton
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/recordAudioButton"
+            android:src="@android:drawable/presence_audio_busy" />
+
+        <ImageButton
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/deleteButton"
+            android:src="@android:drawable/ic_menu_delete"
+            android:layout_marginLeft="30dp" />
+
+    </LinearLayout>
+
+</RelativeLayout>

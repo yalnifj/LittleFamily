@@ -139,5 +139,6 @@ Please wait...</string>
     <string name="low_tree_level">The game is still loading data.  As more data is loaded, the calculations will get more accurate.  Please try again in a few minutes.  You may continue to play while more data is loaded in the background.</string>
     <string name="title_activity_birthday_card">BirthdayCardActivity</string>
     <string name="decorate_a_card">Decorate a birthday card for </string>
+    <string name="record_audio_instr">Tap the audio button to record the person\'s given name. Press the stop button to stop recording. Press the play button to hear the recorded name. Press the delete button to remove the recording.</string>
 
 </resources>

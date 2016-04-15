@@ -206,6 +206,9 @@ public class PersonDetailsDialog extends DialogFragment implements CompoundButto
 
 		Button closeButton = (Button) view.findViewById(R.id.btnClose);
 		closeButton.setOnClickListener(this);
+
+		ImageButton audioButton = (ImageButton) view.findViewById(R.id.recordAudio);
+		audioButton.setOnClickListener(this);
 	}
 
 	@Override
@@ -235,7 +238,12 @@ public class PersonDetailsDialog extends DialogFragment implements CompoundButto
 				getActivity().startActivity(browserIntent);
 				break;
 			case R.id.recordAudio:
-
+				RecordAudioDialog dialog = new RecordAudioDialog();
+				Bundle args = new Bundle();
+				args.putSerializable("person", person);
+				dialog.setArguments(args);
+				dialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.ThemeOverlay_AppCompat_Dark);
+				dialog.show(getFragmentManager(), "Record Audio");
 				break;
 			/*
 			case R.id.btnAttach:
