@@ -105,16 +105,18 @@ public class RandomMediaChooser implements MemoriesLoaderTask.Listener {
 
     public void addPeople(List<LittlePerson> people) {
         for (LittlePerson person : people) {
-			 if (!this.people.contains(person)) {
-				 if (person.isHasMedia()!=null && person.isHasMedia()==false) {
-					 noPhotos.add(person);
-				 } else {
-					this.people.add(person);
-				 }
-             }
-             if (!familyLoaderQueue.contains(person)) {
-                 familyLoaderQueue.add(person);
-             }
+            if (person != null) {
+                if (!this.people.contains(person)) {
+                    if (person.isHasMedia() != null && person.isHasMedia() == false) {
+                        noPhotos.add(person);
+                    } else {
+                        this.people.add(person);
+                    }
+                }
+                if (!familyLoaderQueue.contains(person)) {
+                    familyLoaderQueue.add(person);
+                }
+            }
 		}
     }
 

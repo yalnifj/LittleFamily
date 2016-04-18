@@ -33,8 +33,13 @@ public class RecentPersonTracker
 	}
 	
 	public boolean personRecentlyUsed(LittlePerson person) {
+		if (person==null) return true;
 		if (recentPersonIds.contains(person.getId()))
 			return true;
 		return false;
+	}
+
+	public void reset() {
+		recentPersonIds.clear();
 	}
 } 
