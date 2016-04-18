@@ -87,7 +87,11 @@ public class BubblePopActivity extends LittleFamilyActivity implements ParentsLo
         synchronized (que) {
             que.addAll(parents);
             ArrayList<LittlePerson> children = new ArrayList<>(3);
-            person = que.poll();
+            while(person==null && que.size()>0) person = que.poll();
+            if (person==null && que.size()==0) {
+                personTracker.reset();
+                person = selectedPerson;
+            }
             if (personTracker.personRecentlyUsed(person) && que.size()>0) {
                 ParentsLoaderTask loader = new ParentsLoaderTask(this, this);
                 loader.execute(que.peek());
