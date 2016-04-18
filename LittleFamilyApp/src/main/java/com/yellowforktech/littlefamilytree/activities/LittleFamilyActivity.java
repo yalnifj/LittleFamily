@@ -27,6 +27,7 @@ import com.yellowforktech.littlefamilytree.events.EventQueue;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Set;
 
@@ -307,11 +308,13 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         if (tts!=null && !quietMode) {
             if (Build.VERSION.SDK_INT > 20) {
                 tts.setOnUtteranceProgressListener(listener);
-                tts.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
+                tts.speak(message, TextToSpeech.QUEUE_FLUSH, null, message);
             }
             else {
                 tts.setOnUtteranceProgressListener(listener);
-                tts.speak(message, TextToSpeech.QUEUE_FLUSH, null);
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, message);
+                tts.speak(message, TextToSpeech.QUEUE_FLUSH, map);
             }
         } else {
             runOnUiThread(new Runnable() {

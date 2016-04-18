@@ -16,6 +16,7 @@ import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.data.LocalResource;
+import com.yellowforktech.littlefamilytree.db.DBHelper;
 import com.yellowforktech.littlefamilytree.util.ImageHelper;
 
 import java.io.File;
@@ -50,7 +51,7 @@ public class RecordAudioDialog extends DialogFragment implements View.OnClickLis
         try {
             List<LocalResource> resources = DataService.getInstance().getDBHelper().getLocalResourcesForPerson(person.getId());
             for(LocalResource r : resources) {
-                if (r.getType().equals("givenAudio")) {
+                if (r.getType().equals(DBHelper.TYPE_GIVEN_AUDIO)) {
                     localResource = r;
                 }
             }
@@ -152,7 +153,7 @@ public class RecordAudioDialog extends DialogFragment implements View.OnClickLis
                 File audioFile = new File(personFolder, "given.3gp");
                 localResource.setLocalPath(audioFile.getAbsolutePath());
                 person.setGivenNameAudioPath(audioFile.getAbsolutePath());
-                localResource.setType("givenAudio");
+                localResource.setType(DBHelper.TYPE_GIVEN_AUDIO);
             }
 
             mRecorder = new MediaRecorder();
@@ -194,6 +195,8 @@ public class RecordAudioDialog extends DialogFragment implements View.OnClickLis
 
         } else {
             mRecorder.stop();
+            mRecorder.release();
+            mRecorder = null;
             recording = false;
             setButtonStates();
             try {
