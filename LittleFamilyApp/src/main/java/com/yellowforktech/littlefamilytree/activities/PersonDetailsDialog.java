@@ -242,7 +242,7 @@ public class PersonDetailsDialog extends DialogFragment implements CompoundButto
 				Bundle args = new Bundle();
 				args.putSerializable("person", person);
 				dialog.setArguments(args);
-				dialog.setStyle(DialogFragment.STYLE_NORMAL, R.style.Theme_AppCompat_Dialog);
+				dialog.setStyle(DialogFragment.STYLE_NORMAL, R.style.Theme_AppCompat_Light_Dialog);
 				dialog.show(getFragmentManager(), "Record Audio");
 				break;
 			/*

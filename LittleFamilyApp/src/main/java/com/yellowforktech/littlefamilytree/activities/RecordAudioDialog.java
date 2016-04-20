@@ -121,6 +121,7 @@ public class RecordAudioDialog extends DialogFragment implements View.OnClickLis
             mPlayer = new MediaPlayer();
             try {
                 mPlayer.setDataSource(person.getGivenNameAudioPath());
+                mPlayer.setVolume(2.0f, 2.0f);
                 mPlayer.prepare();
                 mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                     @Override
@@ -161,7 +162,7 @@ public class RecordAudioDialog extends DialogFragment implements View.OnClickLis
             mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
             mRecorder.setOutputFile(localResource.getLocalPath());
             mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-            mRecorder.setMaxDuration(2000);
+            mRecorder.setMaxDuration(2500);
             mRecorder.setOnInfoListener(new MediaRecorder.OnInfoListener() {
                 @Override
                 public void onInfo(MediaRecorder mr, int what, int extra) {

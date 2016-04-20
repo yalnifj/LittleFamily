@@ -332,6 +332,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
             final MediaPlayer mPlayer = new MediaPlayer();
             try {
                 mPlayer.setDataSource(person.getGivenNameAudioPath());
+                mPlayer.setVolume(2.0f, 2.0f);
                 mPlayer.prepare();
                 mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                     @Override
