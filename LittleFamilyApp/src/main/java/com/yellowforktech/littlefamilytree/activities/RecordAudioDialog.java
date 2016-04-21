@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +37,7 @@ public class RecordAudioDialog extends DialogFragment implements View.OnClickLis
     private ImageButton playButton;
     private ImageButton recordButton;
     private ImageButton deleteButton;
+    private Button closeButton;
 
     private boolean playing = false;
     private boolean recording = false;
@@ -78,6 +80,9 @@ public class RecordAudioDialog extends DialogFragment implements View.OnClickLis
         deleteButton = (ImageButton) view.findViewById(R.id.deleteButton);
         deleteButton.setOnClickListener(this);
 
+        closeButton = (Button) view.findViewById(R.id.closeButton);
+        closeButton.setOnClickListener(this);
+
         setButtonStates();
 
         return view;
@@ -105,6 +110,9 @@ public class RecordAudioDialog extends DialogFragment implements View.OnClickLis
                 break;
             case R.id.deleteButton:
                 deleteRecording();
+                break;
+            case R.id.closeButton:
+                this.dismissAllowingStateLoss();
                 break;
         }
     }
@@ -145,23 +153,25 @@ public class RecordAudioDialog extends DialogFragment implements View.OnClickLis
         if (!recording) {
             if (localResource==null) {
                 localResource = new LocalResource();
-                localResource.setPersonId(person.getId());
-                File dataFolder = ImageHelper.getDataFolder(getActivity());
-                File personFolder = new File(dataFolder, person.getFamilySearchId());
-                if (!personFolder.exists()) {
-                    personFolder.mkdirs();
-                }
-                File audioFile = new File(personFolder, "given.3gp");
-                localResource.setLocalPath(audioFile.getAbsolutePath());
-                person.setGivenNameAudioPath(audioFile.getAbsolutePath());
-                localResource.setType(DBHelper.TYPE_GIVEN_AUDIO);
             }
+            localResource.setPersonId(person.getId());
+            File dataFolder = ImageHelper.getDataFolder(getActivity());
+            File personFolder = new File(dataFolder, person.getFamilySearchId());
+            if (!personFolder.exists()) {
+                personFolder.mkdirs();
+            }
+            File audioFile = new File(personFolder, "given.3gp");
+            localResource.setLocalPath(audioFile.getAbsolutePath());
+            person.setGivenNameAudioPath(audioFile.getAbsolutePath());
+            localResource.setType(DBHelper.TYPE_GIVEN_AUDIO);
+
 
             mRecorder = new MediaRecorder();
             mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
             mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
             mRecorder.setOutputFile(localResource.getLocalPath());
-            mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+            mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.HE_AAC);
+            mRecorder.setAudioSamplingRate(48000);
             mRecorder.setMaxDuration(2500);
             mRecorder.setOnInfoListener(new MediaRecorder.OnInfoListener() {
                 @Override

@@ -21,12 +21,14 @@ import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.tasks.WaitTask;
 import com.yellowforktech.littlefamilytree.data.DataNetworkState;
 import com.yellowforktech.littlefamilytree.data.DataNetworkStateListener;
+import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.events.EventListener;
 import com.yellowforktech.littlefamilytree.events.EventQueue;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Set;
@@ -181,12 +183,29 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     }
 
     public void showAdultAuthDialog(AdultsAuthDialog.AuthCompleteAction action) {
-        String text = getResources().getString(R.string.ask_for_help);
-        speak(text);
-        adultAuthDialog = new AdultsAuthDialog();
-        adultAuthDialog.setAction(action);
-        adultAuthDialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Theme_AppCompat_Light_Dialog);
-        adultAuthDialog.show(getFragmentManager(), "Authenticate");
+        boolean skipAuth = false;
+        try {
+            String remember = DataService.getInstance().getDBHelper().getProperty(DataService.PROPERY_REMEMBER_ME);
+            if (remember!=null) {
+                Long time = Long.valueOf(remember);
+                Date now = new Date();
+                if (now.getTime() - time < 1000 * 60 * 20) {
+                    skipAuth = true;
+                }
+            }
+        } catch (Exception e) {
+            Log.e("LittleFamilyActivity", "Error getting property", e);
+        }
+        if (!skipAuth) {
+            String text = getResources().getString(R.string.ask_for_help);
+            speak(text);
+            adultAuthDialog = new AdultsAuthDialog();
+            adultAuthDialog.setAction(action);
+            adultAuthDialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Theme_AppCompat_Light_Dialog);
+            adultAuthDialog.show(getFragmentManager(), "Authenticate");
+        } else {
+            action.doAction(true);
+        }
     }
 
     public void hideAdultAuthDialog() {
@@ -199,7 +218,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     public void onInit(int code) {
         if (code == TextToSpeech.SUCCESS) {
             tts.setLanguage(Locale.getDefault());
-            tts.setSpeechRate(0.9f);
+            tts.setSpeechRate(1.1f);
             setVoiceFromPreferences();
         } else {
             tts = null;

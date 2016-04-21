@@ -86,7 +86,7 @@ public class HomeActivity extends LittleFamilyActivity {
     public void onInit(int code) {
         super.onInit(code);
 		if (selectedPerson != null) {
-      	  String message = String.format(getResources().getString(R.string.player_greeting), "");
+      	  String message = getResources().getString(R.string.player_greeting);
        	  speak(message, new UtteranceProgressListener() {
               @Override
               public void onStart(String utteranceId) {

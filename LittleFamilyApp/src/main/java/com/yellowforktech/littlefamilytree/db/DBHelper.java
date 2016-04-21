@@ -692,6 +692,11 @@ public class DBHelper extends SQLiteOpenHelper {
             Media existing = getMediaByFamilySearchId(media.getFamilySearchId());
             if (existing!=null) {
                 media.setId(existing.getId());
+				String selection = COL_ID + " LIKE ?";
+				String[] selectionArgs = { String.valueOf(media.getId()) };
+
+				int count = db.update(TABLE_MEDIA, values, selection, selectionArgs);
+				Log.d("DBHelper", "persistMedia updated " + count + " rows");
             } else {
                 long rowid = db.insert(TABLE_MEDIA, null, values);
                 media.setId((int) rowid);
@@ -894,6 +899,11 @@ public class DBHelper extends SQLiteOpenHelper {
 			LocalResource existing = getLocalResource(media);
 			if (existing!=null) {
 				media.setId(existing.getId());
+				String selection = COL_ID + " LIKE ?";
+				String[] selectionArgs = { String.valueOf(media.getId()) };
+
+				int count = db.update(TABLE_LOCAL_RESOURCES, values, selection, selectionArgs);
+				Log.d("DBHelper", "persistLocalResource updated " + count + " rows");
 			} else {
 				long rowid = db.insert(TABLE_LOCAL_RESOURCES, null, values);
 				media.setId((int) rowid);
@@ -916,13 +926,13 @@ public class DBHelper extends SQLiteOpenHelper {
 				COL_ID, COL_PERSON_ID, COL_TYPE, COL_LOCAL_PATH
 		};
 		String selection = COL_PERSON_ID + " = ? and "+COL_TYPE+"=?";
-		String[] selectionArgs = {  };
-		String tables = TABLE_MEDIA;
+		String[] selectionArgs = { String.valueOf(media.getPersonId()), media.getType() };
+		String tables = TABLE_LOCAL_RESOURCES;
 
 		LocalResource lr = null;
-		Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, COL_FAMILY_SEARCH_ID);
+		Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, null);
 		while (c.moveToNext()) {
-			media = localResourceFromCursor(c);
+			lr = localResourceFromCursor(c);
 		}
 
 		c.close();
