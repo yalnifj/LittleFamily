@@ -237,26 +237,26 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Random
 		public void doAction(boolean success) {
 			if (success) {
 				Bitmap sharing = layeredImage.getSharingBitmap();
-				File dir = ImageHelper.getDataFolder(ColoringGameActivity.this);
-				File file = new File(dir, "tempImage.jpg");
-				if (file.exists()) {
-					file.delete();
-				}
 				try {
+				    File dir = ColoringGameActivity.this.getCacheDir();
+				    File file = File.createTempFile("tempImage", ".jpg", dir);
+                    if (file.exists()) {
+                        file.delete();
+                    }
 					FileOutputStream out = new FileOutputStream(file);
 					sharing.compress(Bitmap.CompressFormat.JPEG, 90, out);
 					out.flush();
 					out.close();
+                    Uri screenshotUri = Uri.fromFile(file);
+                    Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                    sharingIntent.setType("image/*");
+                    sharingIntent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
+                    startActivity(Intent.createChooser(sharingIntent, "Share image using"));
 				} catch (Exception e) {
 					Log.e(this.getClass().getName(), "Error sharing file", e);
 					Toast.makeText(ColoringGameActivity.this, "Unable to share image "+e, Toast.LENGTH_LONG).show();
 					return;
 				}
-				Uri screenshotUri = Uri.fromFile(file);
-				Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-				sharingIntent.setType("image/*");
-				sharingIntent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
-				startActivity(Intent.createChooser(sharingIntent, "Share image using"));
 			} else {
 				Toast.makeText(ColoringGameActivity.this, "Unable to verify password", Toast.LENGTH_LONG).show();
 			}

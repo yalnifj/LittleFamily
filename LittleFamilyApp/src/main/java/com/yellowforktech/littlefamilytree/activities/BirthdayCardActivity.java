@@ -17,7 +17,6 @@ import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.events.EventQueue;
 import com.yellowforktech.littlefamilytree.sprites.CupcakeSprite;
 import com.yellowforktech.littlefamilytree.sprites.TouchEventGameSprite;
-import com.yellowforktech.littlefamilytree.util.ImageHelper;
 import com.yellowforktech.littlefamilytree.views.BirthdayCardSurfaceView;
 
 import java.io.File;
@@ -175,26 +174,26 @@ public class BirthdayCardActivity extends LittleFamilyActivity {
             if (success) {
                 Bitmap sharing = view.getSharingBitmap();
                 if (sharing != null) {
-                    File dir = ImageHelper.getDataFolder(BirthdayCardActivity.this);
-                    File file = new File(dir, "tempImage.jpg");
-                    if (file.exists()) {
-                        file.delete();
-                    }
                     try {
+                        File dir = BirthdayCardActivity.this.getCacheDir();
+                        File file = File.createTempFile("tempImage", ".jpg", dir);
+                        if (file.exists()) {
+                            file.delete();
+                        }
                         FileOutputStream out = new FileOutputStream(file);
                         sharing.compress(Bitmap.CompressFormat.JPEG, 90, out);
                         out.flush();
                         out.close();
+                        Uri screenshotUri = Uri.fromFile(file);
+                        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                        sharingIntent.setType("image/*");
+                        sharingIntent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
+                        startActivity(Intent.createChooser(sharingIntent, "Share image using"));
                     } catch (Exception e) {
                         Log.e(this.getClass().getName(), "Error sharing file", e);
                         Toast.makeText(BirthdayCardActivity.this, "Unable to share image " + e, Toast.LENGTH_LONG).show();
                         return;
                     }
-                    Uri screenshotUri = Uri.fromFile(file);
-                    Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-                    sharingIntent.setType("image/*");
-                    sharingIntent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
-                    startActivity(Intent.createChooser(sharingIntent, "Share image using"));
                 } else {
                     Toast.makeText(BirthdayCardActivity.this, "Unable to verify password", Toast.LENGTH_LONG).show();
                 }
