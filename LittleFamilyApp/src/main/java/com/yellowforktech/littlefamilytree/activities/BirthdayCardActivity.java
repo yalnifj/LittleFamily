@@ -175,7 +175,7 @@ public class BirthdayCardActivity extends LittleFamilyActivity {
                 Bitmap sharing = view.getSharingBitmap();
                 if (sharing != null) {
                     try {
-                        File dir = BirthdayCardActivity.this.getCacheDir();
+                        File dir = BirthdayCardActivity.this.getExternalCacheDir();
                         File file = File.createTempFile("tempImage", ".jpg", dir);
                         if (file.exists()) {
                             file.delete();

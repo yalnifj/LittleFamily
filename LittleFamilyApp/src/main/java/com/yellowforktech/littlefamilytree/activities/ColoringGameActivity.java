@@ -238,7 +238,7 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Random
 			if (success) {
 				Bitmap sharing = layeredImage.getSharingBitmap();
 				try {
-				    File dir = ColoringGameActivity.this.getCacheDir();
+				    File dir = ColoringGameActivity.this.getExternalCacheDir();
 				    File file = File.createTempFile("tempImage", ".jpg", dir);
                     if (file.exists()) {
                         file.delete();
