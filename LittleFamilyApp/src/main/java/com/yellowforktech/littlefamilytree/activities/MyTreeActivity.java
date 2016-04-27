@@ -59,6 +59,7 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
     private Bitmap paintBtn;
     private Bitmap bubbleBtn;
     private Bitmap songBtn;
+    private Bitmap cardBtn;
     private int maxX = 0;
     private int maxY = 0;
     private TouchEventGameSprite touchedArrow;
@@ -113,6 +114,13 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
             songBtn = ImageHelper.loadBitmapFromResource(this, R.drawable.house_music_piano, 0, buttonSize, buttonSize);
         }
         return songBtn;
+    }
+
+    public Bitmap getCardBtn() {
+        if (cardBtn==null || cardBtn.isRecycled()) {
+            cardBtn = ImageHelper.loadBitmapFromResource(this, R.drawable.birthday_card_button, 0, buttonSize, buttonSize);
+        }
+        return cardBtn;
     }
 
     public int getButtonSize() {

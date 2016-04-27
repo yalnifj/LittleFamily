@@ -31,9 +31,11 @@ public class BirthdayCardActivity extends LittleFamilyActivity {
     public static final String TOPIC_PERSON_TOUCHED = "personTouched";
     public static final String TOPIC_BIRTHDAY_PERSON_SELECTED = "birthdayPersonSelected";
     public static final String TOPIC_CARD_SELECTED = "cardSelected";
+    public static final String BIRTHDAY_PERSON = "birthdayPerson";
 
     private BirthdayCardSurfaceView view;
     private List<LittlePerson> people;
+    private LittlePerson birthdayPerson;
 
     private ShareAction shareAction = new ShareAction();
 
@@ -51,12 +53,15 @@ public class BirthdayCardActivity extends LittleFamilyActivity {
         Intent intent = getIntent();
         selectedPerson = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
 
+        birthdayPerson = (LittlePerson) intent.getSerializableExtra(BirthdayCardActivity.BIRTHDAY_PERSON);
+
         setupTopBar();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+
         DataService.getInstance().registerNetworkStateListener(this);
         try {
             people = DataService.getInstance().getDBHelper().getNextBirthdays(15, 4);
@@ -89,6 +94,10 @@ public class BirthdayCardActivity extends LittleFamilyActivity {
             people.add(selectedPerson);
         }
         view.setBirthdayPeople(people);
+        if (birthdayPerson!=null) {
+            view.setBirthdayPerson(birthdayPerson);
+            speak("Choose a card to decorate.");
+        }
 
         EventQueue.getInstance().subscribe(TOPIC_BIRTHDAY_PERSON_SELECTED, this);
         EventQueue.getInstance().subscribe(TOPIC_PERSON_TOUCHED, this);
@@ -122,7 +131,9 @@ public class BirthdayCardActivity extends LittleFamilyActivity {
     @Override
     public void onInit(int code) {
         super.onInit(code);
-        speak("Look who has birthdays coming up.  Choose someone to start.");
+        if (birthdayPerson==null) {
+            speak("Look who has birthdays coming up.  Choose someone to start.");
+        }
     }
 
     @Override

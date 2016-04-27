@@ -345,24 +345,32 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         }
     }
 
-    public void sayGivenNameForPerson(LittlePerson person) {
+    public void sayGivenNameForPerson(final LittlePerson person) {
         Boolean quietMode = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("quiet_mode", false);
         if (!quietMode && person.getGivenNameAudioPath()!=null) {
-            final MediaPlayer mPlayer = new MediaPlayer();
-            try {
-                mPlayer.setDataSource(person.getGivenNameAudioPath());
-                mPlayer.setVolume(3.0f, 3.0f);
-                mPlayer.prepare();
-                mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer mp) {
-                        mPlayer.release();
+            //-- run name in a new thread to not lose it
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    final MediaPlayer mPlayer = new MediaPlayer();
+                    try {
+                        mPlayer.setDataSource(person.getGivenNameAudioPath());
+                        mPlayer.setVolume(3.0f, 3.0f);
+                        mPlayer.prepare();
+                        mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                            @Override
+                            public void onCompletion(MediaPlayer mp) {
+                                mPlayer.release();
+                            }
+                        });
+                        mPlayer.start();
+                    } catch (IOException e) {
+                        Log.e("LittleFamilyScene", "prepare() failed", e);
                     }
-                });
-                mPlayer.start();
-            } catch (IOException e) {
-                Log.e("LittleFamilyScene", "prepare() failed", e);
-            }
+                }
+            };
+            Thread thread = new Thread(runnable);
+            thread.start();
         } else {
             if (person.getGivenName()!=null) {
                 speak(person.getGivenName());
@@ -547,7 +555,8 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
 
     public void startBirthdayCardGame(LittlePerson person) {
         Intent intent = new Intent( this, BirthdayCardActivity.class );
-        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
+        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, selectedPerson);
+        intent.putExtra(BirthdayCardActivity.BIRTHDAY_PERSON, person);
         startActivity(intent);
     }
 

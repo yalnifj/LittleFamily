@@ -197,7 +197,7 @@ public class TreePersonAnimatedSprite extends Sprite {
                             text = String.format(activity.getResources().getString(R.string.relative_is_your),
                                     person.getName(), relationship);
                         } else {
-                            text = String.format(activity.getResources().getString(R.string.player_greeting), person.getGivenName());
+                            text = activity.getResources().getString(R.string.player_greeting);
                         }
                         if (person.getBirthDate()!=null || person.getBirthPlace()!=null) {
                             String birthText = getBirthText(person);
@@ -215,7 +215,7 @@ public class TreePersonAnimatedSprite extends Sprite {
                             text = String.format(activity.getResources().getString(R.string.relative_is_your),
                                     mother.getName(), relationship);
                         } else {
-                            text = String.format(activity.getResources().getString(R.string.player_greeting), mother.getGivenName());
+                            text = activity.getResources().getString(R.string.player_greeting);
                         }
                         if (mother.getBirthDate()!=null || mother.getBirthPlace()!=null) {
                             String birthText = getBirthText(mother);
@@ -347,6 +347,7 @@ public class TreePersonAnimatedSprite extends Sprite {
                     activityButtons.add(activity.getPencilBtn());
                     activityButtons.add(activity.getBubbleBtn());
                     activityButtons.add(activity.getSongBtn());
+                    activityButtons.add(activity.getCardBtn());
                     if (dressUpBtn != null) activityButtons.add(dressUpBtn);
                 }
 
@@ -382,6 +383,7 @@ public class TreePersonAnimatedSprite extends Sprite {
                     spActivityButtons.add(activity.getPencilBtn());
                     spActivityButtons.add(activity.getBubbleBtn());
                     spActivityButtons.add(activity.getSongBtn());
+                    spActivityButtons.add(activity.getCardBtn());
                     if (spDressUpBtn != null) spActivityButtons.add(spDressUpBtn);
                 }
 
@@ -599,6 +601,8 @@ public class TreePersonAnimatedSprite extends Sprite {
             EventQueue.getInstance().publish(LittleFamilyActivity.TOPIC_START_BUBBLES, person);
         else if (button==activity.getSongBtn())
             EventQueue.getInstance().publish(LittleFamilyActivity.TOPIC_START_SONG, person);
+        else if (button==activity.getCardBtn())
+            EventQueue.getInstance().publish(LittleFamilyActivity.TOPIC_START_BIRTHDAY_CARD, person);
         else
             EventQueue.getInstance().publish(LittleFamilyActivity.TOPIC_START_DRESSUP, person);
     }
