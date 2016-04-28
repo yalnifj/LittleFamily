@@ -10,8 +10,11 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
-    <uses-feature android:name="android.hardware.microphone" android:required="false" />
+    <uses-feature
+        android:name="android.hardware.microphone"
+        android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -150,6 +153,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.yellowforktech.littlefamilytree.activities.HomeActivity" />
         </activity>
+
+        <service
+            android:name=".events.LittleFamilyNotificationService"
+            android:enabled="true"
+            android:exported="true" />
+        <receiver android:name=".events.AutoStartNotifyReceiver" android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

@@ -16,6 +16,7 @@ import com.yellowforktech.littlefamilytree.activities.tasks.FamilyLoaderTask;
 import com.yellowforktech.littlefamilytree.activities.tasks.PersonLoaderTask;
 import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
+import com.yellowforktech.littlefamilytree.events.LittleFamilyNotificationService;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -63,6 +64,10 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
                 Intent intent = new Intent( this, ChooseRemoteService.class );
                 startActivityForResult( intent, LOGIN_REQUEST );
             } else {
+                //-- make sure the service is started
+                Intent intent = new Intent(this, LittleFamilyNotificationService.class);
+                startService(intent);
+
                 PersonLoaderTask task = new PersonLoaderTask(this, this);
                 task.execute();
             }
