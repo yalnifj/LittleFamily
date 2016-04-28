@@ -1,5 +1,6 @@
 package com.yellowforktech.littlefamilytree.events;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -7,6 +8,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
@@ -110,13 +113,16 @@ public class LittleFamilyNotificationService extends Service {
                                 .setSmallIcon(R.mipmap.ic_launcher)
                                 .setContentTitle("Today is "+person.getName()+"'s birthday!")
                                 .setContentText("Decorate a birthday card for "+person.getGivenName());
-
+                        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                        mBuilder.setSound(alarmSound);
                         Intent resultIntent = new Intent(LittleFamilyNotificationService.this, SplashActivity.class);
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(LittleFamilyNotificationService.this);
                         stackBuilder.addParentStack(SplashActivity.class);
                         stackBuilder.addNextIntent(resultIntent);
                         PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
                         mBuilder.setContentIntent(pendingIntent);
+                        mBuilder.setDefaults(Notification.DEFAULT_ALL);
+
                         mNotificationManager.notify(person.getId(), mBuilder.build());
                     }
                 }

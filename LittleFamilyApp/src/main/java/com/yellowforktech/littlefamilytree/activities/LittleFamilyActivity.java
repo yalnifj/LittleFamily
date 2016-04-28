@@ -556,7 +556,9 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     public void startBirthdayCardGame(LittlePerson person) {
         Intent intent = new Intent( this, BirthdayCardActivity.class );
         intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, selectedPerson);
-        intent.putExtra(BirthdayCardActivity.BIRTHDAY_PERSON, person);
+        if (!person.equals(selectedPerson)) {
+            intent.putExtra(BirthdayCardActivity.BIRTHDAY_PERSON, person);
+        }
         startActivity(intent);
     }
 
