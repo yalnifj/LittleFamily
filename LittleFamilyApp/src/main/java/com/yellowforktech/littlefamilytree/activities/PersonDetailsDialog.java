@@ -3,6 +3,7 @@ package com.yellowforktech.littlefamilytree.activities;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -209,6 +210,9 @@ public class PersonDetailsDialog extends DialogFragment implements CompoundButto
 
 		ImageButton audioButton = (ImageButton) view.findViewById(R.id.recordAudio);
 		audioButton.setOnClickListener(this);
+		if (!getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_MICROPHONE)) {
+			audioButton.setVisibility(View.GONE);
+		}
 	}
 
 	@Override
