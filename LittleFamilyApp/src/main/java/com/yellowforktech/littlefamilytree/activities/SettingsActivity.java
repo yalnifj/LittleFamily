@@ -20,7 +20,7 @@ import android.util.Log;
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
-import com.yellowforktech.littlefamilytree.events.LittleFamilyNotificationService;
+import com.yellowforktech.littlefamilytree.events.AutoStartNotifyReceiver;
 
 import java.util.List;
 import java.util.Locale;
@@ -142,22 +142,6 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
                     else {
                         tts.speak(message, TextToSpeech.QUEUE_FLUSH, null);
                     }
-                }
-                return true;
-            }
-        });
-
-        Preference manageCreds = findPreference("manage_creds");
-        manageCreds.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                String serviceType = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this).getString(DataService.SERVICE_TYPE, null);
-                if (serviceType.equals(DataService.SERVICE_TYPE_PHPGEDVIEW)) {
-                    Intent intent = new Intent( SettingsActivity.this, PGVLoginActivity.class );
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent( SettingsActivity.this, FSLoginActivity.class );
-                    startActivity(intent);
                 }
                 return true;
             }
@@ -298,13 +282,9 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
                 if (preference.getKey().equals("enable_notifications")) {
                     Boolean onOff = (Boolean) value;
                     if (onOff) {
-                        Intent myIntent = new Intent(preference.getContext(), LittleFamilyNotificationService.class);
-                        preference.getContext().startService(myIntent);
+                        AutoStartNotifyReceiver.scheduleAlarms(preference.getContext());
                     } else {
-                        Intent intent = new Intent();
-                        intent.setAction(LittleFamilyNotificationService.ACTION);
-                        intent.putExtra("RQS", LittleFamilyNotificationService.RQS_STOP_SERVICE);
-                        preference.getContext().sendBroadcast(intent);
+                        AutoStartNotifyReceiver.cancelAlarms(preference.getContext());
                     }
                 }
             }

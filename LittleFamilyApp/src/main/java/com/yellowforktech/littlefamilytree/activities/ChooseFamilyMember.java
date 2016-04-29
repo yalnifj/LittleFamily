@@ -1,5 +1,6 @@
 package com.yellowforktech.littlefamilytree.activities;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -16,7 +17,7 @@ import com.yellowforktech.littlefamilytree.activities.tasks.FamilyLoaderTask;
 import com.yellowforktech.littlefamilytree.activities.tasks.PersonLoaderTask;
 import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
-import com.yellowforktech.littlefamilytree.events.LittleFamilyNotificationService;
+import com.yellowforktech.littlefamilytree.events.AutoStartNotifyReceiver;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,6 +36,8 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
     private DataService dataService;
     private LittlePerson selectedPerson;
 
+    private boolean forResult = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +46,10 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
         this.dataService = DataService.getInstance();
         this.dataService.setContext(this);
 
+        Intent intent = getIntent();
+        if (intent.getAction() != null) {
+            forResult = true;
+        }
 
         gridView = (GridView) findViewById(R.id.gridViewFamily);
         adapter = new FamilyMemberListAdapter(this);
@@ -64,9 +71,8 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
                 Intent intent = new Intent( this, ChooseRemoteService.class );
                 startActivityForResult( intent, LOGIN_REQUEST );
             } else {
-                //-- make sure the service is started
-                Intent intent = new Intent(this, LittleFamilyNotificationService.class);
-                startService(intent);
+                //-- setup notification alarms
+                AutoStartNotifyReceiver.scheduleAlarms(this);
 
                 PersonLoaderTask task = new PersonLoaderTask(this, this);
                 task.execute();
@@ -110,10 +116,18 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         selectedPerson = (LittlePerson) gridView.getItemAtPosition(position);
-        Intent intent = new Intent( this, HomeActivity.class );
-        intent.putExtra(SELECTED_PERSON, selectedPerson);
-        intent.putExtra(FAMILY, family);
-        startActivity(intent);
+        if (!forResult) {
+            Intent intent = new Intent( this, HomeActivity.class );
+            intent.putExtra(ChooseFamilyMember.FAMILY, family);
+            intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, selectedPerson);
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent();
+            intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, selectedPerson);
+            intent.putExtra(ChooseFamilyMember.FAMILY, family);
+            setResult(Activity.RESULT_OK, intent);
+            finish();
+        }
     }
 
     public void onLoginButtonClicked(View view) {

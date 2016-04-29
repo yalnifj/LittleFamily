@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.yellowforktech.littlefamilytree.data.PuzzlePiece;
@@ -40,6 +41,7 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
     private boolean checkGame = false;
     private boolean showHint = false;
     private boolean complete = false;
+    private DisplayMetrics dm;
 
     private String name;
 	
@@ -58,8 +60,10 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
         shadowPaint.setAlpha(200);
         shadowPaint.setStyle(Paint.Style.FILL);
 
+        dm = context.getResources().getDisplayMetrics();
+
         textPaint = new Paint();
-        textPaint.setTextSize(45);
+        textPaint.setTextSize(25*dm.density);
         textPaint.setTextAlign(Paint.Align.CENTER);
 
         bitmap = null;

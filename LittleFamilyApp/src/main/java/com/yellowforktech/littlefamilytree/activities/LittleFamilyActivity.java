@@ -321,7 +321,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         }
     }
 
-    public void speak(final String message, UtteranceProgressListener listener) {
+    public void speak(final String message, final UtteranceProgressListener listener) {
         Log.d("LittleFamilyActivity", "Speaking: " + message);
         Boolean quietMode = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("quiet_mode", false);
         if (tts!=null && !quietMode) {
@@ -340,6 +340,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
                 @Override
                 public void run() {
                     Toast.makeText(LittleFamilyActivity.this, message, Toast.LENGTH_LONG).show();
+                    listener.onDone(message);
                 }
             });
         }

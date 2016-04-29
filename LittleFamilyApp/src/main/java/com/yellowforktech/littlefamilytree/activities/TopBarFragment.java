@@ -89,12 +89,18 @@ public class TopBarFragment extends Fragment {
         homeButton = (ImageView) view.findViewById(com.yellowforktech.littlefamilytree.R.id.homeButton);
         profileButton = (ImageView) view.findViewById(com.yellowforktech.littlefamilytree.R.id.profileButton);
 
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x / 8;
+        updatePerson(person);
+        return view;
+    }
+
+    public void updatePerson(LittlePerson person) {
+        this.person = person;
         if (person!=null) {
+            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            Display display = wm.getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+            int width = size.x / 8;
             if (person.getPhotoPath() != null) {
                 Bitmap bm = ImageHelper.loadBitmapFromFile(person.getPhotoPath(), ImageHelper.getOrientation(person.getPhotoPath()), width, width, false);
                 profileButton.setImageBitmap(bm);
@@ -103,7 +109,6 @@ public class TopBarFragment extends Fragment {
                 profileButton.setImageBitmap(bm);
             }
         }
-        return view;
     }
 
     @Override

@@ -52,10 +52,27 @@ public class BirthdayCardActivity extends LittleFamilyActivity {
 
         Intent intent = getIntent();
         selectedPerson = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
-
         birthdayPerson = (LittlePerson) intent.getSerializableExtra(BirthdayCardActivity.BIRTHDAY_PERSON);
-
+        if (selectedPerson==null) {
+            Intent chooseIntent = new Intent(this, ChooseFamilyMember.class);
+            chooseIntent.putExtra(BirthdayCardActivity.BIRTHDAY_PERSON, birthdayPerson);
+            chooseIntent.setAction(BirthdayCardActivity.class.getName());
+            startActivityForResult(chooseIntent, 1);
+        }
         setupTopBar();
+    }
+
+    @Override
+    protected void onActivityResult( int requestCode, int resultCode, Intent intent ) {
+        switch(requestCode) {
+            case 1:
+                if (resultCode == RESULT_OK) {
+                    selectedPerson = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
+                    setupTopBar();
+                    getBirthdayPeople();
+                }
+                break;
+        }
     }
 
     @Override
@@ -63,6 +80,42 @@ public class BirthdayCardActivity extends LittleFamilyActivity {
         super.onStart();
 
         DataService.getInstance().registerNetworkStateListener(this);
+
+        if (selectedPerson!=null) {
+            getBirthdayPeople();
+        }
+
+        EventQueue.getInstance().subscribe(TOPIC_BIRTHDAY_PERSON_SELECTED, this);
+        EventQueue.getInstance().subscribe(TOPIC_PERSON_TOUCHED, this);
+        EventQueue.getInstance().subscribe(TOPIC_CARD_SELECTED, this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        DataService.getInstance().unregisterNetworkStateListener(this);
+        EventQueue.getInstance().unSubscribe(TOPIC_BIRTHDAY_PERSON_SELECTED, this);
+        EventQueue.getInstance().unSubscribe(TOPIC_PERSON_TOUCHED, this);
+        EventQueue.getInstance().unSubscribe(TOPIC_CARD_SELECTED, this);
+    }
+
+    @Override
+    public void setupTopBar() {
+        if (findViewById(R.id.topBarFragment)!=null) {
+            topBar = (TopBarFragment) getSupportFragmentManager().findFragmentById(R.id.topBarFragment);
+            if (topBar == null) {
+                topBar = TopBarFragment.newInstance(selectedPerson, R.layout.fragment_top_bar_card);
+                getSupportFragmentManager().beginTransaction().replace(R.id.topBarFragment, topBar).commit();
+            } else {
+                if (selectedPerson != null) {
+                    topBar.getArguments().putSerializable(TopBarFragment.ARG_PERSON, selectedPerson);
+                    topBar.updatePerson(selectedPerson);
+                }
+            }
+        }
+    }
+
+    public void getBirthdayPeople() {
         try {
             people = DataService.getInstance().getDBHelper().getNextBirthdays(15, 4);
             if (people.size()==0) {
@@ -97,34 +150,6 @@ public class BirthdayCardActivity extends LittleFamilyActivity {
         if (birthdayPerson!=null) {
             view.setBirthdayPerson(birthdayPerson);
             speak("Choose a card to decorate.");
-        }
-
-        EventQueue.getInstance().subscribe(TOPIC_BIRTHDAY_PERSON_SELECTED, this);
-        EventQueue.getInstance().subscribe(TOPIC_PERSON_TOUCHED, this);
-        EventQueue.getInstance().subscribe(TOPIC_CARD_SELECTED, this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        DataService.getInstance().unregisterNetworkStateListener(this);
-        EventQueue.getInstance().unSubscribe(TOPIC_BIRTHDAY_PERSON_SELECTED, this);
-        EventQueue.getInstance().unSubscribe(TOPIC_PERSON_TOUCHED, this);
-        EventQueue.getInstance().unSubscribe(TOPIC_CARD_SELECTED, this);
-    }
-
-    @Override
-    public void setupTopBar() {
-        if (findViewById(R.id.topBarFragment)!=null) {
-            topBar = (TopBarFragment) getSupportFragmentManager().findFragmentById(R.id.topBarFragment);
-            if (topBar == null) {
-                topBar = TopBarFragment.newInstance(selectedPerson, R.layout.fragment_top_bar_card);
-                getSupportFragmentManager().beginTransaction().replace(R.id.topBarFragment, topBar).commit();
-            } else {
-                if (selectedPerson != null) {
-                    topBar.getArguments().putSerializable(TopBarFragment.ARG_PERSON, selectedPerson);
-                }
-            }
         }
     }
 
