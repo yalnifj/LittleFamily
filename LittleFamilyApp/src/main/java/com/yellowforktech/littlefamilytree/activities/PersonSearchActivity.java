@@ -11,6 +11,7 @@ import android.widget.ListView;
 
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.adapters.PersonSearchListAdapter;
+import com.yellowforktech.littlefamilytree.activities.tasks.FamilyLoaderTask;
 import com.yellowforktech.littlefamilytree.activities.tasks.SearchLoaderTask;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 
@@ -62,6 +63,21 @@ public class PersonSearchActivity extends Activity implements SearchLoaderTask.L
                 task.execute(params);
             }
         }
+    }
+
+    public void showMyFamily(View v) {
+        FamilyLoaderTask task = new FamilyLoaderTask(new FamilyLoaderTask.Listener() {
+            @Override
+            public void onComplete(ArrayList<LittlePerson> family) {
+                adapter.setPeople(family);
+            }
+
+            @Override
+            public void onStatusUpdate(String message) {
+
+            }
+        }, this);
+        task.equals(selectedPerson);
     }
 
     @Override
