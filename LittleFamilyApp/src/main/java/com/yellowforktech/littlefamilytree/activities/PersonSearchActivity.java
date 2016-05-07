@@ -77,7 +77,7 @@ public class PersonSearchActivity extends Activity implements SearchLoaderTask.L
 
             }
         }, this);
-        task.equals(selectedPerson);
+        task.execute(selectedPerson);
     }
 
     @Override
