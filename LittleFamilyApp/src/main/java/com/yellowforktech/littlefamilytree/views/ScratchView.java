@@ -12,6 +12,7 @@ import android.graphics.Rect;
 import android.media.MediaPlayer;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.HapticFeedbackConstants;
 import android.view.SurfaceHolder;
 
@@ -41,6 +42,7 @@ public class ScratchView extends SpritedSurfaceView {
     private MediaPlayer mediaPlayer;
 	private String name;
     private String relationship;
+    private DisplayMetrics dm;
 
     public ScratchView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -65,9 +67,10 @@ public class ScratchView extends SpritedSurfaceView {
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
         mPaint.setStrokeWidth(12);
-		
+
+        dm = context.getResources().getDisplayMetrics();
 		textPaint = new Paint();
-		textPaint.setTextSize(45);
+		textPaint.setTextSize(25*dm.density);
 		textPaint.setTextAlign(Paint.Align.CENTER);
     }
 

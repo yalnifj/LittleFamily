@@ -17,7 +17,6 @@ import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.events.EventQueue;
 import com.yellowforktech.littlefamilytree.sprites.CupcakeSprite;
 import com.yellowforktech.littlefamilytree.sprites.TouchEventGameSprite;
-import com.yellowforktech.littlefamilytree.util.ImageHelper;
 import com.yellowforktech.littlefamilytree.views.BirthdayCardSurfaceView;
 
 import java.io.File;
@@ -32,9 +31,11 @@ public class BirthdayCardActivity extends LittleFamilyActivity {
     public static final String TOPIC_PERSON_TOUCHED = "personTouched";
     public static final String TOPIC_BIRTHDAY_PERSON_SELECTED = "birthdayPersonSelected";
     public static final String TOPIC_CARD_SELECTED = "cardSelected";
+    public static final String BIRTHDAY_PERSON = "birthdayPerson";
 
     private BirthdayCardSurfaceView view;
     private List<LittlePerson> people;
+    private LittlePerson birthdayPerson;
 
     private ShareAction shareAction = new ShareAction();
 
@@ -51,14 +52,70 @@ public class BirthdayCardActivity extends LittleFamilyActivity {
 
         Intent intent = getIntent();
         selectedPerson = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
-
+        birthdayPerson = (LittlePerson) intent.getSerializableExtra(BirthdayCardActivity.BIRTHDAY_PERSON);
+        if (selectedPerson==null) {
+            Intent chooseIntent = new Intent(this, ChooseFamilyMember.class);
+            chooseIntent.putExtra(BirthdayCardActivity.BIRTHDAY_PERSON, birthdayPerson);
+            chooseIntent.setAction(BirthdayCardActivity.class.getName());
+            startActivityForResult(chooseIntent, 1);
+        }
         setupTopBar();
+    }
+
+    @Override
+    protected void onActivityResult( int requestCode, int resultCode, Intent intent ) {
+        switch(requestCode) {
+            case 1:
+                if (resultCode == RESULT_OK) {
+                    selectedPerson = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
+                    setupTopBar();
+                    getBirthdayPeople();
+                }
+                break;
+        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+
         DataService.getInstance().registerNetworkStateListener(this);
+
+        if (selectedPerson!=null) {
+            getBirthdayPeople();
+        }
+
+        EventQueue.getInstance().subscribe(TOPIC_BIRTHDAY_PERSON_SELECTED, this);
+        EventQueue.getInstance().subscribe(TOPIC_PERSON_TOUCHED, this);
+        EventQueue.getInstance().subscribe(TOPIC_CARD_SELECTED, this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        DataService.getInstance().unregisterNetworkStateListener(this);
+        EventQueue.getInstance().unSubscribe(TOPIC_BIRTHDAY_PERSON_SELECTED, this);
+        EventQueue.getInstance().unSubscribe(TOPIC_PERSON_TOUCHED, this);
+        EventQueue.getInstance().unSubscribe(TOPIC_CARD_SELECTED, this);
+    }
+
+    @Override
+    public void setupTopBar() {
+        if (findViewById(R.id.topBarFragment)!=null) {
+            topBar = (TopBarFragment) getSupportFragmentManager().findFragmentById(R.id.topBarFragment);
+            if (topBar == null) {
+                topBar = TopBarFragment.newInstance(selectedPerson, R.layout.fragment_top_bar_card);
+                getSupportFragmentManager().beginTransaction().replace(R.id.topBarFragment, topBar).commit();
+            } else {
+                if (selectedPerson != null) {
+                    topBar.getArguments().putSerializable(TopBarFragment.ARG_PERSON, selectedPerson);
+                    topBar.updatePerson(selectedPerson);
+                }
+            }
+        }
+    }
+
+    public void getBirthdayPeople() {
         try {
             people = DataService.getInstance().getDBHelper().getNextBirthdays(15, 4);
             if (people.size()==0) {
@@ -90,40 +147,18 @@ public class BirthdayCardActivity extends LittleFamilyActivity {
             people.add(selectedPerson);
         }
         view.setBirthdayPeople(people);
-
-        EventQueue.getInstance().subscribe(TOPIC_BIRTHDAY_PERSON_SELECTED, this);
-        EventQueue.getInstance().subscribe(TOPIC_PERSON_TOUCHED, this);
-        EventQueue.getInstance().subscribe(TOPIC_CARD_SELECTED, this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        DataService.getInstance().unregisterNetworkStateListener(this);
-        EventQueue.getInstance().unSubscribe(TOPIC_BIRTHDAY_PERSON_SELECTED, this);
-        EventQueue.getInstance().unSubscribe(TOPIC_PERSON_TOUCHED, this);
-        EventQueue.getInstance().unSubscribe(TOPIC_CARD_SELECTED, this);
-    }
-
-    @Override
-    public void setupTopBar() {
-        if (findViewById(R.id.topBarFragment)!=null) {
-            topBar = (TopBarFragment) getSupportFragmentManager().findFragmentById(R.id.topBarFragment);
-            if (topBar == null) {
-                topBar = TopBarFragment.newInstance(selectedPerson, R.layout.fragment_top_bar_card);
-                getSupportFragmentManager().beginTransaction().replace(R.id.topBarFragment, topBar).commit();
-            } else {
-                if (selectedPerson != null) {
-                    topBar.getArguments().putSerializable(TopBarFragment.ARG_PERSON, selectedPerson);
-                }
-            }
+        if (birthdayPerson!=null) {
+            view.setBirthdayPerson(birthdayPerson);
+            speak("Choose a card to decorate.");
         }
     }
 
     @Override
     public void onInit(int code) {
         super.onInit(code);
-        speak("Look who has birthdays coming up.  Choose someone to start.");
+        if (birthdayPerson==null) {
+            speak("Look who has birthdays coming up.  Choose someone to start.");
+        }
     }
 
     @Override
@@ -175,26 +210,26 @@ public class BirthdayCardActivity extends LittleFamilyActivity {
             if (success) {
                 Bitmap sharing = view.getSharingBitmap();
                 if (sharing != null) {
-                    File dir = ImageHelper.getDataFolder(BirthdayCardActivity.this);
-                    File file = new File(dir, "tempImage.jpg");
-                    if (file.exists()) {
-                        file.delete();
-                    }
                     try {
+                        File dir = BirthdayCardActivity.this.getExternalCacheDir();
+                        File file = File.createTempFile("tempImage", ".jpg", dir);
+                        if (file.exists()) {
+                            file.delete();
+                        }
                         FileOutputStream out = new FileOutputStream(file);
                         sharing.compress(Bitmap.CompressFormat.JPEG, 90, out);
                         out.flush();
                         out.close();
+                        Uri screenshotUri = Uri.fromFile(file);
+                        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                        sharingIntent.setType("image/*");
+                        sharingIntent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
+                        startActivity(Intent.createChooser(sharingIntent, "Share image using"));
                     } catch (Exception e) {
                         Log.e(this.getClass().getName(), "Error sharing file", e);
                         Toast.makeText(BirthdayCardActivity.this, "Unable to share image " + e, Toast.LENGTH_LONG).show();
                         return;
                     }
-                    Uri screenshotUri = Uri.fromFile(file);
-                    Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-                    sharingIntent.setType("image/*");
-                    sharingIntent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
-                    startActivity(Intent.createChooser(sharingIntent, "Share image using"));
                 } else {
                     Toast.makeText(BirthdayCardActivity.this, "Unable to verify password", Toast.LENGTH_LONG).show();
                 }

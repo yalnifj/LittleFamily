@@ -459,6 +459,7 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
                 try {
                     int x = (int) (mirrorLeft + 35*dm.density);
                     int y = (int) (yOffset + 20 * dm.density);
+                    int counter = 0;
                     for(LittlePerson p : people) {
                         Bitmap photo = null;
                         if (p.getPhotoPath() != null) {
@@ -494,6 +495,10 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
                             y += th + 10 * dm.density;
                         }
                         if (y > yOffset + vanityTop.getHeight() - 10 * dm.density) {
+                            break;
+                        }
+                        counter++;
+                        if (counter > 7) {
                             break;
                         }
                     }
@@ -867,12 +872,10 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
             DataService.getInstance().unregisterNetworkStateListener(activity);
             loadingPeople = false;
             List<LittlePerson> people = new ArrayList<>(family);
-            if (!people.contains(birthdayPerson)) {
-                people.add(birthdayPerson);
-            }
-            if (!people.contains(activity.getSelectedPerson())) {
-                people.add(activity.getSelectedPerson());
-            }
+            people.remove(birthdayPerson);
+            people.add(0, birthdayPerson);
+            people.remove(activity.getSelectedPerson());
+            people.add(1, activity.getSelectedPerson());
             showPeopleOnMirror(people);
         }
 

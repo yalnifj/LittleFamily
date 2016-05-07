@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -18,6 +19,7 @@ import com.yellowforktech.littlefamilytree.data.DataService;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.util.Date;
 
 /**
  * Created by jfinlay on 5/27/2015.
@@ -25,6 +27,7 @@ import java.lang.reflect.Field;
 public class AdultsAuthDialog extends DialogFragment {
 	private EditText passwordField;
 	private AuthCompleteAction action;
+    private CheckBox rememberChk;
 
     public AuthCompleteAction getAction() {
         return action;
@@ -80,6 +83,8 @@ public class AdultsAuthDialog extends DialogFragment {
             }
         });
 
+        rememberChk = (CheckBox) v.findViewById(R.id.rememberChk);
+
         return v;
     }
 
@@ -111,6 +116,12 @@ public class AdultsAuthDialog extends DialogFragment {
             String testToken = dataService.getRemoteService().createEncodedAuthToken(dataService.getDBHelper().getProperty(DataService.SERVICE_USERNAME), password);
             String goodToken = dataService.getEncryptedProperty(dataService.getRemoteService().getClass().getSimpleName() + DataService.SERVICE_TOKEN);
             if (goodToken.equals(testToken)) {
+                if (rememberChk.isChecked()) {
+                    Date now = new Date();
+                    DataService.getInstance().getDBHelper().saveProperty(DataService.PROPERY_REMEMBER_ME, String.valueOf(now.getTime()));
+                } else {
+                    DataService.getInstance().getDBHelper().saveProperty(DataService.PROPERY_REMEMBER_ME, "0");
+                }
                 return true;
             }
         } catch (Exception e) {

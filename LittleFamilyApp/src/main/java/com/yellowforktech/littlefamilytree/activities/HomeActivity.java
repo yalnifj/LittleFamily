@@ -86,16 +86,21 @@ public class HomeActivity extends LittleFamilyActivity {
     public void onInit(int code) {
         super.onInit(code);
 		if (selectedPerson != null) {
-      	  String message = String.format(getResources().getString(R.string.player_greeting), "");
+      	  String message = getResources().getString(R.string.player_greeting);
        	  speak(message, new UtteranceProgressListener() {
               @Override
-              public void onStart(String utteranceId) { }
+              public void onStart(String utteranceId) {
+                  Log.v("HomeActivity", "utterance started");
+              }
               @Override
               public void onDone(String utteranceId) {
+                  Log.v("HomeActivity", "utterance done");
                   sayGivenNameForPerson(selectedPerson);
               }
               @Override
-              public void onError(String utteranceId) { }
+              public void onError(String utteranceId) {
+                  Log.v("HomeActivity", "utterance error");
+              }
           });
 		}
     }

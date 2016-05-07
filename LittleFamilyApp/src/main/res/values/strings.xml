@@ -52,7 +52,7 @@ Please wait...</string>
     <string name="great14">Fourteenth</string>
 
     <string name="play">Play!</string>
-    <string name="player_greeting">Hi, %1$s!</string>
+    <string name="player_greeting">Hi</string>
     <string name="what_game">What would you like to play?</string>
     <string name="title_activity_choose_remote_service">ChooseRemoteService</string>
     <string name="choose_remote_service">Choose the online FamilyTree:</string>
@@ -140,6 +140,7 @@ Please wait...</string>
     <string name="title_activity_birthday_card">BirthdayCardActivity</string>
     <string name="decorate_a_card">Decorate a birthday card for </string>
     <string name="record_audio_instr">Tap the audio button to record the person\'s given name. Press the stop button to stop recording. Press the play button to hear the recorded name. Press the delete button to remove the recording.</string>
+    <string name="remember_20">Remember me for the next 20 minutes</string>
     <string name="show_family">Show My Family</string>
 
 </resources>

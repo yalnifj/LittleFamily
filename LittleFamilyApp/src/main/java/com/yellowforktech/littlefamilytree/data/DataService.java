@@ -46,6 +46,7 @@ public class DataService implements AuthTask.Listener {
     public static final String SERVICE_DEFAULTPERSONID = "DefaultPersonId";
     public static final String SERVICE_USERNAME= "Username";
     public static final String ROOT_PERSON_ID = "Root_Person_id";
+    public static final String PROPERY_REMEMBER_ME = "rememberMe";
 
     private RemoteService remoteService;
     private DBHelper dbHelper = null;

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,6 +17,7 @@ import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.data.LocalResource;
+import com.yellowforktech.littlefamilytree.db.DBHelper;
 import com.yellowforktech.littlefamilytree.util.ImageHelper;
 
 import java.io.File;
@@ -35,6 +37,7 @@ public class RecordAudioDialog extends DialogFragment implements View.OnClickLis
     private ImageButton playButton;
     private ImageButton recordButton;
     private ImageButton deleteButton;
+    private Button closeButton;
 
     private boolean playing = false;
     private boolean recording = false;
@@ -50,7 +53,7 @@ public class RecordAudioDialog extends DialogFragment implements View.OnClickLis
         try {
             List<LocalResource> resources = DataService.getInstance().getDBHelper().getLocalResourcesForPerson(person.getId());
             for(LocalResource r : resources) {
-                if (r.getType().equals("givenAudio")) {
+                if (r.getType().equals(DBHelper.TYPE_GIVEN_AUDIO)) {
                     localResource = r;
                 }
             }
@@ -76,6 +79,9 @@ public class RecordAudioDialog extends DialogFragment implements View.OnClickLis
         recordButton.setOnClickListener(this);
         deleteButton = (ImageButton) view.findViewById(R.id.deleteButton);
         deleteButton.setOnClickListener(this);
+
+        closeButton = (Button) view.findViewById(R.id.closeButton);
+        closeButton.setOnClickListener(this);
 
         setButtonStates();
 
@@ -105,6 +111,9 @@ public class RecordAudioDialog extends DialogFragment implements View.OnClickLis
             case R.id.deleteButton:
                 deleteRecording();
                 break;
+            case R.id.closeButton:
+                this.dismissAllowingStateLoss();
+                break;
         }
     }
 
@@ -120,6 +129,7 @@ public class RecordAudioDialog extends DialogFragment implements View.OnClickLis
             mPlayer = new MediaPlayer();
             try {
                 mPlayer.setDataSource(person.getGivenNameAudioPath());
+                mPlayer.setVolume(3.0f, 3.0f);
                 mPlayer.prepare();
                 mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                     @Override
@@ -143,24 +153,26 @@ public class RecordAudioDialog extends DialogFragment implements View.OnClickLis
         if (!recording) {
             if (localResource==null) {
                 localResource = new LocalResource();
-                localResource.setPersonId(person.getId());
-                File dataFolder = ImageHelper.getDataFolder(getActivity());
-                File personFolder = new File(dataFolder, person.getFamilySearchId());
-                if (!personFolder.exists()) {
-                    personFolder.mkdirs();
-                }
-                File audioFile = new File(personFolder, "given.3gp");
-                localResource.setLocalPath(audioFile.getAbsolutePath());
-                person.setGivenNameAudioPath(audioFile.getAbsolutePath());
-                localResource.setType("givenAudio");
             }
+            localResource.setPersonId(person.getId());
+            File dataFolder = ImageHelper.getDataFolder(getActivity());
+            File personFolder = new File(dataFolder, person.getFamilySearchId());
+            if (!personFolder.exists()) {
+                personFolder.mkdirs();
+            }
+            File audioFile = new File(personFolder, "given.3gp");
+            localResource.setLocalPath(audioFile.getAbsolutePath());
+            person.setGivenNameAudioPath(audioFile.getAbsolutePath());
+            localResource.setType(DBHelper.TYPE_GIVEN_AUDIO);
+
 
             mRecorder = new MediaRecorder();
             mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
             mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
             mRecorder.setOutputFile(localResource.getLocalPath());
-            mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-            mRecorder.setMaxDuration(2000);
+            mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.HE_AAC);
+            mRecorder.setAudioSamplingRate(48000);
+            mRecorder.setMaxDuration(2500);
             mRecorder.setOnInfoListener(new MediaRecorder.OnInfoListener() {
                 @Override
                 public void onInfo(MediaRecorder mr, int what, int extra) {
@@ -194,6 +206,8 @@ public class RecordAudioDialog extends DialogFragment implements View.OnClickLis
 
         } else {
             mRecorder.stop();
+            mRecorder.release();
+            mRecorder = null;
             recording = false;
             setButtonStates();
             try {

@@ -20,6 +20,7 @@ import android.util.Log;
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
+import com.yellowforktech.littlefamilytree.events.AutoStartNotifyReceiver;
 
 import java.util.List;
 import java.util.Locale;
@@ -47,7 +48,6 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
     protected TextToSpeech tts;
     protected ListPreference voicePref;
     protected static LittlePerson selectedPerson;
-
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -147,22 +147,6 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
             }
         });
 
-        Preference manageCreds = findPreference("manage_creds");
-        manageCreds.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                String serviceType = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this).getString(DataService.SERVICE_TYPE, null);
-                if (serviceType.equals(DataService.SERVICE_TYPE_PHPGEDVIEW)) {
-                    Intent intent = new Intent( SettingsActivity.this, PGVLoginActivity.class );
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent( SettingsActivity.this, FSLoginActivity.class );
-                    startActivity(intent);
-                }
-                return true;
-            }
-        });
-
         Preference managePeople = findPreference("manage_people");
         managePeople.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -216,6 +200,7 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
         bindPreferenceSummaryToValue(findPreference("sync_delay"));
         bindPreferenceSummaryToValue(findPreference("tts_voice"));
         bindPreferenceSummaryToValue(findPreference("quiet_mode"));
+        bindPreferenceSummaryToValue(findPreference("enable_notifications"));
         //bindPreferenceSummaryToValue(findPreference("tts_voice_test"));
         Preference versionPref = findPreference("version");
         if (versionPref!=null) {
@@ -293,6 +278,15 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
                 // For all other preferences, set the summary to the value's
                 // simple string representation.
                 preference.setSummary(stringValue);
+
+                if (preference.getKey().equals("enable_notifications")) {
+                    Boolean onOff = (Boolean) value;
+                    if (onOff) {
+                        AutoStartNotifyReceiver.scheduleAlarms(preference.getContext());
+                    } else {
+                        AutoStartNotifyReceiver.cancelAlarms(preference.getContext());
+                    }
+                }
             }
             return true;
         }
@@ -314,7 +308,8 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
 
         // Trigger the listener immediately with the preference's
         // current value.
-        if (preference.getKey().equals("sync_background") || preference.getKey().equals("sync_cellular") || preference.getKey().equals("quiet_mode")) {
+        if (preference.getKey().equals("sync_background") || preference.getKey().equals("sync_cellular")
+                || preference.getKey().equals("quiet_mode") || preference.getKey().equals("enable_notifications")) {
             sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
                     PreferenceManager
                             .getDefaultSharedPreferences(preference.getContext())
@@ -418,6 +413,7 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
             bindPreferenceSummaryToValue(findPreference("sync_delay"));
             bindPreferenceSummaryToValue(findPreference("tts_voice"));
             bindPreferenceSummaryToValue(findPreference("quiet_mode"));
+            bindPreferenceSummaryToValue(findPreference("enable_notifications"));
 
             Preference versionPref = findPreference("version");
             if (versionPref!=null) {
