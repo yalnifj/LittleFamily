@@ -249,6 +249,14 @@
                     </div>
                 </a>
             </div>
+            <div class="col-md-3 col-sm-6 outer-game-box" id="birthday-box">
+                <a href="#" class="portfolio-box">
+                    <img src="game_icons/house_adult_vanity.png" id="birthday" class="img-responsive" alt="">
+                    <div class="game-box">
+                        Birthday Card
+                    </div>
+                </a>
+            </div>
             <div class="col-md-3 col-sm-6 outer-game-box" id="parentsguide-box">
                 <a href="parentsguide.html" class="portfolio-box">
                     <div class="game-box">
@@ -674,7 +682,30 @@
         id: 'song'
     };
 
-    var gameAnimations = [wardrobe, puzzle, watercolor, scratch, match, bubbles, treespy, song];
+    var birthday = {
+        images: [preload("game_icons/house_adult_vanity.png"),
+            preload("game_icons/house_adult_vanity1.png"),
+            preload("game_icons/house_adult_vanity2.png"),
+            preload("game_icons/house_adult_vanity3.png"),
+            preload("game_icons/house_adult_vanity3.png"),
+            preload("game_icons/house_adult_vanity4.png"),
+            preload("game_icons/house_adult_vanity5.png"),
+            preload("game_icons/house_adult_vanity6.png"),
+            preload("game_icons/house_adult_vanity7.png"),
+            preload("game_icons/house_adult_vanity8.png"),
+            preload("game_icons/house_adult_vanity9.png"),
+            preload("game_icons/house_adult_vanity10.png"),
+            preload("game_icons/house_adult_vanity11.png"),
+            preload("game_icons/house_adult_vanity12.png")
+        ],
+        selectedImage: 0,
+        direction: 1,
+        animating: false,
+        href: 'birthdaycard.html',
+        id: 'birthday'
+    };
+
+    var gameAnimations = [wardrobe, puzzle, watercolor, scratch, match, bubbles, treespy, song, birthday];
     var gameObjs = {
         "dressup-box": wardrobe,
         "puzzle-box": puzzle,
@@ -683,7 +714,8 @@
         "match-box": match,
         "bubbles-box": bubbles,
         "treespy-box": treespy,
-        "song-box": song
+        "song-box": song,
+        "birthday-box": birthday
     };
 
     $(document).ready(function() {

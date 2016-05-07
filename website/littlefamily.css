@@ -177,6 +177,10 @@ header .header-content, section .container, section .container-fluid{
     background-image: url("game_icons/puzzle_background.png");
 }
 
+#birthday-box {
+    background-image: url("game_icons/dressup_background.png");
+}
+
 #parentsguide-box {
     background-image: url("game_icons/parentsguide_background.png");
     background-size: cover;
@@ -228,6 +232,11 @@ header .header-content, section .container, section .container-fluid{
     position: relative;
     top: 20%;
     width: 90px;
+}
+
+#birthday {
+    position: relative;
+    top: 20%;
 }
 
 .game-box {
