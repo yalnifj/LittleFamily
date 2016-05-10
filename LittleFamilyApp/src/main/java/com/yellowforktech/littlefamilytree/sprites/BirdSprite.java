@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.yellowforktech.littlefamilytree.R;
+import com.yellowforktech.littlefamilytree.events.EventQueue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +55,7 @@ public class BirdSprite extends AnimatedBitmapSprite {
         } else {
             if (state==0) {
                 state = 1;
+                stateChanged = true;
 
                 isFlipped = random.nextBoolean();
 
@@ -65,7 +67,11 @@ public class BirdSprite extends AnimatedBitmapSprite {
             } else {
                 if (frame!=oldFrame && frame == 0) {
                     delay = random.nextInt(80);
+                    if (state == 2) {
+                        EventQueue.getInstance().publish(eventTopic, this);
+                    }
                     state = 0;
+                    stateChanged = true;
                 }
             }
         }
@@ -89,13 +95,6 @@ public class BirdSprite extends AnimatedBitmapSprite {
             } catch (Exception e) {
                 // just let things go on
                 Log.e(getClass().getSimpleName(), "Error playing audio", e);
-            }
-        }
-        if (state==2) {
-            if (bitmaps.get(state)==null || frame>=bitmaps.get(state).size()-1) {
-                //EventQueue.getInstance().publish(eventTopic, this);
-                state = 0;
-                frame = 0;
             }
         }
     }

@@ -17,12 +17,14 @@ import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.FlyingActivity;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.sprites.AnimatedBitmapSprite;
-import com.yellowforktech.littlefamilytree.sprites.MovingAnimatedBitmapSprite;
+import com.yellowforktech.littlefamilytree.sprites.FlyingPersonLeafSprite;
+import com.yellowforktech.littlefamilytree.sprites.Sprite;
 import com.yellowforktech.littlefamilytree.util.ImageHelper;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -42,7 +44,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
     private int nestHeight;
 
     protected AnimatedBitmapSprite bird;
-    private List<MovingAnimatedBitmapSprite> peopleSprites;
+    private List<FlyingPersonLeafSprite> peopleSprites;
 
     private List<LittlePerson> family;
     private Set<LittlePerson> inNest;
@@ -53,6 +55,11 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
     private Random random;
     private int nestWidth;
 
+    private List<Bitmap> tiles;
+    private LinkedList<Bitmap> backgroundTiles;
+    private List<Bitmap> leaves;
+    private int tx = 0;
+    private int ty = 0;
 
 	public FlyingSurfaceView(Context context) {
         super(context);
@@ -95,6 +102,23 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
 
         random = new Random();
         delay = random.nextInt(maxDelay);
+
+        Bitmap tile1 = BitmapFactory.decodeResource(getResources(), R.drawable.bird_tile1);
+        Bitmap tile2 = BitmapFactory.decodeResource(getResources(), R.drawable.bird_tile2);
+        Bitmap tile3 = BitmapFactory.decodeResource(getResources(), R.drawable.bird_tile3);
+        Bitmap tile4 = BitmapFactory.decodeResource(getResources(), R.drawable.bird_tile4);
+
+        tiles = new ArrayList<>(8);
+        tiles.add(tile1);
+        tiles.add(tile1);
+        tiles.add(tile1);
+        tiles.add(tile1);
+        tiles.add(tile1);
+        tiles.add(tile2);
+        tiles.add(tile3);
+        tiles.add(tile4);
+
+        backgroundTiles = new LinkedList<>();
     }
 
     @Override
@@ -148,6 +172,23 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
             sprites.clear();
             peopleSprites = new ArrayList<>();
 
+            tx = 0;
+            ty = getHeight() + tiles.get(0).getHeight();
+
+            int width = getWidth();
+            while(ty > 0) {
+                tx = 0;
+                while(tx < width) {
+                    int r = random.nextInt(tiles.size());
+                    Bitmap tile = tiles.get(r);
+                    backgroundTiles.add(tile);
+                    tx += tile.getWidth() - dm.density;
+                }
+                ty -= tiles.get(0).getHeight();
+            }
+
+            ty = 0;
+
             nestHeight = (int) (50 * dm.density);
             nestWidth = (int) (30 *dm.density);
 
@@ -161,7 +202,25 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
             bird.setState(0);
             addSprite(bird);
 
+            leaves = new ArrayList<>(2);
+            leaves.add(ImageHelper.loadBitmapFromResource(getContext(), R.drawable.leaf_left, 0, bird.getWidth()/2, bird.getWidth()/2));
+            leaves.add(ImageHelper.loadBitmapFromResource(getContext(), R.drawable.leaf_right, 0, bird.getWidth()/2, bird.getWidth()/2));
+
             spritesCreated = true;
+        }
+    }
+
+    public void addTileRow() {
+        synchronized (sprites) {
+            tx = 0;
+            int width = getWidth();
+            while(tx < width) {
+                int r = random.nextInt(tiles.size());
+                Bitmap tile = tiles.get(r);
+                backgroundTiles.addFirst(tile);
+                backgroundTiles.removeLast();
+                tx += tile.getWidth();
+            }
         }
     }
 
@@ -180,23 +239,17 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                 if (r == oldR) break;
             }
             onBoard.add(person);
-            int width = bird.getWidth() / 2;
-            Bitmap photo = null;
-            if (person.getPhotoPath() != null) {
-                photo = ImageHelper.loadBitmapFromFile(person.getPhotoPath(), ImageHelper.getOrientation(person.getPhotoPath()), width, width, false);
-            }
-            if (photo == null) {
-                photo = ImageHelper.loadBitmapFromResource(activity, person.getDefaultPhotoResource(), 0, width, width);
-            }
-            MovingAnimatedBitmapSprite personSprite = new MovingAnimatedBitmapSprite(photo, getWidth(), getHeight() - (nestHeight + width));
+            int width = (int) (bird.getWidth()*1.25);
+
+            FlyingPersonLeafSprite personSprite = new FlyingPersonLeafSprite(leaves.get(random.nextInt(leaves.size())),
+                    getWidth(), getHeight() - (nestHeight + width), person, activity);
             personSprite.setSelectable(true);
             personSprite.setY(0);
             int x = 20 + random.nextInt(getWidth() - width - 20);
             personSprite.setX(x);
             personSprite.setWrap(false);
             personSprite.setSpeed(0);
-            personSprite.setSlope(5f + random.nextFloat() * 5f);
-            personSprite.setData("person", person);
+            personSprite.setSlope(5f + inNest.size() + random.nextFloat() * 5f);
             addSprite(personSprite);
             peopleSprites.add(personSprite);
         }
@@ -209,24 +262,26 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
         if (spritesCreated) {
             if (Math.abs(roll) > 3) {
                 float x = bird.getX();
-                x += roll;
+                x -= roll / 2;
                 if (x + bird.getWidth() > getWidth()) x = getWidth() - bird.getWidth();
                 if (x < 0) x = 0;
                 bird.setX(x);
             }
 
-            if (Math.abs(pitch) > 3) {
+            if (Math.abs(pitch - 70) > 3) {
                 float y = bird.getY();
-                y += pitch;
+                float dy = (pitch + 65);
+                if (dy > 0) dy = dy * 2;
+                y += dy;
                 if (y + bird.getHeight() + nestHeight > getHeight())
                     y = getHeight() - (bird.getHeight() + nestHeight);
-                if (y < getHeight() * 2 / 3) y = getHeight() * 0.66f;
+                if (y < getHeight() * 0.66f) y = getHeight() * 0.66f;
                 bird.setY(y);
             }
 
-            Iterator<MovingAnimatedBitmapSprite> i = peopleSprites.iterator();
+            Iterator<FlyingPersonLeafSprite> i = peopleSprites.iterator();
             while (i.hasNext()) {
-                MovingAnimatedBitmapSprite s = i.next();
+                FlyingPersonLeafSprite s = i.next();
                 if (s.isRemoveMe()) i.remove();
                 else {
                     if (s.inSprite(bird.getX() + bird.getWidth() / 2, bird.getY())) {
@@ -237,7 +292,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                         s.setHeight(nestWidth);
                         s.setX(inNest.size() * nestWidth);
                         s.setY(getHeight() - nestHeight);
-                        LittlePerson person = (LittlePerson) s.getData("person");
+                        LittlePerson person = s.getPerson();
                         inNest.add(person);
                         onBoard.remove(person);
                         activity.speak(person.getName());
@@ -246,10 +301,16 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                 }
             }
 
+            ty+=2 + inNest.size()/2;
+            if (ty > tiles.get(0).getHeight()) {
+                ty = 0;
+                addTileRow();
+            }
+
             if (delay > 0) {
                 delay--;
             } else {
-                delay = maxDelay/2 + random.nextInt(maxDelay);
+                delay = maxDelay/2 + random.nextInt(maxDelay) - (int)(inNest.size()*1.5);
                 addRandomPersonSprite();
             }
         }
@@ -260,12 +321,45 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
         if (!spritesCreated) {
             createSprites();
         }
-        super.doDraw(canvas);
+
+        synchronized (sprites) {
+            basePaint.setColor(Color.WHITE);
+            canvas.drawRect(0,0,getWidth(),getHeight(),basePaint);
+
+            int x = 0;
+            int width = getWidth();
+            int y = ty - tiles.get(0).getHeight();
+            for(Bitmap tile : backgroundTiles) {
+                int dy = tile.getHeight() - tiles.get(0).getHeight();
+                canvas.drawBitmap(tile, x, y - dy, null);
+                x += tile.getWidth() - dm.density;
+                if (x > width) {
+                    x = 0;
+                    y += tiles.get(0).getHeight();
+                }
+            }
+
+            for (Sprite s : sprites) {
+                if (s.getX() + s.getWidth() >= 0 && s.getX() <= getWidth() && s.getY() + s.getHeight() >= 0 && s.getY() <= getHeight()) {
+                    s.doDraw(canvas);
+                }
+            }
+        }
 
         canvas.drawText(String.format("pitch: %.2f", pitch), 0, 40, textPaint);
         canvas.drawText(String.format("roll: %.2f", roll), 0, 80, textPaint);
         /*
         canvas.drawText(String.format("zRad: %.2f", zRad), 0, 120, textPaint);
         */
+    }
+
+    @Override
+    protected void touch_start(float x, float y) {
+        super.touch_start(x, y);
+    }
+
+    @Override
+    protected void touch_up(float x, float y) {
+        super.touch_up(x, y);
     }
 }
