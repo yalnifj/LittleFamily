@@ -45,6 +45,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
 
     protected AnimatedBitmapSprite bird;
     private List<FlyingPersonLeafSprite> peopleSprites;
+    private List<FlyingPersonLeafSprite> nestSprites;
 
     private List<LittlePerson> family;
     private Set<LittlePerson> inNest;
@@ -107,8 +108,10 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
         Bitmap tile2 = BitmapFactory.decodeResource(getResources(), R.drawable.bird_tile2);
         Bitmap tile3 = BitmapFactory.decodeResource(getResources(), R.drawable.bird_tile3);
         Bitmap tile4 = BitmapFactory.decodeResource(getResources(), R.drawable.bird_tile4);
+        Bitmap tile5 = BitmapFactory.decodeResource(getResources(), R.drawable.bird_tile5);
 
-        tiles = new ArrayList<>(8);
+        tiles = new ArrayList<>(10);
+        tiles.add(tile1);
         tiles.add(tile1);
         tiles.add(tile1);
         tiles.add(tile1);
@@ -117,6 +120,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
         tiles.add(tile2);
         tiles.add(tile3);
         tiles.add(tile4);
+        tiles.add(tile5);
 
         backgroundTiles = new LinkedList<>();
     }
@@ -171,6 +175,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
         synchronized (sprites) {
             sprites.clear();
             peopleSprites = new ArrayList<>();
+            nestSprites = new ArrayList<>();
 
             tx = 0;
             ty = getHeight() + tiles.get(0).getHeight();
@@ -182,15 +187,15 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                     int r = random.nextInt(tiles.size());
                     Bitmap tile = tiles.get(r);
                     backgroundTiles.add(tile);
-                    tx += tile.getWidth() - dm.density;
+                    tx += tile.getWidth() - 2*dm.density;
                 }
-                ty -= tiles.get(0).getHeight();
+                ty -= (tiles.get(0).getHeight() - 2*dm.density);
             }
 
             ty = 0;
 
-            nestHeight = (int) (50 * dm.density);
-            nestWidth = (int) (30 *dm.density);
+            nestHeight = (int) (40 * dm.density);
+            nestWidth = (int) (35 *dm.density);
 
             Bitmap birdBm = BitmapFactory.decodeResource(context.getResources(), R.drawable.flying_bird1);
             bird = new AnimatedBitmapSprite(birdBm);
@@ -203,8 +208,8 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
             addSprite(bird);
 
             leaves = new ArrayList<>(2);
-            leaves.add(ImageHelper.loadBitmapFromResource(getContext(), R.drawable.leaf_left, 0, bird.getWidth()/2, bird.getWidth()/2));
-            leaves.add(ImageHelper.loadBitmapFromResource(getContext(), R.drawable.leaf_right, 0, bird.getWidth()/2, bird.getWidth()/2));
+            leaves.add(ImageHelper.loadBitmapFromResource(getContext(), R.drawable.leaf1, 0, (int) (bird.getWidth()*0.8), (int) (bird.getWidth()*0.8)));
+            leaves.add(ImageHelper.loadBitmapFromResource(getContext(), R.drawable.leaf2, 0, (int) (bird.getWidth()*0.8), (int) (bird.getWidth()*0.8)));
 
             spritesCreated = true;
         }
@@ -239,7 +244,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                 if (r == oldR) break;
             }
             onBoard.add(person);
-            int width = (int) (bird.getWidth()*1.25);
+            int width = (int) (bird.getWidth() * 0.9);
 
             FlyingPersonLeafSprite personSprite = new FlyingPersonLeafSprite(leaves.get(random.nextInt(leaves.size())),
                     getWidth(), getHeight() - (nestHeight + width), person, activity);
@@ -252,6 +257,17 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
             personSprite.setSlope(5f + inNest.size() + random.nextFloat() * 5f);
             addSprite(personSprite);
             peopleSprites.add(personSprite);
+        }
+    }
+
+    public void reorderNest() {
+        if (nestSprites.size() > 0) {
+            int dx = Math.min(nestWidth, getWidth() / nestSprites.size());
+            int x = 0;
+            for (FlyingPersonLeafSprite s : nestSprites) {
+                s.setX(x);
+                x += dx;
+            }
         }
     }
 
@@ -279,6 +295,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                 bird.setY(y);
             }
 
+            int nestSize = nestSprites.size();
             Iterator<FlyingPersonLeafSprite> i = peopleSprites.iterator();
             while (i.hasNext()) {
                 FlyingPersonLeafSprite s = i.next();
@@ -292,13 +309,17 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                         s.setHeight(nestWidth);
                         s.setX(inNest.size() * nestWidth);
                         s.setY(getHeight() - nestHeight);
+                        nestSprites.add(s);
                         LittlePerson person = s.getPerson();
                         inNest.add(person);
                         onBoard.remove(person);
-                        activity.speak(person.getName());
+                        activity.sayGivenNameForPerson(person);
                         i.remove();
                     }
                 }
+            }
+            if (nestSize!=nestSprites.size()) {
+                reorderNest();
             }
 
             ty+=2 + inNest.size()/2;
@@ -332,10 +353,10 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
             for(Bitmap tile : backgroundTiles) {
                 int dy = tile.getHeight() - tiles.get(0).getHeight();
                 canvas.drawBitmap(tile, x, y - dy, null);
-                x += tile.getWidth() - dm.density;
+                x += tile.getWidth() - 2*dm.density;
                 if (x > width) {
                     x = 0;
-                    y += tiles.get(0).getHeight();
+                    y += (tiles.get(0).getHeight() - 2*dm.density);
                 }
             }
 

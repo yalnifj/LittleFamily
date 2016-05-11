@@ -3,6 +3,7 @@ package com.yellowforktech.littlefamilytree.sprites;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.util.ImageHelper;
@@ -35,10 +36,10 @@ public class FlyingPersonLeafSprite extends MovingAnimatedBitmapSprite {
 
     public void setup() {
         if (person.getPhotoPath() != null) {
-            photo = ImageHelper.loadBitmapFromFile(person.getPhotoPath(), ImageHelper.getOrientation(person.getPhotoPath()), (int) (width/1.6), (int) (width/1.6), false);
+            photo = ImageHelper.loadBitmapFromFile(person.getPhotoPath(), ImageHelper.getOrientation(person.getPhotoPath()), (int) (width * 0.5), (int) (width * 0.5), false);
         }
         if (photo == null) {
-            photo = ImageHelper.loadBitmapFromResource(context, person.getDefaultPhotoResource(), 0, (int) (width/1.6), (int)(width/1.6));
+            photo = ImageHelper.loadBitmapFromResource(context, person.getDefaultPhotoResource(), 0, (int) (width * 0.5), (int)(width * 0.5));
         }
     }
 
@@ -55,6 +56,10 @@ public class FlyingPersonLeafSprite extends MovingAnimatedBitmapSprite {
     public void doDraw(Canvas canvas) {
         super.doDraw(canvas);
 
-        canvas.drawBitmap(photo, x + (width/2 - photo.getWidth()/2), y + (height/2 - photo.getHeight()/2), null);
+        int left = (int)(x + (width/2 - width/4));
+        int top = (int)(y + (height/2 - width/4));
+        Rect r = new Rect(left, top, left + (int)(width * 0.5), top + (int)(width * 0.5));
+        canvas.drawBitmap(photo, null, r, null);
+        //canvas.drawBitmap(photo,x + (width/2 - photo.getWidth()/2), y + (height/2 - photo.getHeight()/2), null );
     }
 }
