@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.yellowforktech.littlefamilytree.R;
-import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.games.TreeWalker;
 import com.yellowforktech.littlefamilytree.views.FlyingSurfaceView;
@@ -34,7 +33,7 @@ public class FlyingActivity extends LittleFamilyActivity implements TreeWalker.L
     @Override
     protected void onStart() {
         super.onStart();
-        DataService.getInstance().registerNetworkStateListener(this);
+        //DataService.getInstance().registerNetworkStateListener(this);
         treeWalker.loadFamilyMembers();
         flyView.resume();
     }
@@ -42,7 +41,7 @@ public class FlyingActivity extends LittleFamilyActivity implements TreeWalker.L
     @Override
     protected void onStop() {
         super.onStop();
-        DataService.getInstance().unregisterNetworkStateListener(this);
+       // DataService.getInstance().unregisterNetworkStateListener(this);
     }
 
     @Override

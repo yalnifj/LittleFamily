@@ -367,9 +367,9 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
             }
         }
 
+        /*
         canvas.drawText(String.format("pitch: %.2f", pitch), 0, 40, textPaint);
         canvas.drawText(String.format("roll: %.2f", roll), 0, 80, textPaint);
-        /*
         canvas.drawText(String.format("zRad: %.2f", zRad), 0, 120, textPaint);
         */
     }
