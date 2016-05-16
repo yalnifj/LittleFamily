@@ -3,6 +3,7 @@ package com.yellowforktech.littlefamilytree.sprites;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Rect;
 
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
@@ -52,6 +53,20 @@ public class FlyingPersonLeafSprite extends MovingAnimatedBitmapSprite {
         setup();
     }
 
+    public void setMatrix(Matrix matrix) {
+        this.matrix = matrix;
+    }
+
+    @Override
+    public void buildMatrix() {
+
+    }
+
+    @Override
+    public void doStep() {
+        super.doStep();
+    }
+
     @Override
     public void doDraw(Canvas canvas) {
         super.doDraw(canvas);
@@ -59,7 +74,13 @@ public class FlyingPersonLeafSprite extends MovingAnimatedBitmapSprite {
         int left = (int)(x + (width/2 - width/4));
         int top = (int)(y + (height/2 - width/4));
         Rect r = new Rect(left, top, left + (int)(width * 0.5), top + (int)(width * 0.5));
+        if (matrix != null) {
+            canvas.save();
+            canvas.setMatrix(matrix);
+        }
         canvas.drawBitmap(photo, null, r, null);
-        //canvas.drawBitmap(photo,x + (width/2 - photo.getWidth()/2), y + (height/2 - photo.getHeight()/2), null );
+        if (matrix != null) {
+            canvas.restore();
+        }
     }
 }

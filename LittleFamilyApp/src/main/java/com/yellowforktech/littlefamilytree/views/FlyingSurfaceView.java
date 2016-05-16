@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -41,6 +42,8 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
     private FlyingActivity activity;
 
     private boolean spritesCreated = false;
+    private boolean cutSceneComplete = false;
+    private boolean cutScenePlaying = false;
     private int nestHeight;
 
     protected AnimatedBitmapSprite bird;
@@ -61,6 +64,8 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
     private List<Bitmap> leaves;
     private int tx = 0;
     private int ty = 0;
+
+    private int missed = 0;
 
 	public FlyingSurfaceView(Context context) {
         super(context);
@@ -171,6 +176,56 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
         }
     }
 
+    public void createCutScene() {
+        synchronized (sprites) {
+            sprites.clear();
+
+            Bitmap bbranch2 = ImageHelper.loadBitmapFromResource(getContext(), R.drawable.branch2, 0, (int) (this.getWidth() / 2.5), (int) (this.getWidth()/2.5));
+            Sprite branch2 = new AnimatedBitmapSprite(bbranch2);
+            branch2.setX(this.getWidth() - branch2.getWidth());
+            branch2.setY(this.getHeight()/2 - branch2.getHeight()/2);
+            addSprite(branch2);
+
+            float ratio = (float)(branch2.getWidth()) / (float)(this.getWidth());
+
+            Bitmap bbranch1 = BitmapFactory.decodeResource(getResources(), R.drawable.branch1);
+            float br1 = (float)bbranch1.getWidth() / (float)(bbranch1.getHeight());
+            Sprite branch1 = new AnimatedBitmapSprite(bbranch1);
+            branch1.setHeight((int) (branch2.getWidth() * 0.8));
+            branch1.setWidth((int) (branch1.getHeight() * br1));
+            branch1.setX(this.getWidth() - branch1.getWidth() * 1.8f);
+            branch1.setY(branch2.getY() - branch1.getHeight() / 2.6f);
+            addSprite(branch1);
+
+            Bitmap bbird = BitmapFactory.decodeResource(getResources(), R.drawable.house_tree_bird);
+            float br = (float)(bbird.getWidth()) / (float)(bbird.getHeight());
+            Sprite bird = new AnimatedBitmapSprite(bbird);
+            bird.setWidth(branch1.getWidth()*2);
+            bird.setHeight((int) (bird.getWidth() / br));
+            bird.setX(branch2.getX() + bird.getWidth()/2);
+            bird.setY(branch2.getY() + bird.getHeight()/4f);
+            addSprite(bird);
+
+            Bitmap leaf = BitmapFactory.decodeResource(getResources(), R.drawable.leaf_stem);
+
+            if (family != null && family.size() > 0) {
+
+                FlyingPersonLeafSprite leaf1 = new FlyingPersonLeafSprite(leaf, getWidth(), getHeight(), family.get(0), activity);
+                leaf1.setWidth((int) (bird.getWidth() * 0.8f));
+                leaf1.setHeight((int) (bird.getWidth() * 0.8f));
+                leaf1.setSelectable(false);
+                leaf1.setX(branch1.getX() - leaf1.getWidth()*0.1f);
+                leaf1.setY(branch1.getY() - leaf1.getHeight()*0.8f);
+                Matrix m = new Matrix();
+                m.setRotate(35, leaf1.getX() + leaf1.getWidth()/2, leaf1.getY() + leaf1.getHeight()/2);
+                leaf1.setMatrix(m);
+                addSprite(leaf1);
+
+                cutScenePlaying = true;
+            }
+        }
+    }
+
     public void createSprites() {
         synchronized (sprites) {
             sprites.clear();
@@ -275,7 +330,10 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
     public void doStep() {
         super.doStep();
 
-        if (spritesCreated) {
+        if (cutScenePlaying && !cutSceneComplete) {
+
+        }
+        else if (spritesCreated) {
             if (Math.abs(roll) > 3) {
                 float x = bird.getX();
                 x -= roll / 2;
@@ -299,7 +357,10 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
             Iterator<FlyingPersonLeafSprite> i = peopleSprites.iterator();
             while (i.hasNext()) {
                 FlyingPersonLeafSprite s = i.next();
-                if (s.isRemoveMe()) i.remove();
+                if (s.isRemoveMe()) {
+                    missed++;
+                    i.remove();
+                }
                 else {
                     if (s.inSprite(bird.getX() + bird.getWidth() / 2, bird.getY())) {
                         s.setSlope(0);
@@ -339,7 +400,10 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
 
     @Override
     public void doDraw(Canvas canvas) {
-        if (!spritesCreated) {
+        if (!cutScenePlaying && !cutSceneComplete) {
+            createCutScene();
+        }
+        else if (cutSceneComplete && !spritesCreated) {
             createSprites();
         }
 
@@ -347,16 +411,18 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
             basePaint.setColor(Color.WHITE);
             canvas.drawRect(0,0,getWidth(),getHeight(),basePaint);
 
-            int x = 0;
-            int width = getWidth();
-            int y = ty - tiles.get(0).getHeight();
-            for(Bitmap tile : backgroundTiles) {
-                int dy = tile.getHeight() - tiles.get(0).getHeight();
-                canvas.drawBitmap(tile, x, y - dy, null);
-                x += tile.getWidth() - 2*dm.density;
-                if (x > width) {
-                    x = 0;
-                    y += (tiles.get(0).getHeight() - 2*dm.density);
+            if (spritesCreated) {
+                int x = 0;
+                int width = getWidth();
+                int y = ty - tiles.get(0).getHeight();
+                for (Bitmap tile : backgroundTiles) {
+                    int dy = tile.getHeight() - tiles.get(0).getHeight();
+                    canvas.drawBitmap(tile, x, y - dy, null);
+                    x += tile.getWidth() - 2 * dm.density;
+                    if (x > width) {
+                        x = 0;
+                        y += (tiles.get(0).getHeight() - 2 * dm.density);
+                    }
                 }
             }
 
