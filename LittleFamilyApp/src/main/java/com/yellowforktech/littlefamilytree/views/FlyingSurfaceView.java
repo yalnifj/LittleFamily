@@ -204,22 +204,68 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
             bird.setHeight((int) (bird.getWidth() / br));
             bird.setX(branch2.getX() + bird.getWidth()/2);
             bird.setY(branch2.getY() + bird.getHeight()/4f);
-            addSprite(bird);
 
             Bitmap leaf = BitmapFactory.decodeResource(getResources(), R.drawable.leaf_stem);
 
+            int leafWidth = (int) (bird.getWidth() * 0.8f);
+            int leafHeight = (int) (bird.getWidth() * 0.8f);
             if (family != null && family.size() > 0) {
 
-                FlyingPersonLeafSprite leaf1 = new FlyingPersonLeafSprite(leaf, getWidth(), getHeight(), family.get(0), activity);
-                leaf1.setWidth((int) (bird.getWidth() * 0.8f));
-                leaf1.setHeight((int) (bird.getWidth() * 0.8f));
-                leaf1.setSelectable(false);
-                leaf1.setX(branch1.getX() - leaf1.getWidth()*0.1f);
-                leaf1.setY(branch1.getY() - leaf1.getHeight()*0.8f);
-                Matrix m = new Matrix();
-                m.setRotate(35, leaf1.getX() + leaf1.getWidth()/2, leaf1.getY() + leaf1.getHeight()/2);
-                leaf1.setMatrix(m);
-                addSprite(leaf1);
+                peopleSprites = new ArrayList<>();
+
+                float[][] leaves = new float[7][];
+                leaves[0] = new float[] {0.1f, -0.4f, 45f};
+                leaves[1] = new float[] {-0.75f, -0.4f, -55f};
+                leaves[2] = new float[] {-0.75f, -1.0f, -30f};
+                leaves[3] = new float[] {-0.3f, -1.0f, 15f};
+                leaves[4] = new float[] {-0.8f, 0.3f, -75f};
+                leaves[5] = new float[] {0.2f, 0.1f, 60f};
+                leaves[6] = new float[] {0.25f, 0.7f, 90f};
+
+                int p = 0;
+                for (int f=0; f< leaves.length; f++) {
+                    LittlePerson person = null;
+                    if (random.nextInt(6) > 0 && f < family.size()) person = family.get(p++);
+                    FlyingPersonLeafSprite leaf1 = new FlyingPersonLeafSprite(leaf, getWidth(), getHeight(), person, activity);
+                    float r = (random.nextInt(1) + 10) / 10f;
+
+                    leaf1.setWidth((int) (leafWidth * r));
+                    leaf1.setHeight((int) (leafHeight * r));
+                    leaf1.setSelectable(false);
+                    leaf1.setX(branch1.getX() + leaf1.getWidth() * leaves[f][0]);
+                    leaf1.setY(branch1.getY() + leaf1.getHeight() * leaves[f][1]);
+                    Matrix m = new Matrix();
+                    m.setRotate(leaves[f][2], leaf1.getX() + leaf1.getWidth() / 2, leaf1.getY() + leaf1.getHeight() / 2);
+                    leaf1.setMatrix(m);
+                    addSprite(leaf1);
+                    peopleSprites.add(leaf1);
+                }
+
+                float[][] smallleaves = new float[4][];
+                smallleaves[0] = new float[] {0.75f, -0.6f, 45f};
+                smallleaves[1] = new float[] {-0.05f, -0.6f, -55f};
+                smallleaves[2] = new float[] {-0.5f, 0.0f, -15f};
+                smallleaves[3] = new float[] {-0.95f, 0.7f, -115f};
+
+                for (int f=0; f<smallleaves.length; f++) {
+                    LittlePerson person = null;
+                    if (random.nextInt(3) > 0 && p < family.size()) person = family.get(p++);
+                    FlyingPersonLeafSprite leaf1 = new FlyingPersonLeafSprite(leaf, getWidth(), getHeight(), person, activity);
+                    float r = (random.nextInt(1) + 6) / 10f;
+
+                    leaf1.setWidth((int) (leafWidth * r));
+                    leaf1.setHeight((int) (leafHeight * r));
+                    leaf1.setSelectable(false);
+                    leaf1.setX(branch2.getX() + leaf1.getWidth() * smallleaves[f][0]);
+                    leaf1.setY(branch2.getY() + leaf1.getHeight() * smallleaves[f][1]);
+                    Matrix m = new Matrix();
+                    m.setRotate(smallleaves[f][2], leaf1.getX() + leaf1.getWidth() / 2, leaf1.getY() + leaf1.getHeight() / 2);
+                    leaf1.setMatrix(m);
+                    addSprite(leaf1);
+                    peopleSprites.add(leaf1);
+                }
+
+                addSprite(bird);
 
                 cutScenePlaying = true;
             }
@@ -408,8 +454,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
         }
 
         synchronized (sprites) {
-            basePaint.setColor(Color.WHITE);
-            canvas.drawRect(0,0,getWidth(),getHeight(),basePaint);
+            canvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
 
             if (spritesCreated) {
                 int x = 0;

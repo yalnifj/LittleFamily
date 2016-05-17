@@ -1,7 +1,9 @@
 package com.yellowforktech.littlefamilytree.activities;
 
 import android.content.Intent;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.view.SurfaceHolder;
 
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
@@ -21,6 +23,9 @@ public class FlyingActivity extends LittleFamilyActivity implements TreeWalker.L
         setContentView(R.layout.activity_flying);
 
         flyView = (FlyingSurfaceView) findViewById(R.id.flyingView);
+        flyView.setZOrderOnTop(true);    // necessary
+        SurfaceHolder sfhTrackHolder = flyView.getHolder();
+        sfhTrackHolder.setFormat(PixelFormat.TRANSPARENT);
         flyView.setActivity(this);
 
         Intent intent = getIntent();

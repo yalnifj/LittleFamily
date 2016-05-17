@@ -36,11 +36,13 @@ public class FlyingPersonLeafSprite extends MovingAnimatedBitmapSprite {
     }
 
     public void setup() {
-        if (person.getPhotoPath() != null) {
-            photo = ImageHelper.loadBitmapFromFile(person.getPhotoPath(), ImageHelper.getOrientation(person.getPhotoPath()), (int) (width * 0.5), (int) (width * 0.5), false);
-        }
-        if (photo == null) {
-            photo = ImageHelper.loadBitmapFromResource(context, person.getDefaultPhotoResource(), 0, (int) (width * 0.5), (int)(width * 0.5));
+        if (person!=null) {
+            if (person.getPhotoPath() != null) {
+                photo = ImageHelper.loadBitmapFromFile(person.getPhotoPath(), ImageHelper.getOrientation(person.getPhotoPath()), (int) (width * 0.5), (int) (width * 0.5), false);
+            }
+            if (photo == null) {
+                photo = ImageHelper.loadBitmapFromResource(context, person.getDefaultPhotoResource(), 0, (int) (width * 0.5), (int) (width * 0.5));
+            }
         }
     }
 
@@ -78,7 +80,9 @@ public class FlyingPersonLeafSprite extends MovingAnimatedBitmapSprite {
             canvas.save();
             canvas.setMatrix(matrix);
         }
-        canvas.drawBitmap(photo, null, r, null);
+        if (photo != null) {
+            canvas.drawBitmap(photo, null, r, null);
+        }
         if (matrix != null) {
             canvas.restore();
         }
