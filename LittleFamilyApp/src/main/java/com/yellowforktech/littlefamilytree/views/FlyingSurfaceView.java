@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.PointF;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -19,7 +20,9 @@ import com.yellowforktech.littlefamilytree.activities.FlyingActivity;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.sprites.AnimatedBitmapSprite;
 import com.yellowforktech.littlefamilytree.sprites.FlyingPersonLeafSprite;
+import com.yellowforktech.littlefamilytree.sprites.MovingAnimatedBitmapSprite;
 import com.yellowforktech.littlefamilytree.sprites.Sprite;
+import com.yellowforktech.littlefamilytree.sprites.SpriteAnimator;
 import com.yellowforktech.littlefamilytree.util.ImageHelper;
 
 import java.util.ArrayList;
@@ -45,6 +48,8 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
     private boolean cutSceneComplete = false;
     private boolean cutScenePlaying = false;
     private int nestHeight;
+
+    private SpriteAnimator animator;
 
     protected AnimatedBitmapSprite bird;
     private List<FlyingPersonLeafSprite> peopleSprites;
@@ -180,6 +185,8 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
         synchronized (sprites) {
             sprites.clear();
 
+            animator = new SpriteAnimator();
+
             Bitmap bbranch2 = ImageHelper.loadBitmapFromResource(getContext(), R.drawable.branch2, 0, (int) (this.getWidth() / 2.5), (int) (this.getWidth()/2.5));
             Sprite branch2 = new AnimatedBitmapSprite(bbranch2);
             branch2.setX(this.getWidth() - branch2.getWidth());
@@ -199,11 +206,37 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
 
             Bitmap bbird = BitmapFactory.decodeResource(getResources(), R.drawable.house_tree_bird);
             float br = (float)(bbird.getWidth()) / (float)(bbird.getHeight());
-            Sprite bird = new AnimatedBitmapSprite(bbird);
+            AnimatedBitmapSprite bird = new AnimatedBitmapSprite(bbird);
             bird.setWidth(branch1.getWidth()*2);
             bird.setHeight((int) (bird.getWidth() / br));
             bird.setX(branch2.getX() + bird.getWidth()/2);
             bird.setY(branch2.getY() + bird.getHeight()/4f);
+
+            List<Bitmap> birdState1 = new ArrayList<>();
+            birdState1.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_tree_bird1));
+            birdState1.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_tree_bird2));
+            birdState1.add(birdState1.get(0));
+            birdState1.add(bbird);
+            bird.getBitmaps().put(1, birdState1);
+
+            bird.addBitmap(2, bbird);
+            bird.addBitmap(2, bbird);
+
+            List<Bitmap> birdState3 = new ArrayList<>();
+            birdState3.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_tree_bird3));
+            birdState3.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_tree_bird4));
+            birdState3.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_tree_bird5));
+            birdState3.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_tree_bird6));
+            birdState3.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_tree_bird7));
+            bird.getBitmaps().put(3, birdState3);
+
+            animator.addTiming(2000, bird, 1);
+            animator.addTiming(2500, bird, 2);
+            animator.addTiming(5000, bird, 1);
+            animator.addTiming(5500, bird, 2);
+            animator.addTiming(6000, bird, 3);
+            animator.addTiming(7000, bird, 2);
+            animator.addTiming(13000, bird, 2);
 
             Bitmap leaf = BitmapFactory.decodeResource(getResources(), R.drawable.leaf_stem);
 
@@ -214,19 +247,21 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                 peopleSprites = new ArrayList<>();
 
                 float[][] leaves = new float[7][];
-                leaves[0] = new float[] {0.1f, -0.4f, 45f};
-                leaves[1] = new float[] {-0.75f, -0.4f, -55f};
-                leaves[2] = new float[] {-0.75f, -1.0f, -30f};
-                leaves[3] = new float[] {-0.3f, -1.0f, 15f};
-                leaves[4] = new float[] {-0.8f, 0.3f, -75f};
-                leaves[5] = new float[] {0.2f, 0.1f, 60f};
-                leaves[6] = new float[] {0.25f, 0.7f, 90f};
+                leaves[0] = new float[]{0.1f, -0.4f, 45f};
+                leaves[1] = new float[]{-0.75f, -0.4f, -55f};
+                leaves[2] = new float[]{-0.75f, -1.0f, -30f};
+                leaves[3] = new float[]{-0.3f, -1.0f, 15f};
+                leaves[4] = new float[]{-0.8f, 0.3f, -75f};
+                leaves[5] = new float[]{0.2f, 0.1f, 60f};
+                leaves[6] = new float[]{0.25f, 0.7f, 90f};
 
                 int p = 0;
-                for (int f=0; f< leaves.length; f++) {
+                for (int f = 0; f < leaves.length; f++) {
                     LittlePerson person = null;
                     if (random.nextInt(6) > 0 && f < family.size()) person = family.get(p++);
                     FlyingPersonLeafSprite leaf1 = new FlyingPersonLeafSprite(leaf, getWidth(), getHeight(), person, activity);
+                    leaf1.addBitmap(1, leaf);
+                    leaf1.addBitmap(2, leaf);
                     float r = (random.nextInt(1) + 10) / 10f;
 
                     leaf1.setWidth((int) (leafWidth * r));
@@ -236,21 +271,26 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                     leaf1.setY(branch1.getY() + leaf1.getHeight() * leaves[f][1]);
                     Matrix m = new Matrix();
                     m.setRotate(leaves[f][2], leaf1.getX() + leaf1.getWidth() / 2, leaf1.getY() + leaf1.getHeight() / 2);
+                    leaf1.setBaseRotate(leaves[f][2]);
                     leaf1.setMatrix(m);
                     addSprite(leaf1);
                     peopleSprites.add(leaf1);
+                    animator.addTiming(8500, leaf1, 1);
+                    animator.addTiming(11000 + random.nextInt(1500), leaf1, 2);
                 }
 
                 float[][] smallleaves = new float[4][];
-                smallleaves[0] = new float[] {0.75f, -0.6f, 45f};
-                smallleaves[1] = new float[] {-0.05f, -0.6f, -55f};
-                smallleaves[2] = new float[] {-0.5f, 0.0f, -15f};
-                smallleaves[3] = new float[] {-0.95f, 0.7f, -115f};
+                smallleaves[0] = new float[]{0.75f, -0.6f, 45f};
+                smallleaves[1] = new float[]{-0.05f, -0.6f, -55f};
+                smallleaves[2] = new float[]{-0.5f, 0.0f, -15f};
+                smallleaves[3] = new float[]{-0.95f, 0.7f, -115f};
 
-                for (int f=0; f<smallleaves.length; f++) {
+                for (int f = 0; f < smallleaves.length; f++) {
                     LittlePerson person = null;
                     if (random.nextInt(3) > 0 && p < family.size()) person = family.get(p++);
                     FlyingPersonLeafSprite leaf1 = new FlyingPersonLeafSprite(leaf, getWidth(), getHeight(), person, activity);
+                    leaf1.addBitmap(1, leaf);
+                    leaf1.addBitmap(2, leaf);
                     float r = (random.nextInt(1) + 6) / 10f;
 
                     leaf1.setWidth((int) (leafWidth * r));
@@ -261,13 +301,59 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                     Matrix m = new Matrix();
                     m.setRotate(smallleaves[f][2], leaf1.getX() + leaf1.getWidth() / 2, leaf1.getY() + leaf1.getHeight() / 2);
                     leaf1.setMatrix(m);
+                    leaf1.setBaseRotate(smallleaves[f][2]);
                     addSprite(leaf1);
                     peopleSprites.add(leaf1);
+                    animator.addTiming(8500, leaf1, 1);
+                    animator.addTiming(10000 + random.nextInt(1000), leaf1, 2);
                 }
 
                 addSprite(bird);
 
                 cutScenePlaying = true;
+
+                Bitmap bcloud = BitmapFactory.decodeResource(getResources(), R.drawable.cloud1);
+                float cr = bcloud.getWidth() / bcloud.getHeight();
+                MovingAnimatedBitmapSprite cloud = new MovingAnimatedBitmapSprite(bcloud, getWidth(), getHeight());
+                cloud.setWrap(true);
+                cloud.setSpeed(0);
+                cloud.setSlope(0);
+                cloud.setWidth((int) (getWidth() / 1.3f));
+                cloud.setHeight((int) (cloud.getWidth() / cr));
+                cloud.setX(-cloud.getWidth() / 1.6f);
+                cloud.setY(branch1.getY() - cloud.getHeight()/3);
+
+                cloud.addBitmap(1, bcloud);
+                cloud.setStateSpeed(1, new PointF(getWidth()/bird.getWidth(), 0f));
+
+                cloud.addBitmap(2, bcloud);
+                cloud.setStateSpeed(2, new PointF(0f, 0f));
+
+                cloud.addBitmap(3, BitmapFactory.decodeResource(getResources(), R.drawable.cloud2));
+
+                cloud.addBitmap(4, BitmapFactory.decodeResource(getResources(), R.drawable.cloud3));
+                cloud.addBitmap(4, BitmapFactory.decodeResource(getResources(), R.drawable.cloud4));
+                cloud.addBitmap(4, BitmapFactory.decodeResource(getResources(), R.drawable.cloud5));
+                cloud.addBitmap(4, BitmapFactory.decodeResource(getResources(), R.drawable.cloud6));
+                cloud.addBitmap(4, BitmapFactory.decodeResource(getResources(), R.drawable.cloud7));
+                cloud.addBitmap(4, BitmapFactory.decodeResource(getResources(), R.drawable.cloud8));
+                cloud.addBitmap(4, BitmapFactory.decodeResource(getResources(), R.drawable.cloud9));
+                cloud.addBitmap(4, BitmapFactory.decodeResource(getResources(), R.drawable.cloud10));
+                cloud.addBitmap(4, BitmapFactory.decodeResource(getResources(), R.drawable.cloud11));
+                cloud.addBitmap(4, BitmapFactory.decodeResource(getResources(), R.drawable.cloud12));
+
+                cloud.addBitmap(5, BitmapFactory.decodeResource(getResources(), R.drawable.cloud11));
+                cloud.addBitmap(5, BitmapFactory.decodeResource(getResources(), R.drawable.cloud12));
+
+                addSprite(cloud);
+
+                animator.addTiming(1000, cloud, 1);
+                animator.addTiming(5000, cloud, 2);
+                animator.addTiming(7000, cloud, 3);
+                animator.addTiming(8000, cloud, 4);
+                animator.addTiming(9000, cloud, 5);
+
+                animator.start();
             }
         }
     }
@@ -377,7 +463,11 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
         super.doStep();
 
         if (cutScenePlaying && !cutSceneComplete) {
-
+            animator.doStep();
+            if (animator.isFinished()) {
+                cutSceneComplete = true;
+                cutScenePlaying = false;
+            }
         }
         else if (spritesCreated) {
             if (Math.abs(roll) > 3) {
@@ -438,7 +528,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
             if (delay > 0) {
                 delay--;
             } else {
-                delay = maxDelay/2 + random.nextInt(maxDelay) - (int)(inNest.size()*1.5);
+                delay = maxDelay/2 + random.nextInt(maxDelay) - (int)(inNest.size()*0.5);
                 addRandomPersonSprite();
             }
         }

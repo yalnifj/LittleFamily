@@ -1,7 +1,9 @@
 package com.yellowforktech.littlefamilytree.sprites;
 
 import android.graphics.Bitmap;
+import android.graphics.PointF;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,16 +17,20 @@ public class MovingAnimatedBitmapSprite extends AnimatedBitmapSprite {
     protected int maxWidth;
     protected int maxHeight;
 
+    protected Map<Integer, PointF> stateSpeeds;
+
     public MovingAnimatedBitmapSprite(Bitmap bitmap, int maxWidth, int maxHeight) {
         super(bitmap);
         this.maxWidth = maxWidth;
         this.maxHeight = maxHeight;
+        stateSpeeds = new HashMap<>();
     }
 
     public MovingAnimatedBitmapSprite(Map<Integer, List<Bitmap>> bitmaps, int maxWidth, int maxHeight) {
         super(bitmaps);
         this.maxWidth = maxWidth;
         this.maxHeight = maxHeight;
+        stateSpeeds = new HashMap<>();
     }
 
     public float getSlope() {
@@ -67,9 +73,17 @@ public class MovingAnimatedBitmapSprite extends AnimatedBitmapSprite {
         this.wrap = wrap;
     }
 
+    public void setStateSpeed(int state, PointF speed) {
+        stateSpeeds.put(state, speed);
+    }
+
     @Override
     public void doStep() {
         super.doStep();
+        if (this.stateSpeeds.get(state) != null) {
+            this.speed = this.stateSpeeds.get(state).x;
+            this.slope = this.stateSpeeds.get(state).y;
+        }
         this.x = this.x + this.speed;
         this.y = this.y + this.slope;
         if (this.speed > 0) {

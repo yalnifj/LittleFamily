@@ -11,6 +11,7 @@ import com.yellowforktech.littlefamilytree.util.ImageHelper;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Created by jfinlay on 5/10/2016.
@@ -64,9 +65,28 @@ public class FlyingPersonLeafSprite extends MovingAnimatedBitmapSprite {
 
     }
 
+    float baseRotate = 0;
+    float addRotate = 0;
+    float direction = 1;
+    Random random = new Random();
+
+    public void setBaseRotate(float baseRotate) {
+        this.baseRotate = baseRotate;
+    }
+
     @Override
     public void doStep() {
         super.doStep();
+        if (state==1) {
+            if (addRotate > 4) direction = -2f;
+            if (addRotate < -4) direction = 2f;
+            addRotate += direction;
+            matrix.setRotate(baseRotate+addRotate, getX() + getWidth() / 2, getY() + getHeight() / 2);
+        }
+        if (state==2) {
+            setSpeed(getWidth()/5);
+            setSlope((getHeight()/6) - random.nextInt(getHeight()/4));
+        }
     }
 
     @Override
