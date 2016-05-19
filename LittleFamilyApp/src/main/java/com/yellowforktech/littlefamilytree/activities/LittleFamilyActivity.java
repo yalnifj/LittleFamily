@@ -339,7 +339,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(LittleFamilyActivity.this, message, Toast.LENGTH_LONG).show();
+                    Toast.makeText(LittleFamilyActivity.this, message, Toast.LENGTH_SHORT).show();
                     listener.onDone(message);
                 }
             });

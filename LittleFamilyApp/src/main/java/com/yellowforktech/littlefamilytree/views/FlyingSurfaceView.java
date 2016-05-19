@@ -33,6 +33,15 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+/**
+ * TODO - SKip cutscene Button
+ *      - Rescue Your Relatives Text and prompt
+ *      - Bad clouds to blow bird
+ *      - show missed leaves
+ *      - End game
+ *      - Game over screen
+ */
+
 public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEventListener
 {
     private SensorManager mSensorManager;
@@ -187,7 +196,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
 
             animator = new SpriteAnimator();
 
-            Bitmap bbranch2 = ImageHelper.loadBitmapFromResource(getContext(), R.drawable.branch2, 0, (int) (this.getWidth() / 2.5), (int) (this.getWidth()/2.5));
+            Bitmap bbranch2 = ImageHelper.loadBitmapFromResource(getContext(), R.drawable.branch2, 0, (int) (this.getWidth() / 2), (int) (this.getWidth()/2));
             Sprite branch2 = new AnimatedBitmapSprite(bbranch2);
             branch2.setX(this.getWidth() - branch2.getWidth());
             branch2.setY(this.getHeight()/2 - branch2.getHeight()/2);
@@ -236,7 +245,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
             animator.addTiming(5500, bird, 2);
             animator.addTiming(6000, bird, 3);
             animator.addTiming(7000, bird, 2);
-            animator.addTiming(13000, bird, 2);
+            animator.addTiming(15000, bird, 2);
 
             Bitmap leaf = BitmapFactory.decodeResource(getResources(), R.drawable.leaf_stem);
 
@@ -313,18 +322,18 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                 cutScenePlaying = true;
 
                 Bitmap bcloud = BitmapFactory.decodeResource(getResources(), R.drawable.cloud1);
-                float cr = bcloud.getWidth() / bcloud.getHeight();
+                float cr = (float)(bcloud.getWidth()) /(float)( bcloud.getHeight());
                 MovingAnimatedBitmapSprite cloud = new MovingAnimatedBitmapSprite(bcloud, getWidth(), getHeight());
                 cloud.setWrap(true);
                 cloud.setSpeed(0);
                 cloud.setSlope(0);
-                cloud.setWidth((int) (getWidth() / 1.3f));
+                cloud.setWidth((int) (getWidth() / 1.2f));
                 cloud.setHeight((int) (cloud.getWidth() / cr));
                 cloud.setX(-cloud.getWidth() / 1.6f);
                 cloud.setY(branch1.getY() - cloud.getHeight()/3);
 
                 cloud.addBitmap(1, bcloud);
-                cloud.setStateSpeed(1, new PointF(getWidth()/bird.getWidth(), 0f));
+                cloud.setStateSpeed(1, new PointF(getWidth()/(cloud.getWidth()/5.5f), 0f));
 
                 cloud.addBitmap(2, bcloud);
                 cloud.setStateSpeed(2, new PointF(0f, 0f));
@@ -345,6 +354,16 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                 cloud.addBitmap(5, BitmapFactory.decodeResource(getResources(), R.drawable.cloud11));
                 cloud.addBitmap(5, BitmapFactory.decodeResource(getResources(), R.drawable.cloud12));
 
+                cloud.addBitmap(6, BitmapFactory.decodeResource(getResources(), R.drawable.cloud13));
+                cloud.addBitmap(6, BitmapFactory.decodeResource(getResources(), R.drawable.cloud14));
+                cloud.addBitmap(6, BitmapFactory.decodeResource(getResources(), R.drawable.cloud15));
+
+                cloud.addBitmap(7, BitmapFactory.decodeResource(getResources(), R.drawable.cloud16));
+                cloud.addBitmap(7, BitmapFactory.decodeResource(getResources(), R.drawable.cloud16));
+
+                cloud.addBitmap(8, BitmapFactory.decodeResource(getResources(), R.drawable.cloud15));
+                cloud.addBitmap(8, BitmapFactory.decodeResource(getResources(), R.drawable.cloud15));
+
                 addSprite(cloud);
 
                 animator.addTiming(1000, cloud, 1);
@@ -352,6 +371,10 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                 animator.addTiming(7000, cloud, 3);
                 animator.addTiming(8000, cloud, 4);
                 animator.addTiming(9000, cloud, 5);
+                animator.addTiming(13000, cloud, 6);
+                animator.addTiming(13500, cloud, 7);
+                animator.addTiming(14500, cloud, 8);
+                animator.addTiming(16000, cloud, 8);
 
                 animator.start();
             }
