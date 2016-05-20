@@ -7,6 +7,7 @@ import android.view.SurfaceHolder;
 
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
+import com.yellowforktech.littlefamilytree.events.EventQueue;
 import com.yellowforktech.littlefamilytree.games.TreeWalker;
 import com.yellowforktech.littlefamilytree.views.FlyingSurfaceView;
 
@@ -14,6 +15,7 @@ import java.util.List;
 
 public class FlyingActivity extends LittleFamilyActivity implements TreeWalker.Listener{
 
+    public static final String TOPIC_SKIP_CUTSCENE = "topic_skip_custscene";
     private FlyingSurfaceView flyView;
     private TreeWalker treeWalker;
 
@@ -38,7 +40,7 @@ public class FlyingActivity extends LittleFamilyActivity implements TreeWalker.L
     @Override
     protected void onStart() {
         super.onStart();
-        //DataService.getInstance().registerNetworkStateListener(this);
+        EventQueue.getInstance().subscribe(TOPIC_SKIP_CUTSCENE, this);
         treeWalker.loadFamilyMembers();
         flyView.resume();
     }
@@ -46,7 +48,7 @@ public class FlyingActivity extends LittleFamilyActivity implements TreeWalker.L
     @Override
     protected void onStop() {
         super.onStop();
-       // DataService.getInstance().unregisterNetworkStateListener(this);
+        EventQueue.getInstance().unSubscribe(TOPIC_SKIP_CUTSCENE, this);
     }
 
     @Override
@@ -66,6 +68,14 @@ public class FlyingActivity extends LittleFamilyActivity implements TreeWalker.L
     protected void onResume() {
         super.onResume();
         flyView.resume();
+    }
+
+    @Override
+    public void onEvent(String topic, Object o) {
+        super.onEvent(topic, o);
+        if (topic.equals(TOPIC_SKIP_CUTSCENE)) {
+            flyView.skipCutScene();
+        }
     }
 
     public void loadMorePeople() {

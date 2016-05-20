@@ -23,6 +23,7 @@ import com.yellowforktech.littlefamilytree.sprites.FlyingPersonLeafSprite;
 import com.yellowforktech.littlefamilytree.sprites.MovingAnimatedBitmapSprite;
 import com.yellowforktech.littlefamilytree.sprites.Sprite;
 import com.yellowforktech.littlefamilytree.sprites.SpriteAnimator;
+import com.yellowforktech.littlefamilytree.sprites.TouchEventGameSprite;
 import com.yellowforktech.littlefamilytree.util.ImageHelper;
 
 import java.util.ArrayList;
@@ -37,13 +38,13 @@ import java.util.Set;
  * TODO - SKip cutscene Button
  *      - Rescue Your Relatives Text and prompt
  *      - Bad clouds to blow bird
- *      - show missed leaves
  *      - End game
  *      - Game over screen
  */
 
 public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEventListener
 {
+
     private SensorManager mSensorManager;
     protected Sensor rotation;
     protected int mLastAccuracy;
@@ -56,6 +57,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
     private boolean spritesCreated = false;
     private boolean cutSceneComplete = false;
     private boolean cutScenePlaying = false;
+    private boolean gameOver = false;
     private int nestHeight;
 
     private SpriteAnimator animator;
@@ -63,12 +65,13 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
     protected AnimatedBitmapSprite bird;
     private List<FlyingPersonLeafSprite> peopleSprites;
     private List<FlyingPersonLeafSprite> nestSprites;
+    private List<FlyingPersonLeafSprite> missedSprites;
 
     private List<LittlePerson> family;
     private Set<LittlePerson> inNest;
     private Set<LittlePerson> onBoard;
 
-    private int maxDelay = 70;
+    private int maxDelay = 75;
     private int delay;
     private Random random;
     private int nestWidth;
@@ -80,6 +83,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
     private int ty = 0;
 
     private int missed = 0;
+    private int waitDelay = 200;
 
 	public FlyingSurfaceView(Context context) {
         super(context);
@@ -193,6 +197,9 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
     public void createCutScene() {
         synchronized (sprites) {
             sprites.clear();
+            peopleSprites = new ArrayList<>();
+            nestSprites = new ArrayList<>();
+            missedSprites = new ArrayList<>();
 
             animator = new SpriteAnimator();
 
@@ -358,11 +365,14 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                 cloud.addBitmap(6, BitmapFactory.decodeResource(getResources(), R.drawable.cloud14));
                 cloud.addBitmap(6, BitmapFactory.decodeResource(getResources(), R.drawable.cloud15));
 
-                cloud.addBitmap(7, BitmapFactory.decodeResource(getResources(), R.drawable.cloud16));
-                cloud.addBitmap(7, BitmapFactory.decodeResource(getResources(), R.drawable.cloud16));
+                cloud.addBitmap(7, BitmapFactory.decodeResource(getResources(), R.drawable.cloud15));
+                cloud.addBitmap(7, BitmapFactory.decodeResource(getResources(), R.drawable.cloud15));
 
-                cloud.addBitmap(8, BitmapFactory.decodeResource(getResources(), R.drawable.cloud15));
-                cloud.addBitmap(8, BitmapFactory.decodeResource(getResources(), R.drawable.cloud15));
+                cloud.addBitmap(8, BitmapFactory.decodeResource(getResources(), R.drawable.cloud16));
+                cloud.addBitmap(8, BitmapFactory.decodeResource(getResources(), R.drawable.cloud16));
+
+                cloud.addBitmap(9, BitmapFactory.decodeResource(getResources(), R.drawable.cloud15));
+                cloud.addBitmap(9, BitmapFactory.decodeResource(getResources(), R.drawable.cloud15));
 
                 addSprite(cloud);
 
@@ -372,9 +382,19 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                 animator.addTiming(8000, cloud, 4);
                 animator.addTiming(9000, cloud, 5);
                 animator.addTiming(13000, cloud, 6);
-                animator.addTiming(13500, cloud, 7);
+                animator.addTiming(13300, cloud, 7);
                 animator.addTiming(14500, cloud, 8);
-                animator.addTiming(16000, cloud, 8);
+                animator.addTiming(14800, cloud, 9);
+                animator.addTiming(17000, cloud, 9);
+
+                TouchEventGameSprite skipButton = new TouchEventGameSprite(
+                        BitmapFactory.decodeResource(getResources(), android.R.drawable.ic_media_next),
+                        FlyingActivity.TOPIC_SKIP_CUTSCENE,
+                        dm
+                        );
+                skipButton.setX(getWidth() - skipButton.getWidth());
+                skipButton.setY(getHeight() - skipButton.getHeight());
+                addSprite(skipButton);
 
                 animator.start();
             }
@@ -386,7 +406,9 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
             sprites.clear();
             peopleSprites = new ArrayList<>();
             nestSprites = new ArrayList<>();
+            missedSprites = new ArrayList<>();
 
+            waitDelay = 200;
             tx = 0;
             ty = getHeight() + tiles.get(0).getHeight();
 
@@ -420,7 +442,10 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
             leaves = new ArrayList<>(2);
             leaves.add(ImageHelper.loadBitmapFromResource(getContext(), R.drawable.leaf1, 0, (int) (bird.getWidth()*0.8), (int) (bird.getWidth()*0.8)));
             leaves.add(ImageHelper.loadBitmapFromResource(getContext(), R.drawable.leaf2, 0, (int) (bird.getWidth()*0.8), (int) (bird.getWidth()*0.8)));
+            leaves.add(ImageHelper.loadBitmapFromResource(getContext(), R.drawable.leafb1, 0, (int) (bird.getWidth()*0.8), (int) (bird.getWidth()*0.8)));
+            leaves.add(ImageHelper.loadBitmapFromResource(getContext(), R.drawable.leafb2, 0, (int) (bird.getWidth()*0.8), (int) (bird.getWidth()*0.8)));
 
+            activity.speak(getResources().getString(R.string.relative_rescue));
             spritesCreated = true;
         }
     }
@@ -456,8 +481,10 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
             onBoard.add(person);
             int width = (int) (bird.getWidth() * 0.9);
 
-            FlyingPersonLeafSprite personSprite = new FlyingPersonLeafSprite(leaves.get(random.nextInt(leaves.size())),
+            int rl = random.nextInt(2);
+            FlyingPersonLeafSprite personSprite = new FlyingPersonLeafSprite(leaves.get(rl),
                     getWidth(), getHeight() - (nestHeight + width), person, activity);
+            personSprite.addBitmap(3, leaves.get(rl+2));
             personSprite.setSelectable(true);
             personSprite.setY(0);
             int x = 20 + random.nextInt(getWidth() - width - 20);
@@ -478,6 +505,23 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                 s.setX(x);
                 x += dx;
             }
+        }
+    }
+
+    public void skipCutScene() {
+        cutSceneComplete = true;
+    }
+
+    public void showGameOver() {
+        gameOver = true;
+
+        synchronized (sprites) {
+            for (FlyingPersonLeafSprite s : peopleSprites) {
+                sprites.remove(s);
+            }
+            peopleSprites.clear();
+
+
         }
     }
 
@@ -512,47 +556,68 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                 bird.setY(y);
             }
 
-            int nestSize = nestSprites.size();
-            Iterator<FlyingPersonLeafSprite> i = peopleSprites.iterator();
-            while (i.hasNext()) {
-                FlyingPersonLeafSprite s = i.next();
-                if (s.isRemoveMe()) {
-                    missed++;
-                    i.remove();
-                }
-                else {
-                    if (s.inSprite(bird.getX() + bird.getWidth() / 2, bird.getY())) {
+            if (waitDelay > 0) {
+                waitDelay--;
+            } else if (!gameOver) {
+                int nestSize = nestSprites.size();
+                Iterator<FlyingPersonLeafSprite> i = peopleSprites.iterator();
+                while (i.hasNext()) {
+                    FlyingPersonLeafSprite s = i.next();
+                    if (s.isRemoveMe()) {
+                        missed++;
+
                         s.setSlope(0);
                         s.setSpeed(0);
-                        float r = (float)s.getWidth()/(float)s.getHeight();
-                        s.setWidth((int) (nestWidth*r));
+                        float r = (float) s.getWidth() / (float) s.getHeight();
+                        s.setWidth((int) (nestWidth * r));
                         s.setHeight(nestWidth);
-                        s.setX(inNest.size() * nestWidth);
-                        s.setY(getHeight() - nestHeight);
-                        nestSprites.add(s);
+                        s.setX(missedSprites.size() * nestWidth);
+                        s.setY(getHeight() - nestHeight * 2);
+                        s.setState(3);
+                        missedSprites.add(s);
+                        s.setRemoveMe(false);
                         LittlePerson person = s.getPerson();
-                        inNest.add(person);
                         onBoard.remove(person);
-                        activity.sayGivenNameForPerson(person);
+                        addSprite(s);
                         i.remove();
+                    } else {
+                        if (s.inSprite(bird.getX() + bird.getWidth() / 2, bird.getY())) {
+                            s.setSlope(0);
+                            s.setSpeed(0);
+                            float r = (float) s.getWidth() / (float) s.getHeight();
+                            s.setWidth((int) (nestWidth * r));
+                            s.setHeight(nestWidth);
+                            s.setX(inNest.size() * nestWidth);
+                            s.setY(getHeight() - nestHeight);
+                            nestSprites.add(s);
+                            LittlePerson person = s.getPerson();
+                            inNest.add(person);
+                            onBoard.remove(person);
+                            activity.sayGivenNameForPerson(person);
+                            i.remove();
+                        }
                     }
                 }
-            }
-            if (nestSize!=nestSprites.size()) {
-                reorderNest();
+                if (nestSize != nestSprites.size()) {
+                    reorderNest();
+                }
+
+                if (missed >= 3) {
+                    showGameOver();
+                }
+
+                if (delay > 0) {
+                    delay--;
+                } else {
+                    delay = maxDelay / 2 + random.nextInt(maxDelay) - (int) (inNest.size() * 0.5);
+                    addRandomPersonSprite();
+                }
             }
 
-            ty+=2 + inNest.size()/2;
+            ty += 2 + inNest.size() / 2;
             if (ty > tiles.get(0).getHeight()) {
                 ty = 0;
                 addTileRow();
-            }
-
-            if (delay > 0) {
-                delay--;
-            } else {
-                delay = maxDelay/2 + random.nextInt(maxDelay) - (int)(inNest.size()*0.5);
-                addRandomPersonSprite();
             }
         }
     }

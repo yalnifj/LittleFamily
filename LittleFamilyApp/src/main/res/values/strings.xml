@@ -142,5 +142,8 @@ Please wait...</string>
     <string name="record_audio_instr">Tap the audio button to record the person\'s given name. Press the stop button to stop recording. Press the play button to hear the recorded name. Press the delete button to remove the recording.</string>
     <string name="remember_20">Remember me for the next 20 minutes</string>
     <string name="show_family">Show My Family</string>
+    <string name="relative_rescue">Rescue your Relatives!</string>
+    <string name="rescued">Rescued:</string>
+    <string name="you_rescued">You rescued %1$d relatives!</string>
 
 </resources>
