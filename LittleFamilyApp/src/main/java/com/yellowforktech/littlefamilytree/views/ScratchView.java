@@ -13,6 +13,7 @@ import android.media.MediaPlayer;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.SurfaceHolder;
 
@@ -133,7 +134,8 @@ public class ScratchView extends SpritedSurfaceView {
                 canvas.drawBitmap(imageBitmap, null, dst, null);
 
                 if (!complete && mBitmap!=null && !mBitmap.isRecycled()) {
-                    canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
+                    canvas.drawBitmap(mBitmap, null, dst, mBitmapPaint);
+                    //canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
                     canvas.drawPath(circlePath, circlePaint);
                 }
 				if (complete) {
@@ -167,8 +169,8 @@ public class ScratchView extends SpritedSurfaceView {
         this.relationship = relationship;
         //super.setImageBitmap(bm);
         this.imageBitmap = bm;
-        int w = this.getWidth();
-        int h = this.getHeight();
+        int w = this.getWidth()/2;
+        int h = this.getHeight()/2;
         if (w==0) w=600;
 		if (h==0) h=600;
 
@@ -181,12 +183,17 @@ public class ScratchView extends SpritedSurfaceView {
             }
         }
 
-        mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        try {
+            mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        } catch (OutOfMemoryError e) {
+            Log.e("ScratchView", "Out of memory creating bitmap", e);
+            mBitmap = Bitmap.createBitmap(w/2, h/2, Bitmap.Config.ARGB_8888);
+        }
         mCanvas = new Canvas(mBitmap);
-        mPaint.setStrokeWidth(w < h ? w * 0.15f : h * 0.15f);
+        mPaint.setStrokeWidth(w * 0.15f);
         Paint background = new Paint();
         background.setColor(Color.GRAY);
-        mCanvas.drawRect(0, 0, w, h, background);
+        mCanvas.drawRect(0, 0, mCanvas.getWidth(), mCanvas.getHeight(), background);
         complete = false;
 		synchronized(sprites) {
 			sprites.clear();
@@ -195,10 +202,11 @@ public class ScratchView extends SpritedSurfaceView {
 
 	@Override
     public void touch_start(float x, float y) {
+        float wratio = (float)(mCanvas.getWidth()) / (float)(getWidth());
         mPath.reset();
-        mPath.moveTo(x, y);
-        mX = x;
-        mY = y;
+        mX = x*wratio;
+        mY = y*wratio;
+        mPath.moveTo(mX, mY);
         try {
             Boolean quietMode = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("quiet_mode", false);
             if (!quietMode) {
@@ -213,34 +221,36 @@ public class ScratchView extends SpritedSurfaceView {
 	
 	@Override
 	public void doMove(float oldX, float oldY, float x, float y) {
-		mPath.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2);
+        float wratio = (float)(mCanvas.getWidth()) / (float)(getWidth());
+		mPath.lineTo(x * wratio, y * wratio);
 		// commit the path to our offscreen
         if (mCanvas!=null) {
             mCanvas.drawPath(mPath, mPaint);
         }
 
         circlePath.reset();
-        circlePath.addCircle(mX, mY, 40, Path.Direction.CW);
+        circlePath.addCircle(mX, mY, 25*dm.density, Path.Direction.CW);
 			
 		ScratchBitsSprite bit = new ScratchBitsSprite();
 		bit.setX(x);
 		bit.setY(y);
-		bit.setWidth(4 + random.nextInt(10));
-		bit.setHeight(4 + random.nextInt(10));
+		bit.setWidth((int) ((4 + random.nextInt(8)) * dm.density));
+		bit.setHeight((int) ((4 + random.nextInt(8))*dm.density));
         int xdir = (int) (x - oldX)/3;
         int ydir = (int) (y - oldY)/3;
         bit.setXdir(xdir);
         bit.setYdir(ydir);
 		addSprite(bit);
 
-        if (bit.getWidth()>=12) {
+        if (bit.getWidth()>=8*dm.density) {
             performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY, HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
         }
     }
 	
 	@Override
     protected void touch_up(float tx, float ty) {
-        mPath.lineTo(mX, mY);
+        float wratio = (float)(mCanvas.getWidth()) / (float)(getWidth());
+        mPath.lineTo(tx*wratio, ty*wratio);
         circlePath.reset();
         // commit the path to our offscreen
         if (mCanvas!=null) {
