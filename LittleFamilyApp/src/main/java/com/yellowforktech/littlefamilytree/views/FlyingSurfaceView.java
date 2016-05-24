@@ -37,8 +37,6 @@ import java.util.Set;
 /**
  * TODO - SKip cutscene Button
  *      - Rescue Your Relatives Text and prompt
- *      - Bad clouds to blow bird
- *      - End game
  *      - Game over screen
  */
 
@@ -73,6 +71,8 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
 
     private int maxDelay = 75;
     private int delay;
+    private int maxCloudDelay = 200;
+    private int cloudDelay;
     private Random random;
     private int nestWidth;
 
@@ -81,9 +81,13 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
     private List<Bitmap> leaves;
     private int tx = 0;
     private int ty = 0;
+    private int wind = 0;
+    private int windPower = 0;
 
     private int missed = 0;
-    private int waitDelay = 200;
+    private int waitDelay = 350;
+
+    private MovingAnimatedBitmapSprite cloud;
 
 	public FlyingSurfaceView(Context context) {
         super(context);
@@ -126,6 +130,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
 
         random = new Random();
         delay = random.nextInt(maxDelay);
+        cloudDelay = maxCloudDelay/2 + random.nextInt(maxCloudDelay/2);
 
         Bitmap tile1 = BitmapFactory.decodeResource(getResources(), R.drawable.bird_tile1);
         Bitmap tile2 = BitmapFactory.decodeResource(getResources(), R.drawable.bird_tile2);
@@ -328,9 +333,11 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
 
                 cutScenePlaying = true;
 
-                Bitmap bcloud = BitmapFactory.decodeResource(getResources(), R.drawable.cloud1);
+                int w = getWidth()/4;
+                int h = getWidth()/4;
+                Bitmap bcloud = ImageHelper.loadBitmapFromResource(getContext(), R.drawable.cloud1, 0, w, h);
                 float cr = (float)(bcloud.getWidth()) /(float)( bcloud.getHeight());
-                MovingAnimatedBitmapSprite cloud = new MovingAnimatedBitmapSprite(bcloud, getWidth(), getHeight());
+                cloud = new MovingAnimatedBitmapSprite(bcloud, getWidth(), getHeight());
                 cloud.setWrap(true);
                 cloud.setSpeed(0);
                 cloud.setSlope(0);
@@ -345,34 +352,34 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                 cloud.addBitmap(2, bcloud);
                 cloud.setStateSpeed(2, new PointF(0f, 0f));
 
-                cloud.addBitmap(3, BitmapFactory.decodeResource(getResources(), R.drawable.cloud2));
+                cloud.addBitmap(3, ImageHelper.loadBitmapFromResource(getContext(), R.drawable.cloud2, 0, w, h));
 
-                cloud.addBitmap(4, BitmapFactory.decodeResource(getResources(), R.drawable.cloud3));
-                cloud.addBitmap(4, BitmapFactory.decodeResource(getResources(), R.drawable.cloud4));
-                cloud.addBitmap(4, BitmapFactory.decodeResource(getResources(), R.drawable.cloud5));
-                cloud.addBitmap(4, BitmapFactory.decodeResource(getResources(), R.drawable.cloud6));
-                cloud.addBitmap(4, BitmapFactory.decodeResource(getResources(), R.drawable.cloud7));
-                cloud.addBitmap(4, BitmapFactory.decodeResource(getResources(), R.drawable.cloud8));
-                cloud.addBitmap(4, BitmapFactory.decodeResource(getResources(), R.drawable.cloud9));
-                cloud.addBitmap(4, BitmapFactory.decodeResource(getResources(), R.drawable.cloud10));
-                cloud.addBitmap(4, BitmapFactory.decodeResource(getResources(), R.drawable.cloud11));
-                cloud.addBitmap(4, BitmapFactory.decodeResource(getResources(), R.drawable.cloud12));
+                cloud.addBitmap(4, ImageHelper.loadBitmapFromResource(getContext(), R.drawable.cloud3, 0, w, h));
+                cloud.addBitmap(4, ImageHelper.loadBitmapFromResource(getContext(), R.drawable.cloud4, 0, w, h));
+                cloud.addBitmap(4, ImageHelper.loadBitmapFromResource(getContext(), R.drawable.cloud5, 0, w, h));
+                cloud.addBitmap(4, ImageHelper.loadBitmapFromResource(getContext(), R.drawable.cloud6, 0, w, h));
+                cloud.addBitmap(4, ImageHelper.loadBitmapFromResource(getContext(), R.drawable.cloud7, 0, w, h));
+                cloud.addBitmap(4, ImageHelper.loadBitmapFromResource(getContext(), R.drawable.cloud8, 0, w, h));
+                cloud.addBitmap(4, ImageHelper.loadBitmapFromResource(getContext(), R.drawable.cloud9, 0, w, h));
+                cloud.addBitmap(4, ImageHelper.loadBitmapFromResource(getContext(), R.drawable.cloud10, 0, w, h));
+                cloud.addBitmap(4, ImageHelper.loadBitmapFromResource(getContext(), R.drawable.cloud11, 0, w, h));
+                cloud.addBitmap(4, ImageHelper.loadBitmapFromResource(getContext(), R.drawable.cloud12, 0, w, h));
 
-                cloud.addBitmap(5, BitmapFactory.decodeResource(getResources(), R.drawable.cloud11));
-                cloud.addBitmap(5, BitmapFactory.decodeResource(getResources(), R.drawable.cloud12));
+                cloud.addBitmap(5, ImageHelper.loadBitmapFromResource(getContext(), R.drawable.cloud11, 0, w, h));
+                cloud.addBitmap(5, ImageHelper.loadBitmapFromResource(getContext(), R.drawable.cloud12, 0, w, h));
 
-                cloud.addBitmap(6, BitmapFactory.decodeResource(getResources(), R.drawable.cloud13));
-                cloud.addBitmap(6, BitmapFactory.decodeResource(getResources(), R.drawable.cloud14));
-                cloud.addBitmap(6, BitmapFactory.decodeResource(getResources(), R.drawable.cloud15));
+                cloud.addBitmap(6, ImageHelper.loadBitmapFromResource(getContext(), R.drawable.cloud13, 0, w, h));
+                cloud.addBitmap(6, ImageHelper.loadBitmapFromResource(getContext(), R.drawable.cloud14, 0, w, h));
+                cloud.addBitmap(6, ImageHelper.loadBitmapFromResource(getContext(), R.drawable.cloud15, 0, w, h));
 
-                cloud.addBitmap(7, BitmapFactory.decodeResource(getResources(), R.drawable.cloud15));
-                cloud.addBitmap(7, BitmapFactory.decodeResource(getResources(), R.drawable.cloud15));
+                cloud.addBitmap(7, ImageHelper.loadBitmapFromResource(getContext(), R.drawable.cloud15, 0, w, h));
+                cloud.addBitmap(7, ImageHelper.loadBitmapFromResource(getContext(), R.drawable.cloud15, 0, w, h));
 
-                cloud.addBitmap(8, BitmapFactory.decodeResource(getResources(), R.drawable.cloud16));
-                cloud.addBitmap(8, BitmapFactory.decodeResource(getResources(), R.drawable.cloud16));
+                cloud.addBitmap(8, ImageHelper.loadBitmapFromResource(getContext(), R.drawable.cloud16, 0, w, h));
+                cloud.addBitmap(8, ImageHelper.loadBitmapFromResource(getContext(), R.drawable.cloud16, 0, w, h));
 
-                cloud.addBitmap(9, BitmapFactory.decodeResource(getResources(), R.drawable.cloud15));
-                cloud.addBitmap(9, BitmapFactory.decodeResource(getResources(), R.drawable.cloud15));
+                cloud.addBitmap(9, ImageHelper.loadBitmapFromResource(getContext(), R.drawable.cloud15, 0, w, h));
+                cloud.addBitmap(9, ImageHelper.loadBitmapFromResource(getContext(), R.drawable.cloud15, 0, w, h));
 
                 addSprite(cloud);
 
@@ -392,6 +399,9 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                         FlyingActivity.TOPIC_SKIP_CUTSCENE,
                         dm
                         );
+                float sr = ((float)skipButton.getWidth()) / (float) skipButton.getHeight();
+                skipButton.setWidth(getWidth() / 4);
+                skipButton.setHeight((int) ((getWidth() / 4) / sr));
                 skipButton.setX(getWidth() - skipButton.getWidth());
                 skipButton.setY(getHeight() - skipButton.getHeight());
                 addSprite(skipButton);
@@ -491,10 +501,52 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
             personSprite.setX(x);
             personSprite.setWrap(false);
             personSprite.setSpeed(0);
-            personSprite.setSlope(5f + inNest.size() + random.nextFloat() * 5f);
+            personSprite.setSlope(5f + inNest.size() + random.nextFloat() * 4.5f);
             addSprite(personSprite);
             peopleSprites.add(personSprite);
         }
+    }
+
+    public void addRandomCloud() {
+        cloud.setWrap(true);
+        cloud.setSpeed(0);
+        cloud.setSlope(0);
+        cloud.setY(bird.getY());
+        cloud.setState(0);
+        cloud.setRemoveMe(false);
+
+        windPower = 4 + random.nextInt(3);
+        /*if (random.nextFloat() > 0.5) {
+            windPower = windPower * -1;
+            cloud.setFlipHoriz(true);
+            cloud.setX(getWidth() + cloud.getWidth() / 1.6f);
+            cloud.setStateSpeed(1, new PointF(getWidth()/(cloud.getWidth()/-5.5f), 0f));
+        } else {
+        */
+            cloud.setFlipHoriz(false);
+            cloud.setX(-cloud.getWidth() * 1.5f);
+            cloud.setStateSpeed(1, new PointF(getWidth()/(cloud.getWidth()/2.5f), 0f));
+        //}
+
+        float cr = (float)(cloud.getWidth()) /(float)( cloud.getHeight());
+        cloud.setWidth((int) ((getWidth() / 2f) * Math.abs(windPower)/7f));
+        cloud.setHeight((int) (cloud.getWidth() / cr));
+        cloud.setStateSpeed(2, new PointF(0f, 0f));
+
+        animator = new SpriteAnimator();
+        animator.addTiming(500, cloud, 1);
+        animator.addTiming(1500, cloud, 2);
+        animator.addTiming(2000, cloud, 3);
+        animator.addTiming(3000, cloud, 4);
+        animator.addTiming(4000, cloud, 5);
+        int blowtime = 2000 + random.nextInt(2000);
+        animator.addTiming(4000 + blowtime, cloud, 6);
+        animator.addTiming(5300 + blowtime, cloud, 7);
+        animator.addTiming(6000 + blowtime, cloud, -1);
+        animator.addTiming(6500 + blowtime, cloud, -1);
+
+        addSprite(cloud);
+        animator.start();
     }
 
     public void reorderNest() {
@@ -537,9 +589,17 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
             }
         }
         else if (spritesCreated) {
-            if (Math.abs(roll) > 3) {
+            wind = 0;
+            if (!animator.isFinished()) {
+                animator.doStep();
+                if (animator.getCurrentPosition() >3 && animator.getCurrentPosition() < 6) {
+                    wind = windPower;
+                }
+            }
+            if (Math.abs(roll) > 3 || wind > 0) {
                 float x = bird.getX();
                 x -= roll / 2;
+                x += wind*dm.density;
                 if (x + bird.getWidth() > getWidth()) x = getWidth() - bird.getWidth();
                 if (x < 0) x = 0;
                 bird.setX(x);
@@ -612,9 +672,16 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                     delay = maxDelay / 2 + random.nextInt(maxDelay) - (int) (inNest.size() * 0.5);
                     addRandomPersonSprite();
                 }
+
+                if (cloudDelay > 0) {
+                    cloudDelay--;
+                } else {
+                    cloudDelay = maxCloudDelay / 2 + random.nextInt(maxCloudDelay);
+                    if (animator.isFinished()) addRandomCloud();
+                }
             }
 
-            ty += 2 + inNest.size() / 2;
+            ty += 2 + inNest.size() / 2.5;
             if (ty > tiles.get(0).getHeight()) {
                 ty = 0;
                 addTileRow();
@@ -656,11 +723,11 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
             }
         }
 
-        /*
+/*
         canvas.drawText(String.format("pitch: %.2f", pitch), 0, 40, textPaint);
         canvas.drawText(String.format("roll: %.2f", roll), 0, 80, textPaint);
-        canvas.drawText(String.format("zRad: %.2f", zRad), 0, 120, textPaint);
-        */
+        canvas.drawText(String.format("wind: %d", wind), 0, 120, textPaint);
+*/
     }
 
     @Override

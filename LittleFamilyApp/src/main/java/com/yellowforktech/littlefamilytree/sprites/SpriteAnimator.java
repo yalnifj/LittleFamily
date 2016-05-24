@@ -22,6 +22,7 @@ public class SpriteAnimator {
         currentPosition = 0;
         Collections.sort(timings);
         started = true;
+        finished = false;
     }
 
     public void addTiming(long time, Sprite sprite, int state) {
@@ -36,9 +37,9 @@ public class SpriteAnimator {
                 started = false;
                 return;
             }
-            long time = System.currentTimeMillis() - startmillis;
+            currentTime = System.currentTimeMillis() - startmillis;
 
-            while(currentPosition < timings.size() && timings.get(currentPosition).time < time) {
+            while(currentPosition < timings.size() && timings.get(currentPosition).time < currentTime) {
                 timings.get(currentPosition).apply();
                 currentPosition++;
             }
@@ -53,6 +54,14 @@ public class SpriteAnimator {
         return started;
     }
 
+    public int getCurrentPosition() {
+        return currentPosition;
+    }
+
+    public long getCurrentTime() {
+        return currentTime;
+    }
+
     public class SpriteAnimatorTiming implements Comparable<SpriteAnimatorTiming> {
         Sprite sprite;
         int state;
@@ -65,7 +74,11 @@ public class SpriteAnimator {
         }
 
         public void apply() {
-            sprite.setState(state);
+            if (state < 0) {
+                sprite.setRemoveMe(true);
+            } else {
+                sprite.setState(state);
+            }
         }
 
         @Override
