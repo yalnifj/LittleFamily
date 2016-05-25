@@ -14,6 +14,7 @@ public class MovingAnimatedBitmapSprite extends AnimatedBitmapSprite {
     protected float slope;
     protected float speed;
     protected boolean wrap;
+    protected boolean ignoreBounds = false;
     protected int maxWidth;
     protected int maxHeight;
 
@@ -73,6 +74,14 @@ public class MovingAnimatedBitmapSprite extends AnimatedBitmapSprite {
         this.wrap = wrap;
     }
 
+    public boolean isIgnoreBounds() {
+        return ignoreBounds;
+    }
+
+    public void setIgnoreBounds(boolean ignoreBounds) {
+        this.ignoreBounds = ignoreBounds;
+    }
+
     public void setStateSpeed(int state, PointF speed) {
         stateSpeeds.put(state, speed);
     }
@@ -90,7 +99,7 @@ public class MovingAnimatedBitmapSprite extends AnimatedBitmapSprite {
             if (this.x > this.maxWidth) {
                 if (wrap) {
                     this.x = 0 - (this.width - this.speed);
-                } else {
+                } else if (!ignoreBounds) {
                     setRemoveMe(true);
                 }
             }
@@ -98,7 +107,7 @@ public class MovingAnimatedBitmapSprite extends AnimatedBitmapSprite {
             if (this.x + this.width < 0) {
                 if (wrap) {
                     this.x = this.maxWidth + this.speed;
-                } else {
+                } else if (!ignoreBounds) {
                     setRemoveMe(true);
                 }
             }

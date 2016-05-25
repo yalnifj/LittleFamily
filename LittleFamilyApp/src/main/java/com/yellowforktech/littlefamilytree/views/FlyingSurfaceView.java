@@ -14,6 +14,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.FlyingActivity;
@@ -339,6 +340,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                 float cr = (float)(bcloud.getWidth()) /(float)( bcloud.getHeight());
                 cloud = new MovingAnimatedBitmapSprite(bcloud, getWidth(), getHeight());
                 cloud.setWrap(true);
+                cloud.setIgnoreBounds(true);
                 cloud.setSpeed(0);
                 cloud.setSlope(0);
                 cloud.setWidth((int) (getWidth() / 1.2f));
@@ -404,6 +406,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                 skipButton.setHeight((int) ((getWidth() / 4) / sr));
                 skipButton.setX(getWidth() - skipButton.getWidth());
                 skipButton.setY(getHeight() - skipButton.getHeight());
+                skipButton.setIgnoreAlpha(true);
                 addSprite(skipButton);
 
                 animator.start();
@@ -508,7 +511,8 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
     }
 
     public void addRandomCloud() {
-        cloud.setWrap(true);
+        cloud.setWrap(false);
+        cloud.setIgnoreBounds(true);
         cloud.setSpeed(0);
         cloud.setSlope(0);
         cloud.setY(bird.getY());
@@ -516,21 +520,21 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
         cloud.setRemoveMe(false);
 
         windPower = 4 + random.nextInt(3);
-        /*if (random.nextFloat() > 0.5) {
+        float cr = (float)(cloud.getWidth()) /(float)( cloud.getHeight());
+        cloud.setWidth((int) ((getWidth() / 2.5f) + ((getWidth()/4f) * Math.abs(windPower)/7f)));
+        cloud.setHeight((int) (cloud.getWidth() / cr));
+
+        if (random.nextFloat() > 0.5) {
             windPower = windPower * -1;
             cloud.setFlipHoriz(true);
-            cloud.setX(getWidth() + cloud.getWidth() / 1.6f);
-            cloud.setStateSpeed(1, new PointF(getWidth()/(cloud.getWidth()/-5.5f), 0f));
+            cloud.buildMatrix();
+            cloud.setX(0);
         } else {
-        */
             cloud.setFlipHoriz(false);
-            cloud.setX(-cloud.getWidth() * 1.5f);
-            cloud.setStateSpeed(1, new PointF(getWidth()/(cloud.getWidth()/2.5f), 0f));
-        //}
+            cloud.setX(-cloud.getWidth());
+        }
+        cloud.setStateSpeed(1, new PointF(cloud.getWidth()/32f, 0f));
 
-        float cr = (float)(cloud.getWidth()) /(float)( cloud.getHeight());
-        cloud.setWidth((int) ((getWidth() / 2f) * Math.abs(windPower)/7f));
-        cloud.setHeight((int) (cloud.getWidth() / cr));
         cloud.setStateSpeed(2, new PointF(0f, 0f));
 
         animator = new SpriteAnimator();
@@ -545,6 +549,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
         animator.addTiming(6000 + blowtime, cloud, -1);
         animator.addTiming(6500 + blowtime, cloud, -1);
 
+        Log.i("FlyingSurfaceView", "added clound "+windPower);
         addSprite(cloud);
         animator.start();
     }
