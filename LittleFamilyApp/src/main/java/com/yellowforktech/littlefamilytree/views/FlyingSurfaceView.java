@@ -634,6 +634,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
             message.setFitWidth(true);
             message.setCentered(true);
             addSprite(message);
+            activity.speak(text);
         }
     }
 
@@ -722,7 +723,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                             onBoard.remove(person);
                             activity.sayGivenNameForPerson(person);
                             i.remove();
-                            activity.playCompleteSound();
+                            //activity.playCompleteSound();
                         }
                     }
                 }
