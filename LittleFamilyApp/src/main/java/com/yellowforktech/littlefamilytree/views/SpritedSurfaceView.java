@@ -81,6 +81,18 @@ public class SpritedSurfaceView extends AbstractTouchAnimatedSurfaceView {
         }
     }
 
+    public void addSprite(Sprite s, Sprite before) {
+        synchronized (sprites) {
+            int pos = sprites.indexOf(before);
+            if (pos >=0) {
+                sprites.add(pos, s);
+            } else {
+                sprites.add(s);
+            }
+            s.setSurfaceView(this);
+        }
+    }
+
     public void removeSprite(Sprite s) {
         synchronized (sprites) {
             sprites.remove(s);

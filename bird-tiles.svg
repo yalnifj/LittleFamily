@@ -9015,17 +9015,17 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.80094572"
-     inkscape:cx="257.51734"
-     inkscape:cy="-388.7762"
+     inkscape:zoom="0.35286518"
+     inkscape:cx="230.70226"
+     inkscape:cy="-143.72287"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1366"
-     inkscape:window-height="705"
-     inkscape:window-x="1272"
-     inkscape:window-y="248"
-     inkscape:window-maximized="1" />
+     inkscape:window-width="1360"
+     inkscape:window-height="787"
+     inkscape:window-x="200"
+     inkscape:window-y="200"
+     inkscape:window-maximized="0" />
   <metadata
      id="metadata4247">
     <rdf:RDF>
@@ -9057,7 +9057,10 @@
      inkscape:groupmode="layer"
      id="layer1">
     <g
-       id="g6884">
+       id="g6884"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\relativerescue.png"
+       inkscape:export-xdpi="88.129997"
+       inkscape:export-ydpi="88.129997">
       <g
          id="g6773"
          transform="matrix(1.0835246,0.03401437,-0.03449211,1.0685172,53.16702,-90.727649)">
@@ -15443,7 +15446,10 @@
        d="m 363.84199,10.09325 c 0,0 0.92983,3.131465 -0.34524,4.68213 -1.27508,1.550665 1.96555,-1.601725 2.05279,-3.666591 0.0872,-2.0649174 -1.95964,-2.3773831 -1.70752,-1.015539 z"
        style="display:inline;fill:url(#linearGradient7131)" />
     <g
-       id="g7044">
+       id="g7044"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\rr_gameover.png"
+       inkscape:export-xdpi="97.279999"
+       inkscape:export-ydpi="97.279999">
       <g
          transform="matrix(1.2270601,0.03852028,-0.03906131,1.2100646,427.37026,-140.72164)"
          id="g6773-2">
@@ -15492,7 +15498,10 @@
       </g>
     </g>
     <g
-       id="g7078">
+       id="g7078"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\rr_play.png"
+       inkscape:export-xdpi="76.879997"
+       inkscape:export-ydpi="76.879997">
       <g
          style="stroke:#a7e2f6;stroke-opacity:1;stroke-width:2.43109641;stroke-miterlimit:4;stroke-dasharray:none;opacity:1"
          transform="matrix(0.62100883,0.01949492,-0.01976873,0.61240751,531.08778,752.67744)"

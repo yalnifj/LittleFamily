@@ -19,11 +19,14 @@ import android.util.Log;
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.FlyingActivity;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
+import com.yellowforktech.littlefamilytree.events.EventListener;
+import com.yellowforktech.littlefamilytree.events.EventQueue;
 import com.yellowforktech.littlefamilytree.sprites.AnimatedBitmapSprite;
 import com.yellowforktech.littlefamilytree.sprites.FlyingPersonLeafSprite;
 import com.yellowforktech.littlefamilytree.sprites.MovingAnimatedBitmapSprite;
 import com.yellowforktech.littlefamilytree.sprites.Sprite;
 import com.yellowforktech.littlefamilytree.sprites.SpriteAnimator;
+import com.yellowforktech.littlefamilytree.sprites.TextSprite;
 import com.yellowforktech.littlefamilytree.sprites.TouchEventGameSprite;
 import com.yellowforktech.littlefamilytree.util.ImageHelper;
 
@@ -41,9 +44,9 @@ import java.util.Set;
  *      - Game over screen
  */
 
-public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEventListener
+public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEventListener, EventListener
 {
-
+    public static final String TOPIC_PLAY_AGAIN = "play_again";
     private SensorManager mSensorManager;
     protected Sensor rotation;
     protected int mLastAccuracy;
@@ -152,6 +155,14 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
         tiles.add(tile5);
 
         backgroundTiles = new LinkedList<>();
+
+        EventQueue.getInstance().subscribe(TOPIC_PLAY_AGAIN, this);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        EventQueue.getInstance().unSubscribe(TOPIC_PLAY_AGAIN, this);
     }
 
     @Override
@@ -420,7 +431,11 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
             peopleSprites = new ArrayList<>();
             nestSprites = new ArrayList<>();
             missedSprites = new ArrayList<>();
+            inNest.clear();
+            onBoard.clear();
+            missed = 0;
 
+            gameOver = false;
             waitDelay = 200;
             tx = 0;
             ty = getHeight() + tiles.get(0).getHeight();
@@ -441,6 +456,18 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
 
             nestHeight = (int) (40 * dm.density);
             nestWidth = (int) (35 *dm.density);
+
+            MovingAnimatedBitmapSprite titleSprite = new MovingAnimatedBitmapSprite(BitmapFactory.decodeResource(getResources(), R.drawable.rr_title), getWidth(), getHeight());
+            float tr = (float)(titleSprite.getWidth()) / (float) titleSprite.getHeight();
+            titleSprite.setWidth((int) (getWidth() * 0.8f));
+            titleSprite.setHeight((int) (titleSprite.getWidth() / tr));
+            titleSprite.setX((getWidth() - titleSprite.getWidth())/2);
+            titleSprite.setY((getHeight() / 2) - titleSprite.getHeight());
+            titleSprite.setSpeed(0);
+            titleSprite.setSlope(getHeight() * 3f / titleSprite.getHeight());
+            titleSprite.setWrap(false);
+            titleSprite.setIgnoreBounds(false);
+            addSprite(titleSprite);
 
             Bitmap birdBm = BitmapFactory.decodeResource(context.getResources(), R.drawable.flying_bird1);
             bird = new AnimatedBitmapSprite(birdBm);
@@ -550,7 +577,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
         animator.addTiming(6500 + blowtime, cloud, -1);
 
         Log.i("FlyingSurfaceView", "added clound "+windPower);
-        addSprite(cloud);
+        addSprite(cloud, bird);
         animator.start();
     }
 
@@ -578,7 +605,29 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
             }
             peopleSprites.clear();
 
+            AnimatedBitmapSprite gameOver = new AnimatedBitmapSprite(BitmapFactory.decodeResource(getResources(), R.drawable.rr_gameover));
+            float tr = (float)(gameOver.getWidth()) / (float) gameOver.getHeight();
+            gameOver.setWidth((int) (getWidth() * 0.9f));
+            gameOver.setHeight((int) (gameOver.getWidth() / tr));
+            gameOver.setX((getWidth() - gameOver.getWidth())/2);
+            gameOver.setY((getHeight()/2) - gameOver.getHeight());
+            addSprite(gameOver);
 
+            TouchEventGameSprite playAgain = new TouchEventGameSprite(BitmapFactory.decodeResource(getResources(), R.drawable.rr_play), TOPIC_PLAY_AGAIN, dm);
+            playAgain.setX(getWidth()/2);
+            playAgain.setY(gameOver.getY()+gameOver.getHeight() - playAgain.getHeight()/3);
+            addSprite(playAgain);
+
+            TextSprite message = new TextSprite();
+            String text = getResources().getString(R.string.you_rescued, inNest.size());
+            message.setText(text);
+            message.setWidth((int) (gameOver.getWidth()*0.8f));
+            message.setHeight(gameOver.getHeight()/4);
+            message.setX(gameOver.getX() + gameOver.getWidth()*0.1f);
+            message.setY(gameOver.getY() + gameOver.getHeight()/1.4f);
+            message.setFitWidth(true);
+            message.setCentered(true);
+            addSprite(message);
         }
     }
 
@@ -733,6 +782,13 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
         canvas.drawText(String.format("roll: %.2f", roll), 0, 80, textPaint);
         canvas.drawText(String.format("wind: %d", wind), 0, 120, textPaint);
 */
+    }
+
+    @Override
+    public void onEvent(String topic, Object o) {
+        if (topic.equals(TOPIC_PLAY_AGAIN)) {
+            createSprites();
+        }
     }
 
     @Override
