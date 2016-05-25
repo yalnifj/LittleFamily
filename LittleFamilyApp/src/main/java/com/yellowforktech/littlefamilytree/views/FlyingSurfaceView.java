@@ -548,7 +548,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
         cloud.setState(0);
         cloud.setRemoveMe(false);
 
-        windPower = 4 + random.nextInt(3);
+        windPower = 5 + random.nextInt(3);
         float cr = (float)(cloud.getWidth()) /(float)( cloud.getHeight());
         cloud.setWidth((int) ((getWidth() / 2.5f) + ((getWidth()/4f) * Math.abs(windPower)/7f)));
         cloud.setHeight((int) (cloud.getWidth() / cr));
@@ -653,7 +653,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
             wind = 0;
             if (!animator.isFinished()) {
                 animator.doStep();
-                if (animator.getCurrentPosition() >3 && animator.getCurrentPosition() < 6) {
+                if (animator.getCurrentPosition() >3 && animator.getCurrentPosition() < 7) {
                     wind = windPower;
                 }
             }
