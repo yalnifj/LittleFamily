@@ -108,6 +108,10 @@ public abstract class Sprite {
         return matrix;
     }
 
+    public void setMatrix(Matrix matrix) {
+        this.matrix = matrix;
+    }
+
     public boolean isSelected() {
         return selected;
     }

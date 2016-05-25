@@ -72,7 +72,7 @@ public class AnimatedBitmapSprite extends Sprite implements BitmapSequenceLoader
         frame = 0;
         stepsPerFrame = 3;
         basePaint = new Paint();
-        
+
     }
 
     public Map<Integer, List<Bitmap>> getBitmaps() {

@@ -12,6 +12,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Vibrator;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -37,12 +38,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-
-/**
- * TODO - SKip cutscene Button
- *      - Rescue Your Relatives Text and prompt
- *      - Game over screen
- */
 
 public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEventListener, EventListener
 {
@@ -92,6 +87,9 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
     private int waitDelay = 350;
 
     private MovingAnimatedBitmapSprite cloud;
+    private TouchEventGameSprite playAgain;
+    private float pax;
+    private float pay;
 
 	public FlyingSurfaceView(Context context) {
         super(context);
@@ -268,6 +266,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
             animator.addTiming(5000, bird, 1);
             animator.addTiming(5500, bird, 2);
             animator.addTiming(6000, bird, 3);
+            animator.addAudioTiming(6000, R.raw.bird, getContext());
             animator.addTiming(7000, bird, 2);
             animator.addTiming(15000, bird, 2);
 
@@ -399,11 +398,14 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                 animator.addTiming(1000, cloud, 1);
                 animator.addTiming(5000, cloud, 2);
                 animator.addTiming(7000, cloud, 3);
+                animator.addAudioTiming(7000, R.raw.grumble, getContext());
                 animator.addTiming(8000, cloud, 4);
+                animator.addAudioTiming(8000, R.raw.blowing, getContext());
                 animator.addTiming(9000, cloud, 5);
                 animator.addTiming(13000, cloud, 6);
                 animator.addTiming(13300, cloud, 7);
                 animator.addTiming(14500, cloud, 8);
+                animator.addAudioTiming(14500, R.raw.humph, getContext());
                 animator.addTiming(14800, cloud, 9);
                 animator.addTiming(17000, cloud, 9);
 
@@ -554,8 +556,9 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
         if (random.nextFloat() > 0.5) {
             windPower = windPower * -1;
             cloud.setFlipHoriz(true);
-            cloud.buildMatrix();
             cloud.setX(0);
+            cloud.buildMatrix();
+            cloud.setX(-getWidth() - cloud.getWidth()/5);
         } else {
             cloud.setFlipHoriz(false);
             cloud.setX(-cloud.getWidth());
@@ -569,6 +572,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
         animator.addTiming(1500, cloud, 2);
         animator.addTiming(2000, cloud, 3);
         animator.addTiming(3000, cloud, 4);
+        animator.addAudioTiming(3000, R.raw.blowing, getContext());
         animator.addTiming(4000, cloud, 5);
         int blowtime = 2000 + random.nextInt(2000);
         animator.addTiming(4000 + blowtime, cloud, 6);
@@ -613,9 +617,11 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
             gameOver.setY((getHeight()/2) - gameOver.getHeight());
             addSprite(gameOver);
 
-            TouchEventGameSprite playAgain = new TouchEventGameSprite(BitmapFactory.decodeResource(getResources(), R.drawable.rr_play), TOPIC_PLAY_AGAIN, dm);
+            playAgain = new TouchEventGameSprite(BitmapFactory.decodeResource(getResources(), R.drawable.rr_play), TOPIC_PLAY_AGAIN, dm);
             playAgain.setX(getWidth()/2);
-            playAgain.setY(gameOver.getY()+gameOver.getHeight() - playAgain.getHeight()/3);
+            playAgain.setY(gameOver.getY()+gameOver.getHeight() - playAgain.getHeight()/5);
+            pax = playAgain.getX();
+            pay = playAgain.getY();
             addSprite(playAgain);
 
             TextSprite message = new TextSprite();
@@ -694,8 +700,15 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                         onBoard.remove(person);
                         addSprite(s);
                         i.remove();
+
+                        activity.playBuzzSound();
+                        Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
+                        long[] pattern = {0L, 200L, 50L, 300L};
+                        v.vibrate(pattern, -1);
+
                     } else {
-                        if (s.inSprite(bird.getX() + bird.getWidth() / 2, bird.getY())) {
+                        if (s.inSprite(bird.getX() + bird.getWidth() * 0.33f, bird.getY())
+                                || s.inSprite(bird.getX() + bird.getWidth() *0.66f, bird.getY())) {
                             s.setSlope(0);
                             s.setSpeed(0);
                             float r = (float) s.getWidth() / (float) s.getHeight();
@@ -709,6 +722,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                             onBoard.remove(person);
                             activity.sayGivenNameForPerson(person);
                             i.remove();
+                            activity.playCompleteSound();
                         }
                     }
                 }
@@ -732,6 +746,11 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                 } else {
                     cloudDelay = maxCloudDelay / 2 + random.nextInt(maxCloudDelay);
                     if (animator.isFinished()) addRandomCloud();
+                }
+            } else {
+                if (playAgain!=null) {
+                    playAgain.setX(pax - roll/2);
+                    playAgain.setY(pay + pitch*1.5f);
                 }
             }
 

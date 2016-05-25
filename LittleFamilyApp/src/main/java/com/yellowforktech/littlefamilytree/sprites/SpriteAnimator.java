@@ -1,5 +1,9 @@
 package com.yellowforktech.littlefamilytree.sprites;
 
+import android.content.Context;
+import android.media.MediaPlayer;
+import android.preference.PreferenceManager;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,7 +13,7 @@ import java.util.List;
  */
 public class SpriteAnimator {
 
-    private List<SpriteAnimatorTiming> timings = new ArrayList<>();
+    private List<AnimatorTiming> timings = new ArrayList<>();
     private long startmillis;
     private long currentTime;
     private int currentPosition;
@@ -27,6 +31,11 @@ public class SpriteAnimator {
 
     public void addTiming(long time, Sprite sprite, int state) {
         SpriteAnimatorTiming timing = new SpriteAnimatorTiming(time, sprite, state);
+        timings.add(timing);
+    }
+
+    public void addAudioTiming(long time, int audioId, Context context) {
+        AudioAnimatorTiming timing = new AudioAnimatorTiming(time, audioId, context);
         timings.add(timing);
     }
 
@@ -62,10 +71,20 @@ public class SpriteAnimator {
         return currentTime;
     }
 
-    public class SpriteAnimatorTiming implements Comparable<SpriteAnimatorTiming> {
+    public abstract class AnimatorTiming implements Comparable<AnimatorTiming> {
+        long time;
+
+        public abstract void apply();
+
+        @Override
+        public int compareTo(AnimatorTiming another) {
+            return (int) (time - another.time);
+        }
+    }
+
+    public class SpriteAnimatorTiming extends AnimatorTiming {
         Sprite sprite;
         int state;
-        long time;
 
         public SpriteAnimatorTiming(long time, Sprite sprite, int state) {
             this.sprite = sprite;
@@ -80,10 +99,32 @@ public class SpriteAnimator {
                 sprite.setState(state);
             }
         }
+    }
+
+    public class AudioAnimatorTiming extends AnimatorTiming {
+        int audioId;
+        MediaPlayer player;
+        Context context;
+
+        public AudioAnimatorTiming(long time, int audioId, Context context) {
+            this.time = time;
+            this.audioId = audioId;
+            this.context = context;
+        }
 
         @Override
-        public int compareTo(SpriteAnimatorTiming another) {
-            return (int) (time - another.time);
+        public void apply() {
+            Boolean quietMode = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("quiet_mode", false);
+            if (!quietMode) {
+                player = MediaPlayer.create(context, audioId);
+                player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        mp.release();
+                    }
+                });
+                player.start();
+            }
         }
     }
 }
