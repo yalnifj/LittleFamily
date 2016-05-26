@@ -358,6 +358,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
 
                 cloud.addBitmap(1, bcloud);
                 cloud.setStateSpeed(1, new PointF(cloud.getWidth()/225f, 0f));
+                cloud.setStateTarget(1, new PointF(-cloud.getWidth() / 4, cloud.getY()));
 
                 cloud.addBitmap(2, bcloud);
                 cloud.setStateSpeed(2, new PointF(0f, 0f));
@@ -391,6 +392,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                 cloud.addBitmap(9, ImageHelper.loadBitmapFromResource(getContext(), R.drawable.cloud15, 0, w, h));
                 cloud.addBitmap(9, ImageHelper.loadBitmapFromResource(getContext(), R.drawable.cloud15, 0, w, h));
                 cloud.setStateSpeed(9, new PointF(cloud.getWidth()/80f, 0f));
+                cloud.setStateTarget(9, new PointF(getWidth()-1, cloud.getY()));
 
                 addSprite(cloud);
 
@@ -398,15 +400,15 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                 animator.addTiming(5000, cloud, 2);
                 animator.addTiming(7500, cloud, 3);
                 animator.addAudioTiming(7500, R.raw.grumble, getContext());
-                animator.addTiming(9500, cloud, 4);
-                animator.addAudioTiming(9500, R.raw.blowing, getContext());
-                animator.addTiming(10500, cloud, 5);
-                animator.addTiming(13500, cloud, 6);
-                animator.addTiming(13800, cloud, 7);
-                animator.addTiming(15000, cloud, 8);
-                animator.addAudioTiming(14500, R.raw.humph, getContext());
-                animator.addTiming(15300, cloud, 9);
-                animator.addTiming(20000, cloud, 9);
+                animator.addTiming(10000, cloud, 4);
+                animator.addAudioTiming(10000, R.raw.blowing, getContext());
+                animator.addTiming(10900, cloud, 5);
+                animator.addTiming(14000, cloud, 6);
+                animator.addTiming(14300, cloud, 7);
+                animator.addTiming(15500, cloud, 8);
+                animator.addAudioTiming(15000, R.raw.humph, getContext());
+                animator.addTiming(15800, cloud, 9);
+                animator.addTiming(22000, cloud, 9);
 
                 TouchEventGameSprite skipButton = new TouchEventGameSprite(
                         BitmapFactory.decodeResource(getResources(), android.R.drawable.ic_media_next),
@@ -557,10 +559,12 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
             cloud.setFlipHoriz(true);
             cloud.setX(0);
             cloud.buildMatrix();
-            cloud.setX(-getWidth() - cloud.getWidth()/5);
+            cloud.setX(-getWidth() + cloud.getWidth()/3f);
+            cloud.setStateTarget(1, new PointF(-getWidth() + cloud.getWidth()*0.8f, cloud.getY()));
         } else {
             cloud.setFlipHoriz(false);
             cloud.setX(-cloud.getWidth());
+            cloud.setStateTarget(1, new PointF(-cloud.getWidth()/3.5f, cloud.getY()));
         }
         cloud.setStateSpeed(1, new PointF(cloud.getWidth()/32f, 0f));
 
@@ -572,7 +576,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
         animator.addTiming(2000, cloud, 3);
         animator.addTiming(3000, cloud, 4);
         animator.addAudioTiming(3500, R.raw.blowing, getContext());
-        animator.addTiming(4000, cloud, 5);
+        animator.addTiming(3900, cloud, 5);
         int blowtime = 1000 + random.nextInt(2000);
         animator.addTiming(4000 + blowtime, cloud, 6);
         animator.addTiming(5300 + blowtime, cloud, 7);
@@ -755,7 +759,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
             }
 
             ty += 2 + inNest.size() / 2.5;
-            if (ty > tiles.get(0).getHeight()) {
+            if (ty >= tiles.get(0).getHeight()) {
                 ty = 0;
                 addTileRow();
             }

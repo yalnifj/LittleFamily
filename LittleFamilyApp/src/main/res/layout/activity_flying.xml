@@ -5,7 +5,8 @@
     android:paddingTop="0dp"
     android:paddingBottom="0dp"
     tools:context="com.yellowforktech.littlefamilytree.activities.FlyingActivity"
-    android:background="@drawable/tree_background">
+    android:background="@drawable/tree_background"
+    android:keepScreenOn="true">
 
     <FrameLayout
         android:layout_width="fill_parent"

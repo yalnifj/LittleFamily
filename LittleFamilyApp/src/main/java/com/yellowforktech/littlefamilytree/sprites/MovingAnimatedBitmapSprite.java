@@ -19,12 +19,14 @@ public class MovingAnimatedBitmapSprite extends AnimatedBitmapSprite {
     protected int maxHeight;
 
     protected Map<Integer, PointF> stateSpeeds;
+    protected Map<Integer, PointF> stateTargets;
 
     public MovingAnimatedBitmapSprite(Bitmap bitmap, int maxWidth, int maxHeight) {
         super(bitmap);
         this.maxWidth = maxWidth;
         this.maxHeight = maxHeight;
         stateSpeeds = new HashMap<>();
+        stateTargets = new HashMap<>();
     }
 
     public MovingAnimatedBitmapSprite(Map<Integer, List<Bitmap>> bitmaps, int maxWidth, int maxHeight) {
@@ -32,6 +34,7 @@ public class MovingAnimatedBitmapSprite extends AnimatedBitmapSprite {
         this.maxWidth = maxWidth;
         this.maxHeight = maxHeight;
         stateSpeeds = new HashMap<>();
+        stateTargets = new HashMap<>();
     }
 
     public float getSlope() {
@@ -86,6 +89,10 @@ public class MovingAnimatedBitmapSprite extends AnimatedBitmapSprite {
         stateSpeeds.put(state, speed);
     }
 
+    public void setStateTarget(int state, PointF target) {
+        stateTargets.put(state, target);
+    }
+
     @Override
     public void doStep() {
         super.doStep();
@@ -96,6 +103,12 @@ public class MovingAnimatedBitmapSprite extends AnimatedBitmapSprite {
         this.x = this.x + this.speed;
         this.y = this.y + this.slope;
         if (this.speed > 0) {
+            if (stateTargets.get(state) != null) {
+                if (this.x > stateTargets.get(state).x) {
+                    this.x = stateTargets.get(state).x;
+                    this.speed = 0;
+                }
+            }
             if (this.x > this.maxWidth) {
                 if (wrap) {
                     this.x = 0 - (this.width - this.speed);
@@ -104,6 +117,12 @@ public class MovingAnimatedBitmapSprite extends AnimatedBitmapSprite {
                 }
             }
         } else if (this.speed < 0) {
+            if (stateTargets.get(state) != null) {
+                if (this.x < stateTargets.get(state).x) {
+                    this.x = stateTargets.get(state).x;
+                    this.speed = 0;
+                }
+            }
             if (this.x + this.width < 0) {
                 if (wrap) {
                     this.x = this.maxWidth + this.speed;
@@ -114,6 +133,12 @@ public class MovingAnimatedBitmapSprite extends AnimatedBitmapSprite {
         }
 
         if (this.slope > 0) {
+            if (stateTargets.get(state) != null) {
+                if (this.y > stateTargets.get(state).y) {
+                    this.y = stateTargets.get(state).y;
+                    this.slope = 0;
+                }
+            }
             if (this.y > this.maxHeight) {
                 if (wrap) {
                     this.y = 0.0f - (this.height - this.slope);
@@ -122,6 +147,12 @@ public class MovingAnimatedBitmapSprite extends AnimatedBitmapSprite {
                 }
             }
         } else if (this.slope < 0) {
+            if (stateTargets.get(state) != null) {
+                if (this.y < stateTargets.get(state).y) {
+                    this.y = stateTargets.get(state).y;
+                    this.slope = 0;
+                }
+            }
             if (this.y + this.height < 0) {
                 if (wrap) {
                     this.y = this.maxHeight + this.slope;
