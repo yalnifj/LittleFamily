@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.Log;
 
 import com.yellowforktech.littlefamilytree.activities.tasks.BitmapSequenceLoader;
 
@@ -159,6 +160,12 @@ public class AnimatedBitmapSprite extends Sprite implements BitmapSequenceLoader
         buildMatrix();
     }
 
+    @Override
+    public void setState(int state) {
+        super.setState(state);
+        frame = 0;
+    }
+
     public void buildMatrix() {
         if (flipHoriz || flipVert) {
 			matrix = new Matrix();
@@ -251,11 +258,13 @@ public class AnimatedBitmapSprite extends Sprite implements BitmapSequenceLoader
                             if (matrix != null) {
                                 canvas.restore();
                             }
+                            return;
                         }
                     }
                 }
             }
         }
+        Log.e("AnimatedBitmapSprite", "No image found for state="+state+" frame="+frame);
     }
 
     public boolean inSprite(float tx, float ty) {

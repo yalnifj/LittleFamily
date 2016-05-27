@@ -93,18 +93,22 @@ public class FlyingPersonLeafSprite extends MovingAnimatedBitmapSprite {
     public void doDraw(Canvas canvas) {
         super.doDraw(canvas);
 
-        int left = (int)(x + (width/2 - width/4));
-        int top = (int)(y + (height/2 - width/4));
-        Rect r = new Rect(left, top, left + (int)(width * 0.5), top + (int)(width * 0.5));
-        if (matrix != null) {
-            canvas.save();
-            canvas.setMatrix(matrix);
-        }
         if (photo != null) {
+            float pr = (float) (photo.getWidth()) / (float) photo.getHeight();
+            float photoWidth = (height / 2) * pr;
+            int left = (int) (x + ((width - photoWidth) / 2));
+            int top = (int) (y + (height / 2 - height / 4));
+            if (matrix != null) {
+                canvas.save();
+                canvas.setMatrix(matrix);
+            }
+
+            Rect r = new Rect(left, top, left + (int) (photoWidth), top + (int) (height / 2));
             canvas.drawBitmap(photo, null, r, null);
-        }
-        if (matrix != null) {
-            canvas.restore();
+
+            if (matrix != null) {
+                canvas.restore();
+            }
         }
     }
 }
