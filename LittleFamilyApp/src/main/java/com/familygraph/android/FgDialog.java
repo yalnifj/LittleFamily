@@ -19,6 +19,7 @@
 
 package com.familygraph.android;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -31,6 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
@@ -114,6 +116,7 @@ public class FgDialog extends Dialog {
         mCrossImage.setVisibility(View.INVISIBLE);
     }
 
+    @SuppressLint("JavascriptInterface")
     private void setUpWebView(int margin) {
         LinearLayout webViewContainer = new LinearLayout(getContext());
         mWebView = new WebView(getContext());
@@ -132,13 +135,13 @@ public class FgDialog extends Dialog {
         mContent.addView(webViewContainer);
     }
 
-    private class FgWebViewClient extends WebViewClient {
-
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            Log.d("FamilyGraph-WebView", "Redirect URL: " + url);
-            if (url.startsWith(FamilyGraph.REDIRECT_URI)) {
-                Bundle values = Util.parseUrl(url);
+    class JSInterface {
+        @JavascriptInterface
+        public void getTitle(String title) {
+            Log.i("FamilyGraph-WebView", "Found title: "+title);
+            if (title.startsWith("Success ") || title.startsWith("Error ")) {
+                String qs = title.substring(title.indexOf(" ")+1);
+                Bundle values = Util.parseUrl("http://littlefamilytree.com?"+qs);
 
                 String error = values.getString("error_description");
                 if (error == null) {
@@ -155,17 +158,11 @@ public class FgDialog extends Dialog {
                 }
 
                 FgDialog.this.dismiss();
-                return true;
-            } else if (url.startsWith(FamilyGraph.CANCEL_URI)) {
-                mListener.onCancel();
-                FgDialog.this.dismiss();
-                return true;
-            } else {
-                // lunch in webview (and not in the native browser)
-                view.loadUrl(url);
-                return true;
             }
         }
+    }
+
+    private class FgWebViewClient extends WebViewClient {
 
         @Override
         public void onReceivedError(WebView view, int errorCode,
@@ -194,6 +191,9 @@ public class FgDialog extends Dialog {
             mContent.setBackgroundColor(Color.TRANSPARENT);
             mWebView.setVisibility(View.VISIBLE);
             mCrossImage.setVisibility(View.VISIBLE);
+
+            mWebView.addJavascriptInterface(new JSInterface(), "FgDialog");
+            mWebView.loadUrl("javascript:window.FgDialog.getTitle(document.title);");
         }
     }
 }

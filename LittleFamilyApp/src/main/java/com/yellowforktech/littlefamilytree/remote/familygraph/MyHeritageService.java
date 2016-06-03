@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.familygraph.android.FamilyGraph;
+import com.familygraph.android.FamilyGraphError;
+import com.familygraph.android.Util;
 import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.remote.RemoteResult;
 import com.yellowforktech.littlefamilytree.remote.RemoteService;
@@ -30,6 +32,8 @@ import org.gedcomx.conclusion.Relationship;
 import org.gedcomx.links.Link;
 import org.gedcomx.rt.GedcomxSerializer;
 import org.gedcomx.source.SourceDescription;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.simpleframework.xml.Serializer;
 
 import java.io.File;
@@ -74,43 +78,12 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
 
     @Override
     public RemoteResult authenticate(String username, String password) throws RemoteServiceSearchException {
-        //-- OAuth2
-        Uri action = Uri.parse(OAUTH2_PATH);
-        Bundle params = new Bundle();
-        params.putString("grant_type", "password");
-        params.putString("client_id", CLIENT_ID);
-        params.putString("username", username);
-        params.putString("password", password);
-        Bundle headers = new Bundle();
-        //headers.putString("Authorization", "Basic " + encodedAuthToken);
-
-        RemoteResult data = getRestDataNoRetry(METHOD_POST, action, params, headers);
-        if (data!=null) {
-            if (data.isSuccess()) {
-                String json = data.getData();
-                int pos1 = json.indexOf("access_token");
-                if (pos1>0) {
-                    pos1 = json.indexOf(":", pos1);
-                    if (pos1>0) {
-                        int pos2 = json.indexOf("\"", pos1+2);
-                        this.sessionId = json.substring(pos1+2, pos2);
-                        Log.i(TAG, "access_token: " + sessionId);
-                    }
-                }
-            } else {
-                this.sessionId = null;
-            }
-        }
-
-        return data;
+        return null;
     }
 
     @Override
     public RemoteResult authWithToken(String token) throws RemoteServiceSearchException {
-        String[] parts = token.split(":", 2);
-        String username = parts[0];
-        String password = parts[1];
-        return authenticate(username, password);
+        return null;
     }
 
     @Override
@@ -120,6 +93,21 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
 
     public String createEncodedAuthToken(String username, String password) {
         return username+":"+password;
+    }
+
+    public JSONObject getCurrentUser() {
+        try {
+            String data = familyGraph.request("me");
+            JSONObject userJ = Util.parseJson(data);
+            return userJ;
+        } catch (IOException e) {
+            Log.e(TAG, "Error getting current user", e);
+        } catch (FamilyGraphError e) {
+            Log.e(TAG, "Error getting current user", e);
+        } catch (JSONException e) {
+            Log.e(TAG, "Error getting current user", e);
+        }
+        return null;
     }
 
     @Override
