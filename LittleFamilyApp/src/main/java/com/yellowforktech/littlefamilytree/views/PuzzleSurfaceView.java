@@ -286,6 +286,8 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
             int row = (int) ((y-top) / pieceHeight);
             if (col >= game.getCols()) col = game.getCols()-1;
             if (row >= game.getRows()) row = game.getRows()-1;
+            if (col < 0) col = 0;
+            if (row < 0) row = 0;
             PuzzlePiece pp = game.getPiece(row, col);
             if (!pp.isInPlace()) {
                 game.swap(row, col, sRow, sCol);

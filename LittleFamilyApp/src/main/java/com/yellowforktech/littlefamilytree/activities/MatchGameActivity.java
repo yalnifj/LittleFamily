@@ -219,32 +219,34 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
                         if (Build.VERSION.SDK_INT > 17) {
                             ObjectAnimator anim = (ObjectAnimator) AnimatorInflater.loadAnimator(MatchGameActivity.this, R.animator.flipping);
                             final View view = gridView.getChildAt(pos);
-                            anim.setTarget(view);
-                            anim.setDuration(FLIP_TIME);
-                            anim.addListener(new Animator.AnimatorListener() {
-                                @Override
-                                public void onAnimationStart(Animator animation) {
-                                    flipping = true;
-                                }
+                            if (view!=null) {
+                                anim.setTarget(view);
+                                anim.setDuration(FLIP_TIME);
+                                anim.addListener(new Animator.AnimatorListener() {
+                                    @Override
+                                    public void onAnimationStart(Animator animation) {
+                                        flipping = true;
+                                    }
 
-                                @Override
-                                public void onAnimationEnd(Animator animation) {
-                                    adapter.notifyDataSetChanged();
-                                    view.clearAnimation();
-                                    view.invalidate();
-                                    gridView.invalidate();
-                                    flipping = false;
-                                }
+                                    @Override
+                                    public void onAnimationEnd(Animator animation) {
+                                        adapter.notifyDataSetChanged();
+                                        view.clearAnimation();
+                                        view.invalidate();
+                                        gridView.invalidate();
+                                        flipping = false;
+                                    }
 
-                                @Override
-                                public void onAnimationCancel(Animator animation) {
-                                }
+                                    @Override
+                                    public void onAnimationCancel(Animator animation) {
+                                    }
 
-                                @Override
-                                public void onAnimationRepeat(Animator animation) {
-                                }
-                            });
-                            anim.reverse();
+                                    @Override
+                                    public void onAnimationRepeat(Animator animation) {
+                                    }
+                                });
+                                anim.reverse();
+                            }
                         }
                         p.setFlipped(false);
                     }
