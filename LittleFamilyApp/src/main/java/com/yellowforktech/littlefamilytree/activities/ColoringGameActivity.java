@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class ColoringGameActivity extends LittleFamilyActivity implements RandomMediaChooser.RandomMediaListener, ColoringView.ColoringCompleteListener, SeekBar.OnSeekBarChangeListener {
     public static int maxBrushSize = 50;
@@ -216,7 +217,22 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Random
         }
         if (photo==null) {
             //-- could not find any images, fallback to a default image
-            imageBitmap = ImageHelper.loadBitmapFromResource(this, selectedPerson.getDefaultPhotoResource(), 0, width, height);
+            if (selectedPerson!=null) {
+                imageBitmap = ImageHelper.loadBitmapFromResource(this, selectedPerson.getDefaultPhotoResource(), 0, width, height);
+            } else {
+                if (people.size()>0) {
+                    Random rand = new Random();
+                    selectedPerson = people.get(rand.nextInt(people.size()));
+                } else {
+                    selectedPerson = super.selectedPerson;
+                }
+                if (selectedPerson!=null) {
+                    imageBitmap = ImageHelper.loadBitmapFromResource(this, selectedPerson.getDefaultPhotoResource(), 0, width, height);
+                } else {
+                    mediaChooser.loadRandomImage();
+                    return;
+                }
+            }
             setupCanvas();
         } else {
             imagePath = photo.getLocalPath();

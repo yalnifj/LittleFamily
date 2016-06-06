@@ -447,20 +447,22 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
         if (rotation < -10) {
             rotateDir = 1;
         }
-		
-		Iterator<DraggablePersonSprite> i = peopleSprites.iterator();
-		while (i.hasNext()) {
-            DraggablePersonSprite s = i.next();
-			s.doStep();
-			if (s.isRemoveMe()) i.remove();
-		}
-		
-		i = onStage.iterator();
-		while (i.hasNext()) {
-            DraggablePersonSprite s = i.next();
-			s.doStep();
-			if (s.isRemoveMe()) i.remove();
-		}
+
+        synchronized (sprites) {
+            Iterator<DraggablePersonSprite> i = peopleSprites.iterator();
+            while (i.hasNext()) {
+                DraggablePersonSprite s = i.next();
+                s.doStep();
+                if (s.isRemoveMe()) i.remove();
+            }
+
+            i = onStage.iterator();
+            while (i.hasNext()) {
+                DraggablePersonSprite s = i.next();
+                s.doStep();
+                if (s.isRemoveMe()) i.remove();
+            }
+        }
     }
 
     public void createSprites() {
