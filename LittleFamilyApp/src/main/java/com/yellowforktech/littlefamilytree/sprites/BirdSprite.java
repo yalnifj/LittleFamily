@@ -7,7 +7,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.yellowforktech.littlefamilytree.R;
-import com.yellowforktech.littlefamilytree.events.EventQueue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +67,7 @@ public class BirdSprite extends AnimatedBitmapSprite {
                 if (frame!=oldFrame && frame == 0) {
                     delay = random.nextInt(80);
                     if (state == 2) {
-                        EventQueue.getInstance().publish(eventTopic, this);
+                        //EventQueue.getInstance().publish(eventTopic, this);
                     }
                     state = 0;
                     stateChanged = true;
