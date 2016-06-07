@@ -8,14 +8,13 @@ import android.util.Log;
 import com.familygraph.android.FamilyGraph;
 import com.familygraph.android.FamilyGraphError;
 import com.familygraph.android.Util;
-import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.remote.RemoteResult;
 import com.yellowforktech.littlefamilytree.remote.RemoteService;
 import com.yellowforktech.littlefamilytree.remote.RemoteServiceBase;
 import com.yellowforktech.littlefamilytree.remote.RemoteServiceSearchException;
+import com.yellowforktech.littlefamilytree.remote.phpgedview.FamilyHolder;
 import com.yellowforktech.littlefamilytree.util.ImageHelper;
 
-import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -24,17 +23,17 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.gedcomx.Gedcomx;
 import org.gedcomx.atom.Entry;
-import org.gedcomx.atom.Feed;
+import org.gedcomx.common.ResourceReference;
 import org.gedcomx.conclusion.Person;
 import org.gedcomx.conclusion.Relationship;
 import org.gedcomx.links.Link;
-import org.gedcomx.rt.GedcomxSerializer;
 import org.gedcomx.source.SourceDescription;
+import org.gedcomx.source.SourceReference;
+import org.gedcomx.types.RelationshipType;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.simpleframework.xml.Serializer;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -54,22 +53,22 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
     protected static final String CLIENT_ID = "0d9d29c39d0ded7bd6a9e334e5f673a7";
     protected static final String CLIENT_SECRET = "9021b2dcdb4834bd12a491349f61cb27";
 
-    private static final String FS_PLATFORM_PATH = "https://familygraph.myheritage.com/";
-
     private static final String OAUTH2_PATH = "https://accounts.myheritage.com/oauth2/token";
 
     private static final String TAG = MyHeritageService.class.getSimpleName();
 
     private String sessionId = null;
-    private Person currentPerson = null;
-    private Map<String, Person> personCache;
     private int delayCount = 0;
 
+    private Map<String, Person> personCache;
+
     private FamilyGraph familyGraph;
+    private JSONConverter converter;
 
     public MyHeritageService() {
-        personCache = new HashMap<>();
         familyGraph = new FamilyGraph(CLIENT_ID);
+        converter = new JSONConverter();
+        personCache = new HashMap<>();
     }
 
     public FamilyGraph getFamilyGraph() {
@@ -78,11 +77,13 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
 
     @Override
     public RemoteResult authenticate(String username, String password) throws RemoteServiceSearchException {
+        sessionId = familyGraph.getAccessToken();
         return null;
     }
 
     @Override
     public RemoteResult authWithToken(String token) throws RemoteServiceSearchException {
+        sessionId = familyGraph.getAccessToken();
         return null;
     }
 
@@ -115,37 +116,15 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
         if (sessionId==null) {
             throw new RemoteServiceSearchException("Not Authenticated with MyHeritage.", 0);
         }
-        if (currentPerson==null) {
-            Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/current-person");
-            Bundle headers = new Bundle();
-            headers.putString("Authorization", "Bearer " + sessionId);
-            headers.putString("Accept", "application/x-gedcomx-v1+xml");
-            Bundle params = new Bundle();
-
-            RemoteResult result = getRestData(METHOD_GET, uri, params, headers);
-            if (result!=null) {
-                if (result.isSuccess()) {
-                    Serializer serializer = GedcomxSerializer.create();
-                    try {
-                        Gedcomx doc = serializer.read(Gedcomx.class, result.getData());
-                        if (doc.getPersons() != null && doc.getPersons().size() > 0) {
-                            currentPerson = doc.getPersons().get(0);
-                            personCache.put(currentPerson.getId(), currentPerson);
-                            Log.i(TAG, "getCurrentPerson " + doc.getPersons().size() + ": " + currentPerson.getId());
-                        }
-                    } catch (Exception e) {
-                        Log.e(TAG, "error", e);
-                    }
-                } else {
-                    //-- check status and retry if possible
-                    if (handleStatusCodes(result)) {
-                        return getCurrentPerson();
-                    } else {
-                        throw new RemoteServiceSearchException("Error reading current person: "+result.getData(), result.getStatusCode());
-                    }
-                }
-            }
+        Person currentPerson = null;
+        try {
+            JSONObject user = getCurrentUser();
+            String indiId = user.getString("default_individual");
+            currentPerson = getPerson(indiId, false);
+        } catch (Exception e) {
+            Log.e(TAG, "error getCurrentPerson", e);
         }
+
         return currentPerson;
     }
 
@@ -154,64 +133,35 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
         if (sessionId==null) {
             throw new RemoteServiceSearchException("Not Authenticated with MyHeritage.", 0);
         }
-        if (!checkCache || personCache.get(personId)==null) {
-            Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+personId);
-            Bundle headers = new Bundle();
-            headers.putString("Authorization", "Bearer " + sessionId);
-            headers.putString("Accept", "application/x-gedcomx-v1+xml");
-            Bundle params = new Bundle();
 
-            RemoteResult result = getRestData(METHOD_GET, uri, params, headers);
-            if (result!=null) {
-                if (result.isSuccess()) {
-                    Serializer serializer = GedcomxSerializer.create();
-                    try {
-                        Gedcomx doc = serializer.read(Gedcomx.class, result.getData());
-                        if (doc.getPersons() != null && doc.getPersons().size() > 0) {
-                            for (Person p : doc.getPersons()) {
-                                personCache.put(p.getId(), p);
-                            }
-                            Log.i(TAG, "getPerson " + doc.getPersons().size() + ": " + personId);
-                        }
-                    } catch (Exception e) {
-                        Log.e(TAG, "error", e);
-                    }
-                }
-                //-- person merged to a new id
-                else if(result.getStatusCode()==301) {
-                    Header[] responseHeaders = result.getResponse().getHeaders("X-Entity-Forwarded-Id");
-                    if (responseHeaders!=null && responseHeaders.length>0) {
-                        Header header = responseHeaders[0];
-                        String newFSId = header.getValue();
-                        Person person = getPerson(newFSId, checkCache);
-                        personCache.put(personId, person);
-                    }
-                }
-                //-- not found
-                else if(result.getStatusCode()==404) {
+        Person person = null;
+
+        if (!checkCache || personCache.get(personId)==null) {
+            try {
+                String data = familyGraph.request(personId);
+                JSONObject individual = Util.parseJson(data);
+                person = converter.convertJSONPerson(individual);
+
+                String eventData = familyGraph.request(personId + "/events");
+                JSONObject events = Util.parseJson(eventData);
+                converter.processEvents(events, person);
+
+                personCache.put(personId, person);
+
+            } catch (Exception e) {
+                Log.e(TAG, "error getCurrentPerson", e);
+            } catch (FamilyGraphError e) {
+                Log.e(TAG, "familyGraphError getPerson " + personId, e);
+                if (e.getErrorCode() == 404) {
                     personCache.remove(personId);
-                    Person person = new Person();
+                    person = new Person();
                     person.setId(personId);
                     person.setTransientProperty("deleted", true);
-                    return person;
-                }
-                //-- deleted
-                else if(result.getStatusCode()==410) {
-                    personCache.remove(personId);
-                    Person person = new Person();
-                    person.setId(personId);
-                    person.setTransientProperty("deleted", true);
-                    return person;
-                }
-                else {
-                    //-- check status and retry if possible
-                    if (handleStatusCodes(result)) {
-                        return getPerson(personId, checkCache);
-                    }
                 }
             }
         }
-        return personCache.get(personId);
+
+        return person;
     }
 
     @Override
@@ -220,48 +170,9 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
             throw new RemoteServiceSearchException("Not Authenticated with MyHeritage.", 0);
         }
 
-        Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+personId+"/changes");
-        Bundle headers = new Bundle();
-        headers.putString("Authorization", "Bearer " + sessionId);
-        headers.putString("Accept", "application/atom+xml");
-        Bundle params = new Bundle();
-        params.putInt("count", 1);
-
         Entry entry = null;
-        RemoteResult result = getRestData(METHOD_GET, uri, params, headers);
-        if (result!=null) {
-            if (result.isSuccess()) {
-                Serializer serializer = GedcomxSerializer.create();
-                try {
-                    Feed feed = serializer.read(Feed.class, result.getData());
-                    if (feed.getEntries() != null && feed.getEntries().size() > 0) {
-                        for (Entry e : feed.getEntries()) {
-                            if (entry==null || e.getUpdated().after(entry.getUpdated())) {
-                                entry = e;
-                            }
-                        }
-                        Log.i(TAG, "getLastChangeForPerson " + feed.getEntries().size() + ": " + personId);
-                    }
-                } catch (Exception e) {
-                    Log.e(TAG, "error", e);
-                }
-            }
-            //-- person merged to a new id
-            else if(result.getStatusCode()==301) {
-                Header[] responseHeaders = result.getResponse().getHeaders("X-Entity-Forwarded-Id");
-                if (responseHeaders!=null && responseHeaders.length>0) {
-                    Header header = responseHeaders[0];
-                    String newFSId = header.getValue();
-                    return getLastChangeForPerson(newFSId);
-                }
-            }
-            else {
-                //-- check status and retry if possible
-                if (handleStatusCodes(result)) {
-                    return getLastChangeForPerson(personId);
-                }
-            }
-        }
+        //TODO - ask MyHeritage about a changes api
+
         return entry;
     }
 
@@ -271,54 +182,57 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
             throw new RemoteServiceSearchException("Not Authenticated with MyHeritage.", 0);
         }
 
-        Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+personId+"/portraits");
-        Bundle headers = new Bundle();
-        headers.putString("Authorization", "Bearer " + sessionId);
-        headers.putString("Accept", "application/x-gedcomx-v1+xml");
-        Bundle params = new Bundle();
-
-        RemoteResult result = getRestData(METHOD_GET, uri, params, headers);
-        if (result!=null) {
-            if (result.isSuccess()) {
-                Serializer serializer = GedcomxSerializer.create();
-                try {
-                    Gedcomx doc = serializer.read(Gedcomx.class, result.getData());
-                    if (doc.getSourceDescriptions() != null && doc.getSourceDescriptions().size() > 0) {
-                        for (SourceDescription sd : doc.getSourceDescriptions()) {
-                            List<Link> links = sd.getLinks();
-                            for (Link link : links) {
-                                if (link.getRel() != null && link.getRel().equals("image-thumbnail")) {
-                                    return link;
+        Person person = getPerson(personId, checkCache);
+        Link portrait = null;
+        if (person!=null) {
+            List<SourceReference> media = person.getMedia();
+            if (media!=null && media.size()>0) {
+                for(SourceReference sr : media) {
+                    for(Link link : sr.getLinks()) {
+                        if(link.getHref()!=null) {
+                            String objeid =link.getHref().toString();
+                            try {
+                                String data = familyGraph.request(objeid);
+                                JSONObject json = Util.parseJson(data);
+                                SourceDescription sd = converter.convertMedia(json);
+                                List<Link> links = sd.getLinks();
+                                for (Link link2 : links) {
+                                    if (link2.getRel() != null && link2.getRel().equals("image")) {
+                                        if (portrait == null || (sd.getSortKey()!=null && sd.getSortKey().equals("1"))) {
+                                            portrait = link2;
+                                        }
+                                    }
                                 }
+                            } catch (Exception e) {
+                                Log.e(TAG, "error getPersonPortrait", e);
+                            } catch (FamilyGraphError e) {
+                                Log.e(TAG, "FamilyGraphError getPersonPortrait", e);
                             }
                         }
-                        Log.i(TAG, "getPersonPortrait " + doc.getPersons().size() + ": " + personId);
                     }
-                } catch (Exception e) {
-                    Log.e(TAG, "error", e);
                 }
             }
-            else {
-                //-- check status and retry if possible
-                if (handleStatusCodes(result)) {
-                    return getPersonPortrait(personId, checkCache);
+
+            if (portrait==null) {
+                List<SourceDescription> allMedia = getPersonMemories(personId, checkCache);
+                for(SourceDescription sd : allMedia) {
+                    List<Link> links = sd.getLinks();
+                    for (Link link2 : links) {
+                        if (link2.getRel() != null && link2.getRel().equals("image")) {
+                            if (portrait == null || (sd.getSortKey()!=null && sd.getSortKey().equals("1"))) {
+                                portrait = link2;
+                            }
+                        }
+                    }
                 }
             }
         }
-        return null;
+        return portrait;
     }
 
     @Override
     public List<Relationship> getCloseRelatives(boolean checkCache) throws RemoteServiceSearchException {
-        if (sessionId==null) {
-            throw new RemoteServiceSearchException("Not Authenticated with MyHeritage.", 0);
-        }
-
-        if (getCurrentPerson()==null) {
-            throw new RemoteServiceSearchException("Unable to get current person from MyHeritage", 0);
-        }
-
-        return getCloseRelatives(currentPerson.getId(), checkCache);
+        return getCloseRelatives(getCurrentPerson().getId(), checkCache);
     }
 
 	@Override
@@ -327,36 +241,55 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
             throw new RemoteServiceSearchException("Not Authenticated with MyHeritage.", 0);
         }
 
-        Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons-with-relationships");
-        Bundle headers = new Bundle();
-        headers.putString("Authorization", "Bearer " + sessionId);
-        headers.putString("Accept", "application/x-gedcomx-v1+xml");
-        Bundle params = new Bundle();
-        params.putString("person", personId);
-
-        RemoteResult result = getRestData(METHOD_GET, uri, params, headers);
-        if (result!=null) {
-            if (result.isSuccess()) {
-                Serializer serializer = GedcomxSerializer.create();
-                try {
-                    Gedcomx doc = serializer.read(Gedcomx.class, result.getData());
-                    if (doc.getRelationships() != null && doc.getRelationships().size() > 0) {
-                        List<Relationship> relatives = new ArrayList<>(doc.getRelationships());
-                        Log.i(TAG, "getCloseRelatives " + doc.getRelationships().size() + ": " + personId);
-                        return relatives;
-                    }
-                } catch (Exception e) {
-                    Log.e(TAG, "error", e);
+        List<Relationship> family = new ArrayList<>();
+        try {
+            String dataStr = familyGraph.request(personId+"/immediate_family");
+            JSONObject json = Util.parseJson(dataStr);
+            JSONArray data = json.getJSONArray("data");
+            for(int i=0; i<data.length(); i++) {
+                JSONObject rel = data.getJSONObject(i);
+                if ("wife".equals(rel.getString("relationship_type")) || "husband".equals(rel.getString("relationship_type"))) {
+                    Relationship relationship = new Relationship();
+                    relationship.setKnownType(RelationshipType.Couple);
+                    ResourceReference rr = new ResourceReference();
+                    rr.setResourceId(rel.getJSONObject("individual").getString("id"));
+                    relationship.setPerson1(rr);
+                    ResourceReference rr2 = new ResourceReference();
+                    rr2.setResourceId(personId);
+                    relationship.setPerson2(rr2);
+                    family.add(relationship);
                 }
-            } else {
-                //-- check status and retry if possible
-                if (handleStatusCodes(result)) {
-                    return getCloseRelatives(personId, checkCache);
+                if ("mother".equals(rel.getString("relationship_type")) || "father".equals(rel.getString("relationship_type"))) {
+                    Relationship relationship = new Relationship();
+                    relationship.setKnownType(RelationshipType.ParentChild);
+                    ResourceReference rr = new ResourceReference();
+                    rr.setResourceId(rel.getJSONObject("individual").getString("id"));
+                    relationship.setPerson1(rr);
+                    ResourceReference rr2 = new ResourceReference();
+                    rr2.setResourceId(personId);
+                    relationship.setPerson2(rr2);
+                    family.add(relationship);
+                }
+                if ("daughter".equals(rel.getString("relationship_type")) || "son".equals(rel.getString("relationship_type"))) {
+                    Relationship relationship = new Relationship();
+                    relationship.setKnownType(RelationshipType.ParentChild);
+                    ResourceReference rr = new ResourceReference();
+                    rr.setResourceId(personId);
+                    relationship.setPerson1(rr);
+                    ResourceReference rr2 = new ResourceReference();
+                    rr2.setResourceId(rel.getJSONObject("individual").getString("id"));
+                    relationship.setPerson2(rr2);
+                    family.add(relationship);
                 }
             }
+            return family;
+        } catch (Exception e) {
+            Log.e(TAG, "error getCloseRelatives", e);
+        } catch (FamilyGraphError e) {
+            Log.e(TAG, "FamilyGraphError getCloseRelatives", e);
         }
 
-        return null;
+        return family;
     }
 
     public List<Relationship> getParents(String personId, boolean checkCache) throws RemoteServiceSearchException {
@@ -364,35 +297,40 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
             throw new RemoteServiceSearchException("Not Authenticated with MyHeritage.", 0);
         }
 
-        Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+personId+"/parent-relationships");
-        Bundle headers = new Bundle();
-        headers.putString("Authorization", "Bearer " + sessionId);
-        headers.putString("Accept", "application/x-gedcomx-v1+xml");
-        Bundle params = new Bundle();
-
-        RemoteResult result = getRestData(METHOD_GET, uri, params, headers);
-        if (result!=null) {
-            if (result.isSuccess()) {
-                Serializer serializer = GedcomxSerializer.create();
-                try {
-                    Gedcomx doc = serializer.read(Gedcomx.class, result.getData());
-                    if (doc.getRelationships() != null && doc.getRelationships().size() > 0) {
-                        List<Relationship> relatives = new ArrayList<>(doc.getRelationships());
-                        Log.i(TAG, "getParents " + doc.getRelationships().size() + ": " + personId);
-                        return relatives;
+        List<Relationship> family = new ArrayList<>();
+        try {
+            String dataStr = familyGraph.request(personId+"/child_in_families_connection");
+            JSONObject json = Util.parseJson(dataStr);
+            JSONArray fams = json.getJSONArray("data");
+            if (fams != null) {
+                for(int i=0; i< fams.length(); i++) {
+                    JSONObject famc = fams.getJSONObject(i);
+                    String famData = familyGraph.request(famc.getJSONObject("family").getString("id"));
+                    JSONObject fam = Util.parseJson(famData);
+                    FamilyHolder fh = converter.convertFamily(fam);
+                    for (Link p : fh.getParents()) {
+                        String relId = p.getHref().toString();
+                        if (!relId.equals(personId)) {
+                            Relationship rel = new Relationship();
+                            rel.setKnownType(RelationshipType.ParentChild);
+                            ResourceReference rr = new ResourceReference();
+                            rr.setResourceId(relId);
+                            rel.setPerson1(rr);
+                            ResourceReference rr2 = new ResourceReference();
+                            rr2.setResourceId(personId);
+                            rel.setPerson2(rr2);
+                            family.add(rel);
+                        }
                     }
-                } catch (Exception e) {
-                    Log.e(TAG, "error", e);
-                }
-            } else {
-                //-- check status and retry if possible
-                if (handleStatusCodes(result)) {
-                    return getParents(personId, checkCache);
                 }
             }
+        } catch (Exception e) {
+            Log.e(TAG, "error getParents", e);
+        } catch (FamilyGraphError e) {
+            Log.e(TAG, "FamilyGraphError getParents", e);
         }
 
-        return null;
+        return family;
     }
 
     public List<Relationship> getChildren(String personId, boolean checkCache) throws RemoteServiceSearchException {
@@ -400,35 +338,38 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
             throw new RemoteServiceSearchException("Not Authenticated with MyHeritage.", 0);
         }
 
-        Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+personId+"/child-relationships");
-        Bundle headers = new Bundle();
-        headers.putString("Authorization", "Bearer " + sessionId);
-        headers.putString("Accept", "application/x-gedcomx-v1+xml");
-        Bundle params = new Bundle();
-
-        RemoteResult result = getRestData(METHOD_GET, uri, params, headers);
-        if (result!=null) {
-            if (result.isSuccess()) {
-                Serializer serializer = GedcomxSerializer.create();
-                try {
-                    Gedcomx doc = serializer.read(Gedcomx.class, result.getData());
-                    if (doc.getRelationships() != null && doc.getRelationships().size() > 0) {
-                        List<Relationship> relatives = new ArrayList<>(doc.getRelationships());
-                        Log.i(TAG, "getChildren " + doc.getRelationships().size() + ": " + personId);
-                        return relatives;
+        List<Relationship> family = new ArrayList<>();
+        try {
+            String dataStr = familyGraph.request(personId+"/spouse_in_families_connection");
+            JSONObject json = Util.parseJson(dataStr);
+            JSONArray fams = json.getJSONArray("data");
+            if (fams != null) {
+                for(int i=0; i< fams.length(); i++) {
+                    JSONObject fam = fams.getJSONObject(i);
+                    FamilyHolder fh = converter.convertFamily(fam);
+                    for (Link p : fh.getChildren()) {
+                        String relId = p.getHref().toString();
+                        if (!relId.equals(personId)) {
+                            Relationship rel = new Relationship();
+                            rel.setKnownType(RelationshipType.ParentChild);
+                            ResourceReference rr = new ResourceReference();
+                            rr.setResourceId(personId);
+                            rel.setPerson1(rr);
+                            ResourceReference rr2 = new ResourceReference();
+                            rr2.setResourceId(relId);
+                            rel.setPerson2(rr2);
+                            family.add(rel);
+                        }
                     }
-                } catch (Exception e) {
-                    Log.e(TAG, "error", e);
-                }
-            } else {
-                //-- check status and retry if possible
-                if (handleStatusCodes(result)) {
-                    return getChildren(personId, checkCache);
                 }
             }
+        } catch (Exception e) {
+            Log.e(TAG, "error getChildren", e);
+        } catch (FamilyGraphError e) {
+            Log.e(TAG, "FamilyGraphError getChildren", e);
         }
 
-        return null;
+        return family;
     }
 
     public List<Relationship> getSpouses(String personId, boolean checkCache) throws RemoteServiceSearchException {
@@ -436,83 +377,38 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
             throw new RemoteServiceSearchException("Not Authenticated with MyHeritage.", 0);
         }
 
-        Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+personId+"/spouse-relationships");
-        Bundle headers = new Bundle();
-        headers.putString("Authorization", "Bearer " + sessionId);
-        headers.putString("Accept", "application/x-gedcomx-v1+xml");
-        Bundle params = new Bundle();
-
-        RemoteResult result = getRestData(METHOD_GET, uri, params, headers);
-        if (result!=null) {
-            if (result.isSuccess()) {
-                Serializer serializer = GedcomxSerializer.create();
-                try {
-                    Gedcomx doc = serializer.read(Gedcomx.class, result.getData());
-                    if (doc.getRelationships() != null && doc.getRelationships().size() > 0) {
-                        List<Relationship> relatives = new ArrayList<>(doc.getRelationships());
-                        Log.i(TAG, "getSpouses " + doc.getRelationships().size() + ": " + personId);
-                        return relatives;
-                    }
-                } catch (Exception e) {
-                    Log.e(TAG, "error", e);
-                }
-            } else {
-                //-- check status and retry if possible
-                if (handleStatusCodes(result)) {
-                    return getChildren(personId, checkCache);
-                }
-            }
-        }
-
-        return null;
-    }
-
-    public Map<Integer, Person> getPedigree(String personId) throws RemoteServiceSearchException {
-        if (sessionId==null) {
-            throw new RemoteServiceSearchException("Not Authenticated with MyHeritage.", 0);
-        }
-
-        Map<Integer, Person> tree = new HashMap<>();
-
-        Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/ancestry");
-        Bundle headers = new Bundle();
-        headers.putString("Authorization", "Bearer " + sessionId);
-        headers.putString("Accept", "application/x-gedcomx-v1+xml");
-        Bundle params = new Bundle();
-        params.putString("person", personId);
-        params.putString("personDetails", "");
-
-        RemoteResult result = getRestData(METHOD_GET, uri, params, headers);
-        if (result!=null) {
-            if (result.isSuccess()) {
-                Serializer serializer = GedcomxSerializer.create();
-                try {
-                    Gedcomx doc = serializer.read(Gedcomx.class, result.getData());
-                    if (doc.getPersons() != null && doc.getPersons().size() > 0) {
-                        for (Person p : doc.getPersons()) {
-                            if (!personCache.containsKey(p.getId())) {
-                                personCache.put(p.getId(), p);
-                            }
-                            String placeNumStr = p.getDisplayExtension().getAscendancyNumber();
-                            if (placeNumStr!=null) {
-                                Integer ahnen = Integer.valueOf(placeNumStr);
-                                tree.put(ahnen, p);
-                            }
+        List<Relationship> family = new ArrayList<>();
+        try {
+            String dataStr = familyGraph.request(personId+"/spouse_in_families_connection");
+            JSONObject json = Util.parseJson(dataStr);
+            JSONArray fams = json.getJSONArray("data");
+            if (fams != null) {
+                for(int i=0; i< fams.length(); i++) {
+                    JSONObject fam = fams.getJSONObject(i);
+                    FamilyHolder fh = converter.convertFamily(fam);
+                    for (Link p : fh.getParents()) {
+                        String relId = p.getHref().toString();
+                        if (!relId.equals(personId)) {
+                            Relationship rel = new Relationship();
+                            rel.setKnownType(RelationshipType.Couple);
+                            ResourceReference rr = new ResourceReference();
+                            rr.setResourceId(relId);
+                            rel.setPerson1(rr);
+                            ResourceReference rr2 = new ResourceReference();
+                            rr2.setResourceId(personId);
+                            rel.setPerson2(rr2);
+                            family.add(rel);
                         }
-                        Log.i(TAG, "getPerson " + doc.getPersons().size() + ": " + personId);
                     }
-                } catch (Exception e) {
-                    Log.e(TAG, "error", e);
-                }
-            } else {
-                //-- check status and retry if possible
-                if (handleStatusCodes(result)) {
-                    return getPedigree(personId);
                 }
             }
+        } catch (Exception e) {
+            Log.e(TAG, "error getSpouses", e);
+        } catch (FamilyGraphError e) {
+            Log.e(TAG, "FamilyGraphError getSpouses", e);
         }
 
-        return tree;
+        return family;
     }
 
     @Override
@@ -521,85 +417,37 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
             throw new RemoteServiceSearchException("Not Authenticated with MyHeritage.", 0);
         }
 
-        Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+personId+"/memories");
-        Bundle headers = new Bundle();
-        headers.putString("Authorization", "Bearer " + sessionId);
-        headers.putString("Accept", "application/x-gedcomx-v1+xml");
+        List<SourceDescription> media = new ArrayList<>();
+        try {
+            String reqStr = personId + "/media";
+            boolean hasMorePages = true;
+            while(hasMorePages) {
+                String dataStr = familyGraph.request(reqStr);
+                JSONObject json = Util.parseJson(dataStr);
 
-        Bundle params = new Bundle();
-        params.putString("type", "photo"); //-- limit to photos for now
+                JSONArray data = json.getJSONArray("data");
+                for(int i=0; i<data.length(); i++) {
+                    JSONObject med = data.getJSONObject(i);
+                    SourceDescription sd = converter.convertMedia(med);
+                    media.add(sd);
+                }
 
-        RemoteResult result = getRestData(METHOD_GET, uri, params, headers);
-        if (result!=null) {
-            if (result.isSuccess()) {
-                Serializer serializer = GedcomxSerializer.create();
-                try {
-                    Gedcomx doc = serializer.read(Gedcomx.class, result.getData());
-                    if (doc.getSourceDescriptions() != null && doc.getSourceDescriptions().size() > 0) {
-                        Log.i(TAG, "getPersonMemories found " + doc.getSourceDescriptions().size() + " photos for " + personId);
-                        return doc.getSourceDescriptions();
+                if (json.has("paging")) {
+                    if (json.getJSONObject("paging").has("next")) {
+                        reqStr = json.getJSONObject("paging").getString("next");
+                    } else {
+                        hasMorePages = false;
                     }
-                } catch (Exception e) {
-                    Log.e(TAG, "error", e);
-                }
-            } else {
-                //-- check status and retry if possible
-                if (handleStatusCodes(result)) {
-                    return getPersonMemories(personId, checkCache);
+                } else {
+                    hasMorePages = false;
                 }
             }
+        } catch (Exception e) {
+            Log.e(TAG, "error getPersonMemories", e);
+        } catch (FamilyGraphError e) {
+            Log.e(TAG, "FamilyGraphError getPersonMemories", e);
         }
-
-        return null;
-    }
-
-    private boolean handleStatusCodes(RemoteResult data) throws RemoteServiceSearchException {
-        //-- not authenticated
-        if (data.getStatusCode()==401 && sessionId!=null) {
-            try {
-                String encodedAuthToken = null;
-                encodedAuthToken = DataService.getInstance().getEncryptedProperty(DataService.SERVICE_TYPE_MYHERITAGE + DataService.SERVICE_TOKEN);
-                RemoteResult res = authWithToken(encodedAuthToken);
-                if (res.isSuccess()) {
-                    return true;
-                }
-            } catch (Exception e) {
-                throw new RemoteServiceSearchException("Unabled to authenticate with saved token", data.getStatusCode(), e);
-            }
-        }
-        if (data.getStatusCode()==400) {
-            Log.e(TAG, "Bad Request: "+data.getData());
-            return false;
-        }
-        if (data.getStatusCode()==403) {
-            Log.e(TAG, "Forbidden: "+data.getData());
-            return false;
-        }
-        if (data.getStatusCode()==404) {
-            Log.e(TAG, "Not Found: "+data.getData());
-            return false;
-        }
-        if (data.getStatusCode()==429) {
-            Log.d(TAG, "Connection throttled.  Delay and retry.");
-            try {
-                //-- allow up to 20 retries of throttled connections
-                if (delayCount >= 20) {
-                    return false;
-                }
-                delayCount++;
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                Log.e(TAG, e.getMessage(), e);
-                return false;
-            }
-            return true;
-        }
-        if (data.getStatusCode()>=500) {
-            Log.e(TAG, "Internal Server Error: "+data.getData());
-            return false;
-        }
-        return false;
+        return media;
     }
 
     @Override
@@ -611,8 +459,7 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
             attachUriWithQuery(request, uri, null);
 
             Bundle headers = new Bundle();
-            headers.putString("Authorization", "Bearer " + sessionId);
-            headers.putString("Accept", "application/x-gedcomx-v1+xml");
+            headers.putString("Authorization", "Bearer " + familyGraph.getAccessToken());
 
             HttpClient client = new DefaultHttpClient();
 
@@ -668,6 +515,16 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
 
     @Override
     public String getPersonUrl(String remoteId) {
-        return "https://MyHeritage.org/tree/#view=ancestor&person="+remoteId;
+        try {
+            Person person = getPerson(remoteId, true);
+            for(Link link : person.getLinks()) {
+                if (link.getRel().equals("link")) {
+                    return link.getHref().toString();
+                }
+            }
+        } catch (RemoteServiceSearchException e) {
+            Log.e(TAG, "getPersonUrl", e);
+        }
+        return "https://www.myheritage.com/";
     }
 }

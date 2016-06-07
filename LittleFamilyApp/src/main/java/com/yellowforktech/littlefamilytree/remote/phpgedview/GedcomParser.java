@@ -35,11 +35,9 @@ import java.util.regex.Pattern;
  */
 public class GedcomParser {
 
-    private Map<String, FactType> factMap;
-    //private Map<FactType, String> typeMap;
+    public static Map<String, FactType> factMap = new HashMap<>();
 
-    public GedcomParser(){
-        factMap = new HashMap<>();
+    static {
         factMap.put("ADOP", FactType.Adoption);
         factMap.put("ANUL", FactType.Annulment);
         factMap.put("BAPM", FactType.Baptism);
@@ -79,6 +77,10 @@ public class GedcomParser {
         factMap.put("WILL", FactType.Will);
         factMap.put("RETI", FactType.Retirement);
         factMap.put("RESI", FactType.Residence);
+    }
+
+    public GedcomParser(){
+
     }
 
     public Person parsePerson(String gedcom) throws GedcomParseException {
