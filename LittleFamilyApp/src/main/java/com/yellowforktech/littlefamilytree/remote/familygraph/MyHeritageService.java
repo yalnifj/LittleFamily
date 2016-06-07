@@ -119,7 +119,7 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
         Person currentPerson = null;
         try {
             JSONObject user = getCurrentUser();
-            String indiId = user.getString("default_individual");
+            String indiId = user.getJSONObject("default_individual").getString("id");
             currentPerson = getPerson(indiId, false);
         } catch (Exception e) {
             Log.e(TAG, "error getCurrentPerson", e);
@@ -159,6 +159,8 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
                     person.setTransientProperty("deleted", true);
                 }
             }
+        } else {
+            person = personCache.get(personId);
         }
 
         return person;
@@ -425,16 +427,20 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
                 String dataStr = familyGraph.request(reqStr);
                 JSONObject json = Util.parseJson(dataStr);
 
-                JSONArray data = json.getJSONArray("data");
-                for(int i=0; i<data.length(); i++) {
-                    JSONObject med = data.getJSONObject(i);
-                    SourceDescription sd = converter.convertMedia(med);
-                    media.add(sd);
-                }
+                if (json.has("data")) {
+                    JSONArray data = json.getJSONArray("data");
+                    for (int i = 0; i < data.length(); i++) {
+                        JSONObject med = data.getJSONObject(i);
+                        SourceDescription sd = converter.convertMedia(med);
+                        media.add(sd);
+                    }
 
-                if (json.has("paging")) {
-                    if (json.getJSONObject("paging").has("next")) {
-                        reqStr = json.getJSONObject("paging").getString("next");
+                    if (json.has("paging")) {
+                        if (json.getJSONObject("paging").has("next")) {
+                            reqStr = json.getJSONObject("paging").getString("next");
+                        } else {
+                            hasMorePages = false;
+                        }
                     } else {
                         hasMorePages = false;
                     }

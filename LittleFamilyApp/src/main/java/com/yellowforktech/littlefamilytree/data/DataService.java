@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.tasks.AuthTask;
 import com.yellowforktech.littlefamilytree.db.DBHelper;
 import com.yellowforktech.littlefamilytree.remote.AES;
@@ -989,7 +990,7 @@ public class DataService implements AuthTask.Listener {
                     person1 = getDBHelper().getPersonByFamilySearchId(fsPerson.getId());
                 }
                 if (person1 == null) {
-                    fireStatusUpdate("Processing " + fsPerson.getFullName());
+                    fireStatusUpdate(context.getResources().getString(R.string.processing) + fsPerson.getFullName());
                     person1 = DataHelper.buildLittlePerson(fsPerson, context, remoteService, true);
                 }
             }
@@ -1001,7 +1002,7 @@ public class DataService implements AuthTask.Listener {
                     person2 = getDBHelper().getPersonByFamilySearchId(fsPerson.getId());
                 }
                 if (person2 == null) {
-                    fireStatusUpdate("Processing " + fsPerson.getFullName());
+                    fireStatusUpdate(context.getResources().getString(R.string.processing) + fsPerson.getFullName());
                     person2 = DataHelper.buildLittlePerson(fsPerson, context, remoteService, true);
                 }
             }

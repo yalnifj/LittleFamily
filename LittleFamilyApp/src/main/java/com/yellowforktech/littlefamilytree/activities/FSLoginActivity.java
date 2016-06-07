@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.tasks.AuthTask;
 import com.yellowforktech.littlefamilytree.activities.tasks.FSPedigreeTask;
 import com.yellowforktech.littlefamilytree.activities.tasks.InitialDataLoaderTask;
@@ -115,7 +116,7 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
             // form field with an error.
             focusView.requestFocus();
         } else {
-            pd = ProgressDialog.show(this, "Please wait...", "Logging into FamilySearch", true, false);
+            pd = ProgressDialog.show(this, getResources().getString(R.string.please_wait), getResources().getString(R.string.login_fs), true, false);
             Log.d(this.getClass().getSimpleName(), "Launching new AuthTask for user entered credentials username="+username);
             dataService.setRemoteService(DataService.SERVICE_TYPE_FAMILYSEARCH, FamilySearchService.getInstance());
             AuthTask task = new AuthTask(this, dataService.getRemoteService());
@@ -151,7 +152,7 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
             } catch (Exception e) {
                 Log.e("FSLoginActivity", "Error saving property", e);
             }
-            pd.setMessage("Loading person data from FamilySearch...");
+            pd.setMessage(getResources().getString(R.string.loading_person));
             intent = new Intent();
             PersonLoaderTask task = new PersonLoaderTask(this, this);
             task.setIgnoreLocal(true);
@@ -159,7 +160,7 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
         }
         else {
             pd.dismiss();
-            String message = "Username and password combination failed. ";
+            String message = getResources().getString(R.string.username_fail);
             if (response!=null) message += response.getData();
             Toast.makeText(FSLoginActivity.this, message, Toast.LENGTH_LONG).show();
             setResult( Activity.RESULT_CANCELED, null );
@@ -169,7 +170,7 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
     @Override
     public void onComplete(LittlePerson person) {
         if (person!=null) {
-            pd.setMessage("Loading close family members from FamilySearch...");
+            pd.setMessage(getResources().getString(R.string.loading_close));
             intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
             try {
                 dataService.getDBHelper().saveProperty(DataService.ROOT_PERSON_ID, String.valueOf(person.getId()));

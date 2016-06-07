@@ -31,8 +31,6 @@ import java.util.ArrayList;
  * A login screen that offers login via email/password.
  */
 public class PGVLoginActivity extends Activity implements AuthTask.Listener, PersonLoaderTask.Listener, InitialDataLoaderTask.Listener, PgvVersionTask.Listener {
-    private static final String PGV_DEFAULT_URL = "http://www.finlayfamily.org/genealogy/";
-    private static final String PGV_DEFAULT_USER = "john";
     private static final String PGV_DEFAULT_PASS = "";
 
     // UI references.
@@ -157,7 +155,7 @@ public class PGVLoginActivity extends Activity implements AuthTask.Listener, Per
             // form field with an error.
             focusView.requestFocus();
         } else {
-            pd = ProgressDialog.show(this, "Please wait...", "Logging into PhpGedView", true, false);
+            pd = ProgressDialog.show(this, getResources().getString(R.string.please_wait), getResources().getString(R.string.login_pgv), true, false);
             Log.d(this.getClass().getSimpleName(), "Launching new AuthTask for user entered credentials username="+username);
 
             try {
@@ -196,7 +194,7 @@ public class PGVLoginActivity extends Activity implements AuthTask.Listener, Per
             } catch (Exception e) {
                 Log.e("PGVLoginActivity", "Error saving property", e);
             }
-            pd.setMessage("Loading person data from PhpGedView...");
+            pd.setMessage(getResources().getString(R.string.loading_person));
             intent = new Intent();
             PersonLoaderTask task = new PersonLoaderTask(this, this);
             task.setIgnoreLocal(true);
@@ -204,7 +202,7 @@ public class PGVLoginActivity extends Activity implements AuthTask.Listener, Per
         }
         else {
             pd.dismiss();
-            String message = "Username and password combination failed. ";
+            String message = getResources().getString(R.string.username_fail);
             if (response!=null) message += response.getData();
             Toast.makeText(PGVLoginActivity.this, message, Toast.LENGTH_LONG).show();
             setResult( Activity.RESULT_CANCELED, null );
@@ -213,7 +211,7 @@ public class PGVLoginActivity extends Activity implements AuthTask.Listener, Per
 
     @Override
     public void onComplete(LittlePerson person) {
-        pd.setMessage("Loading close family members from PhpGedView...");
+        pd.setMessage(getResources().getString(R.string.loading_close));
         intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
         try {
             dataService.getDBHelper().saveProperty(DataService.ROOT_PERSON_ID, String.valueOf(person.getId()));
@@ -241,8 +239,8 @@ public class PGVLoginActivity extends Activity implements AuthTask.Listener, Per
     @Override
     public void onComplete(String version) {
         if (version==null) {
-            Toast.makeText(this, "This URL is not a valid instance of PhpGedView.", Toast.LENGTH_LONG).show();
-            mPgvUrlView.setError("This URL is not a valid instance of PhpGedView.");
+            Toast.makeText(this, getResources().getString(R.string.invalid_pgv), Toast.LENGTH_LONG).show();
+            mPgvUrlView.setError(getResources().getString(R.string.invalid_pgv));
         }
         else {
             attemptLogin();

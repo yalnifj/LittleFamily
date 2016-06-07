@@ -13,4 +13,10 @@
     <string name="agreements_text">By clicking the \"SIGN IN\" button, I agree to Little Family Tree knowing my basic FamilySearch profile information and accessing data about my ancestors from FamilySearch family tree.</string>
     <string name="agreements_text2">Little Family Tree will use this information in accordance with their respective terms of service and privacy policies.</string>
     <string name="privacy_text">Little Family Tree will not distribute or share any information outside of your device except with FamilySearch.</string>
+
+    <string name="loading_close">Loading close family members...</string>
+    <string name="auth_cancelled">Authorization cancelled.</string>
+    <string name="loading_person"></string>
+    <string name="please_wait">Please wait...</string>
+    <string name="login_fs">Logging into FamilySearch</string>
 </resources>

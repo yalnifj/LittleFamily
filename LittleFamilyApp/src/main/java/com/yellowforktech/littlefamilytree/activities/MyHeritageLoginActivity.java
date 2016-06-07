@@ -2,23 +2,36 @@ package com.yellowforktech.littlefamilytree.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.familygraph.android.DialogError;
 import com.familygraph.android.FamilyGraph;
 import com.familygraph.android.FamilyGraphError;
 import com.yellowforktech.littlefamilytree.R;
+import com.yellowforktech.littlefamilytree.activities.tasks.InitialDataLoaderTask;
+import com.yellowforktech.littlefamilytree.activities.tasks.PersonLoaderTask;
+import com.yellowforktech.littlefamilytree.data.DataService;
+import com.yellowforktech.littlefamilytree.data.LittlePerson;
+import com.yellowforktech.littlefamilytree.remote.RemoteServiceSearchException;
 import com.yellowforktech.littlefamilytree.remote.familygraph.MyHeritageService;
 
-import org.json.JSONObject;
+import java.util.ArrayList;
 
-public class MyHeritageLoginActivity extends Activity {
+public class MyHeritageLoginActivity extends Activity implements PersonLoaderTask.Listener, InitialDataLoaderTask.Listener {
 
     private MyHeritageService service;
+    private DataService dataService;
 
     private TextView welcomeText;
+    private TextView detailText;
+    private ProgressBar progressBar;
+
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +39,13 @@ public class MyHeritageLoginActivity extends Activity {
         setContentView(R.layout.activity_my_heritage_login);
 
         welcomeText = (TextView) findViewById(R.id.welcomeTxt);
+        detailText = (TextView) findViewById(R.id.detailsTxt);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar3);
+
+        progressBar.animate();
+
+        dataService = DataService.getInstance();
+        dataService.setContext(this);
     }
 
     @Override
@@ -42,15 +62,27 @@ public class MyHeritageLoginActivity extends Activity {
             @Override
             public void onComplete(Bundle values) {
                 Log.d("MyHeritageLoginActivity", "onComplete: "+values);
-                JSONObject user = service.getCurrentUser();
-                Log.d("MyHeritageLoginActivity", user.toString());
-                /*
-                {"id":"user-586269521","name":"John Finlay","first_name":"John","last_name":"Finlay","nickname":"Member","gender":"M","preferred_display_language":"EN","preferred_email_language":"EN","link":"https:\/\/www.myheritage.com\/member-586269521_1\/john-finlay","birth_date":{"text":"1976","date":"1976","structured_date":{"first_date":{"year":1976,"type":"exact","class_name":"SingleDate"},"type":"exact","class_name":"StructuredDate"},"class_name":"EventDate"},"country_code":"US","country":"USA","created_time":"2015-10-07T03:40:05+0000","last_visit_time":"2016-06-01T20:06:00+0000","is_public":true,"show_age":true,"allow_posting_comments":true,"notify_on_comment":true,"show_real_name":true,
-                "default_site":{"id":"site-309415061","name":"Finlay Web Site"},
-                "default_tree":{"id":"tree-309415061-1","name":"Finlay Family Tree"},
-                "default_individual":{"id":"individual-309415061-1500003","name":"John Finlay"},
-                "mailbox":{"id":"mailbox-586269521"},"class_name":"User"}
-                */
+
+                try {
+                    service.authWithToken(values.getString("access_token"));
+                } catch (RemoteServiceSearchException e) {
+                    e.printStackTrace();
+                }
+                dataService.setRemoteService(DataService.SERVICE_TYPE_MYHERITAGE, service);
+                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(MyHeritageLoginActivity.this).edit();
+                editor.putString(DataService.SERVICE_TYPE, dataService.getRemoteService().getClass().getSimpleName());
+                editor.commit();
+
+                intent = new Intent();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        detailText.setText(getResources().getString(R.string.loading_person));
+                        PersonLoaderTask task = new PersonLoaderTask(MyHeritageLoginActivity.this, MyHeritageLoginActivity.this);
+                        task.setIgnoreLocal(true);
+                        task.execute();
+                    }
+                });
             }
 
             @Override
@@ -68,8 +100,34 @@ public class MyHeritageLoginActivity extends Activity {
             @Override
             public void onCancel() {
                 Log.d("MyHeritageLoginActivity", "onCancel: ");
-                welcomeText.setText("Authorization cancelled.");
+                welcomeText.setText(getResources().getString(R.string.auth_cancelled));
             }
         });
+    }
+
+    @Override
+    public void onComplete(LittlePerson person) {
+        detailText.setText(getResources().getString(R.string.loading_close));
+        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
+        try {
+            dataService.getDBHelper().saveProperty(DataService.ROOT_PERSON_ID, String.valueOf(person.getId()));
+        } catch (Exception e) {
+            Log.e("PGVLoginActivity", "Error saving property", e);
+        }
+        InitialDataLoaderTask task = new InitialDataLoaderTask(this, this);
+        task.execute(person);
+    }
+
+    @Override
+    public void onComplete(ArrayList<LittlePerson> family) {
+        dataService.resumeSync();
+        intent.putExtra(ChooseFamilyMember.FAMILY, family);
+        setResult(Activity.RESULT_OK, intent);
+        finish();
+    }
+
+    @Override
+    public void onStatusUpdate(String message) {
+        detailText.setText(message);
     }
 }

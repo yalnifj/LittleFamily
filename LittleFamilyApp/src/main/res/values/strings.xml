@@ -145,5 +145,6 @@ Please wait...</string>
     <string name="relative_rescue">Rescue your Relatives!</string>
     <string name="rescued">Rescued:</string>
     <string name="you_rescued">You rescued %1$d relatives!</string>
+    <string name="processing">Processing </string>
 
 </resources>

@@ -7,4 +7,7 @@
     <string name="pgv_agreements_text2">Little Family Tree will use this information in accordance with their respective terms of service and privacy policies.</string>
     <string name="pgv_privacy_text">Little Family Tree will not distribute or share any information outside of your device except with the specified PhpGedView website.</string>
     <string name="default_id_hint">Default person ID (e.g. I1)</string>
+    <string name="invalid_pgv">This URL is not a valid instance of PhpGedView.</string>
+    <string name="username_fail">Username and password combination failed. </string>
+    <string name="login_pgv">Logging into PhpGedView</string>
 </resources>
