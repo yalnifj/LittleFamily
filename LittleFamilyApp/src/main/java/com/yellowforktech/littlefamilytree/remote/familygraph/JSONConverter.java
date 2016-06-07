@@ -50,7 +50,7 @@ public class JSONConverter {
 
         Name name = new Name();
         NameForm form = new NameForm();
-        form.setFullText(json.getString("name"));
+        form.setFullText(json.getString("name").replaceAll(" \\([\\w\\s]*\\)", ""));
         if (json.has("first_name")) {
             NamePart part = new NamePart();
             part.setKnownType(NamePartType.Given);
@@ -178,7 +178,7 @@ public class JSONConverter {
             JSONArray jchildren = json.getJSONArray("children");
             for (int c=0; c<jchildren.length(); c++) {
                 JSONObject child = jchildren.getJSONObject(c);
-                family.addChild(new Link("CHIL", new URI(child.getString("id"))));
+                family.addChild(new Link("CHIL", new URI(child.getJSONObject("child").getString("id"))));
             }
         }
         return family;

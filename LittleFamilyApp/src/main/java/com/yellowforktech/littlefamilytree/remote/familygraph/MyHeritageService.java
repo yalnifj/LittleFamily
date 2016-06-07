@@ -98,7 +98,7 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
 
     public JSONObject getCurrentUser() {
         try {
-            String data = familyGraph.request("me");
+            String data = getData("me");
             JSONObject userJ = Util.parseJson(data);
             return userJ;
         } catch (IOException e) {
@@ -138,13 +138,15 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
 
         if (!checkCache || personCache.get(personId)==null) {
             try {
-                String data = familyGraph.request(personId);
+                String data = getData(personId);
                 JSONObject individual = Util.parseJson(data);
                 person = converter.convertJSONPerson(individual);
 
-                String eventData = familyGraph.request(personId + "/events");
-                JSONObject events = Util.parseJson(eventData);
-                converter.processEvents(events, person);
+                String eventData = getData(personId + "/events");
+                if (!eventData.equals("[]")) {
+                    JSONObject events = Util.parseJson(eventData);
+                    converter.processEvents(events, person);
+                }
 
                 personCache.put(personId, person);
 
@@ -194,7 +196,7 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
                         if(link.getHref()!=null) {
                             String objeid =link.getHref().toString();
                             try {
-                                String data = familyGraph.request(objeid);
+                                String data = getData(objeid);
                                 JSONObject json = Util.parseJson(data);
                                 SourceDescription sd = converter.convertMedia(json);
                                 List<Link> links = sd.getLinks();
@@ -245,7 +247,7 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
 
         List<Relationship> family = new ArrayList<>();
         try {
-            String dataStr = familyGraph.request(personId+"/immediate_family");
+            String dataStr = getData(personId+"/immediate_family");
             JSONObject json = Util.parseJson(dataStr);
             JSONArray data = json.getJSONArray("data");
             for(int i=0; i<data.length(); i++) {
@@ -301,13 +303,13 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
 
         List<Relationship> family = new ArrayList<>();
         try {
-            String dataStr = familyGraph.request(personId+"/child_in_families_connection");
+            String dataStr = getData(personId+"/child_in_families_connection");
             JSONObject json = Util.parseJson(dataStr);
             JSONArray fams = json.getJSONArray("data");
             if (fams != null) {
                 for(int i=0; i< fams.length(); i++) {
                     JSONObject famc = fams.getJSONObject(i);
-                    String famData = familyGraph.request(famc.getJSONObject("family").getString("id"));
+                    String famData = getData(famc.getJSONObject("family").getString("id"));
                     JSONObject fam = Util.parseJson(famData);
                     FamilyHolder fh = converter.convertFamily(fam);
                     for (Link p : fh.getParents()) {
@@ -342,7 +344,7 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
 
         List<Relationship> family = new ArrayList<>();
         try {
-            String dataStr = familyGraph.request(personId+"/spouse_in_families_connection");
+            String dataStr = getData(personId+"/spouse_in_families_connection");
             JSONObject json = Util.parseJson(dataStr);
             JSONArray fams = json.getJSONArray("data");
             if (fams != null) {
@@ -381,7 +383,7 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
 
         List<Relationship> family = new ArrayList<>();
         try {
-            String dataStr = familyGraph.request(personId+"/spouse_in_families_connection");
+            String dataStr = getData(personId+"/spouse_in_families_connection");
             JSONObject json = Util.parseJson(dataStr);
             JSONArray fams = json.getJSONArray("data");
             if (fams != null) {
@@ -424,7 +426,7 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
             String reqStr = personId + "/media";
             boolean hasMorePages = true;
             while(hasMorePages) {
-                String dataStr = familyGraph.request(reqStr);
+                String dataStr = getData(reqStr);
                 JSONObject json = Util.parseJson(dataStr);
 
                 if (json.has("data")) {
@@ -532,5 +534,31 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
             Log.e(TAG, "getPersonUrl", e);
         }
         return "https://www.myheritage.com/";
+    }
+
+    private long lastRequestTime = 0;
+    public String getData(String url) throws IOException {
+        //-- throttle requests to 3 per second
+        if (System.currentTimeMillis() - lastRequestTime < 300) {
+            try {
+                Thread.sleep(System.currentTimeMillis() - lastRequestTime);
+            } catch (InterruptedException e) {
+                Log.e(TAG, "getData", e);
+            }
+        }
+
+        String data = familyGraph.request(url);
+        int count = 0;
+        //-- check for throttling
+        while (count < 3 && data.startsWith("{\"error\":429")) {
+            try {
+                Thread.sleep(30000);
+            } catch (InterruptedException e) {
+                Log.e(TAG, "getData", e);
+            }
+            data = familyGraph.request(url);
+            count++;
+        }
+        return data;
     }
 }

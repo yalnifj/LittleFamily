@@ -262,6 +262,7 @@ public final class Util {
      */
     public static JSONObject parseJson(String response) throws JSONException,
             FamilyGraphError {
+        Log.d("FamilyGraphUtil", "parseJson: "+response);
         // Edge case: when sending a POST request to /[post_id]/likes
         // the return value is 'true' or 'false'. Unfortunately
         // these values cause the JSONObject constructor to throw
