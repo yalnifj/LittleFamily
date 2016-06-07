@@ -248,42 +248,44 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
         List<Relationship> family = new ArrayList<>();
         try {
             String dataStr = getData(personId+"/immediate_family");
-            JSONObject json = Util.parseJson(dataStr);
-            JSONArray data = json.getJSONArray("data");
-            for(int i=0; i<data.length(); i++) {
-                JSONObject rel = data.getJSONObject(i);
-                if ("wife".equals(rel.getString("relationship_type")) || "husband".equals(rel.getString("relationship_type"))) {
-                    Relationship relationship = new Relationship();
-                    relationship.setKnownType(RelationshipType.Couple);
-                    ResourceReference rr = new ResourceReference();
-                    rr.setResourceId(rel.getJSONObject("individual").getString("id"));
-                    relationship.setPerson1(rr);
-                    ResourceReference rr2 = new ResourceReference();
-                    rr2.setResourceId(personId);
-                    relationship.setPerson2(rr2);
-                    family.add(relationship);
-                }
-                if ("mother".equals(rel.getString("relationship_type")) || "father".equals(rel.getString("relationship_type"))) {
-                    Relationship relationship = new Relationship();
-                    relationship.setKnownType(RelationshipType.ParentChild);
-                    ResourceReference rr = new ResourceReference();
-                    rr.setResourceId(rel.getJSONObject("individual").getString("id"));
-                    relationship.setPerson1(rr);
-                    ResourceReference rr2 = new ResourceReference();
-                    rr2.setResourceId(personId);
-                    relationship.setPerson2(rr2);
-                    family.add(relationship);
-                }
-                if ("daughter".equals(rel.getString("relationship_type")) || "son".equals(rel.getString("relationship_type"))) {
-                    Relationship relationship = new Relationship();
-                    relationship.setKnownType(RelationshipType.ParentChild);
-                    ResourceReference rr = new ResourceReference();
-                    rr.setResourceId(personId);
-                    relationship.setPerson1(rr);
-                    ResourceReference rr2 = new ResourceReference();
-                    rr2.setResourceId(rel.getJSONObject("individual").getString("id"));
-                    relationship.setPerson2(rr2);
-                    family.add(relationship);
+            if (!dataStr.equals("[]")) {
+                JSONObject json = Util.parseJson(dataStr);
+                JSONArray data = json.getJSONArray("data");
+                for (int i = 0; i < data.length(); i++) {
+                    JSONObject rel = data.getJSONObject(i);
+                    if ("wife".equals(rel.getString("relationship_type")) || "husband".equals(rel.getString("relationship_type"))) {
+                        Relationship relationship = new Relationship();
+                        relationship.setKnownType(RelationshipType.Couple);
+                        ResourceReference rr = new ResourceReference();
+                        rr.setResourceId(rel.getJSONObject("individual").getString("id"));
+                        relationship.setPerson1(rr);
+                        ResourceReference rr2 = new ResourceReference();
+                        rr2.setResourceId(personId);
+                        relationship.setPerson2(rr2);
+                        family.add(relationship);
+                    }
+                    if ("mother".equals(rel.getString("relationship_type")) || "father".equals(rel.getString("relationship_type"))) {
+                        Relationship relationship = new Relationship();
+                        relationship.setKnownType(RelationshipType.ParentChild);
+                        ResourceReference rr = new ResourceReference();
+                        rr.setResourceId(rel.getJSONObject("individual").getString("id"));
+                        relationship.setPerson1(rr);
+                        ResourceReference rr2 = new ResourceReference();
+                        rr2.setResourceId(personId);
+                        relationship.setPerson2(rr2);
+                        family.add(relationship);
+                    }
+                    if ("daughter".equals(rel.getString("relationship_type")) || "son".equals(rel.getString("relationship_type"))) {
+                        Relationship relationship = new Relationship();
+                        relationship.setKnownType(RelationshipType.ParentChild);
+                        ResourceReference rr = new ResourceReference();
+                        rr.setResourceId(personId);
+                        relationship.setPerson1(rr);
+                        ResourceReference rr2 = new ResourceReference();
+                        rr2.setResourceId(rel.getJSONObject("individual").getString("id"));
+                        relationship.setPerson2(rr2);
+                        family.add(relationship);
+                    }
                 }
             }
             return family;
@@ -304,26 +306,28 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
         List<Relationship> family = new ArrayList<>();
         try {
             String dataStr = getData(personId+"/child_in_families_connection");
-            JSONObject json = Util.parseJson(dataStr);
-            JSONArray fams = json.getJSONArray("data");
-            if (fams != null) {
-                for(int i=0; i< fams.length(); i++) {
-                    JSONObject famc = fams.getJSONObject(i);
-                    String famData = getData(famc.getJSONObject("family").getString("id"));
-                    JSONObject fam = Util.parseJson(famData);
-                    FamilyHolder fh = converter.convertFamily(fam);
-                    for (Link p : fh.getParents()) {
-                        String relId = p.getHref().toString();
-                        if (!relId.equals(personId)) {
-                            Relationship rel = new Relationship();
-                            rel.setKnownType(RelationshipType.ParentChild);
-                            ResourceReference rr = new ResourceReference();
-                            rr.setResourceId(relId);
-                            rel.setPerson1(rr);
-                            ResourceReference rr2 = new ResourceReference();
-                            rr2.setResourceId(personId);
-                            rel.setPerson2(rr2);
-                            family.add(rel);
+            if (!dataStr.equals("[]")) {
+                JSONObject json = Util.parseJson(dataStr);
+                JSONArray fams = json.getJSONArray("data");
+                if (fams != null) {
+                    for (int i = 0; i < fams.length(); i++) {
+                        JSONObject famc = fams.getJSONObject(i);
+                        String famData = getData(famc.getJSONObject("family").getString("id"));
+                        JSONObject fam = Util.parseJson(famData);
+                        FamilyHolder fh = converter.convertFamily(fam);
+                        for (Link p : fh.getParents()) {
+                            String relId = p.getHref().toString();
+                            if (!relId.equals(personId)) {
+                                Relationship rel = new Relationship();
+                                rel.setKnownType(RelationshipType.ParentChild);
+                                ResourceReference rr = new ResourceReference();
+                                rr.setResourceId(relId);
+                                rel.setPerson1(rr);
+                                ResourceReference rr2 = new ResourceReference();
+                                rr2.setResourceId(personId);
+                                rel.setPerson2(rr2);
+                                family.add(rel);
+                            }
                         }
                     }
                 }
@@ -345,24 +349,26 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
         List<Relationship> family = new ArrayList<>();
         try {
             String dataStr = getData(personId+"/spouse_in_families_connection");
-            JSONObject json = Util.parseJson(dataStr);
-            JSONArray fams = json.getJSONArray("data");
-            if (fams != null) {
-                for(int i=0; i< fams.length(); i++) {
-                    JSONObject fam = fams.getJSONObject(i);
-                    FamilyHolder fh = converter.convertFamily(fam);
-                    for (Link p : fh.getChildren()) {
-                        String relId = p.getHref().toString();
-                        if (!relId.equals(personId)) {
-                            Relationship rel = new Relationship();
-                            rel.setKnownType(RelationshipType.ParentChild);
-                            ResourceReference rr = new ResourceReference();
-                            rr.setResourceId(personId);
-                            rel.setPerson1(rr);
-                            ResourceReference rr2 = new ResourceReference();
-                            rr2.setResourceId(relId);
-                            rel.setPerson2(rr2);
-                            family.add(rel);
+            if (!dataStr.equals("[]")) {
+                JSONObject json = Util.parseJson(dataStr);
+                JSONArray fams = json.getJSONArray("data");
+                if (fams != null) {
+                    for (int i = 0; i < fams.length(); i++) {
+                        JSONObject fam = fams.getJSONObject(i);
+                        FamilyHolder fh = converter.convertFamily(fam);
+                        for (Link p : fh.getChildren()) {
+                            String relId = p.getHref().toString();
+                            if (!relId.equals(personId)) {
+                                Relationship rel = new Relationship();
+                                rel.setKnownType(RelationshipType.ParentChild);
+                                ResourceReference rr = new ResourceReference();
+                                rr.setResourceId(personId);
+                                rel.setPerson1(rr);
+                                ResourceReference rr2 = new ResourceReference();
+                                rr2.setResourceId(relId);
+                                rel.setPerson2(rr2);
+                                family.add(rel);
+                            }
                         }
                     }
                 }
@@ -384,24 +390,26 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
         List<Relationship> family = new ArrayList<>();
         try {
             String dataStr = getData(personId+"/spouse_in_families_connection");
-            JSONObject json = Util.parseJson(dataStr);
-            JSONArray fams = json.getJSONArray("data");
-            if (fams != null) {
-                for(int i=0; i< fams.length(); i++) {
-                    JSONObject fam = fams.getJSONObject(i);
-                    FamilyHolder fh = converter.convertFamily(fam);
-                    for (Link p : fh.getParents()) {
-                        String relId = p.getHref().toString();
-                        if (!relId.equals(personId)) {
-                            Relationship rel = new Relationship();
-                            rel.setKnownType(RelationshipType.Couple);
-                            ResourceReference rr = new ResourceReference();
-                            rr.setResourceId(relId);
-                            rel.setPerson1(rr);
-                            ResourceReference rr2 = new ResourceReference();
-                            rr2.setResourceId(personId);
-                            rel.setPerson2(rr2);
-                            family.add(rel);
+            if (!dataStr.equals("[]")) {
+                JSONObject json = Util.parseJson(dataStr);
+                JSONArray fams = json.getJSONArray("data");
+                if (fams != null) {
+                    for (int i = 0; i < fams.length(); i++) {
+                        JSONObject fam = fams.getJSONObject(i);
+                        FamilyHolder fh = converter.convertFamily(fam);
+                        for (Link p : fh.getParents()) {
+                            String relId = p.getHref().toString();
+                            if (!relId.equals(personId)) {
+                                Relationship rel = new Relationship();
+                                rel.setKnownType(RelationshipType.Couple);
+                                ResourceReference rr = new ResourceReference();
+                                rr.setResourceId(relId);
+                                rel.setPerson1(rr);
+                                ResourceReference rr2 = new ResourceReference();
+                                rr2.setResourceId(personId);
+                                rel.setPerson2(rr2);
+                                family.add(rel);
+                            }
                         }
                     }
                 }
@@ -427,19 +435,23 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
             boolean hasMorePages = true;
             while(hasMorePages) {
                 String dataStr = getData(reqStr);
-                JSONObject json = Util.parseJson(dataStr);
+                if (!dataStr.equals("[]")) {
+                    JSONObject json = Util.parseJson(dataStr);
 
-                if (json.has("data")) {
-                    JSONArray data = json.getJSONArray("data");
-                    for (int i = 0; i < data.length(); i++) {
-                        JSONObject med = data.getJSONObject(i);
-                        SourceDescription sd = converter.convertMedia(med);
-                        media.add(sd);
-                    }
+                    if (json.has("data")) {
+                        JSONArray data = json.getJSONArray("data");
+                        for (int i = 0; i < data.length(); i++) {
+                            JSONObject med = data.getJSONObject(i);
+                            SourceDescription sd = converter.convertMedia(med);
+                            media.add(sd);
+                        }
 
-                    if (json.has("paging")) {
-                        if (json.getJSONObject("paging").has("next")) {
-                            reqStr = json.getJSONObject("paging").getString("next");
+                        if (json.has("paging")) {
+                            if (json.getJSONObject("paging").has("next")) {
+                                reqStr = json.getJSONObject("paging").getString("next");
+                            } else {
+                                hasMorePages = false;
+                            }
                         } else {
                             hasMorePages = false;
                         }
