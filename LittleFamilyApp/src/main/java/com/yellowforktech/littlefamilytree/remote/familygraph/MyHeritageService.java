@@ -1,13 +1,16 @@
 package com.yellowforktech.littlefamilytree.remote.familygraph;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.familygraph.android.DialogError;
 import com.familygraph.android.FamilyGraph;
 import com.familygraph.android.FamilyGraphError;
 import com.familygraph.android.Util;
+import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.remote.RemoteResult;
 import com.yellowforktech.littlefamilytree.remote.RemoteService;
 import com.yellowforktech.littlefamilytree.remote.RemoteServiceBase;
@@ -67,6 +70,7 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
 
     public MyHeritageService() {
         familyGraph = new FamilyGraph(CLIENT_ID);
+        sessionId = familyGraph.getAccessToken();
         converter = new JSONConverter();
         personCache = new HashMap<>();
     }
@@ -84,7 +88,49 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
     @Override
     public RemoteResult authWithToken(String token) throws RemoteServiceSearchException {
         sessionId = familyGraph.getAccessToken();
-        return null;
+        JSONObject user = getCurrentUser();
+        if (user==null) {
+            RemoteResult result = new RemoteResult();
+            result.setStatusCode(403);
+            return result;
+        }
+        else {
+            RemoteResult result = new RemoteResult();
+            result.setStatusCode(200);
+            result.setData(user.toString());
+            return result;
+        }
+    }
+
+    public void authWithDialog(Activity activity) {
+        familyGraph.authorize(activity, new FamilyGraph.DialogListener() {
+            @Override
+            public void onComplete(Bundle values) {
+                Log.d("MyHeritageLoginActivity", "onComplete: "+values);
+
+                try {
+                    sessionId = values.getString("access_token");
+                    DataService.getInstance().saveEncryptedProperty(DataService.SERVICE_TYPE_MYHERITAGE + DataService.SERVICE_TOKEN, sessionId);
+                } catch (Exception e) {
+                    Log.e("MyHeritageLoginActivity", "error saving token", e);
+                }
+            }
+
+            @Override
+            public void onFamilyGraphError(FamilyGraphError e) {
+                Log.e("MyHeritageLoginActivity", "onFamilyGraphError: ", e);
+            }
+
+            @Override
+            public void onError(DialogError e) {
+                Log.e("MyHeritageLoginActivity", "onError: ",e);
+            }
+
+            @Override
+            public void onCancel() {
+                Log.d("MyHeritageLoginActivity", "onCancel: ");
+            }
+        });
     }
 
     @Override

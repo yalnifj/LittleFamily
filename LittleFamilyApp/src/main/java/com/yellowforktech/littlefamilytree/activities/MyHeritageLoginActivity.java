@@ -17,7 +17,6 @@ import com.yellowforktech.littlefamilytree.activities.tasks.InitialDataLoaderTas
 import com.yellowforktech.littlefamilytree.activities.tasks.PersonLoaderTask;
 import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
-import com.yellowforktech.littlefamilytree.remote.RemoteServiceSearchException;
 import com.yellowforktech.littlefamilytree.remote.familygraph.MyHeritageService;
 
 import java.util.ArrayList;
@@ -64,9 +63,11 @@ public class MyHeritageLoginActivity extends Activity implements PersonLoaderTas
                 Log.d("MyHeritageLoginActivity", "onComplete: "+values);
 
                 try {
-                    service.authWithToken(values.getString("access_token"));
-                } catch (RemoteServiceSearchException e) {
-                    e.printStackTrace();
+                    String token = values.getString("access_token");
+                    dataService.saveEncryptedProperty(DataService.SERVICE_TYPE_MYHERITAGE + DataService.SERVICE_TOKEN, token);
+                    service.authWithToken(token);
+                } catch (Exception e) {
+                    Log.e("MyHeritageLoginActivity", "error saving token", e);
                 }
                 dataService.setRemoteService(DataService.SERVICE_TYPE_MYHERITAGE, service);
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(MyHeritageLoginActivity.this).edit();
@@ -87,13 +88,13 @@ public class MyHeritageLoginActivity extends Activity implements PersonLoaderTas
 
             @Override
             public void onFamilyGraphError(FamilyGraphError e) {
-                Log.d("MyHeritageLoginActivity", "onFamilyGraphError: "+e);
+                Log.e("MyHeritageLoginActivity", "onFamilyGraphError: ", e);
                 welcomeText.setText(e.getMessage());
             }
 
             @Override
             public void onError(DialogError e) {
-                Log.d("MyHeritageLoginActivity", "onError: "+e);
+                Log.e("MyHeritageLoginActivity", "onError: ",e);
                 welcomeText.setText(e.getMessage());
             }
 

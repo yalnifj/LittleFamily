@@ -127,6 +127,7 @@ public class JSONConverter {
                 Date date = new Date();
                 date.setOriginal("+"+dateJ.getString("date"));
                 date.setFormal(dateJ.getString("gedcom"));
+                fact.setDate(date);
             }
             if (factJ.has("place")) {
                 PlaceReference place = new PlaceReference();

@@ -1,5 +1,6 @@
 package com.yellowforktech.littlefamilytree.data;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -159,20 +160,20 @@ public class DataService implements AuthTask.Listener {
     public void autoLogin()
 	{
 		try {
-		String token = getEncryptedProperty(serviceType + SERVICE_TOKEN);
-        if (token != null)
-		{
-			synchronized (this)
-			{
-				if (remoteService.getSessionId() == null && !authenticating)
-				{
-					authenticating = true;
-					Log.d(this.getClass().getSimpleName(), "Launching new AuthTask for stored credentials");
-					AuthTask task = new AuthTask(this, remoteService);
-					task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, token);
-				}
-			}
-		}
+            String token = getEncryptedProperty(serviceType + SERVICE_TOKEN);
+            if (token != null)
+            {
+                synchronized (this)
+                {
+                    if (remoteService.getSessionId() == null && !authenticating)
+                    {
+                        authenticating = true;
+                        Log.d(this.getClass().getSimpleName(), "Launching new AuthTask for stored credentials");
+                        AuthTask task = new AuthTask(this, remoteService);
+                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, token);
+                    }
+                }
+            }
 		} catch(Exception e) {
 			Log.e("dataService", "Unable to authenticate", e);
 		}
@@ -195,6 +196,11 @@ public class DataService implements AuthTask.Listener {
             syncPaused = true;
         } else {
             syncPaused = false;
+        }
+
+        if (serviceType.equals(SERVICE_TYPE_MYHERITAGE) && result.getStatusCode()==403) {
+            MyHeritageService mhs = (MyHeritageService) remoteService;
+            mhs.authWithDialog((Activity) context);
         }
 
         PreferenceManager.getDefaultSharedPreferences(context).registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
@@ -1217,8 +1223,11 @@ public class DataService implements AuthTask.Listener {
     public String getEncryptedProperty(String property) throws Exception {
         String value = getDBHelper().getProperty(property);
         String uid = getDBHelper().getProperty(DBHelper.UUID_PROPERTY);
-        value = AES.decrypt(128, uid, value);
-        return value;
+        if (value!=null && uid!=null) {
+            value = AES.decrypt(128, uid, value);
+            return value;
+        }
+        return null;
     }
 
     public void saveEncryptedProperty(String property, String value) throws Exception {
