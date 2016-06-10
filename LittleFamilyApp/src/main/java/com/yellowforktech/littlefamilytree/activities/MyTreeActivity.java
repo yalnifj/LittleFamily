@@ -60,6 +60,7 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
     private Bitmap bubbleBtn;
     private Bitmap songBtn;
     private Bitmap cardBtn;
+    private Bitmap birdBtn;
     private int maxX = 0;
     private int maxY = 0;
     private TouchEventGameSprite touchedArrow;
@@ -121,6 +122,13 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
             cardBtn = ImageHelper.loadBitmapFromResource(this, R.drawable.birthday_card_button, 0, buttonSize, buttonSize);
         }
         return cardBtn;
+    }
+
+    public Bitmap getBirdBtn() {
+        if (birdBtn==null || birdBtn.isRecycled()) {
+            birdBtn = ImageHelper.loadBitmapFromResource(this, R.drawable.house_tree_bird, 0, buttonSize, buttonSize);
+        }
+        return birdBtn;
     }
 
     public int getButtonSize() {
@@ -231,7 +239,7 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
             treeView.addSprite(vine);
             addDownVine(rootSprite, false);
             addChildSprites(root.getChildren(), rootSprite.getX(), rootSprite.getY() + rootSprite.getHeight() + vineBm.getHeight(), true);
-        } else if (root.getLeft()!=null && root.getLeft().getChildren()!=null && root.getLeft().getChildren().size()>0){
+        } else if (root.getLeft()!=null && root.getLeft().getChildren()!=null && root.getLeft().getChildren().size()>0 && root.getSpouse()==null){
             treeView.getSprites().remove(rootSprite);
             addChildSprites(root.getLeft().getChildren(), rootSprite.getX(), rootSprite.getY(), false);
         }

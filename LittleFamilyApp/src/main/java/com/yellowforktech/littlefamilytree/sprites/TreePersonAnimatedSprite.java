@@ -348,6 +348,7 @@ public class TreePersonAnimatedSprite extends Sprite {
                     activityButtons.add(activity.getBubbleBtn());
                     activityButtons.add(activity.getSongBtn());
                     activityButtons.add(activity.getCardBtn());
+                    activityButtons.add(activity.getBirdBtn());
                     if (dressUpBtn != null) activityButtons.add(dressUpBtn);
                 }
 
@@ -384,6 +385,7 @@ public class TreePersonAnimatedSprite extends Sprite {
                     spActivityButtons.add(activity.getBubbleBtn());
                     spActivityButtons.add(activity.getSongBtn());
                     spActivityButtons.add(activity.getCardBtn());
+                    spActivityButtons.add(activity.getBirdBtn());
                     if (spDressUpBtn != null) spActivityButtons.add(spDressUpBtn);
                 }
 
@@ -603,6 +605,8 @@ public class TreePersonAnimatedSprite extends Sprite {
             EventQueue.getInstance().publish(LittleFamilyActivity.TOPIC_START_SONG, person);
         else if (button==activity.getCardBtn())
             EventQueue.getInstance().publish(LittleFamilyActivity.TOPIC_START_BIRTHDAY_CARD, person);
+        else if (button==activity.getBirdBtn())
+            EventQueue.getInstance().publish(LittleFamilyActivity.TOPIC_START_FLYING, person);
         else
             EventQueue.getInstance().publish(LittleFamilyActivity.TOPIC_START_DRESSUP, person);
     }
