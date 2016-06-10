@@ -217,7 +217,7 @@ public class DBHelper extends SQLiteOpenHelper {
             } else {
                 long rowid = db.insert(TABLE_LITTLE_PERSON, null, values);
                 person.setId((int) rowid);
-                Log.d("DBHelper", "persistLittlePerson added person with id " + rowid+" "+person.getId()+" "+person.getName());
+                Log.d("DBHelper", "persistLittlePerson added person with id " + rowid+" "+person.getId()+" "+person.getName() + " " + person.getFamilySearchId());
             }
 		}
 		// --update
@@ -226,7 +226,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			String[] selectionArgs = { String.valueOf(person.getId()) };
 
 			int count = db.update(TABLE_LITTLE_PERSON, values, selection, selectionArgs);
-			Log.d("DBHelper", "persistLittlePerson updated " + count + " rows "+person.getId()+" "+person.getName());
+			Log.d("DBHelper", "persistLittlePerson updated " + count + " rows "+person.getId()+" "+person.getName() + " " + person.getFamilySearchId());
 		}
 	}
 	

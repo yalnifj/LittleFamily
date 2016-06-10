@@ -125,8 +125,8 @@ public class JSONConverter {
             if (factJ.has("date")) {
                 JSONObject dateJ = factJ.getJSONObject("date");
                 Date date = new Date();
-                date.setOriginal("+"+dateJ.getString("date"));
-                date.setFormal(dateJ.getString("gedcom"));
+                date.setFormal("+"+dateJ.getString("date"));
+                date.setOriginal(dateJ.getString("gedcom"));
                 fact.setDate(date);
             }
             if (factJ.has("place")) {

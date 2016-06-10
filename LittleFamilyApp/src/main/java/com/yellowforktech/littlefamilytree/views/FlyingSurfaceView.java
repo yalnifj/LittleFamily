@@ -436,6 +436,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
             missedSprites = new ArrayList<>();
             inNest.clear();
             onBoard.clear();
+            backgroundTiles.clear();
             missed = 0;
 
             gameOver = false;
@@ -718,7 +719,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                             float r = (float) s.getWidth() / (float) s.getHeight();
                             s.setWidth((int) (nestWidth * r));
                             s.setHeight(nestWidth);
-                            s.setX(inNest.size() * nestWidth);
+                            s.setX(nestSprites.size() * nestWidth);
                             s.setY(getHeight() - nestHeight);
                             nestSprites.add(s);
                             LittlePerson person = s.getPerson();
@@ -741,7 +742,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                 if (delay > 0) {
                     delay--;
                 } else {
-                    delay = maxDelay / 2 + random.nextInt(maxDelay) - (int) (inNest.size() * 0.5);
+                    delay = maxDelay / 2 + random.nextInt(maxDelay) - (int) (nestSprites.size() * 0.5);
                     addRandomPersonSprite();
                 }
 
@@ -758,7 +759,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                 }
             }
 
-            ty += 2 + inNest.size() / 2.5;
+            ty += 2 + nestSprites.size() / 2.5;
             if (ty >= tiles.get(0).getHeight()) {
                 ty = 0;
                 addTileRow();
