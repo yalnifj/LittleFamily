@@ -242,6 +242,8 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
         } else if (root.getLeft()!=null && root.getLeft().getChildren()!=null && root.getLeft().getChildren().size()>0 && root.getSpouse()==null){
             treeView.getSprites().remove(rootSprite);
             addChildSprites(root.getLeft().getChildren(), rootSprite.getX(), rootSprite.getY(), false);
+        } else {
+            rootSprite.setY(rootSprite.getY()-45*dm.density);
         }
 
         treeView.setMaxWidth(maxX * 2);
@@ -364,10 +366,12 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
                 int vx = (int) (vine.getX() - vine.getWidth() - (4*dm.density));
                 while (vx > x -(22.5*dm.density)) {
                     Bitmap bv = vineH1;
-                    int vy = cy - (int)(40*dm.density);
+                    int vy = cy - (int)(60.5*dm.density);
                     if (flip) {
                         bv = vineH2;
                         vy = cy - (int)(32*dm.density);
+                    } else {
+                        vx = (int) (vx + 4 * dm.density);
                     }
                     vine = new AnimatedBitmapSprite(bv);
                     vine.setX(vx);
@@ -384,7 +388,8 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
         }
 
         //--child side
-        TreePersonAnimatedSprite sprite = new TreePersonAnimatedSprite(node, this, leftLeaf, rightLeaf, node.getDepth()>0 || (node.getChildren()!=null && node.getChildren().size()>0));
+        TreePersonAnimatedSprite sprite = new TreePersonAnimatedSprite(node, this, leftLeaf, rightLeaf,
+                node.getDepth()>0 || (node.getRight()!=null && node.getLeft()!=null) || (node.getChildren()!=null && node.getChildren().size()>0));
         sprite.setX(x - (sprite.getWidth() / 2) - (node.getLeft() != null ? (5*dm.density) : 0));
         sprite.setY(cy);
         if (x+sprite.getWidth() > maxX) maxX = (int)x+sprite.getWidth();

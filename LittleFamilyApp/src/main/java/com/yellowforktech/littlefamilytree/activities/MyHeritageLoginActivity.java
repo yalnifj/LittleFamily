@@ -56,8 +56,9 @@ public class MyHeritageLoginActivity extends Activity implements PersonLoaderTas
     protected void onStart() {
         super.onStart();
 
+        String[] perms = {"basic", "offline_access"};
         service = new MyHeritageService();
-        service.getFamilyGraph().authorize(this, new FamilyGraph.DialogListener() {
+        service.getFamilyGraph().authorize(this, perms, new FamilyGraph.DialogListener() {
             @Override
             public void onComplete(Bundle values) {
                 Log.d("MyHeritageLoginActivity", "onComplete: "+values);
