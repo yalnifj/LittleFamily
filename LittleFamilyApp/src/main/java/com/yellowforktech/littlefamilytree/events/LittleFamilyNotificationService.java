@@ -55,7 +55,7 @@ public class LittleFamilyNotificationService extends IntentService {
         int month = now.get(Calendar.MONTH);
         int day = now.get(Calendar.DATE);
 
-        List<LittlePerson> people = dbHelper.getNextBirthdays(10, 4);
+        List<LittlePerson> people = dbHelper.getNextBirthdays(10, 3);
         if (people!=null) {
             int count = 0;
             for(LittlePerson person : people) {
