@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -231,7 +232,8 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
         family = new ArrayList<>();
         family.add(person);
         FamilyLoaderTask task = new FamilyLoaderTask(this, this);
-        task.setGetInLaws(false);
+        Boolean showStepChildren = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("show_step_children", true);
+        task.setGetInLaws(showStepChildren);
         task.execute(person);
     }
 }

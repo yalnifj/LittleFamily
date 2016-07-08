@@ -60,7 +60,7 @@ public class RelationshipCalculator
 					return null;
 				}
 				if (p.getTreeLevel().equals(me.getTreeLevel()-1)) {
-					List<LittlePerson> myFamily = dataService.getDBHelper().getRelativesForPerson(me.getId(), false);
+					List<LittlePerson> myFamily = dataService.getDBHelper().getRelativesForPerson(me.getId());
 					if (myFamily.contains(p)) {
 						if (p.getGender() == GenderType.Female) {
 							return context.getResources().getString(R.string.daughter);

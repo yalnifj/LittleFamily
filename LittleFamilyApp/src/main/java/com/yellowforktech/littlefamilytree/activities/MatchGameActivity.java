@@ -9,6 +9,7 @@ import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.view.Display;
 import android.view.View;
 import android.widget.AbsListView;
@@ -78,6 +79,8 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
         flipping = false;
         DataService.getInstance().registerNetworkStateListener(this);
         FamilyLoaderTask task = new FamilyLoaderTask(this, this);
+        Boolean showStepChildren = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("show_step_children", true);
+        task.setGetInLaws(showStepChildren);
         if (people.size()>0) {
             task.execute(people.get(backgroundLoadIndex));
         } else {
@@ -107,6 +110,8 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
 
         if (people.size() < 2) {
             FamilyLoaderTask task = new FamilyLoaderTask(this, this);
+            Boolean showStepChildren = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("show_step_children", true);
+            task.setGetInLaws(showStepChildren);
             LittlePerson[] arrayPeople = new LittlePerson[family.size()];
             family.toArray(arrayPeople);
             task.execute(arrayPeople);
@@ -122,6 +127,8 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
         backgroundLoadIndex++;
         if (people.size() < game.getBoard().size()/2) {
             FamilyLoaderTask task = new FamilyLoaderTask(this, this);
+            Boolean showStepChildren = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("show_step_children", true);
+            task.setGetInLaws(showStepChildren);
             task.execute(people.get(backgroundLoadIndex % people.size()));
         }
     }
@@ -205,6 +212,8 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
             if (game.allMatched()) {
                 if (backgroundLoadIndex<people.size()) {
                     FamilyLoaderTask task = new FamilyLoaderTask(MatchGameActivity.this, MatchGameActivity.this);
+                    Boolean showStepChildren = PreferenceManager.getDefaultSharedPreferences(MatchGameActivity.this).getBoolean("show_step_children", true);
+                    task.setGetInLaws(showStepChildren);
                     task.execute(people.get(backgroundLoadIndex));
                 }
                 playCompleteSound();

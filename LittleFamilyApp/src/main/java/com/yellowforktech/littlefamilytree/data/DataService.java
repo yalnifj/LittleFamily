@@ -863,17 +863,34 @@ public class DataService implements AuthTask.Listener {
     }
 
     public List<LittlePerson> getFamilyMembers(LittlePerson person, boolean loadSpouse) throws Exception {
-        List<LittlePerson> family = getDBHelper().getRelativesForPerson(person.getId(), loadSpouse);
+        List<LittlePerson> family = getDBHelper().getRelativesForPerson(person.getId());
         if (person.isHasSpouses()==null || person.isHasParents()==null || person.isHasChildren()==null) {
             fireNetworkStateChanged(DataNetworkState.REMOTE_STARTING);
-            family = getFamilyMembersFromRemoteService(person, loadSpouse);
+            family = getFamilyMembersFromRemoteService(person);
             fireNetworkStateChanged(DataNetworkState.REMOTE_FINISHED);
         }
+
+        if (loadSpouse) {
+            List<LittlePerson> spouses = getSpouses(person);
+            for (LittlePerson spouse : spouses) {
+                List<LittlePerson> spouseParents = getParents(spouse);
+                for (LittlePerson sParent : spouseParents) {
+                    if (!family.contains(sParent)) family.add(sParent);
+                }
+                if (person.getTreeLevel() != null && person.getTreeLevel() < 2) {
+                    List<LittlePerson> stepChildren = getChildren(spouse);
+                    for (LittlePerson sChild : stepChildren) {
+                        if (!family.contains(sChild)) family.add(sChild);
+                    }
+                }
+            }
+        }
+
         addToSyncQ(family, person.getTreeLevel()==null ? 1 : person.getTreeLevel());
         return family;
     }
 
-    public List<LittlePerson> getFamilyMembersFromRemoteService(LittlePerson person, boolean loadSpouse) throws Exception {
+    public List<LittlePerson> getFamilyMembersFromRemoteService(LittlePerson person) throws Exception {
         List<LittlePerson> family = new ArrayList<>();
         waitForAuth();
         List<Relationship> closeRelatives = remoteService.getCloseRelatives(person.getFamilySearchId(), true);
@@ -882,20 +899,6 @@ public class DataService implements AuthTask.Listener {
             for (Relationship r : closeRelatives) {
                 if (r.getKnownType()==RelationshipType.Couple) {
                     person.setHasSpouses(true);
-                    if (loadSpouse) {
-                        LittlePerson spouse = null;
-                        if (r.getPerson1().getResourceId().equals(person.getFamilySearchId())) {
-                            spouse = getPersonByRemoteId(r.getPerson2().getResourceId());
-                        } else {
-                            spouse = getPersonByRemoteId(r.getPerson1().getResourceId());
-                        }
-                        if (spouse!=null) {
-                            List<LittlePerson> spouseParents = getParentsFromRemoteService(spouse);
-                            for (LittlePerson sParent : spouseParents) {
-                                if (!family.contains(sParent)) family.add(sParent);
-                            }
-                        }
-                    }
                 }
                 if (r.getKnownType()==RelationshipType.ParentChild) {
                     if (r.getPerson1().getResourceId().equals(person.getFamilySearchId())) {

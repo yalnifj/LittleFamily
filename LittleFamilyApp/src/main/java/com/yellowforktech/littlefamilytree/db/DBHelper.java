@@ -387,7 +387,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		return people;
 	}
 
-    public List<LittlePerson> getRelativesForPerson(int id, boolean followSpouse) {
+    public List<LittlePerson> getRelativesForPerson(int id) {
 		List<LittlePerson> people = new ArrayList<>();
 		SQLiteDatabase db = getReadableDatabase();
 		String[] projection = {
@@ -405,21 +405,10 @@ public class DBHelper extends SQLiteOpenHelper {
 
 		Map<Integer, LittlePerson> personMap = new HashMap<>();
 		Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, "p."+COL_ID);
-        Integer spouseId = null;
 		while (c.moveToNext()) {
 			LittlePerson p = personFromCursor(c);
 			personMap.put(p.getId(), p);
-            int type = c.getInt(c.getColumnIndexOrThrow(COL_TYPE));
-            RelationshipType rt = RelationshipType.getTypeFromId(type);
-            if (rt==RelationshipType.SPOUSE) spouseId = p.getId();
 		}
-
-        if (followSpouse && spouseId!=null) {
-            List<LittlePerson> spouseFamily = this.getRelativesForPerson(spouseId, false);
-            for(LittlePerson p : spouseFamily) {
-                personMap.put(p.getId(), p);
-            }
-        }
 
 		c.close();
 		people.addAll(personMap.values());

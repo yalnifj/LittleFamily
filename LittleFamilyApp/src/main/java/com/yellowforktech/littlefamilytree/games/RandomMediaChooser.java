@@ -1,5 +1,6 @@
 package com.yellowforktech.littlefamilytree.games;
 
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.yellowforktech.littlefamilytree.activities.LittleFamilyActivity;
@@ -134,6 +135,8 @@ public class RandomMediaChooser implements MemoriesLoaderTask.Listener {
         if (familyLoaderQueue.size()>0) {
             counter++;
             FamilyLoaderTask task = new FamilyLoaderTask(new FamilyLoaderListener(), activity);
+            Boolean showStepChildren = PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("show_step_children", true);
+            task.setGetInLaws(showStepChildren);
 			selectedPerson = familyLoaderQueue.poll();
             if (selectedPerson!=null) {
                 task.execute(selectedPerson);

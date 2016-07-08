@@ -25,6 +25,7 @@
     <CheckBoxPreference android:title="@string/pref_title_notifications" android:key="enable_notifications" android:defaultValue="true"
          />
 
+    <CheckBoxPreference android:title="@string/pref_title_show_step_children" android:key="show_step_children" android:defaultValue="true" />
     <Preference android:title="@string/pref_title_manage_people" android:key="manage_people">
     </Preference>
 

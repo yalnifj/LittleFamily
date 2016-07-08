@@ -93,5 +93,6 @@
     <string name="pref_title_quiet_mode">Quiet Mode</string>
     <string name="pref_summary_quiet_mode">Can also be toggled on the first loading screen.</string>
     <string name="pref_title_notifications">Enable Notifications</string>
+    <string name="pref_title_show_step_children">Show Step Children</string>
 
 </resources>

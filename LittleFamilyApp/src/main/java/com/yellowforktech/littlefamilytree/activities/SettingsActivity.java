@@ -201,6 +201,7 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
         bindPreferenceSummaryToValue(findPreference("tts_voice"));
         bindPreferenceSummaryToValue(findPreference("quiet_mode"));
         bindPreferenceSummaryToValue(findPreference("enable_notifications"));
+        bindPreferenceSummaryToValue(findPreference("show_step_children"));
         //bindPreferenceSummaryToValue(findPreference("tts_voice_test"));
         Preference versionPref = findPreference("version");
         if (versionPref!=null) {
@@ -309,7 +310,8 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
         // Trigger the listener immediately with the preference's
         // current value.
         if (preference.getKey().equals("sync_background") || preference.getKey().equals("sync_cellular")
-                || preference.getKey().equals("quiet_mode") || preference.getKey().equals("enable_notifications")) {
+                || preference.getKey().equals("quiet_mode") || preference.getKey().equals("enable_notifications")
+                || preference.getKey().equals("show_step_children")) {
             sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
                     PreferenceManager
                             .getDefaultSharedPreferences(preference.getContext())
@@ -414,6 +416,7 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
             bindPreferenceSummaryToValue(findPreference("tts_voice"));
             bindPreferenceSummaryToValue(findPreference("quiet_mode"));
             bindPreferenceSummaryToValue(findPreference("enable_notifications"));
+            bindPreferenceSummaryToValue(findPreference("show_step_children"));
 
             Preference versionPref = findPreference("version");
             if (versionPref!=null) {

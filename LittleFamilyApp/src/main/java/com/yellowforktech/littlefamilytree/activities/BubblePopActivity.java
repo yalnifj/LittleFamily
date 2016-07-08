@@ -3,6 +3,7 @@ package com.yellowforktech.littlefamilytree.activities;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.tasks.FamilyLoaderTask;
@@ -122,6 +123,8 @@ public class BubblePopActivity extends LittleFamilyActivity implements ParentsLo
                 public void onStatusUpdate(String message) {
                 }
             }, this);
+            Boolean showStepChildren = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("show_step_children", true);
+            familyLoaderTask.setGetInLaws(showStepChildren);
             familyLoaderTask.execute(person);
         }
     }
