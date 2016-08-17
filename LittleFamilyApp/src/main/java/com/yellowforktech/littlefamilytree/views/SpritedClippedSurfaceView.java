@@ -26,6 +26,7 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
     protected List<Sprite> sprites;
     protected Sprite backgroundSprite;
 	protected Bitmap starBitmap;
+    protected Bitmap redStarBitmap;
     protected Paint basePaint;
     protected List<Sprite> selectedSprites;
 
@@ -37,7 +38,12 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
 	protected int starDelay = 3;
 	protected int starDelayCount = 3;
 	protected Rect starRect;
-	protected boolean starsInRect;
+    protected boolean starsInRect;
+    protected int redStarCount = 0;
+    protected int redStarDelay = 3;
+    protected int redStarDelayCount = 3;
+    protected Rect redStarRect;
+    protected boolean redStarsInRect;
 	protected Random random;
     protected int spriteCacheSize = 3;
     protected SpriteLruCache spriteCache;
@@ -177,6 +183,46 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
 				starDelayCount--;
 			}
 		}
+
+        if (redStarCount > 0) {
+            if (redStarDelayCount<=0) {
+                redStarDelayCount = redStarDelay;
+                redStarCount--;
+                if (redStarBitmap!=null && redStarRect != null) {
+                    StarSprite star = new StarSprite(redStarBitmap, true, true);
+                    int x=0, y=0;
+                    if (starsInRect) {
+                        x = (int) (redStarRect.left + random.nextInt(redStarRect.right - redStarRect.left));
+                        y = (int) (redStarRect.top + random.nextInt(redStarRect.bottom - redStarRect.top));
+                    } else {
+                        int side = random.nextInt(4);
+                        switch (side) {
+                            case 0:
+                                x = redStarRect.left + random.nextInt(redStarRect.right - redStarRect.left);
+                                y = redStarRect.top + random.nextInt(redStarBitmap.getHeight());
+                                break;
+                            case 1:
+                                x = redStarRect.right - random.nextInt(redStarBitmap.getWidth());
+                                y = redStarRect.top + random.nextInt(redStarRect.bottom - redStarRect.top);
+                                break;
+                            case 2:
+                                x = redStarRect.left + random.nextInt(redStarRect.right - redStarRect.left);
+                                y = redStarRect.bottom - random.nextInt(redStarBitmap.getHeight());
+                                break;
+                            case 3:
+                                x = redStarRect.left + random.nextInt(redStarBitmap.getWidth());
+                                y = redStarRect.top + random.nextInt(redStarRect.bottom - redStarRect.top);
+                                break;
+                        }
+                    }
+                    star.setX(x);
+                    star.setY(y);
+                    addSprite(star);
+                }
+            } else {
+                redStarDelayCount--;
+            }
+        }
     }
 
     @Override
@@ -286,7 +332,15 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
         }
     }
 	
-	public Bitmap getStarBitmap() {
+	public Bitmap getRedStarBitmap() {
+        return redStarBitmap;
+    }
+
+    public void setRedStarBitmap(Bitmap starBitmap) {
+        this.redStarBitmap = starBitmap;
+    }
+
+    public Bitmap getStarBitmap() {
         return starBitmap;
     }
 
@@ -299,6 +353,12 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
 		this.starsInRect = starsInRect;
 		this.starCount = count;
 	}
+
+    public void addRedStars(Rect rect, boolean starsInRect, int count) {
+        redStarRect = rect;
+        this.redStarsInRect = starsInRect;
+        this.redStarCount = count;
+    }
 
     public class SpriteLruCache extends LruCache<Long, AnimatedBitmapSprite> {
         public SpriteLruCache(int maxSize) {

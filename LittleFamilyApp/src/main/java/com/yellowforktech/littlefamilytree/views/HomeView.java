@@ -26,7 +26,9 @@ public class HomeView extends ScaledSpritedClippedSurfaceView {
     private TouchEventGameSprite lockSprite;
 	private TouchEventGameSprite profileSprite;
     private long timer;
+    private long ptimer;
     private List<Sprite> activitySprites;
+    private List<Sprite> premiumSprites;
     private Random random;
     private int state = 0;
     private Sprite activeSprite = null;
@@ -35,8 +37,10 @@ public class HomeView extends ScaledSpritedClippedSurfaceView {
     public HomeView(Context context) {
         super(context);
         activitySprites = new ArrayList<>();
+        premiumSprites = new ArrayList<>();
         random = new Random();
         timer = 0L;
+        ptimer = 0L;
         DisplayMetrics dm = getContext().getResources().getDisplayMetrics();
         lockBitmap = ImageHelper.loadBitmapFromResource(context, R.drawable.settings, 0, (int) (30 * dm.density), (int) (30 * dm.density));
         lockSprite = new TouchEventGameSprite(lockBitmap, LittleFamilyActivity.TOPIC_START_SETTINGS, dm);
@@ -45,8 +49,10 @@ public class HomeView extends ScaledSpritedClippedSurfaceView {
     public HomeView(Context context, AttributeSet attrs) {
         super(context, attrs);
         activitySprites = new ArrayList<>();
+        premiumSprites = new ArrayList<>();
         random = new Random();
         timer = 0L;
+        ptimer = 0L;
         DisplayMetrics dm = getContext().getResources().getDisplayMetrics();
         lockBitmap = ImageHelper.loadBitmapFromResource(context, R.drawable.settings, 0, (int)(30*dm.density), (int)(30*dm.density));
         lockSprite = new TouchEventGameSprite(lockBitmap, LittleFamilyActivity.TOPIC_START_SETTINGS, dm);
@@ -67,6 +73,10 @@ public class HomeView extends ScaledSpritedClippedSurfaceView {
         activitySprites.add(s);
     }
 
+    public void addPremiumSprite(Sprite s) {
+        premiumSprites.add(s);
+    }
+
     public boolean isScaleSet() {
         return scaleSet;
     }
@@ -82,23 +92,40 @@ public class HomeView extends ScaledSpritedClippedSurfaceView {
             if (timer <= 0) {
                 state = 1;
                 timer = random.nextInt(50);
-                int activity = random.nextInt(activitySprites.size());
-                while(activitySprites.get(activity)==activeSprite) {
-                    activity = random.nextInt(activitySprites.size());
+                boolean yellow = random.nextBoolean();
+                if (yellow) {
+                    int activity = random.nextInt(activitySprites.size());
+                    while (activitySprites.get(activity) == activeSprite) {
+                        activity = random.nextInt(activitySprites.size());
+                    }
+                    activeSprite = activitySprites.get(activity);
+                    int starCount = 4 + random.nextInt(2 + activeSprite.getHeight() / starBitmap.getHeight());
+                    Rect r = new Rect();
+                    r.set((int) activeSprite.getX(), (int) activeSprite.getY(), (int) (activeSprite.getX() + activeSprite.getWidth()),
+                            (int) (activeSprite.getY() + activeSprite.getHeight()));
+                    addStars(r, true, starCount);
+                } else {
+                    int activity = random.nextInt(premiumSprites.size());
+                    while (premiumSprites.get(activity) == activeSprite) {
+                        activity = random.nextInt(premiumSprites.size());
+                    }
+                    activeSprite = premiumSprites.get(activity);
+                    int starCount = 4 + random.nextInt(2 + activeSprite.getHeight() / redStarBitmap.getHeight());
+                    Rect r = new Rect();
+                    r.set((int) activeSprite.getX(), (int) activeSprite.getY(), (int) (activeSprite.getX() + activeSprite.getWidth()),
+                            (int) (activeSprite.getY() + activeSprite.getHeight()));
+                    addRedStars(r, true, starCount);
                 }
-                activeSprite = activitySprites.get(activity);
-                int starCount = 4 + random.nextInt(2+activeSprite.getHeight()/starBitmap.getHeight());
-				Rect r = new Rect();
-				r.set((int)activeSprite.getX(), (int)activeSprite.getY(), (int)(activeSprite.getX()+activeSprite.getWidth()),
-						(int)(activeSprite.getY()+activeSprite.getHeight()));
-				addStars(r, true, starCount);
             }
             timer--;
         }
         if (state==1) {
-                if (starCount == 0) {
-                    state = 0;
-                }
+            if (starCount == 0) {
+                state = 0;
+            }
+            if (redStarCount == 0) {
+                state = 0;
+            }
         }
     }
 

@@ -126,6 +126,9 @@ public class HomeActivity extends LittleFamilyActivity {
 
             Bitmap starBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.star1);
             homeView.setStarBitmap(starBitmap);
+
+            Bitmap redStarBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.redstar1);
+            homeView.setRedStarBitmap(redStarBitmap);
 			
 			if (selectedPerson!=null) {
 				Bitmap photo = null;
@@ -215,7 +218,7 @@ public class HomeActivity extends LittleFamilyActivity {
             birdSprite.setSelectable(true);
             birdSprite.setIgnoreAlpha(true);
             homeView.addSprite(birdSprite);
-            homeView.addActivitySprite(birdSprite);
+            homeView.addPremiumSprite(birdSprite);
 
             Bitmap flowerBm2 = BitmapFactory.decodeResource(getResources(), R.drawable.house_flowers_a1);
             TouchStateAnimatedBitmapSprite flower1 = new TouchStateAnimatedBitmapSprite(flowerBm2, this);
@@ -441,7 +444,7 @@ public class HomeActivity extends LittleFamilyActivity {
             childPaint.setStateTransition(2, 5);
             childPaint.setStateTransitionEvent(2, TOPIC_START_COLORING);
             homeView.addSprite(childPaint);
-            homeView.addActivitySprite(childPaint);
+            homeView.addPremiumSprite(childPaint);
 
             Bitmap childTeddyBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_chilldroom_teddy);
             TouchStateAnimatedBitmapSprite childTeddy = new TouchStateAnimatedBitmapSprite(childTeddyBm, this);
@@ -646,7 +649,7 @@ public class HomeActivity extends LittleFamilyActivity {
             wardrobe.setStateTransitionEvent(2, TOPIC_START_HERITAGE_CALC);
             wardrobe.setResources(getResources());
             homeView.addSprite(wardrobe);
-            homeView.addActivitySprite(wardrobe);
+            homeView.addPremiumSprite(wardrobe);
 
             Bitmap adultBedBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_adult_bed);
             AnimatedBitmapSprite adultBed = new AnimatedBitmapSprite(adultBedBm);
@@ -681,7 +684,7 @@ public class HomeActivity extends LittleFamilyActivity {
             adultVanity.setStateTransitionEvent(2, TOPIC_START_BIRTHDAY_CARD);
 			adultVanity.setResources(getResources());
             homeView.addSprite(adultVanity);
-            homeView.addActivitySprite(adultVanity);
+            homeView.addPremiumSprite(adultVanity);
 
             Bitmap lightABm = BitmapFactory.decodeResource(getResources(), R.drawable.house_light_a1);
             TouchStateAnimatedBitmapSprite lightA = new TouchStateAnimatedBitmapSprite(lightABm, this);
@@ -817,7 +820,7 @@ public class HomeActivity extends LittleFamilyActivity {
 			piano.setStateTransitionEvent(0, TOPIC_START_SONG);
             piano.getAudio().put(1, R.raw.piano);
             homeView.addSprite(piano);
-			homeView.addActivitySprite(piano);
+			homeView.addPremiumSprite(piano);
 
             Bitmap guitarBm = BitmapFactory.decodeResource(getResources(), R.drawable.house_music_guitar);
             TouchStateAnimatedBitmapSprite guitar = new TouchStateAnimatedBitmapSprite(guitarBm, this);

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "872882263194",
+    "firebase_url": "https://little-family-tree.firebaseio.com",
+    "project_id": "little-family-tree",
+    "storage_bucket": "little-family-tree.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:872882263194:android:d6a9bc0c8c0c4066",
+        "android_client_info": {
+          "package_name": "com.yellowforktech.littlefamilytree.com.yellowforktech.littlefamilytree.littlefamilytree1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "872882263194-c5e9m8ge22eppmmvr29594o80iefgi2k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDyQoCqVeqQQkO5NT2tMFSA1W6-NNaq12c"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
