@@ -36,6 +36,68 @@
           "status": 2
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:872882263194:android:692dfedee6ce3ccd",
+        "android_client_info": {
+          "package_name": "com.yellowforktech.littlefamilytree"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "872882263194-c5e9m8ge22eppmmvr29594o80iefgi2k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDyQoCqVeqQQkO5NT2tMFSA1W6-NNaq12c"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:872882263194:android:58d8b0f68cebb263",
+        "android_client_info": {
+          "package_name": "com.yellowforktech.littlefamilytreefree"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "872882263194-c5e9m8ge22eppmmvr29594o80iefgi2k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDyQoCqVeqQQkO5NT2tMFSA1W6-NNaq12c"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
     }
   ],
   "configuration_version": "1"

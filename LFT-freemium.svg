@@ -624,8 +624,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.35"
-     inkscape:cx="-357.66434"
-     inkscape:cy="527.55101"
+     inkscape:cx="138.04995"
+     inkscape:cy="403.2653"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -768,13 +768,13 @@
        inkscape:export-filename="C:\Users\Parents\Documents\GitHub\LittleFamily\LittleFamilyApp\src\main\res\drawable\tryButton.png"
        inkscape:export-xdpi="36.889999"
        inkscape:export-ydpi="36.889999"
-       style="">
+       transform="translate(-17.142857,5.714286)">
       <path
          transform="matrix(1.1973129,0,0,0.67053574,85.510294,427.86456)"
          id="A-7-6"
          d="m -161.2088,572.29273 a 127.36264,18.53635 0 0 1 -254.72527,0 127.36264,18.53635 0 1 1 254.72527,0 z"
          inkscape:connector-curvature="0"
-         style="opacity:0.8;fill:url(#7-4-9);" />
+         style="opacity:0.8;fill:url(#7-4-9)" />
       <rect
          transform="matrix(1.1973129,0,0,0.67053574,85.510294,427.86456)"
          rx="33.114285"
@@ -783,47 +783,35 @@
          x="-404.47144"
          height="231.79999"
          width="231.79999"
-         style="fill:#005500;" />
+         style="fill:#005500" />
       <path
          transform="matrix(1.1973129,0,0,0.67053574,85.510294,427.86456)"
          id="C-7-3"
          d="m -371.35715,348.5084 c -15.11735,0 -27.07783,11.96048 -27.07783,27.07783 l 0,165.57142 c 0,15.11735 11.96048,27.07783 27.07783,27.07783 l 165.57142,0 c 15.11735,0 27.07783,-11.96048 27.07783,-27.07783 l 0,-165.57142 c 0,-15.11735 -11.96048,-27.07783 -27.07783,-27.07783 l -165.57142,0 z"
          inkscape:connector-curvature="0"
-         style="fill:#00aa00;" />
+         style="fill:#00aa00" />
       <path
          transform="matrix(1.1973129,0,0,0.67053574,85.510294,427.86456)"
          id="D-9-7"
          d="m -371.35715,351.95781 c -13.2767,0 -23.62842,10.35172 -23.62842,23.62842 l 0,165.57142 c 0,13.27671 10.35172,23.62842 23.62842,23.62842 l 165.57142,0 c 13.27671,0 23.62842,-10.35171 23.62842,-23.62842 l 0,-165.57142 c 0,-13.2767 -10.35171,-23.62842 -23.62842,-23.62842 l -165.57142,0 z"
          inkscape:connector-curvature="0"
-         style="opacity:0.8;fill:#008000;stroke:url(#8-9-4);stroke-width:5.51904774;stroke-linecap:round;stroke-dashoffset:30;" />
+         style="opacity:0.8;fill:#008000;stroke:url(#8-9-4);stroke-width:5.51904774;stroke-linecap:round;stroke-dashoffset:30" />
       <path
          transform="matrix(1.1973129,0,0,0.67053574,85.510294,427.86456)"
          id="G-1-1"
          d="m -371.35715,348.5084 c -15.11735,0 -27.07783,11.96048 -27.07783,27.07783 l 0,94.68616 c 66.69884,-28.33006 141.7338,-52.81465 219.72708,-69.16056 l 0,-25.5256 c 0,-15.11735 -11.96048,-27.07783 -27.07783,-27.07783 l -165.57142,0 0,0 z"
          inkscape:connector-curvature="0"
-         style="opacity:0.6;fill:#00aa00;" />
-      <text
-         sodipodi:linespacing="125%"
-         id="text4317-4"
-         y="791.78107"
-         x="-334.28571"
-         style="font-style:normal;font-variant:normal;font-weight:100;font-stretch:normal;font-size:45px;line-height:125%;font-family:'AR CENA';-inkscape-font-specification:'AR CENA, Thin';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#092f03;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;"
-         xml:space="preserve"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:100;font-stretch:normal;font-size:70px;line-height:125%;font-family:'AR CENA';-inkscape-font-specification:'AR CENA, Thin';text-align:start;writing-mode:lr-tb;text-anchor:start;"
-           y="791.78107"
-           x="-334.28571"
-           id="tspan4319-1"
-           sodipodi:role="line">ONCE</tspan></text>
+         style="opacity:0.6;fill:#00aa00" />
       <text
          sodipodi:linespacing="125%"
          id="text4329-3"
-         y="728.06665"
-         x="-320.57144"
-         style="font-style:normal;font-variant:normal;font-weight:100;font-stretch:normal;font-size:90px;line-height:125%;font-family:'AR CENA';-inkscape-font-specification:'AR CENA, Thin';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#092f03;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;"
+         y="766.06665"
+         x="-328.57144"
+         style="font-style:normal;font-variant:normal;font-weight:100;font-stretch:normal;font-size:90px;line-height:125%;font-family:'AR CENA';-inkscape-font-specification:'AR CENA, Thin';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#092f03;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
          xml:space="preserve"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:100;font-stretch:normal;font-size:80px;line-height:125%;font-family:'AR CENA';-inkscape-font-specification:'AR CENA, Thin';text-align:start;writing-mode:lr-tb;text-anchor:start;"
-           y="728.06665"
-           x="-320.57144"
+           style="font-style:normal;font-variant:normal;font-weight:100;font-stretch:normal;font-size:90px;line-height:125%;font-family:'AR CENA';-inkscape-font-specification:'AR CENA, Thin';text-align:start;writing-mode:lr-tb;text-anchor:start"
+           y="766.06665"
+           x="-328.57144"
            id="tspan4331-4"
            sodipodi:role="line">TRY</tspan></text>
     </g>
