@@ -7,6 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.google.firebase.database.FirebaseDatabase;
+import com.yellowforktech.littlefamilytree.activities.LittleFamilyActivity;
+import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.data.LocalResource;
 import com.yellowforktech.littlefamilytree.data.Media;
@@ -25,7 +28,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class DBHelper extends SQLiteOpenHelper {
-	private static final int DATABASE_VERSION = 5;
+	private static final int DATABASE_VERSION = 6;
 	public static final String UUID_PROPERTY = "UUID";
 	private static final String DATABASE_NAME = "LittleFamily.db";
 
@@ -157,6 +160,10 @@ public class DBHelper extends SQLiteOpenHelper {
 			if (oldVersion < 5) {
 				db.execSQL(CREATE_LOCAL_RESOURCES);
 			}
+			if (oldVersion < 6) {
+				saveProperty(LittleFamilyActivity.PROP_HAS_PREMIUM, "true");
+				fireCreateOrUpdateUser(true);
+			}
 		}
 	}
 
@@ -175,6 +182,16 @@ public class DBHelper extends SQLiteOpenHelper {
         if (b) return "Y";
         return "N";
     }
+
+	public void fireCreateOrUpdateUser(boolean isPremium) {
+		try {
+			String username = DataService.getInstance().getEncryptedProperty(DataService.SERVICE_USERNAME);
+			String serviceType = getProperty(DataService.SERVICE_TYPE);
+			FirebaseDatabase database = FirebaseDatabase.getInstance();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	public void persistLittlePerson(LittlePerson person) {
 		SQLiteDatabase db = getWritableDatabase();

@@ -51,6 +51,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     public static final String TOPIC_START_FLYING = "startFlying";
     public static final String TOPIC_START_BIRTHDAY_CARD = "startBirthdayCard";
 	public static final String TOPIC_START_PROFILE = "startProfile";
+    public static final String PROP_HAS_PREMIUM = "propHasPremium";
     protected TextToSpeech tts;
     protected MediaPlayer successPlayer;
     protected MediaPlayer buzzPlayer;
