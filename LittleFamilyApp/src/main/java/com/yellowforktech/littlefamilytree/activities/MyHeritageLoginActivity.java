@@ -17,6 +17,8 @@ import com.yellowforktech.littlefamilytree.activities.tasks.InitialDataLoaderTas
 import com.yellowforktech.littlefamilytree.activities.tasks.PersonLoaderTask;
 import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
+import com.yellowforktech.littlefamilytree.db.DBHelper;
+import com.yellowforktech.littlefamilytree.db.FireHelper;
 import com.yellowforktech.littlefamilytree.remote.familygraph.MyHeritageService;
 
 import java.util.ArrayList;
@@ -29,6 +31,8 @@ public class MyHeritageLoginActivity extends Activity implements PersonLoaderTas
     private TextView welcomeText;
     private TextView detailText;
     private ProgressBar progressBar;
+
+    private FireHelper fireHelper;
 
     private Intent intent;
 
@@ -45,6 +49,9 @@ public class MyHeritageLoginActivity extends Activity implements PersonLoaderTas
 
         dataService = DataService.getInstance();
         dataService.setContext(this);
+
+        fireHelper = FireHelper.getInstance();
+        fireHelper.authenticate();
     }
 
     @Override
@@ -74,6 +81,13 @@ public class MyHeritageLoginActivity extends Activity implements PersonLoaderTas
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(MyHeritageLoginActivity.this).edit();
                 editor.putString(DataService.SERVICE_TYPE, dataService.getRemoteService().getClass().getSimpleName());
                 editor.commit();
+
+                try {
+                    fireHelper.createOrUpdateUser(dataService.getDBHelper().getProperty(DBHelper.UUID_PROPERTY),
+                            dataService.getRemoteService().getClass().getSimpleName(), false);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
                 intent = new Intent();
                 runOnUiThread(new Runnable() {

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.yellowforktech.littlefamilytree.activities.LittleFamilyActivity;
@@ -162,9 +163,11 @@ public class DBHelper extends SQLiteOpenHelper {
 			if (oldVersion < 6) {
 				saveProperty(LittleFamilyActivity.PROP_HAS_PREMIUM, "true");
 				try {
-					String username = DataService.getInstance().getEncryptedProperty(DataService.SERVICE_USERNAME);
-					String serviceType = getProperty(DataService.SERVICE_TYPE);
-					FireHelper.getInstance().createOrUpdateUser(username, serviceType, true);
+					String username = getProperty(DataService.SERVICE_USERNAME);
+					String serviceType = PreferenceManager.getDefaultSharedPreferences(context).getString(DataService.SERVICE_TYPE, null);
+					if (username!=null && serviceType!=null) {
+						FireHelper.getInstance().createOrUpdateUser(username, serviceType, true);
+					}
 				} catch (Exception e) {
 					Log.e("DBHelper", "Error upgrading DB", e);
 				}

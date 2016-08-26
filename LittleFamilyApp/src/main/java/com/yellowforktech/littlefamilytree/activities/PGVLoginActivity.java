@@ -22,6 +22,7 @@ import com.yellowforktech.littlefamilytree.activities.tasks.PersonLoaderTask;
 import com.yellowforktech.littlefamilytree.activities.tasks.PgvVersionTask;
 import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
+import com.yellowforktech.littlefamilytree.db.FireHelper;
 import com.yellowforktech.littlefamilytree.remote.RemoteResult;
 import com.yellowforktech.littlefamilytree.remote.phpgedview.PGVService;
 
@@ -41,6 +42,7 @@ public class PGVLoginActivity extends Activity implements AuthTask.Listener, Per
     private ProgressDialog pd;
     private DataService dataService;
     private Intent intent;
+    private FireHelper fireHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,9 @@ public class PGVLoginActivity extends Activity implements AuthTask.Listener, Per
 
         dataService = DataService.getInstance();
         dataService.setContext(this);
+
+        fireHelper = FireHelper.getInstance();
+        fireHelper.authenticate();
 
         // Set up the login form.
         mPgvUrlView = (EditText) findViewById(R.id.pgv_url);
@@ -191,6 +196,8 @@ public class PGVLoginActivity extends Activity implements AuthTask.Listener, Per
                 mPasswordView.getText().clear();
                 String token = dataService.getRemoteService().createEncodedAuthToken(username, password);
                 dataService.saveEncryptedProperty(DataService.SERVICE_TYPE_PHPGEDVIEW + DataService.SERVICE_TOKEN, token);
+
+                fireHelper.createOrUpdateUser(username, dataService.getRemoteService().getClass().getSimpleName(), false);
             } catch (Exception e) {
                 Log.e("PGVLoginActivity", "Error saving property", e);
             }

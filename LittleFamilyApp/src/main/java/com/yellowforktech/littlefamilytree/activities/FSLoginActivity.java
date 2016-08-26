@@ -22,6 +22,7 @@ import com.yellowforktech.littlefamilytree.activities.tasks.InitialDataLoaderTas
 import com.yellowforktech.littlefamilytree.activities.tasks.PersonLoaderTask;
 import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
+import com.yellowforktech.littlefamilytree.db.FireHelper;
 import com.yellowforktech.littlefamilytree.remote.RemoteResult;
 import com.yellowforktech.littlefamilytree.remote.familysearch.FamilySearchService;
 
@@ -42,6 +43,7 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
     private ProgressDialog pd;
     private DataService dataService;
     private Intent intent;
+    private FireHelper fireHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,9 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
 
         dataService = DataService.getInstance();
         dataService.setContext(this);
+
+        fireHelper = FireHelper.getInstance();
+        fireHelper.authenticate();
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(com.yellowforktech.littlefamilytree.R.id.email);
@@ -147,6 +152,9 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
                 mPasswordView.getText().clear();
                 String token = dataService.getRemoteService().createEncodedAuthToken(username, password);
                 dataService.saveEncryptedProperty(DataService.SERVICE_TYPE_FAMILYSEARCH + DataService.SERVICE_TOKEN, token);
+
+                fireHelper.createOrUpdateUser(username, dataService.getRemoteService().getClass().getSimpleName(), false);
+
                 username = null;
                 password = null;
             } catch (Exception e) {
