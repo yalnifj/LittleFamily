@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.google.firebase.database.FirebaseDatabase;
 import com.yellowforktech.littlefamilytree.activities.LittleFamilyActivity;
 import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
@@ -162,7 +161,13 @@ public class DBHelper extends SQLiteOpenHelper {
 			}
 			if (oldVersion < 6) {
 				saveProperty(LittleFamilyActivity.PROP_HAS_PREMIUM, "true");
-				fireCreateOrUpdateUser(true);
+				try {
+					String username = DataService.getInstance().getEncryptedProperty(DataService.SERVICE_USERNAME);
+					String serviceType = getProperty(DataService.SERVICE_TYPE);
+					FireHelper.getInstance().createOrUpdateUser(username, serviceType, true);
+				} catch (Exception e) {
+					Log.e("DBHelper", "Error upgrading DB", e);
+				}
 			}
 		}
 	}
@@ -182,16 +187,6 @@ public class DBHelper extends SQLiteOpenHelper {
         if (b) return "Y";
         return "N";
     }
-
-	public void fireCreateOrUpdateUser(boolean isPremium) {
-		try {
-			String username = DataService.getInstance().getEncryptedProperty(DataService.SERVICE_USERNAME);
-			String serviceType = getProperty(DataService.SERVICE_TYPE);
-			FirebaseDatabase database = FirebaseDatabase.getInstance();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	public void persistLittlePerson(LittlePerson person) {
 		SQLiteDatabase db = getWritableDatabase();
