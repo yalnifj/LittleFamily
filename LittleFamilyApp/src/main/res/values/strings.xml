@@ -146,5 +146,7 @@ Please wait...</string>
     <string name="rescued">Rescued:</string>
     <string name="you_rescued">You rescued %1$d relatives!</string>
     <string name="processing">Processing </string>
+    <string name="premium_game">This is a premium game.</string>
+    <string name="tries_left">You have %d %s left.</string>
 
 </resources>
