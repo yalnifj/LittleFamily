@@ -23,6 +23,7 @@ import com.yellowforktech.littlefamilytree.data.DataNetworkState;
 import com.yellowforktech.littlefamilytree.data.DataNetworkStateListener;
 import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
+import com.yellowforktech.littlefamilytree.db.FireHelper;
 import com.yellowforktech.littlefamilytree.events.EventListener;
 import com.yellowforktech.littlefamilytree.events.EventQueue;
 
@@ -62,6 +63,8 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     protected Boolean dialogShown = false;
     protected AdultsAuthDialog adultAuthDialog;
 	protected SettingsAction settingsAction = new SettingsAction();
+    protected Boolean hasPremium = null;
+    protected PremiumDialog premiumDialog;
 
     public LittlePerson getSelectedPerson() {
         return selectedPerson;
@@ -212,6 +215,20 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     public void hideAdultAuthDialog() {
         if (adultAuthDialog != null && adultAuthDialog.isVisible()) {
             adultAuthDialog.dismissAllowingStateLoss();
+        }
+    }
+
+    public void showBuyTryDialog(int tries, PremiumDialog.ActionListener listener) {
+        premiumDialog = new PremiumDialog();
+        premiumDialog.setTries(tries);
+        premiumDialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Theme_AppCompat_Light_Dialog);
+        premiumDialog.setListener(listener);
+        premiumDialog.show(getFragmentManager(), "Authenticate");
+    }
+
+    public void hideBuyTryDialog() {
+        if (premiumDialog != null && premiumDialog.isVisible()) {
+            premiumDialog.dismissAllowingStateLoss();
         }
     }
 
@@ -388,6 +405,43 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     public void playBuzzSound() {
         Boolean quietMode = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("quiet_mode", false);
         if (buzzPlayer !=null && !quietMode) buzzPlayer.start();
+    }
+
+    public void userHasPremium(FireHelper.PremiumListener listener) {
+        try {
+            if (hasPremium!=null) {
+                listener.results(hasPremium);
+                return;
+            }
+            String premStr = DataService.getInstance().getDBHelper().getProperty(PROP_HAS_PREMIUM);
+            if ("true".equals(premStr)) {
+                hasPremium = true;
+                listener.results(hasPremium);
+                return;
+            }
+            String username = DataService.getInstance().getDBHelper().getProperty(DataService.SERVICE_USERNAME);
+            String serviceType = DataService.getInstance().getDBHelper().getProperty(DataService.SERVICE_TYPE);
+            FireHelper.getInstance().userIsPremium(username, serviceType, (premium -> {
+                hasPremium = premium;
+                listener.results(hasPremium);
+            }));
+
+        } catch (Exception e) {
+            Log.e("LittleFamilyActivity", "Error getting property", e);
+        }
+    }
+
+    public int getTries(String gameCode) {
+        int tries = 3;
+        try {
+            String triesStr = DataService.getInstance().getDBHelper().getProperty(gameCode);
+            if (triesStr != null) {
+                tries = Integer.parseInt(triesStr);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return tries;
     }
 
     public void onHomeButtonPressed(View view) {

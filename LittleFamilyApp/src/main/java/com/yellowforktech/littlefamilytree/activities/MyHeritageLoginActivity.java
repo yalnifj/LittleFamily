@@ -17,7 +17,6 @@ import com.yellowforktech.littlefamilytree.activities.tasks.InitialDataLoaderTas
 import com.yellowforktech.littlefamilytree.activities.tasks.PersonLoaderTask;
 import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
-import com.yellowforktech.littlefamilytree.db.DBHelper;
 import com.yellowforktech.littlefamilytree.db.FireHelper;
 import com.yellowforktech.littlefamilytree.remote.familygraph.MyHeritageService;
 
@@ -82,13 +81,6 @@ public class MyHeritageLoginActivity extends Activity implements PersonLoaderTas
                 editor.putString(DataService.SERVICE_TYPE, dataService.getRemoteService().getClass().getSimpleName());
                 editor.commit();
 
-                try {
-                    fireHelper.createOrUpdateUser(dataService.getDBHelper().getProperty(DBHelper.UUID_PROPERTY),
-                            dataService.getRemoteService().getClass().getSimpleName(), false);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
                 intent = new Intent();
                 runOnUiThread(new Runnable() {
                     @Override
@@ -126,9 +118,16 @@ public class MyHeritageLoginActivity extends Activity implements PersonLoaderTas
         detailText.setText(getResources().getString(R.string.loading_close));
         intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
         try {
+            dataService.getDBHelper().saveProperty(DataService.SERVICE_USERNAME, service.getUserId());
+            fireHelper.createOrUpdateUser(service.getUserId(),
+                    dataService.getRemoteService().getClass().getSimpleName(), false);
+        } catch (Exception e) {
+            Log.e("MyHeritageLoginActivity", "Error saving to firebase", e);
+        }
+        try {
             dataService.getDBHelper().saveProperty(DataService.ROOT_PERSON_ID, String.valueOf(person.getId()));
         } catch (Exception e) {
-            Log.e("PGVLoginActivity", "Error saving property", e);
+            Log.e("MyHeritageLoginActivity", "Error saving property", e);
         }
         InitialDataLoaderTask task = new InitialDataLoaderTask(this, this);
         task.execute(person);

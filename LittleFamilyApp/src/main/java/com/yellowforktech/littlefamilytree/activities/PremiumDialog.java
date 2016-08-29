@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yellowforktech.littlefamilytree.R;
@@ -21,6 +22,7 @@ import java.lang.reflect.Field;
 public class PremiumDialog extends DialogFragment {
 
     private int tries;
+    private ActionListener listener;
 
     @Nullable
     @Override
@@ -41,15 +43,23 @@ public class PremiumDialog extends DialogFragment {
         }
 
         Button closeBtn = (Button) v.findViewById(R.id.close_button);
-        closeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LittleFamilyActivity activity = (LittleFamilyActivity) getActivity();
-                activity.finish();
-            }
+        closeBtn.setOnClickListener(view -> {
+                listener.onClose();
         });
 
+        ImageView tryButton = (ImageView) v.findViewById(R.id.try_button);
+        if (tries < 1) {
+            tryButton.setVisibility(View.GONE);
+        } else {
+            tryButton.setOnClickListener(view -> {
+                listener.onTry();
+            });
+        }
 
+        ImageView buyButton = (ImageView) v.findViewById(R.id.buy_button);
+        buyButton.setOnClickListener(view -> {
+            listener.onBuy();
+        });
 
         return v;
     }
@@ -75,4 +85,17 @@ public class PremiumDialog extends DialogFragment {
         }
     }
 
+    public void setTries(int tries) {
+        this.tries = tries;
+    }
+
+    public void setListener(ActionListener listener) {
+        this.listener = listener;
+    }
+
+    public interface ActionListener {
+        public void onBuy();
+        public void onTry();
+        public void onClose();
+    }
 }

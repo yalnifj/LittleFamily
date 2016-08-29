@@ -67,6 +67,7 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
 
     private FamilyGraph familyGraph;
     private JSONConverter converter;
+    private String userId;
 
     public MyHeritageService() {
         familyGraph = new FamilyGraph(CLIENT_ID);
@@ -138,6 +139,10 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
         return sessionId;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
     public String createEncodedAuthToken(String username, String password) {
         return username+":"+password;
     }
@@ -146,6 +151,7 @@ public class MyHeritageService extends RemoteServiceBase implements RemoteServic
         try {
             String data = getData("me");
             JSONObject userJ = Util.parseJson(data);
+            userId = userJ.getString("id");
             return userJ;
         } catch (IOException e) {
             Log.e(TAG, "Error getting current user", e);

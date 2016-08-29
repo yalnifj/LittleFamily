@@ -109,6 +109,48 @@ public class FireHelper implements FirebaseAuth.AuthStateListener {
         }
     }
 
+    public void userIsPremium(String username, String serviceType, PremiumListener listener) {
+        if (authenticated) {
+            isPremium(username, serviceType, listener);
+        } else {
+            FirebaseAuth.AuthStateListener tempList = new FirebaseAuth.AuthStateListener() {
+                @Override
+                public void onAuthStateChanged(FirebaseAuth firebaseAuth) {
+                    FirebaseUser user = firebaseAuth.getCurrentUser();
+                    if (user != null) {
+                        isPremium(username, serviceType, listener);
+                    }
+                    mAuth.removeAuthStateListener(this);
+                }
+            };
+            mAuth.addAuthStateListener(tempList);
+            authenticate();
+        }
+    }
+
+    private void isPremium(String username, String serviceType, PremiumListener listener) {
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+        database.child("users").child(serviceType).child(username).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot!=null && dataSnapshot.exists()) {
+                    Boolean isPremium = (Boolean) dataSnapshot.child("androidPremium").getValue();
+                    if (isPremium!=null) {
+
+                        listener.results(isPremium);
+                        return;
+                    }
+                }
+                listener.results(false);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.results(false);
+            }
+        });
+    }
+
     @Override
     public void onAuthStateChanged(FirebaseAuth firebaseAuth) {
         FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -120,5 +162,9 @@ public class FireHelper implements FirebaseAuth.AuthStateListener {
             // User is signed out
             Log.d("FireHelper", "onAuthStateChanged:signed_out");
         }
+    }
+
+    public interface PremiumListener {
+        public void results(boolean premium);
     }
 }
