@@ -178,6 +178,16 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
             }
         });
 
+        Preference restorePurchases = findPreference("restore");
+        restorePurchases.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent intent = new Intent( SettingsActivity.this, RestorePurchases.class );
+                startActivity(intent);
+                return true;
+            }
+        });
+
         /*
         // Add 'notifications' preferences, and a corresponding header.
         PreferenceCategory fakeHeader = new PreferenceCategory(this);
@@ -400,6 +410,16 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse("http://www.littlefamilytree.com"));
+                    startActivity(intent);
+                    return true;
+                }
+            });
+
+            Preference restorePurchases = findPreference("restore");
+            parentsGuide.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    Intent intent = new Intent( getActivity(), RestorePurchases.class );
                     startActivity(intent);
                     return true;
                 }

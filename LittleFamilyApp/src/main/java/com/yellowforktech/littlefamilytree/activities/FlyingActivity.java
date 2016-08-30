@@ -13,7 +13,7 @@ import com.yellowforktech.littlefamilytree.views.FlyingSurfaceView;
 
 import java.util.List;
 
-public class FlyingActivity extends LittleFamilyActivity implements TreeWalker.Listener{
+public class FlyingActivity extends LittleFamilyBillingActivity implements TreeWalker.Listener{
 
     public static final String TOPIC_SKIP_CUTSCENE = "topic_skip_custscene";
     private FlyingSurfaceView flyView;
@@ -68,6 +68,14 @@ public class FlyingActivity extends LittleFamilyActivity implements TreeWalker.L
     protected void onResume() {
         super.onResume();
         flyView.resume();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (hasPremium) {
+            flyView.getAnimator().start();
+        }
     }
 
     @Override

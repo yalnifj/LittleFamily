@@ -148,5 +148,6 @@ Please wait...</string>
     <string name="processing">Processing </string>
     <string name="premium_game">This is a premium game.</string>
     <string name="tries_left">You have %d %s left.</string>
+    <string name="title_activity_restore_purchases">RestorePurchases</string>
 
 </resources>

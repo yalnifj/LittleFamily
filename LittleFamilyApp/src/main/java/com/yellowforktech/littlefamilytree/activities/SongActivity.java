@@ -17,7 +17,7 @@ import com.yellowforktech.littlefamilytree.views.SongSpriteSurfaceView;
 
 import java.util.List;
 
-public class SongActivity extends LittleFamilyActivity implements TreeWalker.Listener {
+public class SongActivity extends LittleFamilyBillingActivity implements TreeWalker.Listener {
     private SongSpriteSurfaceView view;
     private TreeWalker treeWalker;
 
@@ -78,6 +78,7 @@ public class SongActivity extends LittleFamilyActivity implements TreeWalker.Lis
     @Override
     public void onComplete(List<LittlePerson> people) {
         view.setFamily(people);
+        checkPremium("song_game");
     }
 
     public void loadMorePeople() {

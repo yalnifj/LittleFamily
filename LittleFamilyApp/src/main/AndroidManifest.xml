@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.yellowforktech.littlefamilytree" >
+    package="com.yellowforktech.littlefamilytree">
 
     <uses-sdk android:minSdkVersion="15" />
 
@@ -22,10 +22,10 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
+        android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen">
         <activity
             android:name=".activities.SplashActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -55,7 +55,7 @@
         <activity
             android:name=".activities.ScratchGameActivity"
             android:label="@string/title_activity_scratch_game"
-            android:parentActivityName=".activities.ChooseGameActivity" >
+            android:parentActivityName=".activities.ChooseGameActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.yellowforktech.littlefamilytree.activities.ChooseGameActivity" />
@@ -64,7 +64,7 @@
             android:name=".activities.ColoringGameActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_coloring_game"
-            android:parentActivityName=".activities.ChooseGameActivity" >
+            android:parentActivityName=".activities.ChooseGameActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.yellowforktech.littlefamilytree.activities.ChooseGameActivity" />
@@ -72,7 +72,7 @@
         <activity
             android:name=".activities.HeritageDressUpActivity"
             android:label="@string/title_activity_heritage_dress_up"
-            android:parentActivityName=".activities.ChooseCultureActivity" >
+            android:parentActivityName=".activities.ChooseCultureActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.yellowforktech.littlefamilytree.activities.ChooseCultureActivity" />
@@ -80,7 +80,7 @@
         <activity
             android:name=".activities.ChooseCultureActivity"
             android:label="@string/title_activity_choose_culture"
-            android:parentActivityName=".activities.ChooseGameActivity" >
+            android:parentActivityName=".activities.ChooseGameActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.yellowforktech.littlefamilytree.activities.ChooseGameActivity" />
@@ -94,7 +94,7 @@
         <activity
             android:name=".activities.PuzzleGameActivity"
             android:label="@string/title_activity_puzzle_game"
-            android:parentActivityName=".activities.ChooseGameActivity" >
+            android:parentActivityName=".activities.ChooseGameActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.yellowforktech.littlefamilytree.activities.ChooseGameActivity" />
@@ -105,7 +105,7 @@
         <activity
             android:name=".activities.MyTreeActivity"
             android:label="@string/title_activity_my_tree"
-            android:parentActivityName=".activities.HomeActivity" >
+            android:parentActivityName=".activities.HomeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.yellowforktech.littlefamilytree.activities.HomeActivity" />
@@ -114,7 +114,7 @@
             android:name=".activities.BubblePopActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_bubble_pop"
-            android:parentActivityName=".activities.HomeActivity" >
+            android:parentActivityName=".activities.HomeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.yellowforktech.littlefamilytree.activities.HomeActivity" />
@@ -126,7 +126,7 @@
             android:name=".activities.SongActivity"
             android:label="@string/title_activity_song"
             android:parentActivityName=".activities.HomeActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.yellowforktech.littlefamilytree.activities.HomeActivity" />
@@ -138,7 +138,7 @@
             android:name=".activities.FlyingActivity"
             android:label="@string/title_activity_flying"
             android:parentActivityName=".activities.HomeActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.yellowforktech.littlefamilytree.activities.HomeActivity" />
@@ -150,7 +150,7 @@
             android:name=".activities.BirthdayCardActivity"
             android:label="@string/title_activity_birthday_card"
             android:parentActivityName=".activities.HomeActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.yellowforktech.littlefamilytree.activities.HomeActivity" />
@@ -163,13 +163,22 @@
 
         <receiver
             android:name=".events.AutoStartNotifyReceiver"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </receiver>
+
+        <activity
+            android:name=".activities.RestorePurchases"
+            android:label="@string/title_activity_restore_purchases"
+            android:parentActivityName=".activities.SettingsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.yellowforktech.littlefamilytree.activities.SettingsActivity" />
+        </activity>
     </application>
 
 </manifest>

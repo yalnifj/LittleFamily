@@ -36,7 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ChooseCultureActivity extends LittleFamilyActivity implements HeritageCalculatorTask.Listener, PersonHeritageChartView.SelectedPathListener {
+public class ChooseCultureActivity extends LittleFamilyBillingActivity implements HeritageCalculatorTask.Listener, PersonHeritageChartView.SelectedPathListener {
     public static final String DOLL_CONFIG = "dollConfig";
     private LittlePerson person;
     private Map<String, HeritagePath> cultures;
@@ -246,6 +246,8 @@ public class ChooseCultureActivity extends LittleFamilyActivity implements Herit
             }
         });
         waiter.execute(3000 - (System.currentTimeMillis() - starttime));
+
+        checkPremium("heritage_calc");
     }
 	
 	@Override

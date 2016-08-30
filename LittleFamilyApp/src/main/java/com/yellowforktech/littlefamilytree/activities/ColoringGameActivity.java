@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class ColoringGameActivity extends LittleFamilyActivity implements RandomMediaChooser.RandomMediaListener, ColoringView.ColoringCompleteListener, SeekBar.OnSeekBarChangeListener {
+public class ColoringGameActivity extends LittleFamilyBillingActivity implements RandomMediaChooser.RandomMediaListener, ColoringView.ColoringCompleteListener, SeekBar.OnSeekBarChangeListener {
     public static int maxBrushSize = 50;
     public static int minBrushSize = 15;
 
@@ -201,6 +201,7 @@ public class ColoringGameActivity extends LittleFamilyActivity implements Random
     @Override
     public void onColoringReady() {
         hideLoadingDialog();
+        checkPremium("coloring");
     }
 
     @Override

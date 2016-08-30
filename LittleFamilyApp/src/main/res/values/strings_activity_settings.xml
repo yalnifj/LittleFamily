@@ -94,5 +94,10 @@
     <string name="pref_summary_quiet_mode">Can also be toggled on the first loading screen.</string>
     <string name="pref_title_notifications">Enable Notifications</string>
     <string name="pref_title_show_step_children">Show Step Children</string>
+    <string name="pref_title_restore_purchases">Restore Premium Upgrade</string>
+    <string name="pref_summary_restore_purchases">Check if premium upgrade was already purchased for this account.</string>
+    <string name="checking_for_purchases">Checking for purchases...</string>
+    <string name="purchases_restore">Successfully restored premium upgrade.</string>
+    <string name="purchase_not_found">Previous purchase was not found for this account.</string>
 
 </resources>

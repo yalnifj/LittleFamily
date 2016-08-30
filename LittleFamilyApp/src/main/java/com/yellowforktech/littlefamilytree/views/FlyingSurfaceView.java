@@ -119,6 +119,10 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
         this.family = family;
     }
 
+    public SpriteAnimator getAnimator() {
+        return animator;
+    }
+
     private void setup() {
         mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         rotation = mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
@@ -423,7 +427,13 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                 skipButton.setIgnoreAlpha(true);
                 addSprite(skipButton);
 
-                animator.start();
+                activity.userHasPremium(premium -> {
+                    if (premium) {
+                        animator.start();
+                    } else {
+                        activity.checkPremium("bird_game");
+                    }
+                });
             }
         }
     }

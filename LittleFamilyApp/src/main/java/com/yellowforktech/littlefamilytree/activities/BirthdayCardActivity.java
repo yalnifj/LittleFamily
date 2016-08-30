@@ -64,6 +64,7 @@ public class BirthdayCardActivity extends LittleFamilyBillingActivity {
 
     @Override
     protected void onActivityResult( int requestCode, int resultCode, Intent intent ) {
+        super.onActivityResult(requestCode, resultCode, intent);
         switch(requestCode) {
             case 1:
                 if (resultCode == RESULT_OK) {
@@ -150,7 +151,7 @@ public class BirthdayCardActivity extends LittleFamilyBillingActivity {
         if (birthdayPerson!=null) {
             view.setBirthdayPerson(birthdayPerson);
             speak("Choose a card to decorate.");
-            checkPremium();
+            checkPremium("birthday_card");
         }
     }
 
@@ -162,37 +163,6 @@ public class BirthdayCardActivity extends LittleFamilyBillingActivity {
         }
     }
 
-    public void checkPremium() {
-        userHasPremium(premium -> {
-            if (!premium) {
-                int tries = getTries("birthday_card");
-                showBuyTryDialog(tries, new PremiumDialog.ActionListener() {
-                    @Override
-                    public void onBuy() {
-                        hideBuyTryDialog();
-                    }
-
-                    @Override
-                    public void onTry() {
-                        int newTries = tries-1;
-                        try {
-                            DataService.getInstance().getDBHelper().saveProperty("birthday_card", String.valueOf(newTries));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                        hideBuyTryDialog();
-                    }
-
-                    @Override
-                    public void onClose() {
-                        hideBuyTryDialog();
-                    }
-                });
-            }
-        });
-    }
-
     @Override
     public void onEvent(String topic, Object o) {
         super.onEvent(topic, o);
@@ -201,7 +171,7 @@ public class BirthdayCardActivity extends LittleFamilyBillingActivity {
                 LittlePerson person = ((CupcakeSprite) o).getPerson();
                 view.setBirthdayPerson(person);
                 speak("Choose a card to decorate.");
-                checkPremium();
+                checkPremium("birthday_card");
             }
         } else if (topic.equals(TOPIC_PERSON_TOUCHED)) {
             if (o instanceof TouchEventGameSprite) {
