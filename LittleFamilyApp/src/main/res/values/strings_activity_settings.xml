@@ -99,5 +99,7 @@
     <string name="checking_for_purchases">Checking for purchases...</string>
     <string name="purchases_restore">Successfully restored premium upgrade.</string>
     <string name="purchase_not_found">Previous purchase was not found for this account.</string>
+    <string name="pref_title_enter_premium_code">Enter Premium Code</string>
+    <string name="pref_summary_enter_code">Enter a premium redemption code.</string>
 
 </resources>

@@ -149,5 +149,8 @@ Please wait...</string>
     <string name="premium_game">This is a premium game.</string>
     <string name="tries_left">You have %d %s left.</string>
     <string name="title_activity_restore_purchases">RestorePurchases</string>
+    <string name="validate_code">Enter premium redemption code</string>
+    <string name="validate">Validate</string>
+    <string name="already_premium">You already have a premium version.</string>
 
 </resources>

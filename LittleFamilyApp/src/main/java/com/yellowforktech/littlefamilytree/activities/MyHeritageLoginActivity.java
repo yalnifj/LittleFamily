@@ -120,7 +120,7 @@ public class MyHeritageLoginActivity extends Activity implements PersonLoaderTas
         try {
             dataService.getDBHelper().saveProperty(DataService.SERVICE_USERNAME, service.getUserId());
             fireHelper.createOrUpdateUser(service.getUserId(),
-                    dataService.getRemoteService().getClass().getSimpleName(), false);
+                    dataService.getServiceType(), false);
         } catch (Exception e) {
             Log.e("MyHeritageLoginActivity", "Error saving to firebase", e);
         }

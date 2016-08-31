@@ -151,6 +151,55 @@ public class FireHelper implements FirebaseAuth.AuthStateListener {
         });
     }
 
+    public void validateCode(String username, String code, ValidateListener listener) {
+        if (authenticated) {
+            validateCodeImpl(username, code, listener);
+        } else {
+            FirebaseAuth.AuthStateListener tempList = new FirebaseAuth.AuthStateListener() {
+                @Override
+                public void onAuthStateChanged(FirebaseAuth firebaseAuth) {
+                    FirebaseUser user = firebaseAuth.getCurrentUser();
+                    if (user != null) {
+                        validateCodeImpl(username, code, listener);
+                    }
+                    mAuth.removeAuthStateListener(this);
+                }
+            };
+            mAuth.addAuthStateListener(tempList);
+            authenticate();
+        }
+    }
+
+    private void validateCodeImpl(String username, String code, ValidateListener listener) {
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+        database.child("codes").child(code).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot!=null && dataSnapshot.exists()) {
+                    Boolean redeemed = (Boolean) dataSnapshot.child("redeemed").getValue();
+                    if (redeemed!=null && redeemed==true) {
+                        String oldUser = (String) dataSnapshot.child("user").getValue();
+                        if (oldUser!=null && oldUser.equals(username)) {
+                            listener.results(true, "Code already validated for this user.");
+                            return;
+                        }
+                    } else {
+                        database.child("codes/"+code+"/redeemed").setValue(true);
+                        database.child("codes/"+code+"/user").setValue(username);
+                        listener.results(true, "Code validated.");
+                        return;
+                    }
+                }
+                listener.results(false, "Invalid code.");
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.results(false, "Validation request cancelled.");
+            }
+        });
+    }
+
     @Override
     public void onAuthStateChanged(FirebaseAuth firebaseAuth) {
         FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -166,5 +215,9 @@ public class FireHelper implements FirebaseAuth.AuthStateListener {
 
     public interface PremiumListener {
         public void results(boolean premium);
+    }
+
+    public interface ValidateListener {
+        public void results(boolean valid, String status);
     }
 }

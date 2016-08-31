@@ -153,7 +153,7 @@ public class FSLoginActivity extends Activity implements AuthTask.Listener, Pers
                 String token = dataService.getRemoteService().createEncodedAuthToken(username, password);
                 dataService.saveEncryptedProperty(DataService.SERVICE_TYPE_FAMILYSEARCH + DataService.SERVICE_TOKEN, token);
 
-                fireHelper.createOrUpdateUser(username, dataService.getRemoteService().getClass().getSimpleName(), false);
+                fireHelper.createOrUpdateUser(username, dataService.getServiceType(), false);
 
                 username = null;
                 password = null;

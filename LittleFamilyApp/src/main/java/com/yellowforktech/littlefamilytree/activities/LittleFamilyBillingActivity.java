@@ -8,7 +8,6 @@ import android.content.IntentSender;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.yellowforktech.littlefamilytree.data.DataService;
@@ -82,7 +81,7 @@ public class LittleFamilyBillingActivity extends LittleFamilyActivity {
                         this.hasPremium = true;
                         DataService.getInstance().getDBHelper().saveProperty(LittleFamilyActivity.PROP_HAS_PREMIUM, "true");
                         String username = DataService.getInstance().getDBHelper().getProperty(DataService.SERVICE_USERNAME);
-                        String serviceType = PreferenceManager.getDefaultSharedPreferences(this).getString(DataService.SERVICE_TYPE, null);
+                        String serviceType = DataService.getInstance().getServiceType();
                         if (username!=null && serviceType!=null) {
                             FireHelper.getInstance().createOrUpdateUser(username, serviceType, true);
                         }
