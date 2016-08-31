@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -135,18 +136,26 @@ public class LittleFamilyBillingActivity extends LittleFamilyActivity {
     }
 
     public void buyUpgrade() {
-        waitForConnect();
-        Bundle buyIntentBundle = mService.getBuyIntent(3, getPackageName(),
-                SKU_PREMIUM, "inapp", "");
-        int response = buyIntentBundle.getInt("RESPONSE_CODE");
-        if (response == 0) {
-            PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
-            try {
-                startIntentSenderForResult(pendingIntent.getIntentSender(),
-                        1001, new Intent(), Integer.valueOf(0), Integer.valueOf(0),
-                        Integer.valueOf(0));
-            } catch (IntentSender.SendIntentException e) {
-                Log.e(this.getClass().getName().toString(), "Error starting purchase intent", e);
+        PackageManager pkgManager = this.getPackageManager();
+        String installerPackageName = pkgManager.getInstallerPackageName(this.getPackageName());
+        if(installerPackageName.startsWith("com.amazon")) {
+            // Amazon
+
+        } else {
+            // Google Play
+            waitForConnect();
+            Bundle buyIntentBundle = mService.getBuyIntent(3, getPackageName(),
+                    SKU_PREMIUM, "inapp", "");
+            int response = buyIntentBundle.getInt("RESPONSE_CODE");
+            if (response == 0) {
+                PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
+                try {
+                    startIntentSenderForResult(pendingIntent.getIntentSender(),
+                            1001, new Intent(), Integer.valueOf(0), Integer.valueOf(0),
+                            Integer.valueOf(0));
+                } catch (IntentSender.SendIntentException e) {
+                    Log.e(this.getClass().getName().toString(), "Error starting purchase intent", e);
+                }
             }
         }
     }

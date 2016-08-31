@@ -156,6 +156,15 @@
                 android:value="com.yellowforktech.littlefamilytree.activities.HomeActivity" />
         </activity>
 
+        <activity
+            android:name=".activities.RestorePurchases"
+            android:label="@string/title_activity_restore_purchases"
+            android:parentActivityName=".activities.SettingsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.yellowforktech.littlefamilytree.activities.SettingsActivity" />
+        </activity>
+
         <service
             android:name=".events.LittleFamilyNotificationService"
             android:enabled="true"
@@ -171,14 +180,13 @@
             </intent-filter>
         </receiver>
 
-        <activity
-            android:name=".activities.RestorePurchases"
-            android:label="@string/title_activity_restore_purchases"
-            android:parentActivityName=".activities.SettingsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.yellowforktech.littlefamilytree.activities.SettingsActivity" />
-        </activity>
+        <receiver android:name="com.amazon.inapp.iap.ResponseReceiver">
+            <intent-filter>
+                <action android:name="com.amazon.inapp.purchasing.NOTIFY" android:permission="com.amazon.inapp.purchasing.Permission.NOTIFY">
+                </action>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>
