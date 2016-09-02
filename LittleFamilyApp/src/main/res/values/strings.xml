@@ -147,7 +147,7 @@ Please wait...</string>
     <string name="you_rescued">You rescued %1$d relatives!</string>
     <string name="processing">Processing </string>
     <string name="premium_game">This is a premium game.</string>
-    <string name="tries_left">You have %1$d %1$s left.</string>
+    <string name="tries_left">You have %1$d %2$s left.</string>
     <string name="title_activity_restore_purchases">RestorePurchases</string>
     <string name="validate_code">Enter premium redemption code</string>
     <string name="validate">Validate</string>

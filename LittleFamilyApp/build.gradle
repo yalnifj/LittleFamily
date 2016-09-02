@@ -1,17 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion '23.0.2'
+    compileSdkVersion 24
+    buildToolsVersion '24.0.0'
     defaultConfig {
         applicationId "com.yellowforktech.littlefamilytree"
         minSdkVersion 15
-        targetSdkVersion 21
-        versionName "1.4.0"
-        versionCode 40
-        jackOptions {
-            enabled true
-        }
+        targetSdkVersion 24
+        versionName "2.0.0"
+        versionCode 200
     }
     buildTypes {
         release {
@@ -20,26 +17,27 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
     productFlavors {
         local {
             minSdkVersion 15
             applicationId 'com.yellowforktech.littlefamilytree'
-            targetSdkVersion 21
+            targetSdkVersion 24
         }
         beta {
             minSdkVersion 15
             applicationId 'com.yellowforktech.littlefamilytreefree'
-            targetSdkVersion 21
+            targetSdkVersion 24
         }
         production {
             minSdkVersion 15
             applicationId 'com.yellowforktech.littlefamilytree.com.yellowforktech.littlefamilytree.littlefamilytree1'
-            targetSdkVersion 21
+            targetSdkVersion 24
         }
     }
+    useLibrary 'org.apache.http.legacy'
 }
 
 repositories {
@@ -48,9 +46,9 @@ repositories {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:23.2.0'
+    compile 'com.android.support:appcompat-v7:24.0.0'
     compile 'com.google.android.gms:play-services:9.4.0'
-    compile 'com.android.support:support-v4:23.2.0'
+    compile 'com.android.support:support-v4:24.0.0'
     compile 'com.google.firebase:firebase-core:9.4.0'
     compile 'com.google.firebase:firebase-database:9.4.0'
     compile 'com.google.firebase:firebase-auth:9.4.0'

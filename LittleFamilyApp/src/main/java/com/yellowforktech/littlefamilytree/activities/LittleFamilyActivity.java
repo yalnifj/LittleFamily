@@ -407,7 +407,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         if (buzzPlayer !=null && !quietMode) buzzPlayer.start();
     }
 
-    public void userHasPremium(FireHelper.PremiumListener listener) {
+    public void userHasPremium(final FireHelper.PremiumListener listener) {
         try {
             if (hasPremium!=null) {
                 listener.results(hasPremium);
@@ -421,10 +421,13 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
             }
             String username = DataService.getInstance().getDBHelper().getProperty(DataService.SERVICE_USERNAME);
             String serviceType = DataService.getInstance().getDBHelper().getProperty(DataService.SERVICE_TYPE);
-            FireHelper.getInstance().userIsPremium(username, serviceType, (premium -> {
-                hasPremium = premium;
-                listener.results(hasPremium);
-            }));
+            FireHelper.getInstance().userIsPremium(username, serviceType, new FireHelper.PremiumListener() {
+                @Override
+                public void results(boolean premium) {
+                    hasPremium = premium;
+                    listener.results(hasPremium);
+                }
+            });
 
         } catch (Exception e) {
             Log.e("LittleFamilyActivity", "Error getting property", e);

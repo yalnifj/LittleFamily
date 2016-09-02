@@ -54,7 +54,7 @@ public class FireHelper implements FirebaseAuth.AuthStateListener {
         }
     }
 
-    public void createOrUpdateUser(String username, String serviceType, boolean isPremium) {
+    public void createOrUpdateUser(final String username, final String serviceType, final boolean isPremium) {
         if (authenticated) {
             updateUser(username, serviceType, isPremium);
         } else {
@@ -73,9 +73,9 @@ public class FireHelper implements FirebaseAuth.AuthStateListener {
         }
     }
 
-    private void updateUser(String username, String serviceType, boolean isPremium) {
+    private void updateUser(final String username, final String serviceType, final boolean isPremium) {
         try {
-            DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+            final DatabaseReference database = FirebaseDatabase.getInstance().getReference();
             database.child("users").child(serviceType).child(username).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -109,7 +109,7 @@ public class FireHelper implements FirebaseAuth.AuthStateListener {
         }
     }
 
-    public void userIsPremium(String username, String serviceType, PremiumListener listener) {
+    public void userIsPremium(final String username, final String serviceType, final PremiumListener listener) {
         if (authenticated) {
             isPremium(username, serviceType, listener);
         } else {
@@ -128,7 +128,7 @@ public class FireHelper implements FirebaseAuth.AuthStateListener {
         }
     }
 
-    private void isPremium(String username, String serviceType, PremiumListener listener) {
+    private void isPremium(String username, String serviceType, final PremiumListener listener) {
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
         database.child("users").child(serviceType).child(username).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -151,7 +151,7 @@ public class FireHelper implements FirebaseAuth.AuthStateListener {
         });
     }
 
-    public void validateCode(String username, String code, ValidateListener listener) {
+    public void validateCode(final String username, final String code, final ValidateListener listener) {
         if (authenticated) {
             validateCodeImpl(username, code, listener);
         } else {
@@ -170,8 +170,8 @@ public class FireHelper implements FirebaseAuth.AuthStateListener {
         }
     }
 
-    private void validateCodeImpl(String username, String code, ValidateListener listener) {
-        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+    private void validateCodeImpl(final String username, final String code, final ValidateListener listener) {
+        final DatabaseReference database = FirebaseDatabase.getInstance().getReference();
         database.child("codes").child(code).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

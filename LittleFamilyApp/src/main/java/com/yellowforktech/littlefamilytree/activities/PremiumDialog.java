@@ -43,22 +43,31 @@ public class PremiumDialog extends DialogFragment {
         }
 
         Button closeBtn = (Button) v.findViewById(R.id.close_button);
-        closeBtn.setOnClickListener(view -> {
+        closeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 listener.onClose();
+            }
         });
 
         ImageView tryButton = (ImageView) v.findViewById(R.id.try_button);
         if (tries < 1) {
             tryButton.setVisibility(View.GONE);
         } else {
-            tryButton.setOnClickListener(view -> {
-                listener.onTry();
+            tryButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onTry();
+                }
             });
         }
 
         ImageView buyButton = (ImageView) v.findViewById(R.id.buy_button);
-        buyButton.setOnClickListener(view -> {
-            listener.onBuy();
+        buyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onBuy();
+            }
         });
 
         return v;

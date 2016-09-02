@@ -20,6 +20,7 @@ import android.util.Log;
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.FlyingActivity;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
+import com.yellowforktech.littlefamilytree.db.FireHelper;
 import com.yellowforktech.littlefamilytree.events.EventListener;
 import com.yellowforktech.littlefamilytree.events.EventQueue;
 import com.yellowforktech.littlefamilytree.sprites.AnimatedBitmapSprite;
@@ -427,11 +428,14 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                 skipButton.setIgnoreAlpha(true);
                 addSprite(skipButton);
 
-                activity.userHasPremium(premium -> {
-                    if (premium) {
-                        animator.start();
-                    } else {
-                        activity.checkPremium("bird_game");
+                activity.userHasPremium(new FireHelper.PremiumListener() {
+                    @Override
+                    public void results(boolean premium) {
+                        if (premium) {
+                            animator.start();
+                        } else {
+                            activity.checkPremium("bird_game");
+                        }
                     }
                 });
             }

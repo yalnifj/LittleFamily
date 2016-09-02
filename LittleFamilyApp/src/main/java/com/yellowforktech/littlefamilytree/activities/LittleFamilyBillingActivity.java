@@ -220,35 +220,38 @@ public class LittleFamilyBillingActivity extends LittleFamilyActivity {
         }
     }
 
-    public void checkPremium(String gameCode) {
-        userHasPremium(premium -> {
-            if (!premium) {
-                int tries = getTries(gameCode);
-                showBuyTryDialog(tries, new PremiumDialog.ActionListener() {
-                    @Override
-                    public void onBuy() {
-                        hideBuyTryDialog();
-                        buyUpgrade();
-                    }
-
-                    @Override
-                    public void onTry() {
-                        int newTries = tries-1;
-                        try {
-                            DataService.getInstance().getDBHelper().saveProperty(gameCode, String.valueOf(newTries));
-                        } catch (Exception e) {
-                            e.printStackTrace();
+    public void checkPremium(final String gameCode) {
+        userHasPremium(new FireHelper.PremiumListener() {
+            @Override
+            public void results(boolean premium) {
+                if (!premium) {
+                    final int tries = getTries(gameCode);
+                    showBuyTryDialog(tries, new PremiumDialog.ActionListener() {
+                        @Override
+                        public void onBuy() {
+                            hideBuyTryDialog();
+                            buyUpgrade();
                         }
 
-                        hideBuyTryDialog();
-                    }
+                        @Override
+                        public void onTry() {
+                            int newTries = tries-1;
+                            try {
+                                DataService.getInstance().getDBHelper().saveProperty(gameCode, String.valueOf(newTries));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
 
-                    @Override
-                    public void onClose() {
-                        hideBuyTryDialog();
-                        finish();
-                    }
-                });
+                            hideBuyTryDialog();
+                        }
+
+                        @Override
+                        public void onClose() {
+                            hideBuyTryDialog();
+                            finish();
+                        }
+                    });
+                }
             }
         });
     }

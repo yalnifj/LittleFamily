@@ -76,20 +76,23 @@ public class EnterCodeDialog extends DialogFragment {
                 }
 
                 try {
-                    String username = DataService.getInstance().getDBHelper().getProperty(DataService.SERVICE_USERNAME);
-                    FireHelper.getInstance().validateCode(username, code, (valid, status) -> {
-                        spinner.setVisibility(View.INVISIBLE);
-                        if (valid) {
-                            statusText.setText("Code successfully validated.");
-                            try {
-                                DataService.getInstance().getDBHelper().saveProperty(LittleFamilyActivity.PROP_HAS_PREMIUM, "true");
-                                String serviceType = DataService.getInstance().getServiceType();
-                                FireHelper.getInstance().createOrUpdateUser(username, serviceType, true);
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                    final String username = DataService.getInstance().getDBHelper().getProperty(DataService.SERVICE_USERNAME);
+                    FireHelper.getInstance().validateCode(username, code, new FireHelper.ValidateListener() {
+                        @Override
+                        public void results(boolean valid, String status) {
+                            spinner.setVisibility(View.INVISIBLE);
+                            if (valid) {
+                                statusText.setText("Code successfully validated.");
+                                try {
+                                    DataService.getInstance().getDBHelper().saveProperty(LittleFamilyActivity.PROP_HAS_PREMIUM, "true");
+                                    String serviceType = DataService.getInstance().getServiceType();
+                                    FireHelper.getInstance().createOrUpdateUser(username, serviceType, true);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            } else {
+                                statusText.setText("Unable to validate code. "+status);
                             }
-                        } else {
-                            statusText.setText("Unable to validate code. "+status);
                         }
                     });
                 } catch (Exception e) {
