@@ -230,8 +230,16 @@ public class LittleFamilyBillingActivity extends LittleFamilyActivity {
                         @Override
                         public void onBuy() {
                             hideBuyTryDialog();
-                            showLoadingDialog();
-                            buyUpgrade();
+                            showAdultAuthDialog(new AdultsAuthDialog.AuthCompleteAction() {
+                                @Override
+                                public void doAction(boolean success) {
+                                    buyUpgrade();
+                                }
+
+                                public void onClose() {
+                                    finish();
+                                }
+                            });
                         }
 
                         @Override

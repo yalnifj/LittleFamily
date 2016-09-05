@@ -281,5 +281,9 @@ public class ColoringGameActivity extends LittleFamilyBillingActivity implements
 			}
             hideAdultAuthDialog();
 		}
+
+        public void onClose() {
+            hideAdultAuthDialog();
+        }
 	}
 }

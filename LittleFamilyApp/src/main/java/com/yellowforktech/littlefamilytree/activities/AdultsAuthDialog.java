@@ -61,7 +61,10 @@ public class AdultsAuthDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 LittleFamilyActivity activity = (LittleFamilyActivity) getActivity();
-                activity.hideAdultAuthDialog();
+                if (action!=null)
+                    action.onClose();
+                else
+                    activity.hideAdultAuthDialog();
             }
         });
 
@@ -70,7 +73,10 @@ public class AdultsAuthDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 LittleFamilyActivity activity = (LittleFamilyActivity) getActivity();
-                activity.hideAdultAuthDialog();
+                if (action!=null)
+                    action.onClose();
+                else
+                    activity.hideAdultAuthDialog();
             }
         });
 
@@ -78,8 +84,11 @@ public class AdultsAuthDialog extends DialogFragment {
         signInBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                LittleFamilyActivity activity = (LittleFamilyActivity) getActivity();
 				if (action!=null)
                 	action.doAction(authenticated());
+                else
+                    activity.hideAdultAuthDialog();
             }
         });
 
@@ -132,5 +141,6 @@ public class AdultsAuthDialog extends DialogFragment {
 	
 	public interface AuthCompleteAction extends Serializable {
 		public void doAction(boolean success);
+        public void onClose();
 	}
 }

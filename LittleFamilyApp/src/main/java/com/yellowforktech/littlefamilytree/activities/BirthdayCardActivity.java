@@ -249,5 +249,9 @@ public class BirthdayCardActivity extends LittleFamilyBillingActivity {
             }
             hideAdultAuthDialog();
         }
+
+        public void onClose() {
+            hideAdultAuthDialog();
+        }
     }
 }

@@ -483,6 +483,10 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
 			}
 			hideAdultAuthDialog();
 		}
+
+        public void onClose() {
+            hideAdultAuthDialog();
+        }
 	}
 
     @Override
