@@ -6,10 +6,10 @@
     >
 
     <Button
-        style="?android:attr/buttonStyleSmall"
+        style="@style/Base.Widget.AppCompat.Toolbar.Button.Navigation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/close"
+        android:text="@string/back"
         android:id="@+id/close_button"/>
 
     <ImageView
@@ -51,7 +51,8 @@
             android:id="@+id/try_button"
             android:src="@drawable/try_button"
             android:layout_gravity="center_horizontal"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:layout_marginRight="20dp"/>
 
         <ImageView
             android:layout_width="wrap_content"
@@ -59,7 +60,8 @@
             android:id="@+id/buy_button"
             android:src="@drawable/buy_button"
             android:layout_gravity="center_horizontal"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:layout_marginLeft="20dp"/>
     </LinearLayout>
 
 </LinearLayout>

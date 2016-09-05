@@ -50,6 +50,7 @@ public class ColoringGameActivity extends LittleFamilyBillingActivity implements
     private ImageButton toggleOutlineBtn;
 
     private boolean showOutline = true;
+    private boolean trySelected = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,6 +141,7 @@ public class ColoringGameActivity extends LittleFamilyBillingActivity implements
     public void nextImage(View view) {
         showLoadingDialog();
         mediaChooser.loadRandomImage();
+        trySelected = true;
     }
 
     public void shareImage(View view) {
@@ -201,7 +203,7 @@ public class ColoringGameActivity extends LittleFamilyBillingActivity implements
     @Override
     public void onColoringReady() {
         hideLoadingDialog();
-        checkPremium("coloring");
+        if (!trySelected) checkPremium("coloring");
     }
 
     @Override

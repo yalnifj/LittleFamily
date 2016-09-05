@@ -45,7 +45,7 @@ public class LittleFamilyBillingActivity extends LittleFamilyActivity {
 
         PackageManager pkgManager = this.getPackageManager();
         String installerPackageName = pkgManager.getInstallerPackageName(this.getPackageName());
-        if(installerPackageName.startsWith("com.amazon")) {
+        if(installerPackageName!=null && installerPackageName.startsWith("com.amazon")) {
             isAmazon = true;
         }
     }
@@ -230,6 +230,7 @@ public class LittleFamilyBillingActivity extends LittleFamilyActivity {
                         @Override
                         public void onBuy() {
                             hideBuyTryDialog();
+                            showLoadingDialog();
                             buyUpgrade();
                         }
 

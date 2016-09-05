@@ -161,9 +161,30 @@ public class DBHelper extends SQLiteOpenHelper {
 				db.execSQL(CREATE_LOCAL_RESOURCES);
 			}
 			if (oldVersion < 6) {
-				saveProperty(LittleFamilyActivity.PROP_HAS_PREMIUM, "true");
+				//saveProperty(LittleFamilyActivity.PROP_HAS_PREMIUM, "true");
+				ContentValues values = new ContentValues();
+				values.put("property", LittleFamilyActivity.PROP_HAS_PREMIUM);
+				values.put("value", "true");
+				values.put(COL_LAST_SYNC, (new Date()).getTime());
+
+				long rowid = db.insert(TABLE_PROPERTIES, null, values);
+				Log.d("DBHelper", "saveProperty rowid " + rowid + " "+LittleFamilyActivity.PROP_HAS_PREMIUM+"="+true);
 				try {
-					String username = getProperty(DataService.SERVICE_USERNAME);
+					//String username = getProperty(DataService.SERVICE_USERNAME);
+					String[] projection = {
+							"value", COL_LAST_SYNC
+					};
+					String selection = "property LIKE ?";
+					String[] selectionArgs = { DataService.SERVICE_USERNAME };
+					String tables = TABLE_PROPERTIES;
+
+					String username = null;
+					Cursor c = db.query(tables, projection, selection, selectionArgs, null, null, COL_LAST_SYNC);
+					while (c.moveToNext()) {
+						username = c.getString(c.getColumnIndexOrThrow("value"));
+					}
+
+					c.close();
 					String serviceType = PreferenceManager.getDefaultSharedPreferences(context).getString(DataService.SERVICE_TYPE, null);
 					if (username!=null && serviceType!=null) {
 						FireHelper.getInstance().createOrUpdateUser(username, serviceType, true);

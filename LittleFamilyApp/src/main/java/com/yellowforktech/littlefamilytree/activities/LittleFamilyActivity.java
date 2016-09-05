@@ -65,6 +65,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
 	protected SettingsAction settingsAction = new SettingsAction();
     protected Boolean hasPremium = null;
     protected PremiumDialog premiumDialog;
+    protected Boolean launchingGame = false;
 
     public LittlePerson getSelectedPerson() {
         return selectedPerson;
@@ -140,6 +141,14 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         EventQueue.getInstance().unSubscribe(TOPIC_START_FLYING, this);
         EventQueue.getInstance().unSubscribe(TOPIC_START_BIRTHDAY_CARD, this);
 		EventQueue.getInstance().unSubscribe(TOPIC_START_PROFILE, this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==200) {
+            launchingGame = false;
+        }
     }
 
     public void showLoadingDialog() {
@@ -223,6 +232,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         premiumDialog.setTries(tries);
         premiumDialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Theme_AppCompat_Light_Dialog);
         premiumDialog.setListener(listener);
+        premiumDialog.setCancelable(false);
         premiumDialog.show(getFragmentManager(), "Authenticate");
     }
 
@@ -420,7 +430,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
                 return;
             }
             String username = DataService.getInstance().getDBHelper().getProperty(DataService.SERVICE_USERNAME);
-            String serviceType = DataService.getInstance().getDBHelper().getProperty(DataService.SERVICE_TYPE);
+            String serviceType = PreferenceManager.getDefaultSharedPreferences(this).getString(DataService.SERVICE_TYPE, null);
             FireHelper.getInstance().userIsPremium(username, serviceType, new FireHelper.PremiumListener() {
                 @Override
                 public void results(boolean premium) {
@@ -525,48 +535,60 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     }
 
     public void startMatchGame(LittlePerson person) {
-        Intent intent = new Intent( this, MatchGameActivity.class );
-        if (person!=selectedPerson) {
-            ArrayList<LittlePerson> people = new ArrayList<>();
-            people.add(person);
-            intent.putExtra(ChooseFamilyMember.FAMILY, people);
-        } else {
-            intent.putExtra(ChooseFamilyMember.FAMILY, people);
+        if (!launchingGame) {
+            launchingGame = true;
+            Intent intent = new Intent(this, MatchGameActivity.class);
+            if (person != selectedPerson) {
+                ArrayList<LittlePerson> people = new ArrayList<>();
+                people.add(person);
+                intent.putExtra(ChooseFamilyMember.FAMILY, people);
+            } else {
+                intent.putExtra(ChooseFamilyMember.FAMILY, people);
+            }
+            intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
+            startActivityForResult(intent, 200);
         }
-        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
-        startActivity(intent);
     }
 
     public void startScratchGame(LittlePerson person) {
-        Intent intent = new Intent( this, ScratchGameActivity.class );
-        if (person!=selectedPerson) {
-            ArrayList<LittlePerson> people = new ArrayList<>();
-            people.add(person);
-            intent.putExtra(ChooseFamilyMember.FAMILY, people);
-        } else {
-            intent.putExtra(ChooseFamilyMember.FAMILY, people);
+        if (!launchingGame) {
+            launchingGame = true;
+            Intent intent = new Intent(this, ScratchGameActivity.class);
+            if (person != selectedPerson) {
+                ArrayList<LittlePerson> people = new ArrayList<>();
+                people.add(person);
+                intent.putExtra(ChooseFamilyMember.FAMILY, people);
+            } else {
+                intent.putExtra(ChooseFamilyMember.FAMILY, people);
+            }
+            intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
+            startActivityForResult(intent, 200);
         }
-        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
-        startActivity(intent);
     }
 
     public void startColoringGame(LittlePerson person) {
-        Intent intent = new Intent( this, ColoringGameActivity.class );
-        if (person!=selectedPerson) {
-            ArrayList<LittlePerson> people = new ArrayList<>();
-            people.add(person);
-            intent.putExtra(ChooseFamilyMember.FAMILY, people);
-        } else {
-            intent.putExtra(ChooseFamilyMember.FAMILY, people);
+        if (!launchingGame) {
+            launchingGame = true;
+            Intent intent = new Intent(this, ColoringGameActivity.class);
+            if (person != selectedPerson) {
+                ArrayList<LittlePerson> people = new ArrayList<>();
+                people.add(person);
+                intent.putExtra(ChooseFamilyMember.FAMILY, people);
+            } else {
+                intent.putExtra(ChooseFamilyMember.FAMILY, people);
+            }
+            intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
+            startActivityForResult(intent, 200);
         }
-        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
-        startActivity(intent);
     }
 
     public void startHeritageCalc(LittlePerson person) {
-        Intent intent = new Intent( this, ChooseCultureActivity.class );
-        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
-        startActivity(intent);
+        if (!launchingGame) {
+            launchingGame = true;
+            Intent intent = new Intent(this, ChooseCultureActivity.class);
+            intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
+            startActivityForResult(intent, 200);
+        }
     }
 
     public void startHeritageDressUpGame(LittlePerson person) {
@@ -576,49 +598,67 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     }
 
     public void startPuzzleGame(LittlePerson person) {
-        Intent intent = new Intent( this, PuzzleGameActivity.class );
-        if (person!=selectedPerson) {
-            ArrayList<LittlePerson> people = new ArrayList<>();
-            people.add(person);
-            intent.putExtra(ChooseFamilyMember.FAMILY, people);
-        } else {
-            intent.putExtra(ChooseFamilyMember.FAMILY, people);
+        if (!launchingGame) {
+            launchingGame = true;
+            Intent intent = new Intent(this, PuzzleGameActivity.class);
+            if (person != selectedPerson) {
+                ArrayList<LittlePerson> people = new ArrayList<>();
+                people.add(person);
+                intent.putExtra(ChooseFamilyMember.FAMILY, people);
+            } else {
+                intent.putExtra(ChooseFamilyMember.FAMILY, people);
+            }
+            intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
+            startActivityForResult(intent, 200);
         }
-        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
-        startActivity(intent);
     }
 
     public void startTreeGame(LittlePerson person) {
-        Intent intent = new Intent( this, MyTreeActivity.class );
-        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
-        startActivity(intent);
+        if (!launchingGame) {
+            launchingGame = true;
+            Intent intent = new Intent(this, MyTreeActivity.class);
+            intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
+            startActivityForResult(intent, 200);
+        }
     }
 
     public void startBubbleGame(LittlePerson person) {
-        Intent intent = new Intent( this, BubblePopActivity.class );
-        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
-        startActivity(intent);
+        if (!launchingGame) {
+            launchingGame = true;
+            Intent intent = new Intent(this, BubblePopActivity.class);
+            intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
+            startActivityForResult(intent, 200);
+        }
     }
 	
 	public void startSongGame(LittlePerson person) {
-        Intent intent = new Intent( this, SongActivity.class );
-        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
-        startActivity(intent);
+        if (!launchingGame) {
+            launchingGame = true;
+            Intent intent = new Intent(this, SongActivity.class);
+            intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
+            startActivityForResult(intent, 200);
+        }
     }
 
     public void startFlyingGame(LittlePerson person) {
-        Intent intent = new Intent( this, FlyingActivity.class );
-        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
-        startActivity(intent);
+        if (!launchingGame) {
+            launchingGame = true;
+            Intent intent = new Intent(this, FlyingActivity.class);
+            intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, person);
+            startActivityForResult(intent, 200);
+        }
     }
 
     public void startBirthdayCardGame(LittlePerson person) {
-        Intent intent = new Intent( this, BirthdayCardActivity.class );
-        intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, selectedPerson);
-        if (person!=null && !person.equals(selectedPerson)) {
-            intent.putExtra(BirthdayCardActivity.BIRTHDAY_PERSON, person);
+        if (!launchingGame) {
+            launchingGame = true;
+            Intent intent = new Intent(this, BirthdayCardActivity.class);
+            intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, selectedPerson);
+            if (person != null && !person.equals(selectedPerson)) {
+                intent.putExtra(BirthdayCardActivity.BIRTHDAY_PERSON, person);
+            }
+            startActivityForResult(intent, 200);
         }
-        startActivity(intent);
     }
 
     @Override

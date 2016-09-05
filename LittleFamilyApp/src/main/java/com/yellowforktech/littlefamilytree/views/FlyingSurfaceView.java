@@ -19,6 +19,8 @@ import android.util.Log;
 
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.FlyingActivity;
+import com.yellowforktech.littlefamilytree.activities.PremiumDialog;
+import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.db.FireHelper;
 import com.yellowforktech.littlefamilytree.events.EventListener;
@@ -434,7 +436,34 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                         if (premium) {
                             animator.start();
                         } else {
-                            activity.checkPremium("bird_game");
+                            //activity.checkPremium("bird_game");
+                            final int tries = activity.getTries("bird_game");
+                            activity.showBuyTryDialog(tries, new PremiumDialog.ActionListener() {
+                                @Override
+                                public void onBuy() {
+                                    activity.hideBuyTryDialog();
+                                    activity.buyUpgrade();
+                                }
+
+                                @Override
+                                public void onTry() {
+                                    int newTries = tries-1;
+                                    try {
+                                        DataService.getInstance().getDBHelper().saveProperty("bird_game", String.valueOf(newTries));
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    activity.hideBuyTryDialog();
+                                    animator.start();
+                                }
+
+                                @Override
+                                public void onClose() {
+                                    activity.hideBuyTryDialog();
+                                    activity.finish();
+                                }
+                            });
                         }
                     }
                 });

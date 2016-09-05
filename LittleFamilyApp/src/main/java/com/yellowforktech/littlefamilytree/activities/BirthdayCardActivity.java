@@ -128,12 +128,22 @@ public class BirthdayCardActivity extends LittleFamilyBillingActivity {
                     @Override
                     public int compare(LittlePerson lhs, LittlePerson rhs) {
                         if (lhs.getBirthDate()!=null && rhs.getBirthDate()!=null) {
+                            Calendar now = Calendar.getInstance();
+                            int currentMonth = now.get(Calendar.MONTH);
                             Calendar lcal = Calendar.getInstance();
                             Calendar rcal = Calendar.getInstance();
                             lcal.setTime(lhs.getBirthDate());
                             rcal.setTime(rhs.getBirthDate());
                             if (lcal.get(Calendar.MONTH) != rcal.get(Calendar.MONTH)) {
-                                return lcal.get(Calendar.MONTH) - rcal.get(Calendar.MONTH);
+                                int lm = lcal.get(Calendar.MONTH);
+                                int rm = rcal.get(Calendar.MONTH);
+                                if (lm < currentMonth) {
+                                    lm = lm + 12;
+                                }
+                                if (rm < currentMonth) {
+                                    rm = rm + 12;
+                                }
+                                return lm - rm;
                             }
                             return lcal.get(Calendar.DAY_OF_MONTH) - rcal.get(Calendar.DAY_OF_MONTH);
                         }

@@ -152,5 +152,6 @@ Please wait...</string>
     <string name="validate_code">Enter premium redemption code</string>
     <string name="validate">Validate</string>
     <string name="already_premium">You already have a premium version.</string>
+    <string name="back"><![CDATA[< Back]]></string>
 
 </resources>
