@@ -210,12 +210,19 @@ public class LittleFamilyBillingActivity extends LittleFamilyActivity {
             if (!connecting) {
                 connectToStore();
             }
-            while(mService==null) {
+            int tries = 0;
+            while(mService==null && tries < 300) {
                 try {
                     Thread.sleep(200);
+                    tries++;
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+            }
+
+            if (mService==null) {
+                Toast.makeText(this, "Unable to connect to Google play store.", Toast.LENGTH_LONG);
+                finish();
             }
         }
     }
