@@ -9,6 +9,7 @@ android {
         targetSdkVersion 24
         versionName "2.0.0"
         versionCode 200
+        multiDexEnabled true
     }
     buildTypes {
         release {

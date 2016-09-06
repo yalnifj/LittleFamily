@@ -40,7 +40,8 @@
             android:enabled="false"
             android:layout_marginTop="5dp"
             android:inputType="text"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:autoText="false" />
 
         <Button
             android:layout_width="wrap_content"
