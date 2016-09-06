@@ -21,7 +21,6 @@ public class AutoStartNotifyReceiver extends BroadcastReceiver {
         if(intent.getAction().equals(BOOT_COMPLETED_ACTION)){
             scheduleAlarms(context);
         }
-
     }
 
     public static void scheduleAlarms(Context context) {

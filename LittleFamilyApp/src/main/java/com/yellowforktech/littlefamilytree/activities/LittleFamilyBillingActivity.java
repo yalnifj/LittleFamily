@@ -37,7 +37,7 @@ public class LittleFamilyBillingActivity extends LittleFamilyActivity {
 
     private ServiceConnection mServiceConn;
     private boolean connecting;
-    private boolean isAmazon = false;
+    protected boolean isAmazon = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +58,28 @@ public class LittleFamilyBillingActivity extends LittleFamilyActivity {
             unbindService(mServiceConn);
         }
         mService = null;
+    }
+
+    /**
+     * Dispatch onResume() to fragments.  Note that for better inter-operation
+     * with older versions of the platform, at the point of this call the
+     * fragments attached to the activity are <em>not</em> resumed.  This means
+     * that in some cases the previous state may still be saved, not allowing
+     * fragment transactions that modify the state.  To correctly interact
+     * with fragments in their proper state, you should instead override
+     * {@link #onResumeFragments()}.
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        userHasPremium(new FireHelper.PremiumListener() {
+            @Override
+            public void results(boolean premium) {
+                if (!premium) {
+                    restorePurchases();
+                }
+            }
+        });
     }
 
     public void connectToStore() {
@@ -198,6 +220,47 @@ public class LittleFamilyBillingActivity extends LittleFamilyActivity {
             } catch (RemoteException e) {
                 Log.e(this.getClass().getName().toString(), "Error purchasing upgrade from store", e);
             }
+        }
+    }
+
+    public void restorePurchases() {
+        waitForConnect();
+        try {
+            Bundle ownedItems = mService.getPurchases(3, getPackageName(), "inapp", null);
+            int response = ownedItems.getInt("RESPONSE_CODE");
+            if (response == 0) {
+                ArrayList<String> ownedSkus =
+                        ownedItems.getStringArrayList("INAPP_PURCHASE_ITEM_LIST");
+                ArrayList<String> purchaseDataList =
+                        ownedItems.getStringArrayList("INAPP_PURCHASE_DATA_LIST");
+                ArrayList<String> signatureList =
+                        ownedItems.getStringArrayList("INAPP_DATA_SIGNATURE_LIST");
+                //String continuationToken =
+                //        ownedItems.getString("INAPP_CONTINUATION_TOKEN");
+
+                boolean found = false;
+                for (int i = 0; i < purchaseDataList.size(); ++i) {
+                    String purchaseData = purchaseDataList.get(i);
+                    String signature = signatureList.get(i);
+                    String sku = ownedSkus.get(i);
+
+                    if (sku != null && sku.equals(SKU_PREMIUM)) {
+                        try {
+                            grantPremium();
+                        } catch (Exception e) {
+                            Log.e(this.getClass().getName().toString(), "Error starting purchase intent", e);
+                        }
+                    }
+
+                    // do something with this purchase information
+                    // e.g. display the updated list of products owned by user
+                }
+
+                // if continuationToken != null, call getPurchases again
+                // and pass in the token to retrieve more items
+            }
+        } catch (RemoteException e) {
+            Log.e(this.getClass().getName().toString(), "Error starting purchase intent", e);
         }
     }
 
