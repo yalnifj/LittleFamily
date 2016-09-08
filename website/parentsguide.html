@@ -247,21 +247,27 @@
         <div class="col-sm-8 col-lg-offset-1">
             <h3>Follow the Stars!</h3>
             <p>
-                Special games and activities are highlighted by stars on the home screen.  The stars
-                will show up randomly.  Follow the stars to interact in fun and unique ways with
-                your heritage.
+                Portals to special games and activities are highlighted by stars on the home screen.
+                Tap the items behind the stars to start those activities. Yellow stars highlight free
+                activities, and red stars highlight premium activities.  You may try a premium activity up to 3 times
+                after which a premium upgrade will be required to continue playing that activity. A one-time premium upgrade
+                may be purchased by an adult at anytime.
             </p>
             <p>
                 Visit the <a href="index.html#games">Games</a> section of this site to learn more
-                about individual games.
+                about individual games and activities.
             </p>
         </div>
-        <div class="col-sm-3 text-center" style="position: relative;">
+        <div class="col-sm-3 text-center" style="position: relative; margin-left: auto; margin-right: auto; height: 200px;">
             <img class="star" src="star1.png" />
             <img class="star" src="star1.png" />
             <img class="star" src="star1.png" />
             <img class="star" src="star1.png" />
             <img class="star" src="star1.png" />
+            <img class="star" src="star1.png" />
+            <img class="star" src="redstar1.png" />
+            <img class="star" src="redstar1.png" />
+            <img class="star" src="redstar1.png" />
         </div>
     </div>
     <div class="row">
@@ -325,13 +331,13 @@
 
         var x = 0;
         $('.star').each(function() {
-            $(this).css('top', randomNumber(40));
+            $(this).css('top', 10+randomNumber(150));
             $(this).css('left', x + randomNumber(25));
             $(this).css('width', 10 + randomNumber(30));
             $(this).data("growing", true);
             $(this).data("x", $(this).position().left);
             $(this).data("y", $(this).position().top);
-            x+=40;
+            x+=30;
         });
 
         window.setInterval(function() {
