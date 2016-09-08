@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Little Family Tree - Relative Rescue</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="littlefamily.css">
+
+    <link rel="shortcut icon" type="image/png" href="littlefamilytree_icon_small.png" />
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        .row {
+            margin-bottom: 20px;
+        }
+        .guide-image {
+            width: 100%;
+            max-width: 500px;
+        }
+    </style>
+</head>
+<body>
+<nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="socialbuttons">
+            <a class="socialmedia" href="http://www.facebook.com/LittleFamilyTree" title="Visit Little Family Tree on Facebook"><i class="fa fa-facebook-square"></i></a>
+        </div>
+        <div class="navbar-header">
+            <a class="navbar-brand page-scroll" href="index.html">
+                <img class="icon" src="home.png" border="0" height="45" />
+                <!-- Little Family Tree -->
+            </a>
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-left">
+
+                <li>
+                    <a class="page-scroll" href="index.html">Home</a>
+                </li>
+                <!--
+                <li>
+                    <a class="page-scroll" href="index.html#video">Video</a>
+                </li>
+                -->
+                <li>
+                    <a class="page-scroll" href="parentsguide.html">Parent's Guide</a>
+                </li>
+                <li>
+                    <a class="page-scroll selected" href="index.html#games">Games</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="familysearch.html">FamilySearch</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="index.html#about">About Us</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="localevents.html">Local Event Resources</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+<div class="content-start container">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 text-center">
+            <h2 class="section-heading"><img src="game_icons/house_tree_bird.png" height="100" />&nbsp; Relative Rescue</h2>
+            <hr class="primary">
+            <p>&nbsp;</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 col-lg-offset-1">
+            <p>
+                This activity is designed to reinforce name to picture associations for your relatives in a fun
+                fast-paced game.  When the game starts you will see the happy bird standing in a tree
+                surrounded by your relatives on leaves of the tree. Then a grumpy cloud comes along
+                and blows the leaves off of the tree.  You may skip this animation sequence and jump
+                right into the game by tapping the arrow button in bottom right of the screen
+            </p>
+            <p>
+                Your role in the game is to rescue your relatives by guiding the flying bird to collect
+                the leaves of your relatives. You may move the bird around screen by tilting your device
+                in the direction you would like the bird to fly.
+                When a leaf is collected the game will say the name of
+                the relative who was rescued and put them in your rescued collection. If a leaf
+                falls all of the way to the bottom of the screen without being collected by the bird
+                the leaf will turn red and be put in the missed collection.  The game ends when you
+                miss 3 leaves.
+            </p>
+            <p>
+                Sometimes the grumpy cloud will appear on the side of the screen and blow
+                your bird toward the other edge of the screen.  As you collect more leaves, the
+                faster new leaves will begin to fall, making them harder to catch.
+            </p>
+        </div>
+        <div class="col-sm-4 text-center">
+            <div class="game-video embed-responsive embed-responsive-16by9">
+                <iframe class="embed-responsive-item" width="380" height="285" src="https://www.youtube.com/embed/6YdVmS1Q2NE?rel=0" frameborder="0" allowfullscreen></iframe>
+            </div>
+            <a href="Screenshot_tree.png"><img class="guide-image" src="Screenshot_tree.png" border="0"/></a>
+        </div>
+    </div>
+    <div class="row">
+        <p>&nbsp;<!-- footer --></p>
+    </div>
+</div>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<!-- Plugin JavaScript -->
+<script src="jquery.easing.min.js"></script>
+
+<script>
+    function randomNumber(max) {
+        return Math.floor((Math.random() * max));
+    }
+
+    $(document).ready(function() {
+        // jQuery for page scrolling feature - requires jQuery Easing plugin
+        $('a.page-scroll').bind('click', function(event) {
+            var $anchor = $(this);
+            $('html, body').stop().animate({
+                scrollTop: ($($anchor.attr('href')).offset().top - 50)
+            }, 1250, 'easeInOutExpo');
+            event.preventDefault();
+        });
+    });
+</script>
+</body>
+</html>

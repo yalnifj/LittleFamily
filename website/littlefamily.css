@@ -181,6 +181,11 @@ header .header-content, section .container, section .container-fluid{
     background-image: url("game_icons/dressup_background.png");
 }
 
+#rescue-box {
+    background-image: url("game_icons/tree_background.png");
+    background-size: cover;
+}
+
 #parentsguide-box {
     background-image: url("game_icons/parentsguide_background.png");
     background-size: cover;
@@ -237,6 +242,12 @@ header .header-content, section .container, section .container-fluid{
 #birthday {
     position: relative;
     top: 20%;
+}
+
+#rescue {
+    position: relative;
+    top: 15%;
+    left: -10px;
 }
 
 .game-box {
