@@ -1,9 +1,11 @@
 package com.yellowforktech.littlefamilytree.activities;
 
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
@@ -50,6 +52,8 @@ public class LittleFamilyBillingActivity extends LittleFamilyActivity {
     protected boolean isAmazon = false;
     protected boolean noBilling = false;
 
+    protected PromoCodeReceiver myPromoReceiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +88,22 @@ public class LittleFamilyBillingActivity extends LittleFamilyActivity {
     protected void onResume() {
         super.onResume();
         connectToStore();
+
+        if (myPromoReceiver==null) {
+            myPromoReceiver = new PromoCodeReceiver();
+        }
+        IntentFilter promoFilter =
+                new IntentFilter("com.android.vending.billing.PURCHASES_UPDATED");
+        registerReceiver(myPromoReceiver, promoFilter);
+    }
+
+    /**
+     * Dispatch onPause() to fragments.
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myPromoReceiver);
     }
 
     public void connectToStore() {
@@ -417,6 +437,13 @@ public class LittleFamilyBillingActivity extends LittleFamilyActivity {
                     Toast.makeText(LittleFamilyBillingActivity.this, "Unable to restore purchases", Toast.LENGTH_LONG);
                     break;
             }
+        }
+    }
+
+    class PromoCodeReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            restorePurchases();
         }
     }
 }
