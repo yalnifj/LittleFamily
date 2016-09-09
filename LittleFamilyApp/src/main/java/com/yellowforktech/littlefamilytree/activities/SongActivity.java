@@ -48,6 +48,7 @@ public class SongActivity extends LittleFamilyBillingActivity implements TreeWal
     protected void onStart() {
         super.onStart();
         DataService.getInstance().registerNetworkStateListener(this);
+        showLoadingDialog();
         treeWalker.loadFamilyMembers();
     }
 
@@ -78,6 +79,7 @@ public class SongActivity extends LittleFamilyBillingActivity implements TreeWal
     @Override
     public void onComplete(List<LittlePerson> people) {
         view.setFamily(people);
+        hideLoadingDialog();
         checkPremium("song_game");
     }
 
