@@ -102,6 +102,20 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
 		System.gc();
         successPlayer = MediaPlayer.create(this, R.raw.powerup_success);
         buzzPlayer = MediaPlayer.create(this, R.raw.beepboop);
+    }
+
+    /**
+     * Dispatch onResume() to fragments.  Note that for better inter-operation
+     * with older versions of the platform, at the point of this call the
+     * fragments attached to the activity are <em>not</em> resumed.  This means
+     * that in some cases the previous state may still be saved, not allowing
+     * fragment transactions that modify the state.  To correctly interact
+     * with fragments in their proper state, you should instead override
+     * {@link #onResumeFragments()}.
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
         EventQueue.getInstance().subscribe(TOPIC_START_MATCH, this);
         EventQueue.getInstance().subscribe(TOPIC_START_COLORING, this);
         EventQueue.getInstance().subscribe(TOPIC_START_DRESSUP, this);
@@ -114,7 +128,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         EventQueue.getInstance().subscribe(TOPIC_START_SONG, this);
         EventQueue.getInstance().subscribe(TOPIC_START_FLYING, this);
         EventQueue.getInstance().subscribe(TOPIC_START_BIRTHDAY_CARD, this);
-		EventQueue.getInstance().subscribe(TOPIC_START_PROFILE, this);
+        EventQueue.getInstance().subscribe(TOPIC_START_PROFILE, this);
     }
 
     @Override
@@ -128,6 +142,14 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
             buzzPlayer.release();
             buzzPlayer = null;
         }
+    }
+
+    /**
+     * Dispatch onPause() to fragments.
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
         EventQueue.getInstance().unSubscribe(TOPIC_START_MATCH, this);
         EventQueue.getInstance().unSubscribe(TOPIC_START_COLORING, this);
         EventQueue.getInstance().unSubscribe(TOPIC_START_DRESSUP, this);
@@ -140,7 +162,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         EventQueue.getInstance().unSubscribe(TOPIC_START_SONG, this);
         EventQueue.getInstance().unSubscribe(TOPIC_START_FLYING, this);
         EventQueue.getInstance().unSubscribe(TOPIC_START_BIRTHDAY_CARD, this);
-		EventQueue.getInstance().unSubscribe(TOPIC_START_PROFILE, this);
+        EventQueue.getInstance().unSubscribe(TOPIC_START_PROFILE, this);
     }
 
     @Override

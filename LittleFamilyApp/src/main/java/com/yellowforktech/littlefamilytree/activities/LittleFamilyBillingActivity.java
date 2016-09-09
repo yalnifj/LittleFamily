@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -27,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jfinlay on 8/29/2016.
@@ -38,6 +40,7 @@ public class LittleFamilyBillingActivity extends LittleFamilyActivity {
     private ServiceConnection mServiceConn;
     private boolean connecting;
     protected boolean isAmazon = false;
+    protected boolean noBilling = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +112,13 @@ public class LittleFamilyBillingActivity extends LittleFamilyActivity {
             Intent serviceIntent =
                     new Intent("com.android.vending.billing.InAppBillingService.BIND");
             serviceIntent.setPackage("com.android.vending");
-            bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
+            List<ResolveInfo> intentServices = getPackageManager().queryIntentServices(serviceIntent, 0);
+            if (intentServices != null && !intentServices.isEmpty()) {
+                bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
+            } else {
+                Log.e(this.getClass().getName(), "No billing services availabe on device.");
+                noBilling = true;
+            }
         }
     }
 
@@ -226,38 +235,40 @@ public class LittleFamilyBillingActivity extends LittleFamilyActivity {
     public void restorePurchases() {
         waitForConnect();
         try {
-            Bundle ownedItems = mService.getPurchases(3, getPackageName(), "inapp", null);
-            int response = ownedItems.getInt("RESPONSE_CODE");
-            if (response == 0) {
-                ArrayList<String> ownedSkus =
-                        ownedItems.getStringArrayList("INAPP_PURCHASE_ITEM_LIST");
-                ArrayList<String> purchaseDataList =
-                        ownedItems.getStringArrayList("INAPP_PURCHASE_DATA_LIST");
-                ArrayList<String> signatureList =
-                        ownedItems.getStringArrayList("INAPP_DATA_SIGNATURE_LIST");
-                //String continuationToken =
-                //        ownedItems.getString("INAPP_CONTINUATION_TOKEN");
+            if (mService!=null) {
+                Bundle ownedItems = mService.getPurchases(3, getPackageName(), "inapp", null);
+                int response = ownedItems.getInt("RESPONSE_CODE");
+                if (response == 0) {
+                    ArrayList<String> ownedSkus =
+                            ownedItems.getStringArrayList("INAPP_PURCHASE_ITEM_LIST");
+                    ArrayList<String> purchaseDataList =
+                            ownedItems.getStringArrayList("INAPP_PURCHASE_DATA_LIST");
+                    ArrayList<String> signatureList =
+                            ownedItems.getStringArrayList("INAPP_DATA_SIGNATURE_LIST");
+                    //String continuationToken =
+                    //        ownedItems.getString("INAPP_CONTINUATION_TOKEN");
 
-                boolean found = false;
-                for (int i = 0; i < purchaseDataList.size(); ++i) {
-                    String purchaseData = purchaseDataList.get(i);
-                    String signature = signatureList.get(i);
-                    String sku = ownedSkus.get(i);
+                    boolean found = false;
+                    for (int i = 0; i < purchaseDataList.size(); ++i) {
+                        String purchaseData = purchaseDataList.get(i);
+                        String signature = signatureList.get(i);
+                        String sku = ownedSkus.get(i);
 
-                    if (sku != null && sku.equals(SKU_PREMIUM)) {
-                        try {
-                            grantPremium();
-                        } catch (Exception e) {
-                            Log.e(this.getClass().getName().toString(), "Error starting purchase intent", e);
+                        if (sku != null && sku.equals(SKU_PREMIUM)) {
+                            try {
+                                grantPremium();
+                            } catch (Exception e) {
+                                Log.e(this.getClass().getName().toString(), "Error starting purchase intent", e);
+                            }
                         }
+
+                        // do something with this purchase information
+                        // e.g. display the updated list of products owned by user
                     }
 
-                    // do something with this purchase information
-                    // e.g. display the updated list of products owned by user
+                    // if continuationToken != null, call getPurchases again
+                    // and pass in the token to retrieve more items
                 }
-
-                // if continuationToken != null, call getPurchases again
-                // and pass in the token to retrieve more items
             }
         } catch (RemoteException e) {
             Log.e(this.getClass().getName().toString(), "Error starting purchase intent", e);
@@ -274,7 +285,7 @@ public class LittleFamilyBillingActivity extends LittleFamilyActivity {
                 connectToStore();
             }
             int tries = 0;
-            while(mService==null && tries < 300) {
+            while(mService==null && tries < 100 && !noBilling) {
                 try {
                     Thread.sleep(200);
                     tries++;

@@ -272,8 +272,8 @@ public class HomeActivity extends LittleFamilyActivity {
                             float y = (85 + r * tileBm.getHeight()) * dm.density;
                             tile.setX(x);
                             tile.setY(y);
-                            tile.setWidth((int) (tileBm.getWidth() * dm.density));
-                            tile.setHeight((int) (tileBm.getHeight()* dm.density));
+                            tile.setWidth(Math.round(tileBm.getWidth() * dm.density));
+                            tile.setHeight(Math.round(tileBm.getHeight()* dm.density));
                             homeView.addSprite(tile);
                         }
                     } catch (FileNotFoundException e) {
