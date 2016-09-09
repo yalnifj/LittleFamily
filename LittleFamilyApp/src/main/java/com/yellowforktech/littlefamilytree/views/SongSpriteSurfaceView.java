@@ -254,7 +254,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
                             DraggablePersonSprite ds = null;
                             if (nextPerson < onStage.size()) {
                                 ds = onStage.get(nextPerson);
-                            } else {
+                            } else if (onStage.size()>0) {
                                 ds = onStage.get(onStage.size() - 1);
                             }
                             if (ds != null) {

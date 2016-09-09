@@ -34,6 +34,7 @@ public class ParentsGuideDialog extends DialogFragment {
             R.layout.fragment_pg_playtogether,
             R.layout.fragment_pg_chooseplayer,
             R.layout.fragment_pg_home,
+            R.layout.fragment_pg_stars,
             R.layout.fragment_pg_settings,
             R.layout.fragment_pg_kidheritage
     };

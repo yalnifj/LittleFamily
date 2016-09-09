@@ -13,6 +13,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,7 +92,8 @@ public class FireHelper implements FirebaseAuth.AuthStateListener {
                     } else {
                         Map<String, Object> user = new HashMap<>();
                         user.put("username", username);
-                        String[] platforms = {"android"};
+                        List<String> platforms = new ArrayList<>(1);
+                        platforms.add("android");
                         user.put("platforms", platforms);
                         user.put("androidPremium", isPremium);
                         database.child("users").child(serviceType).child(username).setValue(user);
