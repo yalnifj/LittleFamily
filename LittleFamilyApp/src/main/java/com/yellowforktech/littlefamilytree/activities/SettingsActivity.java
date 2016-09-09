@@ -217,8 +217,14 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
         if (versionPref!=null) {
             try {
                 String versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+                String premStr = DataService.getInstance().getDBHelper().getProperty(LittleFamilyActivity.PROP_HAS_PREMIUM);
+                if ("true".equals(premStr)) {
+                    versionName += " Premium";
+                }
                 versionPref.setSummary(versionName);
             } catch (PackageManager.NameNotFoundException e) {
+                Log.e(this.getClass().getSimpleName(), "Error getting version number", e);
+            } catch (Exception e) {
                 Log.e(this.getClass().getSimpleName(), "Error getting version number", e);
             }
         }
