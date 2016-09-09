@@ -32,7 +32,7 @@ import java.util.ArrayList;
  * Created by jfinlay on 8/29/2016.
  */
 public class LittleFamilyBillingActivity extends LittleFamilyActivity {
-    protected final String SKU_PREMIUM = "LFTPremium";
+    protected final String SKU_PREMIUM = "lftpremium";
     protected IInAppBillingService mService;
 
     private ServiceConnection mServiceConn;
