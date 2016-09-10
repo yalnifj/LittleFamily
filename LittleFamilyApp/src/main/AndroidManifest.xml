@@ -1,65 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.yellowforktech.littlefamilytree">
+<manifest package="com.yellowforktech.littlefamilytree"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-sdk android:minSdkVersion="15" />
+    <uses-sdk android:minSdkVersion="15"/>
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="com.android.vending.BILLING" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="com.android.vending.BILLING"/>
 
     <uses-feature
         android:name="android.hardware.microphone"
-        android:required="false" />
+        android:required="false"/>
 
     <application
+        android:name="android.support.multidex.MultiDexApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"
-        android:name="android.support.multidex.MultiDexApplication">
+        android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen">
         <activity
             android:name=".activities.SplashActivity"
             android:label="@string/app_name">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".activities.ChooseFamilyMember"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"/>
         <activity
             android:name=".activities.FSLoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_fslogin"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".activities.PGVLoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_pgvlogin"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".activities.MatchGameActivity"
-            android:label="@string/title_activity_match_game" />
+            android:label="@string/title_activity_match_game"/>
         <activity
             android:name=".activities.ChooseGameActivity"
-            android:label="@string/title_activity_choose_game" />
+            android:label="@string/title_activity_choose_game"/>
         <activity
             android:name=".activities.ScratchGameActivity"
             android:label="@string/title_activity_scratch_game"
             android:parentActivityName=".activities.ChooseGameActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.yellowforktech.littlefamilytree.activities.ChooseGameActivity" />
+                android:value="com.yellowforktech.littlefamilytree.activities.ChooseGameActivity"/>
         </activity>
         <activity
             android:name=".activities.ColoringGameActivity"
@@ -68,7 +68,7 @@
             android:parentActivityName=".activities.ChooseGameActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.yellowforktech.littlefamilytree.activities.ChooseGameActivity" />
+                android:value="com.yellowforktech.littlefamilytree.activities.ChooseGameActivity"/>
         </activity>
         <activity
             android:name=".activities.HeritageDressUpActivity"
@@ -76,7 +76,7 @@
             android:parentActivityName=".activities.ChooseCultureActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.yellowforktech.littlefamilytree.activities.ChooseCultureActivity" />
+                android:value="com.yellowforktech.littlefamilytree.activities.ChooseCultureActivity"/>
         </activity>
         <activity
             android:name=".activities.ChooseCultureActivity"
@@ -84,32 +84,32 @@
             android:parentActivityName=".activities.ChooseGameActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.yellowforktech.littlefamilytree.activities.ChooseGameActivity" />
+                android:value="com.yellowforktech.littlefamilytree.activities.ChooseGameActivity"/>
         </activity>
         <activity
             android:name=".activities.ChooseRemoteService"
-            android:label="@string/title_activity_choose_remote_service" />
+            android:label="@string/title_activity_choose_remote_service"/>
         <activity
             android:name=".activities.SettingsActivity"
-            android:label="@string/title_activity_settings" />
+            android:label="@string/title_activity_settings"/>
         <activity
             android:name=".activities.PuzzleGameActivity"
             android:label="@string/title_activity_puzzle_game"
             android:parentActivityName=".activities.ChooseGameActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.yellowforktech.littlefamilytree.activities.ChooseGameActivity" />
+                android:value="com.yellowforktech.littlefamilytree.activities.ChooseGameActivity"/>
         </activity>
         <activity
             android:name=".activities.HomeActivity"
-            android:label="@string/title_activity_home" />
+            android:label="@string/title_activity_home"/>
         <activity
             android:name=".activities.MyTreeActivity"
             android:label="@string/title_activity_my_tree"
             android:parentActivityName=".activities.HomeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.yellowforktech.littlefamilytree.activities.HomeActivity" />
+                android:value="com.yellowforktech.littlefamilytree.activities.HomeActivity"/>
         </activity>
         <activity
             android:name=".activities.BubblePopActivity"
@@ -118,11 +118,11 @@
             android:parentActivityName=".activities.HomeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.yellowforktech.littlefamilytree.activities.HomeActivity" />
+                android:value="com.yellowforktech.littlefamilytree.activities.HomeActivity"/>
         </activity>
         <activity
             android:name=".activities.PersonSearchActivity"
-            android:label="@string/title_activity_person_search" />
+            android:label="@string/title_activity_person_search"/>
         <activity
             android:name=".activities.SongActivity"
             android:label="@string/title_activity_song"
@@ -130,11 +130,11 @@
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.yellowforktech.littlefamilytree.activities.HomeActivity" />
+                android:value="com.yellowforktech.littlefamilytree.activities.HomeActivity"/>
         </activity>
         <activity
             android:name=".activities.ParentsGuideActivity"
-            android:label="@string/title_activity_parents_guide" />
+            android:label="@string/title_activity_parents_guide"/>
         <activity
             android:name=".activities.FlyingActivity"
             android:label="@string/title_activity_flying"
@@ -142,11 +142,11 @@
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.yellowforktech.littlefamilytree.activities.HomeActivity" />
+                android:value="com.yellowforktech.littlefamilytree.activities.HomeActivity"/>
         </activity>
         <activity
             android:name=".activities.MyHeritageLoginActivity"
-            android:label="@string/title_activity_my_heritage_login" />
+            android:label="@string/title_activity_my_heritage_login"/>
         <activity
             android:name=".activities.BirthdayCardActivity"
             android:label="@string/title_activity_birthday_card"
@@ -154,40 +154,42 @@
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.yellowforktech.littlefamilytree.activities.HomeActivity" />
+                android:value="com.yellowforktech.littlefamilytree.activities.HomeActivity"/>
         </activity>
-
         <activity
             android:name=".activities.RestorePurchases"
             android:label="@string/title_activity_restore_purchases"
             android:parentActivityName=".activities.SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.yellowforktech.littlefamilytree.activities.SettingsActivity" />
+                android:value="com.yellowforktech.littlefamilytree.activities.SettingsActivity"/>
         </activity>
 
         <service
             android:name=".events.LittleFamilyNotificationService"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true"/>
 
         <receiver
             android:name=".events.AutoStartNotifyReceiver"
             android:label="@string/app_name">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </receiver>
-
         <receiver android:name="com.amazon.device.iap.ResponseReceiver">
             <intent-filter>
-                <action android:name="com.amazon.inapp.purchasing.NOTIFY" android:permission="com.amazon.inapp.purchasing.Permission.NOTIFY">
+                <action
+                    android:name="com.amazon.inapp.purchasing.NOTIFY"
+                    android:permission="com.amazon.inapp.purchasing.Permission.NOTIFY">
                 </action>
             </intent-filter>
         </receiver>
 
+        <activity android:name=".activities.NewSettingsActivity">
+        </activity>
     </application>
 
 </manifest>

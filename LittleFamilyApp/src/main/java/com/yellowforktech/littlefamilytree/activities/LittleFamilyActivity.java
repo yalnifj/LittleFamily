@@ -497,7 +497,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
 	public class SettingsAction implements AdultsAuthDialog.AuthCompleteAction {
 		public void doAction(boolean success) {
 			if (success) {
-				Intent intent = new Intent(LittleFamilyActivity.this, SettingsActivity.class);
+				Intent intent = new Intent(LittleFamilyActivity.this, NewSettingsActivity.class);
                 intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, selectedPerson);
 				startActivity(intent);
 			} else {

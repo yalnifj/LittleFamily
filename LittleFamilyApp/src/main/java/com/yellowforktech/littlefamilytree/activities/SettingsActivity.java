@@ -19,7 +19,6 @@ import android.util.Log;
 
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.data.DataService;
-import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.events.AutoStartNotifyReceiver;
 
 import java.util.List;
@@ -47,7 +46,7 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
     private static final boolean ALWAYS_SIMPLE_PREFS = false;
     protected TextToSpeech tts;
     protected ListPreference voicePref;
-    protected static LittlePerson selectedPerson;
+    protected static com.yellowforktech.littlefamilytree.data.LittlePerson selectedPerson;
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -56,7 +55,7 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
         tts = new TextToSpeech(this, this);
 
         Intent intent = getIntent();
-        selectedPerson = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
+        selectedPerson = (com.yellowforktech.littlefamilytree.data.LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
 
         setupSimplePreferencesScreen();
     }

@@ -163,7 +163,12 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
             }
 
             if (family.size()<=1) {
-                family.addAll(familyMembers);
+                //family.addAll(familyMembers);
+                for(LittlePerson p : familyMembers) {
+                    if (!this.family.contains(p)) {
+                        this.family.add(p);
+                    }
+                }
             }
 
             //-- get grandchildren

@@ -1181,7 +1181,7 @@ public class DataService implements AuthTask.Listener {
                                             String fileName = sd.getId()+"-"+DataHelper.lastPath(link.getHref().toString());
                                             File localFile = DataHelper.getImageFile(folderName, fileName, context);
                                             String localPath = null;
-                                            if (!localFile.exists()) {
+                                            if (localFile==null || !localFile.exists()) {
                                                 localPath = DataHelper.downloadFile(link.getHref().toString(), folderName, fileName, remoteService, context);
                                             } else {
                                                 localPath = localFile.getAbsolutePath();
