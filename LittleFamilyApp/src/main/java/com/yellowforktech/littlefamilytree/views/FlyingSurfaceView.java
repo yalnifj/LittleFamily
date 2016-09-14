@@ -66,6 +66,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
     private List<FlyingPersonLeafSprite> peopleSprites;
     private List<FlyingPersonLeafSprite> nestSprites;
     private List<FlyingPersonLeafSprite> missedSprites;
+    private AnimatedBitmapSprite exampleSprite;
 
     private List<LittlePerson> family;
     private Set<LittlePerson> inNest;
@@ -266,14 +267,14 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
             birdState3.add(BitmapFactory.decodeResource(getResources(), R.drawable.house_tree_bird7));
             bird.getBitmaps().put(3, birdState3);
 
-            animator.addTiming(2000, bird, 1);
+            animator.addTiming(100, bird, 1);
+            animator.addTiming(600, bird, 2);
+            animator.addTiming(1500, bird, 1);
+            animator.addTiming(2000, bird, 2);
+            animator.addTiming(1500, bird, 3);
+            animator.addAudioTiming(1500, R.raw.bird, getContext());
             animator.addTiming(2500, bird, 2);
-            animator.addTiming(5000, bird, 1);
-            animator.addTiming(5500, bird, 2);
-            animator.addTiming(6000, bird, 3);
-            animator.addAudioTiming(6000, R.raw.bird, getContext());
-            animator.addTiming(7000, bird, 2);
-            animator.addTiming(15000, bird, 2);
+            animator.addTiming(10500, bird, 2);
 
             Bitmap leaf = BitmapFactory.decodeResource(getResources(), R.drawable.leaf_stem);
 
@@ -312,8 +313,8 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                     leaf1.setMatrix(m);
                     addSprite(leaf1);
                     peopleSprites.add(leaf1);
-                    animator.addTiming(10000, leaf1, 1);
-                    animator.addTiming(12000 + random.nextInt(1500), leaf1, 2);
+                    animator.addTiming(7000, leaf1, 1);
+                    animator.addTiming(88000 + random.nextInt(1500), leaf1, 2);
                 }
 
                 float[][] smallleaves = new float[4][];
@@ -341,8 +342,8 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                     leaf1.setBaseRotate(smallleaves[f][2]);
                     addSprite(leaf1);
                     peopleSprites.add(leaf1);
-                    animator.addTiming(10000, leaf1, 1);
-                    animator.addTiming(11500 + random.nextInt(1000), leaf1, 2);
+                    animator.addTiming(7000, leaf1, 1);
+                    animator.addTiming(8000 + random.nextInt(1000), leaf1, 2);
                 }
 
                 addSprite(bird);
@@ -403,19 +404,19 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
 
                 addSprite(cloud);
 
-                animator.addTiming(1000, cloud, 1);
-                animator.addTiming(5000, cloud, 2);
-                animator.addTiming(7500, cloud, 3);
-                animator.addAudioTiming(7500, R.raw.grumble, getContext());
-                animator.addTiming(10000, cloud, 4);
-                animator.addAudioTiming(10000, R.raw.blowing, getContext());
-                animator.addTiming(10900, cloud, 5);
-                animator.addTiming(14000, cloud, 6);
-                animator.addTiming(14300, cloud, 7);
-                animator.addTiming(15500, cloud, 8);
-                animator.addAudioTiming(15000, R.raw.humph, getContext());
-                animator.addTiming(15800, cloud, 9);
-                animator.addTiming(22000, cloud, 9);
+                animator.addTiming(100, cloud, 1);
+                animator.addTiming(2600, cloud, 2);
+                animator.addTiming(3500, cloud, 3);
+                animator.addAudioTiming(3500, R.raw.grumble, getContext());
+                animator.addTiming(6000, cloud, 4);
+                animator.addAudioTiming(6200, R.raw.blowing, getContext());
+                animator.addTiming(7500, cloud, 5);
+                animator.addTiming(11000, cloud, 6);
+                animator.addTiming(11300, cloud, 7);
+                animator.addTiming(12500, cloud, 8);
+                animator.addAudioTiming(12000, R.raw.humph, getContext());
+                animator.addTiming(12800, cloud, 9);
+                animator.addTiming(15000, cloud, 9);
 
                 TouchEventGameSprite skipButton = new TouchEventGameSprite(
                         BitmapFactory.decodeResource(getResources(), android.R.drawable.ic_media_next),
@@ -532,6 +533,16 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
             leaves.add(ImageHelper.loadBitmapFromResource(getContext(), R.drawable.leafb1, 0, (int) (bird.getWidth()*0.8), (int) (bird.getWidth()*0.8)));
             leaves.add(ImageHelper.loadBitmapFromResource(getContext(), R.drawable.leafb2, 0, (int) (bird.getWidth()*0.8), (int) (bird.getWidth()*0.8)));
 
+            Bitmap device = BitmapFactory.decodeResource(context.getResources(), R.drawable.device2);
+            exampleSprite = new AnimatedBitmapSprite(device);
+            exampleSprite.setX(this.getWidth() / 2 - device.getWidth() / 2);
+            exampleSprite.setY(this.getHeight() - device.getHeight());
+            exampleSprite.addBitmap(0, BitmapFactory.decodeResource(context.getResources(), R.drawable.device1));
+            exampleSprite.addBitmap(0, BitmapFactory.decodeResource(context.getResources(), R.drawable.device3));
+            exampleSprite.setBounce(true);
+            exampleSprite.setState(0);
+            addSprite(exampleSprite);
+
             activity.speak(getResources().getString(R.string.relative_rescue));
             spritesCreated = true;
         }
@@ -552,6 +563,10 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
     }
 
     public void addRandomPersonSprite() {
+        if (exampleSprite != null) {
+            removeSprite(exampleSprite);
+            exampleSprite = null;
+        }
         if (family!=null && family.size()>0) {
             if (inNest.size() > family.size()/2) {
                 activity.loadMorePeople();
