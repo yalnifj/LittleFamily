@@ -180,7 +180,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
     @Override
     public void resume() {
         super.resume();
-        mSensorManager.registerListener(this, rotation, SensorManager.SENSOR_DELAY_GAME);
+        if (rotation!=null) mSensorManager.registerListener(this, rotation, SensorManager.SENSOR_DELAY_GAME);
     }
 
     @Override
@@ -876,10 +876,25 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
     @Override
     protected void touch_start(float x, float y) {
         super.touch_start(x, y);
+        if (rotation==null) {
+
+        }
+    }
+
+    @Override
+    protected void touch_move(float x, float y) {
+        super.touch_move(x, y);
+        if (rotation==null) {
+            //roll = x -
+        }
     }
 
     @Override
     protected void touch_up(float x, float y) {
         super.touch_up(x, y);
+        if (rotation==null) {
+            pitch = 70;
+            roll = 0;
+        }
     }
 }
