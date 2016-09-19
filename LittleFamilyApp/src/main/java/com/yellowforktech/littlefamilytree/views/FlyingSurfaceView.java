@@ -314,7 +314,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                     addSprite(leaf1);
                     peopleSprites.add(leaf1);
                     animator.addTiming(7000, leaf1, 1);
-                    animator.addTiming(88000 + random.nextInt(1500), leaf1, 2);
+                    animator.addTiming(8800 + random.nextInt(1500), leaf1, 2);
                 }
 
                 float[][] smallleaves = new float[4][];
@@ -359,9 +359,9 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                 cloud.setIgnoreBounds(true);
                 cloud.setSpeed(0);
                 cloud.setSlope(0);
-                cloud.setWidth((int) (getWidth() * 1.6f));
+                cloud.setWidth((int) (getWidth() * 1.5f));
                 cloud.setHeight((int) (cloud.getWidth() / cr));
-                cloud.setX(-cloud.getWidth() / 1.6f);
+                cloud.setX(-cloud.getWidth() / 1.5f);
                 cloud.setY(branch1.getY() - cloud.getHeight()/3);
 
                 cloud.addBitmap(1, bcloud);
@@ -533,15 +533,17 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
             leaves.add(ImageHelper.loadBitmapFromResource(getContext(), R.drawable.leafb1, 0, (int) (bird.getWidth()*0.8), (int) (bird.getWidth()*0.8)));
             leaves.add(ImageHelper.loadBitmapFromResource(getContext(), R.drawable.leafb2, 0, (int) (bird.getWidth()*0.8), (int) (bird.getWidth()*0.8)));
 
-            Bitmap device = BitmapFactory.decodeResource(context.getResources(), R.drawable.device2);
-            exampleSprite = new AnimatedBitmapSprite(device);
-            exampleSprite.setX(this.getWidth() / 2 - device.getWidth() / 2);
-            exampleSprite.setY(this.getHeight() - device.getHeight());
-            exampleSprite.addBitmap(0, BitmapFactory.decodeResource(context.getResources(), R.drawable.device1));
-            exampleSprite.addBitmap(0, BitmapFactory.decodeResource(context.getResources(), R.drawable.device3));
-            exampleSprite.setBounce(true);
-            exampleSprite.setState(0);
-            addSprite(exampleSprite);
+            if (rotation!=null) {
+                Bitmap device = BitmapFactory.decodeResource(context.getResources(), R.drawable.device2);
+                exampleSprite = new AnimatedBitmapSprite(device);
+                exampleSprite.setX(this.getWidth() / 2 - device.getWidth() / 2);
+                exampleSprite.setY(this.getHeight() - device.getHeight());
+                exampleSprite.addBitmap(0, BitmapFactory.decodeResource(context.getResources(), R.drawable.device1));
+                exampleSprite.addBitmap(0, BitmapFactory.decodeResource(context.getResources(), R.drawable.device3));
+                exampleSprite.setBounce(true);
+                exampleSprite.setState(0);
+                addSprite(exampleSprite);
+            }
 
             activity.speak(getResources().getString(R.string.relative_rescue));
             spritesCreated = true;
@@ -608,9 +610,9 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
         cloud.setState(0);
         cloud.setRemoveMe(false);
 
-        windPower = 5 + random.nextInt(3);
+        windPower = 6 + random.nextInt(3);
         float cr = (float)(cloud.getWidth()) /(float)( cloud.getHeight());
-        cloud.setWidth((int) ((getWidth() / 2.5f) + ((getWidth()/4f) * Math.abs(windPower)/7f)));
+        cloud.setWidth((int) ((getWidth() / 2.5f) + (getWidth()/4f) ));
         cloud.setHeight((int) (cloud.getWidth() / cr));
 
         if (random.nextFloat() > 0.5) {
@@ -811,7 +813,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                     if (animator.isFinished()) addRandomCloud();
                 }
             } else {
-                if (playAgain!=null) {
+                if (playAgain!=null && rotation!=null) {
                     playAgain.setX(pax - roll/2);
                     playAgain.setY(pay + pitch*1.5f);
                 }
@@ -877,7 +879,15 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
     protected void touch_start(float x, float y) {
         super.touch_start(x, y);
         if (rotation==null) {
+            float perc = (x - getWidth() / 2) / getWidth();
+            roll = -70 * perc;
 
+            float miny = getHeight() * 0.66f;
+            float ny = y;
+            if (ny < miny) ny = miny;
+            float h = (getHeight() - miny) / 2f;
+            float yp = (getHeight() - ny - (h / 2)) / h;
+            pitch = -70 * yp;
         }
     }
 
@@ -885,7 +895,15 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
     protected void touch_move(float x, float y) {
         super.touch_move(x, y);
         if (rotation==null) {
-            //roll = x -
+            float perc = (x - getWidth() / 2) / getWidth();
+            roll = -70 * perc;
+
+            float miny = getHeight() * 0.66f;
+            float ny = y;
+            if (ny < miny) ny = miny;
+            float h = (getHeight() - miny) / 2f;
+            float yp = (getHeight() - ny - (h / 2)) / h;
+            pitch = -70 * yp;
         }
     }
 

@@ -65,11 +65,11 @@ public class NewSettingsActivity extends Activity {
         txtSyncDelay.setText(syncDelayTitle);
 
         chkNotifications = (CheckBox) findViewById(R.id.chkNotifications);
-        Boolean enableNotifications = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("enable_notifications", false);
+        Boolean enableNotifications = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("enable_notifications", true);
         chkNotifications.setChecked(enableNotifications);
 
         chkShowStepChildren = (CheckBox) findViewById(R.id.chkShowStepChildren);
-        Boolean showStepChildren = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("show_step_children", false);
+        Boolean showStepChildren = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("show_step_children", true);
         chkShowStepChildren.setChecked(showStepChildren);
 
         chkQuietMode = (CheckBox) findViewById(R.id.chkQuietMode);

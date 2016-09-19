@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
+import com.yellowforktech.littlefamilytree.db.FireHelper;
 import com.yellowforktech.littlefamilytree.events.EventQueue;
 import com.yellowforktech.littlefamilytree.sprites.AnimatedBitmapSprite;
 import com.yellowforktech.littlefamilytree.sprites.BirdSprite;
@@ -124,11 +125,20 @@ public class HomeActivity extends LittleFamilyActivity {
             homeBackground.setHeight(homeView.getHeight());
             homeView.setBackgroundSprite(homeBackground);
 
-            Bitmap starBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.star1);
+            final Bitmap starBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.star1);
             homeView.setStarBitmap(starBitmap);
 
-            Bitmap redStarBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.redstar1);
-            homeView.setRedStarBitmap(redStarBitmap);
+            userHasPremium(new FireHelper.PremiumListener() {
+                @Override
+                public void results(boolean premium) {
+                    if (premium) {
+                        homeView.setRedStarBitmap(starBitmap);
+                    } else {
+                        Bitmap redStarBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.redstar1);
+                        homeView.setRedStarBitmap(redStarBitmap);
+                    }
+                }
+            });
 			
 			if (selectedPerson!=null) {
 				Bitmap photo = null;

@@ -105,16 +105,18 @@ public class HomeView extends ScaledSpritedClippedSurfaceView {
                             (int) (activeSprite.getY() + activeSprite.getHeight()));
                     addStars(r, true, starCount);
                 } else {
-                    int activity = random.nextInt(premiumSprites.size());
-                    while (premiumSprites.get(activity) == activeSprite) {
-                        activity = random.nextInt(premiumSprites.size());
+                    if (redStarBitmap!=null) {
+                        int activity = random.nextInt(premiumSprites.size());
+                        while (premiumSprites.get(activity) == activeSprite) {
+                            activity = random.nextInt(premiumSprites.size());
+                        }
+                        activeSprite = premiumSprites.get(activity);
+                        int starCount = 4 + random.nextInt(2 + activeSprite.getHeight() / redStarBitmap.getHeight());
+                        Rect r = new Rect();
+                        r.set((int) activeSprite.getX(), (int) activeSprite.getY(), (int) (activeSprite.getX() + activeSprite.getWidth()),
+                                (int) (activeSprite.getY() + activeSprite.getHeight()));
+                        addRedStars(r, true, starCount);
                     }
-                    activeSprite = premiumSprites.get(activity);
-                    int starCount = 4 + random.nextInt(2 + activeSprite.getHeight() / redStarBitmap.getHeight());
-                    Rect r = new Rect();
-                    r.set((int) activeSprite.getX(), (int) activeSprite.getY(), (int) (activeSprite.getX() + activeSprite.getWidth()),
-                            (int) (activeSprite.getY() + activeSprite.getHeight()));
-                    addRedStars(r, true, starCount);
                 }
             }
             timer--;

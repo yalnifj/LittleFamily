@@ -15,7 +15,8 @@
         android:layout_height="fill_parent"
         android:id="@+id/scrollView3"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true">
+        android:layout_alignParentLeft="true"
+        android:layout_margin="10dp">
 
         <LinearLayout
             android:orientation="vertical"
@@ -27,13 +28,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:weightSum="1"
-                android:minHeight="50dp"
+                android:minHeight="60dp"
                 >
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="@string/pref_title_remote_service_type"
                     android:id="@+id/textView12"
                     android:layout_weight="1"
@@ -42,7 +43,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="Small Text"
                     android:id="@+id/remoteTreeTypeTxt"
                     android:layout_weight="0"
@@ -54,12 +55,12 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:minHeight="50dp">
+                android:minHeight="60dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="@string/pref_title_sync_data_background"
                     android:id="@+id/textView13"
                     android:layout_weight="1"
@@ -78,12 +79,12 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:minHeight="50dp">
+                android:minHeight="60dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="@string/pref_title_sync_data_cellular"
                     android:id="@+id/textView14"
                     android:layout_weight="1"
@@ -103,12 +104,12 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:minHeight="50dp">
+                android:minHeight="60dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="@string/pref_title_sync_delay"
                     android:id="@+id/textView15"
                     android:layout_weight="1"
@@ -118,7 +119,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="Small Text"
                     android:id="@+id/txtSyncDelay"
                     android:layout_weight="0"
@@ -131,12 +132,12 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:minHeight="50dp">
+                android:minHeight="60dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="@string/pref_title_notifications"
                     android:id="@+id/textView16"
                     android:layout_weight="1"
@@ -156,13 +157,13 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:minHeight="50dp"
+                android:minHeight="60dp"
                 >
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="@string/pref_title_show_step_children"
                     android:id="@+id/textView17"
                     android:layout_weight="1"
@@ -182,12 +183,12 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:minHeight="50dp">
+                android:minHeight="60dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="@string/pref_title_manage_people"
                     android:id="@+id/txtManagePeople"
                     android:layout_weight="1"
@@ -199,13 +200,13 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:minHeight="50dp"
+                android:minHeight="60dp"
                 >
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="@string/pref_title_quiet_mode"
                     android:id="@+id/textView19"
                     android:layout_weight="1"
@@ -225,12 +226,12 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:minHeight="50dp">
+                android:minHeight="60dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="@string/title_activity_parents_guide"
                     android:id="@+id/txtParentsGuide"
                     android:layout_weight="1"
@@ -241,12 +242,14 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:minHeight="50dp">
+                android:minHeight="60dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp">
 
                 <TextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="@string/pref_title_website"
                     android:id="@+id/txtWebsite"
                     android:layout_gravity="left|center_vertical"
@@ -266,12 +269,12 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:minHeight="50dp">
+                android:minHeight="60dp">
 
                 <TextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="@string/pref_title_restore_purchases"
                     android:id="@+id/txtRestore"
                     android:layout_gravity="left|center_vertical"
@@ -292,13 +295,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:weightSum="1"
-                android:minHeight="50dp"
+                android:minHeight="60dp"
+                android:layout_marginTop="5dp"
                 >
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="@string/pref_title_version"
                     android:id="@+id/textView21"
                     android:layout_weight="1"
@@ -307,7 +311,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="Small Text"
                     android:id="@+id/txtVersion"
                     android:layout_weight="0"

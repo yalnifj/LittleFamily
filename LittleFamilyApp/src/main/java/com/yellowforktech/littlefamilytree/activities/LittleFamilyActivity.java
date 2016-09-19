@@ -457,6 +457,13 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
                 @Override
                 public void results(boolean premium) {
                     hasPremium = premium;
+                    if (premium) {
+                        try {
+                            DataService.getInstance().getDBHelper().saveProperty(PROP_HAS_PREMIUM, "true");
+                        } catch (Exception e) {
+                            Log.e("LittleFamilyActivity", "Error getting property", e);
+                        }
+                    }
                     listener.results(hasPremium);
                 }
             });
