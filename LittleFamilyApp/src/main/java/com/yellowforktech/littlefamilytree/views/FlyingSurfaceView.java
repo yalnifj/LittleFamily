@@ -879,15 +879,13 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
     protected void touch_start(float x, float y) {
         super.touch_start(x, y);
         if (rotation==null) {
-            float perc = (x - getWidth() / 2) / getWidth();
-            roll = -70 * perc;
+            float percx = (x - bird.getX()) / getWidth();
+            roll = -70 * percx;
 
             float miny = getHeight() * 0.66f;
-            float ny = y;
-            if (ny < miny) ny = miny;
-            float h = (getHeight() - miny) / 2f;
-            float yp = (getHeight() - ny - (h / 2)) / h;
-            pitch = -70 * yp;
+            float h = (getHeight() - miny);
+            float percy = (Math.max(miny, y) - bird.getY()) / h;
+            pitch = -70 * percy;
         }
     }
 
@@ -895,15 +893,13 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
     protected void touch_move(float x, float y) {
         super.touch_move(x, y);
         if (rotation==null) {
-            float perc = (x - getWidth() / 2) / getWidth();
-            roll = -70 * perc;
+            float percx = (x - bird.getX()) / getWidth();
+            roll = -70 * percx;
 
             float miny = getHeight() * 0.66f;
-            float ny = y;
-            if (ny < miny) ny = miny;
-            float h = (getHeight() - miny) / 2f;
-            float yp = (getHeight() - ny - (h / 2)) / h;
-            pitch = -70 * yp;
+            float h = (getHeight() - miny);
+            float percy = (Math.max(miny, y) - bird.getY()) / h;
+            pitch = -70 * percy;
         }
     }
 
