@@ -350,8 +350,8 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
 
                 cutScenePlaying = true;
 
-                int w = getWidth()/3;
-                int h = getWidth()/3;
+                int w = (int) (getWidth()/3.5);
+                int h = (int) (getWidth()/3.5);
                 Bitmap bcloud = ImageHelper.loadBitmapFromResource(getContext(), R.drawable.cloud1, 0, w, h);
                 float cr = (float)(bcloud.getWidth()) /(float)( bcloud.getHeight());
                 cloud = new MovingAnimatedBitmapSprite(bcloud, getWidth(), getHeight());
@@ -365,8 +365,8 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                 cloud.setY(branch1.getY() - cloud.getHeight()/3);
 
                 cloud.addBitmap(1, bcloud);
-                cloud.setStateSpeed(1, new PointF(cloud.getWidth()/225f, 0f));
-                cloud.setStateTarget(1, new PointF(-cloud.getWidth() / 4, cloud.getY()));
+                cloud.setStateSpeed(1, new PointF(cloud.getWidth()/120f, 0f));
+                cloud.setStateTarget(1, new PointF(-cloud.getWidth() / 5, cloud.getY()));
 
                 cloud.addBitmap(2, bcloud);
                 cloud.setStateSpeed(2, new PointF(0f, 0f));
@@ -405,12 +405,12 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                 addSprite(cloud);
 
                 animator.addTiming(100, cloud, 1);
-                animator.addTiming(2600, cloud, 2);
+                animator.addTiming(2700, cloud, 2);
                 animator.addTiming(3500, cloud, 3);
                 animator.addAudioTiming(3500, R.raw.grumble, getContext());
                 animator.addTiming(6000, cloud, 4);
                 animator.addAudioTiming(6200, R.raw.blowing, getContext());
-                animator.addTiming(7500, cloud, 5);
+                animator.addTiming(7000, cloud, 5);
                 animator.addTiming(11000, cloud, 6);
                 animator.addTiming(11300, cloud, 7);
                 animator.addTiming(12500, cloud, 8);
@@ -606,7 +606,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
         cloud.setIgnoreBounds(true);
         cloud.setSpeed(0);
         cloud.setSlope(0);
-        cloud.setY(bird.getY());
+        float y = bird.getY();
         cloud.setState(0);
         cloud.setRemoveMe(false);
 
@@ -614,6 +614,11 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
         float cr = (float)(cloud.getWidth()) /(float)( cloud.getHeight());
         cloud.setWidth((int) ((getWidth() / 2.5f) + (getWidth()/4f) ));
         cloud.setHeight((int) (cloud.getWidth() / cr));
+
+        if (y + cloud.getHeight() > getHeight()) {
+            y = getHeight() - cloud.getHeight();
+        }
+        cloud.setY(y);
 
         if (random.nextFloat() > 0.5) {
             windPower = windPower * -1;
@@ -721,7 +726,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                     wind = windPower;
                 }
             }
-            if (Math.abs(roll) > 3 || wind > 0) {
+            if (Math.abs(roll) > 2 || wind > 0) {
                 float x = bird.getX();
                 x -= roll / 2;
                 x += wind*dm.density;
@@ -730,7 +735,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                 bird.setX(x);
             }
 
-            if (Math.abs(pitch - 70) > 3) {
+            if (Math.abs(pitch - 70) > 2) {
                 float y = bird.getY();
                 float dy = (pitch + 65);
                 if (dy > 0) dy = dy * 2;
@@ -880,12 +885,12 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
         super.touch_start(x, y);
         if (rotation==null) {
             float percx = (x - bird.getX()) / getWidth();
-            roll = -70 * percx;
+            roll = -100 * dm.density * percx;
 
             float miny = getHeight() * 0.66f;
             float h = (getHeight() - miny);
             float percy = (Math.max(miny, y) - bird.getY()) / h;
-            pitch = -70 * percy;
+            pitch = 150 * dm.density * percy;
         }
     }
 
@@ -894,12 +899,12 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
         super.touch_move(x, y);
         if (rotation==null) {
             float percx = (x - bird.getX()) / getWidth();
-            roll = -70 * percx;
+            roll = -100 * dm.density * percx;
 
             float miny = getHeight() * 0.66f;
             float h = (getHeight() - miny);
             float percy = (Math.max(miny, y) - bird.getY()) / h;
-            pitch = -70 * percy;
+            pitch = 150 * dm.density * percy;
         }
     }
 
