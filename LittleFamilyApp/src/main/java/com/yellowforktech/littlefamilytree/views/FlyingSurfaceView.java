@@ -350,8 +350,8 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
 
                 cutScenePlaying = true;
 
-                int w = (int) (getWidth()/5f);
-                int h = (int) (getWidth()/5f);
+                int w = (int) (getWidth()/3f);
+                int h = (int) (getWidth()/3f);
                 Bitmap bcloud = ImageHelper.loadBitmapFromResource(getContext(), R.drawable.cloud1, 0, w, h);
                 float cr = (float)(bcloud.getWidth()) /(float)( bcloud.getHeight());
                 cloud = new MovingAnimatedBitmapSprite(bcloud, getWidth(), getHeight());
