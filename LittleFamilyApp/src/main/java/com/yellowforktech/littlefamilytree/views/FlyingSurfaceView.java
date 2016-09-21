@@ -350,8 +350,8 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
 
                 cutScenePlaying = true;
 
-                int w = (int) (getWidth()/3.5);
-                int h = (int) (getWidth()/3.5);
+                int w = (int) (getWidth()/5f);
+                int h = (int) (getWidth()/5f);
                 Bitmap bcloud = ImageHelper.loadBitmapFromResource(getContext(), R.drawable.cloud1, 0, w, h);
                 float cr = (float)(bcloud.getWidth()) /(float)( bcloud.getHeight());
                 cloud = new MovingAnimatedBitmapSprite(bcloud, getWidth(), getHeight());
@@ -366,7 +366,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
 
                 cloud.addBitmap(1, bcloud);
                 cloud.setStateSpeed(1, new PointF(cloud.getWidth()/120f, 0f));
-                cloud.setStateTarget(1, new PointF(-cloud.getWidth() / 5, cloud.getY()));
+                cloud.setStateTarget(1, new PointF(-cloud.getWidth() / 4.5f, cloud.getY()));
 
                 cloud.addBitmap(2, bcloud);
                 cloud.setStateSpeed(2, new PointF(0f, 0f));
@@ -519,6 +519,8 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
 
             Bitmap birdBm = BitmapFactory.decodeResource(context.getResources(), R.drawable.flying_bird1);
             bird = new AnimatedBitmapSprite(birdBm);
+            bird.setWidth((int) (getWidth() / 5f));
+            bird.setHeight((int) (bird.getWidth() * ((float)birdBm.getHeight() / birdBm.getWidth())));
             bird.setX(this.getWidth() / 2 - birdBm.getWidth() / 2);
             bird.setY(this.getHeight() - (birdBm.getHeight() * 2));
             bird.addBitmap(0, BitmapFactory.decodeResource(context.getResources(), R.drawable.flying_bird2));
@@ -542,6 +544,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                 exampleSprite.addBitmap(0, BitmapFactory.decodeResource(context.getResources(), R.drawable.device3));
                 exampleSprite.setBounce(true);
                 exampleSprite.setState(0);
+                exampleSprite.setStepsPerFrame(12);
                 addSprite(exampleSprite);
             }
 
