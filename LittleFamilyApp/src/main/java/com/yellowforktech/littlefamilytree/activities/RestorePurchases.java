@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.amazon.device.iap.PurchasingService;
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.db.FireHelper;
@@ -23,7 +24,6 @@ public class RestorePurchases extends LittleFamilyBillingActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restore_purchases);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         spinner = (ProgressBar) findViewById(R.id.spinner);
         statusText = (TextView) findViewById(R.id.status);
@@ -42,7 +42,7 @@ public class RestorePurchases extends LittleFamilyBillingActivity {
         waitForConnect();
         try {
             if (isAmazon) {
-                // TODO implement amazon restore purchases
+                PurchasingService.getPurchaseUpdates(false);
             } else {
                 Bundle ownedItems = mService.getPurchases(3, getPackageName(), "inapp", null);
                 int response = ownedItems.getInt("RESPONSE_CODE");
