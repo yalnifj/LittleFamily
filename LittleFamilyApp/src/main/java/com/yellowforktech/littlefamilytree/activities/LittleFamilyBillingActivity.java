@@ -160,6 +160,7 @@ public class LittleFamilyBillingActivity extends LittleFamilyActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(this.getClass().getName().toString(), "onActivityResult requestCode="+requestCode+" resultCode="+resultCode);
         if (requestCode == 1001) {
             int responseCode = data.getIntExtra("RESPONSE_CODE", 0);
             String purchaseData = data.getStringExtra("INAPP_PURCHASE_DATA");
@@ -203,6 +204,7 @@ public class LittleFamilyBillingActivity extends LittleFamilyActivity {
     }
 
     public void queryItems() {
+        Log.d(this.getClass().getName().toString(), "Querying items from store");
         if (isAmazon) {
             waitForConnect();
             final Set<String> productSkus =  new HashSet<>();
@@ -238,12 +240,15 @@ public class LittleFamilyBillingActivity extends LittleFamilyActivity {
                                     if (response2 == 0) {
                                         PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
                                         try {
+                                            Log.d(this.getClass().getName().toString(), "starting purchase intent for sku="+sku);
                                             startIntentSenderForResult(pendingIntent.getIntentSender(),
                                                     1001, new Intent(), Integer.valueOf(0), Integer.valueOf(0),
                                                     Integer.valueOf(0));
                                         } catch (IntentSender.SendIntentException e) {
                                             Log.e(this.getClass().getName().toString(), "Error starting purchase intent", e);
                                         }
+                                    } else {
+                                        Log.d(this.getClass().getName().toString(), "What's going on sku="+sku+ " response2="+response2);
                                     }
 
                                 } catch (JSONException e) {
