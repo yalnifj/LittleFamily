@@ -275,6 +275,7 @@ public class LittleFamilyBillingActivity extends LittleFamilyActivity {
 
     public void restorePurchases() {
         waitForConnect();
+        Log.d(this.getClass().getName().toString(), "Restoring purchases from the store");
         if (isAmazon) {
             PurchasingService.getPurchaseUpdates(false);
         } else {
@@ -292,6 +293,7 @@ public class LittleFamilyBillingActivity extends LittleFamilyActivity {
                         //String continuationToken =
                         //        ownedItems.getString("INAPP_CONTINUATION_TOKEN");
 
+                        Log.d(this.getClass().getName().toString(), "Found "+purchaseDataList.size()+" purchased items.");
                         boolean found = false;
                         for (int i = 0; i < purchaseDataList.size(); ++i) {
                             String purchaseData = purchaseDataList.get(i);
@@ -312,6 +314,8 @@ public class LittleFamilyBillingActivity extends LittleFamilyActivity {
 
                         // if continuationToken != null, call getPurchases again
                         // and pass in the token to retrieve more items
+                    } else {
+                        Log.d(this.getClass().getName().toString(), "Purchased item response code="+response);
                     }
                 }
             } catch (RemoteException e) {
