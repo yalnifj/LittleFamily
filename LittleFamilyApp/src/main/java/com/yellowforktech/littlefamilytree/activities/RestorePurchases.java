@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.amazon.device.iap.PurchasingService;
 import com.yellowforktech.littlefamilytree.R;
+import com.yellowforktech.littlefamilytree.activities.tasks.WaitTask;
 import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.db.FireHelper;
 
@@ -27,18 +28,32 @@ public class RestorePurchases extends LittleFamilyBillingActivity {
 
         spinner = (ProgressBar) findViewById(R.id.spinner);
         statusText = (TextView) findViewById(R.id.status);
-
-        connectToStore();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+    }
 
-        restorePurchases();
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        WaitTask task = new WaitTask(new WaitTask.WaitTaskListener() {
+            @Override
+            public void onProgressUpdate(Integer progress) {
+            }
+
+            @Override
+            public void onComplete(Integer progress) {
+                restorePurchases();
+            }
+        });
+        task.execute(3000L);
     }
 
     public void restorePurchases() {
+        Log.d(this.getClass().getSimpleName(), "Starting restore purchases ");
         waitForConnect();
         try {
             if (isAmazon) {
@@ -46,6 +61,7 @@ public class RestorePurchases extends LittleFamilyBillingActivity {
             } else {
                 Bundle ownedItems = mService.getPurchases(3, getPackageName(), "inapp", null);
                 int response = ownedItems.getInt("RESPONSE_CODE");
+                Log.d(this.getClass().getSimpleName(), "Received response code "+response);
                 if (response == 0) {
                     ArrayList<String> ownedSkus =
                             ownedItems.getStringArrayList("INAPP_PURCHASE_ITEM_LIST");
@@ -57,11 +73,13 @@ public class RestorePurchases extends LittleFamilyBillingActivity {
                     //        ownedItems.getString("INAPP_CONTINUATION_TOKEN");
 
                     boolean found = false;
+                    Log.d(this.getClass().getSimpleName(), "Found "+purchaseDataList.size()+" purchases.");
                     for (int i = 0; i < purchaseDataList.size(); ++i) {
                         String purchaseData = purchaseDataList.get(i);
                         String signature = signatureList.get(i);
                         String sku = ownedSkus.get(i);
 
+                        Log.d(this.getClass().getSimpleName(), "Found SKU "+sku);
                         if (sku != null && sku.equals(SKU_PREMIUM)) {
                             try {
                                 String premStr = DataService.getInstance().getDBHelper().getProperty(LittleFamilyActivity.PROP_HAS_PREMIUM);
