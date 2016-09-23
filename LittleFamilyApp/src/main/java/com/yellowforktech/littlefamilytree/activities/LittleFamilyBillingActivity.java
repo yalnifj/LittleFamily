@@ -273,7 +273,7 @@ public class LittleFamilyBillingActivity extends LittleFamilyActivity {
         queryItems();
     }
 
-    public void restorePurchases() {
+    private boolean restorePurchases() {
         waitForConnect();
         Log.d(this.getClass().getName().toString(), "Restoring purchases from the store");
         if (isAmazon) {
@@ -302,6 +302,7 @@ public class LittleFamilyBillingActivity extends LittleFamilyActivity {
 
                             if (sku != null && sku.equals(SKU_PREMIUM)) {
                                 try {
+                                    found = true;
                                     grantPremium();
                                 } catch (Exception e) {
                                     Log.e(this.getClass().getName().toString(), "Error starting purchase intent", e);
@@ -311,6 +312,7 @@ public class LittleFamilyBillingActivity extends LittleFamilyActivity {
                             // do something with this purchase information
                             // e.g. display the updated list of products owned by user
                         }
+                        return found;
 
                         // if continuationToken != null, call getPurchases again
                         // and pass in the token to retrieve more items
@@ -322,6 +324,7 @@ public class LittleFamilyBillingActivity extends LittleFamilyActivity {
                 Log.e(this.getClass().getName().toString(), "Error starting purchase intent", e);
             }
         }
+        return false;
     }
 
     protected void waitForConnect() {
@@ -341,42 +344,47 @@ public class LittleFamilyBillingActivity extends LittleFamilyActivity {
             @Override
             public void results(boolean premium) {
                 if (!premium) {
-                    final int tries = getTries(gameCode);
-                    showBuyTryDialog(tries, new PremiumDialog.ActionListener() {
-                        @Override
-                        public void onBuy() {
-                            hideBuyTryDialog();
-                            showAdultAuthDialog(new AdultsAuthDialog.AuthCompleteAction() {
-                                @Override
-                                public void doAction(boolean success) {
-                                    hideAdultAuthDialog();
-                                    buyUpgrade();
-                                }
+                    //-- try to restore purchases
+                    if (restorePurchases()) {
+                        grantPremium();
+                    } else {
+                        final int tries = getTries(gameCode);
+                        showBuyTryDialog(tries, new PremiumDialog.ActionListener() {
+                            @Override
+                            public void onBuy() {
+                                hideBuyTryDialog();
+                                showAdultAuthDialog(new AdultsAuthDialog.AuthCompleteAction() {
+                                    @Override
+                                    public void doAction(boolean success) {
+                                        hideAdultAuthDialog();
+                                        buyUpgrade();
+                                    }
 
-                                public void onClose() {
-                                    finish();
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onTry() {
-                            int newTries = tries-1;
-                            try {
-                                DataService.getInstance().getDBHelper().saveProperty(gameCode, String.valueOf(newTries));
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                                    public void onClose() {
+                                        finish();
+                                    }
+                                });
                             }
 
-                            hideBuyTryDialog();
-                        }
+                            @Override
+                            public void onTry() {
+                                int newTries = tries - 1;
+                                try {
+                                    DataService.getInstance().getDBHelper().saveProperty(gameCode, String.valueOf(newTries));
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
 
-                        @Override
-                        public void onClose() {
-                            hideBuyTryDialog();
-                            finish();
-                        }
-                    });
+                                hideBuyTryDialog();
+                            }
+
+                            @Override
+                            public void onClose() {
+                                hideBuyTryDialog();
+                                finish();
+                            }
+                        });
+                    }
                 }
             }
         });
