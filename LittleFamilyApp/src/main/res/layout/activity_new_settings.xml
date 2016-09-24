@@ -193,7 +193,8 @@
                     android:id="@+id/txtManagePeople"
                     android:layout_weight="1"
                     android:layout_gravity="left|center_vertical"
-                    android:onClick="showManagePeople"/>
+                    android:onClick="showManagePeople"
+                    android:clickable="true"/>
             </LinearLayout>
 
             <LinearLayout
@@ -236,7 +237,8 @@
                     android:id="@+id/txtParentsGuide"
                     android:layout_weight="1"
                     android:layout_gravity="left|center_vertical"
-                    android:onClick="showParentsGuide"/>
+                    android:onClick="showParentsGuide"
+                    android:clickable="true"/>
             </LinearLayout>
             <LinearLayout
                 android:orientation="vertical"
@@ -253,7 +255,8 @@
                     android:text="@string/pref_title_website"
                     android:id="@+id/txtWebsite"
                     android:layout_gravity="left|center_vertical"
-                    android:onClick="showWebsite"/>
+                    android:onClick="showWebsite"
+                    android:clickable="true"/>
 
                 <TextView
                     android:layout_width="fill_parent"
@@ -278,7 +281,8 @@
                     android:text="@string/pref_title_restore_purchases"
                     android:id="@+id/txtRestore"
                     android:layout_gravity="left|center_vertical"
-                    android:onClick="restorePremium"/>
+                    android:onClick="restorePremium"
+                    android:clickable="true"/>
 
                 <TextView
                     android:layout_width="fill_parent"
