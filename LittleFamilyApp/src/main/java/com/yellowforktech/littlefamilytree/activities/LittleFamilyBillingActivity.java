@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.ServiceConnection;
-import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -58,11 +57,17 @@ public class LittleFamilyBillingActivity extends LittleFamilyActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        String packageName = getPackageName();
+        if (packageName.contains("littlefamilytreefree")) {
+            isAmazon = true;
+        }
+        /*
         PackageManager pkgManager = this.getPackageManager();
         String installerPackageName = pkgManager.getInstallerPackageName(this.getPackageName());
         if(installerPackageName!=null && installerPackageName.startsWith("com.amazon")) {
             isAmazon = true;
         }
+        */
     }
 
     @Override
@@ -209,6 +214,8 @@ public class LittleFamilyBillingActivity extends LittleFamilyActivity {
             waitForConnect();
             final Set<String> productSkus =  new HashSet<>();
             productSkus.add( "com.amazon.example.iap.entitlement" );
+            productSkus.add( "com.amazon.example.iap.consumable" );
+            productSkus.add( AMAZON_PREMIUM );
             PurchasingService.getProductData(productSkus);
         } else {
             Runnable offMain = new Runnable() {
@@ -401,21 +408,27 @@ public class LittleFamilyBillingActivity extends LittleFamilyActivity {
             switch (productDataResponse.getRequestStatus()) {
                 case SUCCESSFUL:
                     for (final String s : productDataResponse.getUnavailableSkus()) {
-                        Log.v(getClass().getName(), "Unavailable SKU:" + s);
+                        Log.d(getClass().getName(), "Unavailable SKU:" + s);
                     }
 
+                    boolean found = false;
                     final Map<String, Product> products = productDataResponse.getProductData();
                     for (final String key : products.keySet()) {
                         Product product = products.get(key);
-                        Log.v(getClass().getName(), String.format("Product: %s\n Type: %s\n SKU: %s\n Price: %s\n Description: %s\n", product.getTitle(), product.getProductType(), product.getSku(), product.getPrice(), product.getDescription()));
+                        Log.d(getClass().getName(), String.format("Product: %s\n Type: %s\n SKU: %s\n Price: %s\n Description: %s\n", product.getTitle(), product.getProductType(), product.getSku(), product.getPrice(), product.getDescription()));
                         if (product.getSku().equals(AMAZON_PREMIUM)) {
+                            found = true;
                             PurchasingService.purchase(AMAZON_PREMIUM);
                         }
+                    }
+                    if (!found) {
+                        //-- if not found try to purchase anyway
+                        PurchasingService.purchase(AMAZON_PREMIUM);
                     }
                     break;
 
                 case FAILED:
-                    Log.v(getClass().getName(), "ProductDataRequestStatus: FAILED");
+                    Log.d(getClass().getName(), "ProductDataRequestStatus: FAILED");
                     break;
             }
         }
@@ -433,8 +446,8 @@ public class LittleFamilyBillingActivity extends LittleFamilyActivity {
                     }
                     break;
                 default:
-                    finish();
                     Toast.makeText(LittleFamilyBillingActivity.this, "Unable to complete purchase", Toast.LENGTH_LONG);
+                    finish();
                     break;
             }
         }
