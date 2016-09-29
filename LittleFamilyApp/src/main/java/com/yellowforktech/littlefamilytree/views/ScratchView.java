@@ -202,93 +202,99 @@ public class ScratchView extends SpritedSurfaceView {
 
 	@Override
     public void touch_start(float x, float y) {
-        float wratio = (float)(mCanvas.getWidth()) / (float)(getWidth());
-        mPath.reset();
-        mX = x*wratio;
-        mY = y*wratio;
-        mPath.moveTo(mX, mY);
-        try {
-            Boolean quietMode = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("quiet_mode", false);
-            if (!quietMode) {
-                mediaPlayer = MediaPlayer.create(context, com.yellowforktech.littlefamilytree.R.raw.erasing);
-                mediaPlayer.start();
-                mediaPlayer.setLooping(true);
+        if (mCanvas!=null) {
+            float wratio = (float) (mCanvas.getWidth()) / (float) (getWidth());
+            mPath.reset();
+            mX = x * wratio;
+            mY = y * wratio;
+            mPath.moveTo(mX, mY);
+            try {
+                Boolean quietMode = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("quiet_mode", false);
+                if (!quietMode) {
+                    mediaPlayer = MediaPlayer.create(context, com.yellowforktech.littlefamilytree.R.raw.erasing);
+                    mediaPlayer.start();
+                    mediaPlayer.setLooping(true);
+                }
+            } catch (Exception e) {
+                // just let things go on
             }
-        } catch (Exception e) {
-            // just let things go on
         }
     }
 	
 	@Override
 	public void doMove(float oldX, float oldY, float x, float y) {
-        float wratio = (float)(mCanvas.getWidth()) / (float)(getWidth());
-		mPath.lineTo(x * wratio, y * wratio);
-		// commit the path to our offscreen
         if (mCanvas!=null) {
-            mCanvas.drawPath(mPath, mPaint);
-        }
+            float wratio = (float) (mCanvas.getWidth()) / (float) (getWidth());
+            mPath.lineTo(x * wratio, y * wratio);
+            // commit the path to our offscreen
+            if (mCanvas != null) {
+                mCanvas.drawPath(mPath, mPaint);
+            }
 
-        circlePath.reset();
-        circlePath.addCircle(mX, mY, 25*dm.density, Path.Direction.CW);
-			
-		ScratchBitsSprite bit = new ScratchBitsSprite();
-		bit.setX(x);
-		bit.setY(y);
-		bit.setWidth((int) ((4 + random.nextInt(8)) * dm.density));
-		bit.setHeight((int) ((4 + random.nextInt(8))*dm.density));
-        int xdir = (int) (x - oldX)/3;
-        int ydir = (int) (y - oldY)/3;
-        bit.setXdir(xdir);
-        bit.setYdir(ydir);
-		addSprite(bit);
+            circlePath.reset();
+            circlePath.addCircle(mX, mY, 25 * dm.density, Path.Direction.CW);
 
-        if (bit.getWidth()>=8*dm.density) {
-            performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY, HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
+            ScratchBitsSprite bit = new ScratchBitsSprite();
+            bit.setX(x);
+            bit.setY(y);
+            bit.setWidth((int) ((4 + random.nextInt(8)) * dm.density));
+            bit.setHeight((int) ((4 + random.nextInt(8)) * dm.density));
+            int xdir = (int) (x - oldX) / 3;
+            int ydir = (int) (y - oldY) / 3;
+            bit.setXdir(xdir);
+            bit.setYdir(ydir);
+            addSprite(bit);
+
+            if (bit.getWidth() >= 8 * dm.density) {
+                performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY, HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
+            }
         }
     }
 	
 	@Override
     protected void touch_up(float tx, float ty) {
-        float wratio = (float)(mCanvas.getWidth()) / (float)(getWidth());
-        mPath.lineTo(tx*wratio, ty*wratio);
-        circlePath.reset();
-        // commit the path to our offscreen
         if (mCanvas!=null) {
-            mCanvas.drawPath(mPath, mPaint);
-        }
-        // kill this so we don't double draw
-        mPath.reset();
-
-        try {
-            if (mediaPlayer!=null) mediaPlayer.stop();
-        } catch (Exception e) {
-            // just let things go on
-        }
-
-        // check if scratch is complete
-        if (!complete && mBitmap!=null) {
-            int xd = (int) mPaint.getStrokeWidth() / 5;
-            int yd = (int) mPaint.getStrokeWidth() / 5;
-            int count = 0;
-            int total = 0;
-            int maxX = Math.min(mBitmap.getWidth(), getWidth());
-            int maxY = Math.min(mBitmap.getHeight(), getHeight());
-            for (int y = yd; y < maxY; y += yd) {
-                for (int x = xd; x < maxX; x += xd) {
-                    total++;
-                    int pixel = mBitmap.getPixel(x, y);
-                    if (Color.alpha(pixel) < 200) count++;
-                }
+            float wratio = (float) (mCanvas.getWidth()) / (float) (getWidth());
+            mPath.lineTo(tx * wratio, ty * wratio);
+            circlePath.reset();
+            // commit the path to our offscreen
+            if (mCanvas != null) {
+                mCanvas.drawPath(mPath, mPaint);
             }
-            if (count > total * 0.97) {
-                Rect r = new Rect();
-                r.set(starBitmap.getWidth() / 2, starBitmap.getHeight() / 2,
-                        getWidth() - starBitmap.getWidth() / 2, mBitmap.getHeight() - starBitmap.getHeight() / 2);
-                int sc = 10 + random.nextInt(10);
-                addStars(r, false, sc);
-                complete = true;
-                for (ScratchCompleteListener l : listeners) {
-                    l.onScratchComplete();
+            // kill this so we don't double draw
+            mPath.reset();
+
+            try {
+                if (mediaPlayer != null) mediaPlayer.stop();
+            } catch (Exception e) {
+                // just let things go on
+            }
+
+            // check if scratch is complete
+            if (!complete && mBitmap != null) {
+                int xd = (int) mPaint.getStrokeWidth() / 5;
+                int yd = (int) mPaint.getStrokeWidth() / 5;
+                int count = 0;
+                int total = 0;
+                int maxX = Math.min(mBitmap.getWidth(), getWidth());
+                int maxY = Math.min(mBitmap.getHeight(), getHeight());
+                for (int y = yd; y < maxY; y += yd) {
+                    for (int x = xd; x < maxX; x += xd) {
+                        total++;
+                        int pixel = mBitmap.getPixel(x, y);
+                        if (Color.alpha(pixel) < 200) count++;
+                    }
+                }
+                if (count > total * 0.97) {
+                    Rect r = new Rect();
+                    r.set(starBitmap.getWidth() / 2, starBitmap.getHeight() / 2,
+                            getWidth() - starBitmap.getWidth() / 2, mBitmap.getHeight() - starBitmap.getHeight() / 2);
+                    int sc = 10 + random.nextInt(10);
+                    addStars(r, false, sc);
+                    complete = true;
+                    for (ScratchCompleteListener l : listeners) {
+                        l.onScratchComplete();
+                    }
                 }
             }
         }
