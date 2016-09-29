@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -115,7 +116,11 @@ public class PagerContainer extends FrameLayout implements ViewPager.OnPageChang
                 if (getViewPager().getChildCount()>0) {
                     getViewPager().fakeDragBy(0f);
                 }
-                getViewPager().endFakeDrag();
+                try {
+                    getViewPager().endFakeDrag();
+                } catch(Exception e) {
+                    Log.e("PageContainer", "Error with view pager", e);
+                }
             }
         }
     };
