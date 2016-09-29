@@ -177,13 +177,21 @@ public class FgDialog extends Dialog {
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             Log.d("FamilyGraph-WebView", "Webview loading URL: " + url);
             super.onPageStarted(view, url, favicon);
-            mSpinner.show();
+            try {
+                mSpinner.show();
+            } catch(Exception e) {
+                Log.e(this.getClass().getName(), "Error closing dialog", e);
+            }
         }
 
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
-            mSpinner.dismiss();
+            try {
+                mSpinner.dismiss();
+            } catch(Exception e) {
+                Log.e(this.getClass().getName(), "Error closing dialog", e);
+            }
             /*
              * Once webview is fully loaded, set the mContent background to be
              * transparent and make visible the 'x' image.

@@ -247,7 +247,7 @@ public class AnimatedBitmapSprite extends Sprite implements BitmapSequenceLoader
                 if (frames != null) {
                     if (frame >= 0 && frame < frames.size()) {
                         Bitmap bitmap = frames.get(frame);
-                        if (bitmap!=null) {
+                        if (bitmap!=null && !bitmap.isRecycled()) {
                             Rect rect = new Rect();
                             rect.set((int) (x), (int) (y), (int) ((x + width)), (int) ((y + height)));
                             if (matrix != null) {

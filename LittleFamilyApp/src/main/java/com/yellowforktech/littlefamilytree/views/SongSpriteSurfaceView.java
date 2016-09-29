@@ -353,7 +353,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
                     ds.setMoving(true);
                 }
 
-                if (currentSongTime > song.getDanceTimings().get(1) && currentSongTime < song.getDanceTimings().get(1) + 500) {
+                if (onStage.size() > 1 && currentSongTime > song.getDanceTimings().get(1) && currentSongTime < song.getDanceTimings().get(1) + 500) {
                     DraggablePersonSprite ds = onStage.get(0);
                     ds.setTargetX((int) selPerson1.getX());
                     ds.setTargetHeight(womanHeight);
@@ -368,7 +368,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
                     ds.setMoving(true);
                 }
 
-                if (currentSongTime > song.getDanceTimings().get(2) && currentSongTime < song.getDanceTimings().get(2) + 500) {
+                if (onStage.size() > 2 && currentSongTime > song.getDanceTimings().get(2) && currentSongTime < song.getDanceTimings().get(2) + 500) {
                     DraggablePersonSprite ds = onStage.get(1);
                     ds.setTargetX((int) selPerson2.getX());
                     ds.setTargetHeight(womanHeight);
@@ -383,7 +383,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
                     ds.setMoving(true);
                 }
 
-                if (currentSongTime > song.getDanceTimings().get(3) && currentSongTime < song.getDanceTimings().get(3) + 500) {
+                if (onStage.size() > 3 && currentSongTime > song.getDanceTimings().get(3) && currentSongTime < song.getDanceTimings().get(3) + 500) {
                     DraggablePersonSprite ds = onStage.get(2);
                     ds.setTargetX((int) selPerson3.getX());
                     ds.setTargetHeight(womanHeight);
@@ -398,7 +398,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
                     ds.setMoving(true);
                 }
 
-                if (currentSongTime > song.getDanceTimings().get(4) && currentSongTime < song.getDanceTimings().get(4) + 500) {
+                if (onStage.size() > 3 && currentSongTime > song.getDanceTimings().get(4) && currentSongTime < song.getDanceTimings().get(4) + 500) {
                     DraggablePersonSprite ds = onStage.get(3);
                     ds.setTargetX((int) selPerson4.getX());
                     ds.setTargetHeight(womanHeight);
