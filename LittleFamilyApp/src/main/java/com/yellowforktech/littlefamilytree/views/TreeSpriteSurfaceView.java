@@ -173,7 +173,7 @@ public class TreeSpriteSurfaceView extends SpritedClippedSurfaceView {
                 selectedMoved |= s.onMove(oldX+clipX*scale, oldY+clipY*scale, newX+clipX*scale, newY+clipY*scale);
             }
         }
-        if (!selectedMoved) {
+        if (!selectedMoved && backgroundSprite != null) {
             backgroundSprite.onMove(oldX, oldY, newX, newY);
             clipX -= (newX-oldX);
             clipY -= (newY-oldY);

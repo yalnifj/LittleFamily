@@ -101,12 +101,14 @@ public class TopBarFragment extends Fragment {
             Point size = new Point();
             display.getSize(size);
             int width = size.x / 8;
-            if (person.getPhotoPath() != null) {
-                Bitmap bm = ImageHelper.loadBitmapFromFile(person.getPhotoPath(), ImageHelper.getOrientation(person.getPhotoPath()), width, width, false);
-                profileButton.setImageBitmap(bm);
-            } else {
-                Bitmap bm = ImageHelper.loadBitmapFromResource(context, person.getDefaultPhotoResource(), 0, width, width);
-                profileButton.setImageBitmap(bm);
+            if (profileButton!=null) {
+                if (person.getPhotoPath() != null) {
+                    Bitmap bm = ImageHelper.loadBitmapFromFile(person.getPhotoPath(), ImageHelper.getOrientation(person.getPhotoPath()), width, width, false);
+                    profileButton.setImageBitmap(bm);
+                } else {
+                    Bitmap bm = ImageHelper.loadBitmapFromResource(context, person.getDefaultPhotoResource(), 0, width, width);
+                    profileButton.setImageBitmap(bm);
+                }
             }
         }
     }

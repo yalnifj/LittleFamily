@@ -59,6 +59,7 @@ public class PersonDetailsDialog extends DialogFragment implements CompoundButto
     }
 
 	public void updatePerson() {
+		if (person==null) return;
 		ImageView portrait = (ImageView) view.findViewById(R.id.portraitImage);
 		int width = portrait.getWidth();
 		if (width==0) width = 100;
