@@ -1,5 +1,6 @@
 package com.yellowforktech.littlefamilytree.activities;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -128,6 +129,12 @@ public class ScratchGameActivity extends LittleFamilyActivity implements Scratch
             if (imageBitmap != null) {
                 setupCanvas();
             } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage(R.string.low_media);
+                builder.setPositiveButton("OK", null);
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
                 mediaChooser.loadRandomImage();
             }
         } else {

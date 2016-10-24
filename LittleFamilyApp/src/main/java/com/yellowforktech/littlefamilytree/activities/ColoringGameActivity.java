@@ -1,5 +1,6 @@
 package com.yellowforktech.littlefamilytree.activities;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -223,6 +224,12 @@ public class ColoringGameActivity extends LittleFamilyBillingActivity implements
             if (selectedPerson!=null) {
                 imageBitmap = ImageHelper.loadBitmapFromResource(this, selectedPerson.getDefaultPhotoResource(), 0, width, height);
             } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage(R.string.low_media);
+                builder.setPositiveButton("OK", null);
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
                 if (people.size()>0) {
                     Random rand = new Random();
                     selectedPerson = people.get(rand.nextInt(people.size()));

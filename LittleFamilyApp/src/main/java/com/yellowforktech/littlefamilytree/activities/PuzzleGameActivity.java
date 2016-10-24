@@ -1,5 +1,6 @@
 package com.yellowforktech.littlefamilytree.activities;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,6 +21,7 @@ import com.yellowforktech.littlefamilytree.views.PuzzleSurfaceView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class PuzzleGameActivity extends LittleFamilyActivity implements RandomMediaChooser.RandomMediaListener, PuzzleSurfaceView.PuzzleCompleteListener {
     private List<LittlePerson> people;
@@ -30,6 +32,7 @@ public class PuzzleGameActivity extends LittleFamilyActivity implements RandomMe
     private Media photo;
     private RandomMediaChooser mediaChooser;
     private LittlePerson player;
+    private LittlePerson selectedPerson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +118,20 @@ public class PuzzleGameActivity extends LittleFamilyActivity implements RandomMe
         }
         if (photo==null) {
             //-- could not find any images, fallback to a default image
+            if (selectedPerson==null) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage(R.string.low_media);
+                builder.setPositiveButton("OK", null);
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+                if (people.size() > 0) {
+                    Random rand = new Random();
+                    selectedPerson = people.get(rand.nextInt(people.size()));
+                } else {
+                    selectedPerson = super.selectedPerson;
+                }
+            }
             imageBitmap = ImageHelper.loadBitmapFromResource(this, selectedPerson.getDefaultPhotoResource(), 0, width, height);
             if (imageBitmap != null) {
                 setupGame();
