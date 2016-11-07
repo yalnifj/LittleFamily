@@ -186,15 +186,17 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
                 }
 
                 if (selected != null) {
-                    int by = selected.getRow() * bHeight;
-                    int bx = selected.getCol() * bWidth;
-                    Rect src = new Rect();
-                    src.set(bx, by, bx + bWidth, by + bHeight);
-                    Rect dst = new Rect();
-                    dst.set(selected.getX(), selected.getY(), selected.getX() + pieceWidth, selected.getY() + pieceHeight);
-                    canvas.drawRect((float) (dst.left + 10), (float) (dst.top + 10), (float) (dst.right + 10), (float) (dst.bottom + 10), shadowPaint);
-                    canvas.drawBitmap(bitmap, src, dst, outlinePaint);
-                    canvas.drawRect(dst, outlinePaint);
+                    synchronized (selected) {
+                        int by = selected.getRow() * bHeight;
+                        int bx = selected.getCol() * bWidth;
+                        Rect src = new Rect();
+                        src.set(bx, by, bx + bWidth, by + bHeight);
+                        Rect dst = new Rect();
+                        dst.set(selected.getX(), selected.getY(), selected.getX() + pieceWidth, selected.getY() + pieceHeight);
+                        canvas.drawRect((float) (dst.left + 10), (float) (dst.top + 10), (float) (dst.right + 10), (float) (dst.bottom + 10), shadowPaint);
+                        canvas.drawBitmap(bitmap, src, dst, outlinePaint);
+                        canvas.drawRect(dst, outlinePaint);
+                    }
                 }
 
                 Rect dst = new Rect();
@@ -246,18 +248,20 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
                     return;
                 }
 
-                selected = null;
-                for (int r = 0; r < game.getRows(); r++) {
-                    for (int c = 0; c < game.getCols(); c++) {
-                        PuzzlePiece pp = game.getPiece(r, c);
-                        if (!pp.isInPlace() && !pp.isAnimating()) {
-                            if (x >= pp.getX() && x <= pp.getX() + pieceWidth && y >= pp.getY() && y <= pp.getY() + pieceHeight) {
-                                selected = pp;
-                                pp.setSelected(true);
-                                sRow = r;
-                                sCol = c;
-                                Log.d("PuzzleSurfaceView", "Selecting r=" + r + " c=" + c);
-                                return;
+                synchronized (selected) {
+                    selected = null;
+                    for (int r = 0; r < game.getRows(); r++) {
+                        for (int c = 0; c < game.getCols(); c++) {
+                            PuzzlePiece pp = game.getPiece(r, c);
+                            if (!pp.isInPlace() && !pp.isAnimating()) {
+                                if (x >= pp.getX() && x <= pp.getX() + pieceWidth && y >= pp.getY() && y <= pp.getY() + pieceHeight) {
+                                    selected = pp;
+                                    pp.setSelected(true);
+                                    sRow = r;
+                                    sCol = c;
+                                    Log.d("PuzzleSurfaceView", "Selecting r=" + r + " c=" + c);
+                                    return;
+                                }
                             }
                         }
                     }
@@ -271,64 +275,68 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
         super.touch_up(x, y);
         showHint = false;
         if (selected!=null) {
-            int centerX = getWidth()/2;
-            int centerY = (getHeight()-thumbnailHeight)/2;
+            synchronized (selected) {
+                int centerX = getWidth() / 2;
+                int centerY = (getHeight() - thumbnailHeight) / 2;
 
-            int puzzleWidth = pieceWidth*game.getCols();
-            int puzzleHeight = pieceHeight*game.getRows();
+                int puzzleWidth = pieceWidth * game.getCols();
+                int puzzleHeight = pieceHeight * game.getRows();
 
-            int left = centerX - (puzzleWidth/2);
-            if (left < 0) left = 0;
-            int top = centerY - (puzzleHeight /2);
-            if (top < 0) top = 0;
+                int left = centerX - (puzzleWidth / 2);
+                if (left < 0) left = 0;
+                int top = centerY - (puzzleHeight / 2);
+                if (top < 0) top = 0;
 
-            int col = (int) ((x-left) / pieceWidth);
-            int row = (int) ((y-top) / pieceHeight);
-            if (col >= game.getCols()) col = game.getCols()-1;
-            if (row >= game.getRows()) row = game.getRows()-1;
-            if (col < 0) col = 0;
-            if (row < 0) row = 0;
-            PuzzlePiece pp = game.getPiece(row, col);
-            if (!pp.isInPlace()) {
-                game.swap(row, col, sRow, sCol);
-                pp.setToX(left + (sCol * pieceWidth));
-                pp.setToY(top + (sRow * pieceHeight));
-                if (sRow==pp.getRow() && sCol==pp.getCol()) {
-                    pp.setInPlace(true);
-                    checkGame = true;
+                int col = (int) ((x - left) / pieceWidth);
+                int row = (int) ((y - top) / pieceHeight);
+                if (col >= game.getCols()) col = game.getCols() - 1;
+                if (row >= game.getRows()) row = game.getRows() - 1;
+                if (col < 0) col = 0;
+                if (row < 0) row = 0;
+                PuzzlePiece pp = game.getPiece(row, col);
+                if (!pp.isInPlace()) {
+                    game.swap(row, col, sRow, sCol);
+                    pp.setToX(left + (sCol * pieceWidth));
+                    pp.setToY(top + (sRow * pieceHeight));
+                    if (sRow == pp.getRow() && sCol == pp.getCol()) {
+                        pp.setInPlace(true);
+                        checkGame = true;
+                    }
+                    pp.setAnimating(true);
+                    selected.setToX(left + (col * pieceWidth));
+                    selected.setToY(top + (row * pieceHeight));
+                    if (row == selected.getRow() && col == selected.getCol()) {
+                        selected.setInPlace(true);
+                        checkGame = true;
+                    }
+                } else {
+                    selected.setToX(left + (sCol * pieceWidth));
+                    selected.setToY(top + (sRow * pieceHeight));
                 }
-                pp.setAnimating(true);
-                selected.setToX(left + (col * pieceWidth));
-                selected.setToY(top + (row * pieceHeight));
-                if (row==selected.getRow() && col==selected.getCol()) {
-                    selected.setInPlace(true);
-                    checkGame = true;
-                }
-            } else {
-                selected.setToX(left + (sCol * pieceWidth));
-                selected.setToY(top + (sRow * pieceHeight));
+                selected.setSelected(false);
+                selected.setAnimating(true);
+                selected = null;
             }
-            selected.setSelected(false);
-            selected.setAnimating(true);
         }
-        selected = null;
 
     }
 
     @Override
     public void doMove(float oldX, float oldY, float newX, float newY) {
         if (selected!=null) {
-            int dx = (int) (newX - oldX);
-            int dy = (int) (newY - oldY);
-            sx = selected.getX() + dx;
-            sy = selected.getY() + dy;
-            if (sx < 0) sx = 0;
-            if (sy < 0) sy = 0;
-            if (sx + pieceWidth > getWidth()) sx = getWidth() - pieceWidth;
-            if (sy + pieceHeight > getHeight()) sy = getHeight() - pieceHeight;
-            selected.setX(sx);
-            selected.setY(sy);
-            //Log.d("PuzzleSurfaceView", "Moving selected to sx="+sx+" sy="+sy);
+            synchronized (selected) {
+                int dx = (int) (newX - oldX);
+                int dy = (int) (newY - oldY);
+                sx = selected.getX() + dx;
+                sy = selected.getY() + dy;
+                if (sx < 0) sx = 0;
+                if (sy < 0) sy = 0;
+                if (sx + pieceWidth > getWidth()) sx = getWidth() - pieceWidth;
+                if (sy + pieceHeight > getHeight()) sy = getHeight() - pieceHeight;
+                selected.setX(sx);
+                selected.setY(sy);
+                //Log.d("PuzzleSurfaceView", "Moving selected to sx="+sx+" sy="+sy);
+            }
         }
     }
 

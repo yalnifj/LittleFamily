@@ -69,7 +69,6 @@ public class DressUpView extends SpritedSurfaceView {
                 InputStream is = context.getAssets().open(dollFilename);
                 doll = BitmapFactory.decodeStream(is);
                 DollClothing[] clothes = dollConfig.getClothing(context);
-                clothing = null;
                 if (clothes != null) {
                     factored = false;
                     int x = 0;
@@ -104,7 +103,9 @@ public class DressUpView extends SpritedSurfaceView {
                             Log.e("DressUpView", "Error drawing image", e);
                         }
                     }
-                    clothing = clothes;
+                    synchronized (clothing) {
+                        clothing = clothes;
+                    }
                 }
 
                 textPaint = new Paint();
@@ -144,40 +145,42 @@ public class DressUpView extends SpritedSurfaceView {
                     }
 
                     if (clothing != null) {
-                        for (int c = 0; c < clothing.length; c++) {
-                            DollClothing dc = clothing[c];
-                            if (dc.getBitmap() != null) {
-                                if (!factored) {
-                                    dc.setX((int) (dc.getX() * factor));
-                                    dc.setY((int) (dc.getY() * factor));
-                                    if (dc.getX() + dc.getBitmap().getWidth() * factor > getWidth()) {
-                                        dc.setX(dc.getX() - getWidth());
-                                        if (dc.getX() < 0) {
-                                            dc.setX(0);
+                        synchronized (clothing) {
+                            for (int c = 0; c < clothing.length; c++) {
+                                DollClothing dc = clothing[c];
+                                if (dc.getBitmap() != null) {
+                                    if (!factored) {
+                                        dc.setX((int) (dc.getX() * factor));
+                                        dc.setY((int) (dc.getY() * factor));
+                                        if (dc.getX() + dc.getBitmap().getWidth() * factor > getWidth()) {
+                                            dc.setX(dc.getX() - getWidth());
+                                            if (dc.getX() < 0) {
+                                                dc.setX(0);
+                                            }
+                                            dc.setY(dc.getY() + (int) (dc.getBitmap().getHeight() * factor));
                                         }
-                                        dc.setY(dc.getY() + (int) (dc.getBitmap().getHeight() * factor));
+                                        if (dc.getY() + dc.getBitmap().getHeight() * factor > getHeight()) {
+                                            dc.setY(getHeight() - (int) (dc.getBitmap().getHeight() * factor));
+                                        }
                                     }
-                                    if (dc.getY() + dc.getBitmap().getHeight() * factor > getHeight()) {
-                                        dc.setY(getHeight() - (int) (dc.getBitmap().getHeight() * factor));
+                                    //-- draw outline of selected
+                                    if (dc == selected) {
+                                        Rect cr3 = new Rect();
+                                        int left = (int) (dc.getSnapX() * factor) + offset;
+                                        int top = (int) (dc.getSnapY() * factor);
+                                        cr3.set(left, top,
+                                                (int) (left + dc.getOutline().getWidth() * factor),
+                                                (int) (top + dc.getOutline().getHeight() * factor)
+                                        );
+                                        canvas.drawBitmap(dc.getOutline(), null, cr3, null);
                                     }
+                                    Rect cr2 = new Rect();
+                                    cr2.set(dc.getX(), dc.getY(), (int) (dc.getX() + dc.getBitmap().getWidth() * factor), (int) (dc.getY() + dc.getBitmap().getHeight() * factor));
+                                    canvas.drawBitmap(dc.getBitmap(), null, cr2, null);
                                 }
-                                //-- draw outline of selected
-                                if (dc == selected) {
-                                    Rect cr3 = new Rect();
-                                    int left = (int) (dc.getSnapX() * factor) + offset;
-                                    int top = (int) (dc.getSnapY() * factor);
-                                    cr3.set(left, top,
-                                            (int) (left + dc.getOutline().getWidth() * factor),
-                                            (int) (top + dc.getOutline().getHeight() * factor)
-                                    );
-                                    canvas.drawBitmap(dc.getOutline(), null, cr3, null);
-                                }
-                                Rect cr2 = new Rect();
-                                cr2.set(dc.getX(), dc.getY(), (int) (dc.getX() + dc.getBitmap().getWidth() * factor), (int) (dc.getY() + dc.getBitmap().getHeight() * factor));
-                                canvas.drawBitmap(dc.getBitmap(), null, cr2, null);
                             }
+                            factored = true;
                         }
-                        factored = true;
                     }
                 } else {
                     factor = (this.getHeight() * 0.80f) / doll.getHeight();
@@ -196,40 +199,42 @@ public class DressUpView extends SpritedSurfaceView {
                     }
 
                     if (clothing != null) {
-                        for (int c = 0; c < clothing.length; c++) {
-                            DollClothing dc = clothing[c];
-                            if (dc.getBitmap() != null) {
-                                if (!factored) {
-                                    dc.setX((int) (dc.getX() * factor));
-                                    dc.setY((int) (dc.getY() * factor));
-                                    if (dc.getY() + dc.getBitmap().getHeight() * factor > getHeight()) {
-                                        dc.setY(dc.getY() - getHeight());
-                                        if (dc.getY() < 0) {
-                                            dc.setY(0);
+                        synchronized (clothing) {
+                            for (int c = 0; c < clothing.length; c++) {
+                                DollClothing dc = clothing[c];
+                                if (dc.getBitmap() != null) {
+                                    if (!factored) {
+                                        dc.setX((int) (dc.getX() * factor));
+                                        dc.setY((int) (dc.getY() * factor));
+                                        if (dc.getY() + dc.getBitmap().getHeight() * factor > getHeight()) {
+                                            dc.setY(dc.getY() - getHeight());
+                                            if (dc.getY() < 0) {
+                                                dc.setY(0);
+                                            }
+                                            dc.setX(dc.getX() + (int) (dc.getBitmap().getWidth() * factor));
                                         }
-                                        dc.setX(dc.getX() + (int) (dc.getBitmap().getWidth() * factor));
+                                        if (dc.getX() + dc.getBitmap().getWidth() * factor > getWidth()) {
+                                            dc.setX(getWidth() - (int) (dc.getBitmap().getWidth() * factor));
+                                        }
                                     }
-                                    if (dc.getX() + dc.getBitmap().getWidth() * factor > getWidth()) {
-                                        dc.setX(getWidth() - (int) (dc.getBitmap().getWidth() * factor));
+                                    //-- draw outline of selected
+                                    if (dc == selected) {
+                                        Rect cr3 = new Rect();
+                                        int left = (int) (dc.getSnapX() * factor) + offset;
+                                        int top = (int) (dc.getSnapY() * factor);
+                                        cr3.set(left, top,
+                                                (int) (left + dc.getOutline().getWidth() * factor),
+                                                (int) (top + dc.getOutline().getHeight() * factor)
+                                        );
+                                        canvas.drawBitmap(dc.getOutline(), null, cr3, null);
                                     }
+                                    Rect cr2 = new Rect();
+                                    cr2.set(dc.getX(), dc.getY(), (int) (dc.getX() + dc.getBitmap().getWidth() * factor), (int) (dc.getY() + dc.getBitmap().getHeight() * factor));
+                                    canvas.drawBitmap(dc.getBitmap(), null, cr2, null);
                                 }
-                                //-- draw outline of selected
-                                if (dc == selected) {
-                                    Rect cr3 = new Rect();
-                                    int left = (int) (dc.getSnapX() * factor) + offset;
-                                    int top = (int) (dc.getSnapY() * factor);
-                                    cr3.set(left, top,
-                                            (int) (left + dc.getOutline().getWidth() * factor),
-                                            (int) (top + dc.getOutline().getHeight() * factor)
-                                    );
-                                    canvas.drawBitmap(dc.getOutline(), null, cr3, null);
-                                }
-                                Rect cr2 = new Rect();
-                                cr2.set(dc.getX(), dc.getY(), (int) (dc.getX() + dc.getBitmap().getWidth() * factor), (int) (dc.getY() + dc.getBitmap().getHeight() * factor));
-                                canvas.drawBitmap(dc.getBitmap(), null, cr2, null);
                             }
+                            factored = true;
                         }
-                        factored = true;
                     }
                 }
             }
@@ -246,15 +251,17 @@ public class DressUpView extends SpritedSurfaceView {
     protected void touch_start(float x, float y) {
         super.touch_start(x, y);
         if (doll!=null && clothing != null) {
-            for (int c = clothing.length-1; c >=0; c--) {
-                DollClothing dc = clothing[c];
-                if (dc!=null && dc.getBitmap()!=null) {
-                    Rect rect = new Rect();
-                    rect.set(dc.getX(), dc.getY(), (int) (dc.getX() + dc.getBitmap().getWidth() * factor), (int) (dc.getY() + dc.getBitmap().getHeight() * factor));
-                    if (rect.contains((int) x, (int) y)) {
-                        selected = dc;
-                        selected.setPlaced(false);
-                        break;
+            synchronized (clothing) {
+                for (int c = clothing.length - 1; c >= 0; c--) {
+                    DollClothing dc = clothing[c];
+                    if (dc != null && dc.getBitmap() != null) {
+                        Rect rect = new Rect();
+                        rect.set(dc.getX(), dc.getY(), (int) (dc.getX() + dc.getBitmap().getWidth() * factor), (int) (dc.getY() + dc.getBitmap().getHeight() * factor));
+                        if (rect.contains((int) x, (int) y)) {
+                            selected = dc;
+                            selected.setPlaced(false);
+                            break;
+                        }
                     }
                 }
             }
@@ -287,11 +294,15 @@ public class DressUpView extends SpritedSurfaceView {
             selected.setPlaced(true);
 
             boolean complete = true;
-            for (int c = 0; c < clothing.length; c++) {
-                DollClothing dc = clothing[c];
-                if (!dc.isPlaced()) {
-                    complete = false;
-                    break;
+            if (clothing!=null) {
+                synchronized (clothing) {
+                    for (int c = 0; c < clothing.length; c++) {
+                        DollClothing dc = clothing[c];
+                        if (!dc.isPlaced()) {
+                            complete = false;
+                            break;
+                        }
+                    }
                 }
             }
             if (complete) {
