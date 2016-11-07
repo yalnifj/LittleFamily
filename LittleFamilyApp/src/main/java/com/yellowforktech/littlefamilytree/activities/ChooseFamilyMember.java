@@ -157,7 +157,7 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
                 this.family = new ArrayList<>();
             }
             for(LittlePerson p : familyMembers) {
-                if ((p.getTreeLevel()==null || p.getTreeLevel() <=0) && !this.family.contains(p)) {
+                if ((p.getTreeLevel()==null || p.getTreeLevel() <=0) && !this.family.contains(p) && p!=null) {
                     this.family.add(p);
                 }
             }
@@ -165,7 +165,7 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
             if (family.size()<=1) {
                 //family.addAll(familyMembers);
                 for(LittlePerson p : familyMembers) {
-                    if (!this.family.contains(p)) {
+                    if (!this.family.contains(p) && p!=null) {
                         this.family.add(p);
                     }
                 }
@@ -179,7 +179,7 @@ public class ChooseFamilyMember extends LittleFamilyActivity implements AdapterV
         } else {
             //-- add grandchildren
             for(LittlePerson p : familyMembers) {
-                if (!this.family.contains(p)) {
+                if (!this.family.contains(p) && p!=null) {
                     this.family.add(p);
                 }
             }

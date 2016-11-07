@@ -29,7 +29,7 @@ public class PedigreeHelper {
                     lp = dataService.getDBHelper().getPersonByFamilySearchId(fsPerson.getId());
                 }
                 if (lp == null) {
-                    dataService.fireStatusUpdate("Processing " + fsPerson.getFullName());
+                    dataService.fireStatusUpdate("Processing " + fsPerson.getDisplayExtension().getName());
                     lp = DataHelper.buildLittlePerson(fsPerson, dataService.getContext(), fsService, true);
                     dataService.getDBHelper().persistLittlePerson(lp);
                 }

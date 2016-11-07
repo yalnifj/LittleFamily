@@ -108,7 +108,7 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
             }
         }
 
-        if (people.size() < 2) {
+        if (people.size() < 2 && family.size()>0) {
             FamilyLoaderTask task = new FamilyLoaderTask(this, this);
             Boolean showStepChildren = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("show_step_children", true);
             task.setGetInLaws(showStepChildren);

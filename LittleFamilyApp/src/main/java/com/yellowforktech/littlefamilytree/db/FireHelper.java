@@ -55,7 +55,8 @@ public class FireHelper implements FirebaseAuth.AuthStateListener {
         }
     }
 
-    public void createOrUpdateUser(final String username, final String serviceType, final boolean isPremium) {
+    public void createOrUpdateUser(final String usern, final String serviceType, final boolean isPremium) {
+        final String username = safeUsername(usern);
         if (authenticated) {
             updateUser(username, serviceType, isPremium);
         } else {
@@ -74,7 +75,8 @@ public class FireHelper implements FirebaseAuth.AuthStateListener {
         }
     }
 
-    private void updateUser(final String username, final String serviceType, final boolean isPremium) {
+    private void updateUser(final String usern, final String serviceType, final boolean isPremium) {
+        final String username = safeUsername(usern);
         try {
             final DatabaseReference database = FirebaseDatabase.getInstance().getReference();
             database.child("users").child(serviceType).child(username).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -111,7 +113,8 @@ public class FireHelper implements FirebaseAuth.AuthStateListener {
         }
     }
 
-    public void userIsPremium(final String username, final String serviceType, final PremiumListener listener) {
+    public void userIsPremium(final String usern, final String serviceType, final PremiumListener listener) {
+        final String username = safeUsername(usern);
         if (authenticated) {
             isPremium(username, serviceType, listener);
         } else {
@@ -130,7 +133,8 @@ public class FireHelper implements FirebaseAuth.AuthStateListener {
         }
     }
 
-    private void isPremium(String username, String serviceType, final PremiumListener listener) {
+    private void isPremium(String usern, String serviceType, final PremiumListener listener) {
+        final String username = safeUsername(usern);
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
         database.child("users").child(serviceType).child(username).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -153,7 +157,8 @@ public class FireHelper implements FirebaseAuth.AuthStateListener {
         });
     }
 
-    public void validateCode(final String username, final String code, final ValidateListener listener) {
+    public void validateCode(final String usern, final String code, final ValidateListener listener) {
+       final String username = safeUsername(usern);
         if (authenticated) {
             validateCodeImpl(username, code, listener);
         } else {
@@ -172,7 +177,8 @@ public class FireHelper implements FirebaseAuth.AuthStateListener {
         }
     }
 
-    private void validateCodeImpl(final String username, final String code, final ValidateListener listener) {
+    private void validateCodeImpl(final String usern, final String code, final ValidateListener listener) {
+        final String username = safeUsername(usern);
         final DatabaseReference database = FirebaseDatabase.getInstance().getReference();
         database.child("codes").child(code).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -200,6 +206,11 @@ public class FireHelper implements FirebaseAuth.AuthStateListener {
                 listener.results(false, "Validation request cancelled.");
             }
         });
+    }
+
+    public String safeUsername(String username) {
+        String safe = username.replaceAll("\\W", "_");
+        return safe;
     }
 
     @Override

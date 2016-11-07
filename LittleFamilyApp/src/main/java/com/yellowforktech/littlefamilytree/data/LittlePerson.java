@@ -67,7 +67,7 @@ public class LittlePerson implements Serializable {
     }
 
     public LittlePerson(Person fsPerson) {
-        setName(fsPerson.getFullName());
+        setName(fsPerson.getDisplayExtension().getName());
         setFamilySearchId(fsPerson.getId());
         if (fsPerson.getGender()!=null) {
             setGender(fsPerson.getGender().getKnownType());
