@@ -248,24 +248,27 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
                     return;
                 }
 
-                synchronized (selected) {
-                    selected = null;
-                    for (int r = 0; r < game.getRows(); r++) {
-                        for (int c = 0; c < game.getCols(); c++) {
-                            PuzzlePiece pp = game.getPiece(r, c);
-                            if (!pp.isInPlace() && !pp.isAnimating()) {
-                                if (x >= pp.getX() && x <= pp.getX() + pieceWidth && y >= pp.getY() && y <= pp.getY() + pieceHeight) {
-                                    selected = pp;
-                                    pp.setSelected(true);
-                                    sRow = r;
-                                    sCol = c;
-                                    Log.d("PuzzleSurfaceView", "Selecting r=" + r + " c=" + c);
-                                    return;
-                                }
+                if (selected!=null) {
+                    synchronized (selected) {
+                        selected = null;
+                    }
+                }
+                for (int r = 0; r < game.getRows(); r++) {
+                    for (int c = 0; c < game.getCols(); c++) {
+                        PuzzlePiece pp = game.getPiece(r, c);
+                        if (!pp.isInPlace() && !pp.isAnimating()) {
+                            if (x >= pp.getX() && x <= pp.getX() + pieceWidth && y >= pp.getY() && y <= pp.getY() + pieceHeight) {
+                                selected = pp;
+                                pp.setSelected(true);
+                                sRow = r;
+                                sCol = c;
+                                Log.d("PuzzleSurfaceView", "Selecting r=" + r + " c=" + c);
+                                return;
                             }
                         }
                     }
                 }
+
             }
         }
     }

@@ -47,7 +47,7 @@ public class FamilyMemberListAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int index) {
-        if (family!=null && family.size()>index) {
+        if (family!=null && family.size()>index && family.get(index)!=null) {
             return family.get(index);
         }
         return null;
@@ -55,7 +55,7 @@ public class FamilyMemberListAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int index) {
-        if (family!=null && family.size()>index) {
+        if (family!=null && family.size()>index && family.get(index)!=null) {
             return family.get(index).getId();
         }
         return 0;

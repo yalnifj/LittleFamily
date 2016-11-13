@@ -81,7 +81,7 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
         FamilyLoaderTask task = new FamilyLoaderTask(this, this);
         Boolean showStepChildren = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("show_step_children", true);
         task.setGetInLaws(showStepChildren);
-        if (people.size()>0) {
+        if (people.size()>backgroundLoadIndex) {
             task.execute(people.get(backgroundLoadIndex));
         } else {
             task.execute(selectedPerson);
@@ -108,13 +108,18 @@ public class MatchGameActivity extends LittleFamilyActivity implements AdapterVi
             }
         }
 
-        if (people.size() < 2 && family.size()>0) {
-            FamilyLoaderTask task = new FamilyLoaderTask(this, this);
-            Boolean showStepChildren = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("show_step_children", true);
-            task.setGetInLaws(showStepChildren);
-            LittlePerson[] arrayPeople = new LittlePerson[family.size()];
-            family.toArray(arrayPeople);
-            task.execute(arrayPeople);
+        if (people.size() < 2) {
+                FamilyLoaderTask task = new FamilyLoaderTask(this, this);
+                Boolean showStepChildren = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("show_step_children", true);
+                task.setGetInLaws(showStepChildren);
+                LittlePerson[] arrayPeople = new LittlePerson[family.size()];
+            if (family.size()>0) {
+                family.toArray(arrayPeople);
+                task.execute(arrayPeople);
+            } else {
+                personTracker.reset();
+                task.execute(selectedPerson);
+            }
             return;
         }
 
