@@ -109,28 +109,30 @@ public class ColoringView extends SpritedSurfaceView implements ColoringImageFil
         synchronized (canvasBitmap) {
             int w = this.getWidth();
             int h = this.getHeight();
-            float ratio = (float) (originalBitmap.getWidth()) / originalBitmap.getHeight();
-            if (ratio > 1) {
-                h = (int) (w / ratio);
-            } else {
-                w = (int) (h * ratio);
+            if (originalBitmap!=null) {
+                float ratio = (float) (originalBitmap.getWidth()) / originalBitmap.getHeight();
+                if (ratio > 1) {
+                    h = (int) (w / ratio);
+                } else {
+                    w = (int) (h * ratio);
+                }
+                //-- create the cropping rectangle
+                Rect src = new Rect();
+                src.set(0, 0, w, h);
+
+                //-- create a copy that is the correct size
+                copy = Bitmap.createBitmap(w, h, canvasBitmap.getConfig());
+                Canvas copyCanvas = new Canvas(copy);
+
+                //-- draw the cropped bitmap onto the copy
+                copyCanvas.drawBitmap(canvasBitmap, src, src, null);
+
+                Bitmap branding = ImageHelper.loadBitmapFromResource(context, R.drawable.logo, 0, (int) (w * 0.25f), (int) (h * 0.25f));
+                //-- add the branding mark
+                Rect dst = new Rect();
+                dst.set(0, h - branding.getHeight(), branding.getWidth(), h);
+                copyCanvas.drawBitmap(branding, null, dst, null);
             }
-            //-- create the cropping rectangle
-            Rect src = new Rect();
-            src.set(0,0,w,h);
-
-            //-- create a copy that is the correct size
-            copy = Bitmap.createBitmap(w, h, canvasBitmap.getConfig());
-            Canvas copyCanvas = new Canvas(copy);
-
-            //-- draw the cropped bitmap onto the copy
-            copyCanvas.drawBitmap(canvasBitmap, src, src, null);
-
-            Bitmap branding = ImageHelper.loadBitmapFromResource(context, R.drawable.logo,0, (int) (w*0.25f), (int) (h*0.25f));
-            //-- add the branding mark
-            Rect dst = new Rect();
-            dst.set(0, h - branding.getHeight(), branding.getWidth(), h);
-            copyCanvas.drawBitmap(branding, null, dst, null);
         }
 		return copy;
 	}

@@ -886,7 +886,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
     @Override
     protected void touch_start(float x, float y) {
         super.touch_start(x, y);
-        if (rotation==null) {
+        if (rotation==null && bird!=null) {
             float percx = (x - bird.getX()) / getWidth();
             roll = -100 * dm.density * percx;
 
@@ -900,7 +900,7 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
     @Override
     protected void touch_move(float x, float y) {
         super.touch_move(x, y);
-        if (rotation==null) {
+        if (rotation==null && bird!=null) {
             float percx = (x - bird.getX()) / getWidth();
             roll = -100 * dm.density * percx;
 

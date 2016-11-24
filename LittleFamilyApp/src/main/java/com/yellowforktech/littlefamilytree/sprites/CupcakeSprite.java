@@ -113,18 +113,21 @@ public class CupcakeSprite extends TouchEventGameSprite {
             }
             if (person.getAge() != null) {
                 int age = person.getAge();
-                Calendar now = Calendar.getInstance();
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(person.getBirthDate());
-                cal.set(Calendar.YEAR, now.get(Calendar.YEAR));
-                if (cal.after(now)) {
-                    age++;
+                if (person.getBirthDate()!=null) {
+                    Calendar now = Calendar.getInstance();
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(person.getBirthDate());
+                    cal.set(Calendar.YEAR, now.get(Calendar.YEAR));
+                    if (cal.after(now)) {
+                        age++;
+                    }
+
+                    Rect bounds = new Rect();
+                    String ageStr = "Age " + age;
+                    textPaint.getTextBounds(ageStr, 0, ageStr.length(), bounds);
+                    float dx = (getWidth() - bounds.width()) / 2;
+                    canvas.drawText(ageStr, getX() + dx, textTop + textPaint.getTextSize() * 2, textPaint);
                 }
-                Rect bounds = new Rect();
-                String ageStr = "Age "+age;
-                textPaint.getTextBounds(ageStr, 0, ageStr.length(), bounds);
-                float dx = (getWidth() - bounds.width()) / 2;
-                canvas.drawText(ageStr, getX() + dx, textTop + textPaint.getTextSize()*2, textPaint);
             }
         }
     }

@@ -37,9 +37,11 @@ public class ColoringImageFilterTask extends AsyncTask<Bitmap, Integer, Bitmap> 
 
         Bitmap orig = params[0];
         Bitmap outlineBitmap = null;
-        if (orig!=null && !orig.isRecycled()) {
+        if (orig!=null) {
             synchronized (orig) {
-                outlineBitmap = outlineImage.getBitmapWithFilterApplied(orig);
+                if (!orig.isRecycled()) {
+                    outlineBitmap = outlineImage.getBitmapWithFilterApplied(orig);
+                }
             }
         }
         long endtime = System.currentTimeMillis();

@@ -7,8 +7,8 @@ android {
         applicationId "com.yellowforktech.littlefamilytree"
         minSdkVersion 15
         targetSdkVersion 24
-        versionName "2.0.7"
-        versionCode 213
+        versionName "2.0.8"
+        versionCode 214
         multiDexEnabled true
     }
     buildTypes {

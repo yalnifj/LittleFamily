@@ -259,7 +259,9 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
                             }
                             if (ds != null) {
                                 LittlePerson person = ds.getPerson();
-                                word = word.replace("_", song.getAttributor().getAttributeFromPerson(person, nextPerson));
+                                String replace = song.getAttributor().getAttributeFromPerson(person, nextPerson);
+                                if (replace==null) replace = "";
+                                word = word.replace("_", replace);
                                 Log.d("SongSpriteSurfaceView", "word "+word+" speakPerson="+speakPerson+" nextPerson="+nextPerson);
                                 nextPerson++;
                             }
@@ -328,13 +330,15 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
                             DraggablePersonSprite ds = onStage.get(speakPerson);
                             LittlePerson person = ds.getPerson();
 							String attr = song.getAttributor().getAttributeFromPerson(person, speakPerson);
-							if (attr.matches("\\d[1-9]\\d{2}") ) {
-								attr = attr.substring(0,2) + " " + attr.substring(2);
-							}
-                            if (attr.equals(person.getGivenName())) {
-                                activity.sayGivenNameForPerson(person);
-                            } else {
-                                activity.speak(attr);
+                            if (attr != null) {
+                                if (attr.matches("\\d[1-9]\\d{2}")) {
+                                    attr = attr.substring(0, 2) + " " + attr.substring(2);
+                                }
+                                if (attr.equals(person.getGivenName())) {
+                                    activity.sayGivenNameForPerson(person);
+                                } else {
+                                    activity.speak(attr);
+                                }
                             }
                             speakPerson++;
                             Log.d("SongSpriteSurfaceView", "speak speakPerson="+speakPerson+" nextPerson="+nextPerson);

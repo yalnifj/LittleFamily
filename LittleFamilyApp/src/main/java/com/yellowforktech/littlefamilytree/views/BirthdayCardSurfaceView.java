@@ -872,10 +872,10 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
             DataService.getInstance().unregisterNetworkStateListener(activity);
             loadingPeople = false;
             List<LittlePerson> people = new ArrayList<>(family);
+            people.remove(activity.getSelectedPerson());
+            people.add(0, activity.getSelectedPerson());
             people.remove(birthdayPerson);
             people.add(0, birthdayPerson);
-            people.remove(activity.getSelectedPerson());
-            people.add(1, activity.getSelectedPerson());
             showPeopleOnMirror(people);
         }
 
