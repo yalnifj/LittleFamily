@@ -146,23 +146,27 @@ public class HomeView extends ScaledSpritedClippedSurfaceView {
 
         canvas.setMatrix(new Matrix());
         canvas.translate(0, 0);
-        lockSprite.setX(getWidth() - lockSprite.getWidth() * 1.5f);
-        lockSprite.setY(getHeight() - lockSprite.getHeight() * 1.5f);
-        lockSprite.doDraw(canvas);
-		
-		profileSprite.setX(lockSprite.getX() - profileSprite.getWidth() * 1.2f);
-        profileSprite.setY(lockSprite.getY());
-        profileSprite.doDraw(canvas);
+        if (lockSprite!=null) {
+            lockSprite.setX(getWidth() - lockSprite.getWidth() * 1.5f);
+            lockSprite.setY(getHeight() - lockSprite.getHeight() * 1.5f);
+            lockSprite.doDraw(canvas);
+        }
+
+        if (profileSprite!=null) {
+            profileSprite.setX(lockSprite.getX() - profileSprite.getWidth() * 1.2f);
+            profileSprite.setY(lockSprite.getY());
+            profileSprite.doDraw(canvas);
+        }
     }
 
     @Override
     protected void touch_start(float x, float y) {
         super.touch_start(x, y);
 
-        if (lockSprite.inSprite(x, y)) {
+        if (lockSprite!=null && lockSprite.inSprite(x, y)) {
             lockSprite.onSelect(x, y);
         }
-		if (profileSprite.inSprite(x, y)) {
+		if (profileSprite!=null && profileSprite.inSprite(x, y)) {
             profileSprite.onSelect(x, y);
         }
     }
@@ -171,10 +175,10 @@ public class HomeView extends ScaledSpritedClippedSurfaceView {
     protected void touch_up(float x, float y) {
         super.touch_up(x, y);
 
-        if (lockSprite.inSprite(x, y)) {
+        if (lockSprite!=null && lockSprite.inSprite(x, y)) {
             lockSprite.onRelease(x, y);
         }
-		if (profileSprite.inSprite(x, y)) {
+		if (profileSprite!=null && profileSprite.inSprite(x, y)) {
             profileSprite.onRelease(x, y);
         }
 
