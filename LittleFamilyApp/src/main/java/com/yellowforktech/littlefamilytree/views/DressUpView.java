@@ -103,8 +103,12 @@ public class DressUpView extends SpritedSurfaceView {
                             Log.e("DressUpView", "Error drawing image", e);
                         }
                     }
-                    synchronized (clothing) {
+                    if (clothing==null) {
                         clothing = clothes;
+                    } else {
+                        synchronized (clothing) {
+                            clothing = clothes;
+                        }
                     }
                 }
 
