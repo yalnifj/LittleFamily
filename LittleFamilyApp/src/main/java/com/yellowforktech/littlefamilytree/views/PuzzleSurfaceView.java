@@ -187,15 +187,17 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
 
                 if (selected != null) {
                     synchronized (selected) {
-                        int by = selected.getRow() * bHeight;
-                        int bx = selected.getCol() * bWidth;
-                        Rect src = new Rect();
-                        src.set(bx, by, bx + bWidth, by + bHeight);
-                        Rect dst = new Rect();
-                        dst.set(selected.getX(), selected.getY(), selected.getX() + pieceWidth, selected.getY() + pieceHeight);
-                        canvas.drawRect((float) (dst.left + 10), (float) (dst.top + 10), (float) (dst.right + 10), (float) (dst.bottom + 10), shadowPaint);
-                        canvas.drawBitmap(bitmap, src, dst, outlinePaint);
-                        canvas.drawRect(dst, outlinePaint);
+                        if (selected != null) {
+                            int by = selected.getRow() * bHeight;
+                            int bx = selected.getCol() * bWidth;
+                            Rect src = new Rect();
+                            src.set(bx, by, bx + bWidth, by + bHeight);
+                            Rect dst = new Rect();
+                            dst.set(selected.getX(), selected.getY(), selected.getX() + pieceWidth, selected.getY() + pieceHeight);
+                            canvas.drawRect((float) (dst.left + 10), (float) (dst.top + 10), (float) (dst.right + 10), (float) (dst.bottom + 10), shadowPaint);
+                            canvas.drawBitmap(bitmap, src, dst, outlinePaint);
+                            canvas.drawRect(dst, outlinePaint);
+                        }
                     }
                 }
 

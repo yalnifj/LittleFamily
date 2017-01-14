@@ -53,6 +53,7 @@ public class TreeSearchGame {
     int retryCounter = 0;
     public void findRandomPerson(TreeNode root) {
         rootNode = root;
+        if (root==null) return;
         rootPerson = root.getPerson();
         Random rand = new Random();
         targetPerson = null;

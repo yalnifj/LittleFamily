@@ -46,7 +46,7 @@ public class PremiumDialog extends DialogFragment {
         closeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onClose();
+                if (listener!=null) listener.onClose();
             }
         });
 

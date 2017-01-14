@@ -250,12 +250,16 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     }
 
     public void showBuyTryDialog(int tries, PremiumDialog.ActionListener listener) {
-        premiumDialog = new PremiumDialog();
-        premiumDialog.setTries(tries);
-        premiumDialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Theme_AppCompat_Light_Dialog);
-        premiumDialog.setListener(listener);
-        premiumDialog.setCancelable(false);
-        premiumDialog.show(getFragmentManager(), "Authenticate");
+        try {
+            premiumDialog = new PremiumDialog();
+            premiumDialog.setTries(tries);
+            premiumDialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Theme_AppCompat_Light_Dialog);
+            premiumDialog.setListener(listener);
+            premiumDialog.setCancelable(false);
+            premiumDialog.show(getFragmentManager(), "Authenticate");
+        } catch (Exception e) {
+            Log.e("LittleFamilyActivity", "Error Showing buy dialog", e);
+        }
     }
 
     public void hideBuyTryDialog() {

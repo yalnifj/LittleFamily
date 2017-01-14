@@ -81,7 +81,9 @@ public class AnimatedBitmapSprite extends Sprite implements BitmapSequenceLoader
     }
 
     public void setBitmaps(Map<Integer, List<Bitmap>> bitmaps) {
-        this.bitmaps = bitmaps;
+        synchronized (this.bitmaps) {
+            this.bitmaps = bitmaps;
+        }
     }
 
     public Map<Integer, List<Integer>> getBitmapIds() {

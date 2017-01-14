@@ -135,12 +135,14 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
 
     @Override
     public void doStep() {
-        synchronized (sprites) {
-            Iterator<Sprite> i = sprites.iterator();
-            while (i.hasNext()) {
-                Sprite s = i.next();
-                s.doStep();
-                if (s.isRemoveMe()) i.remove();
+        if (sprites!=null) {
+            synchronized (sprites) {
+                Iterator<Sprite> i = sprites.iterator();
+                while (i.hasNext()) {
+                    Sprite s = i.next();
+                    s.doStep();
+                    if (s.isRemoveMe()) i.remove();
+                }
             }
         }
 		

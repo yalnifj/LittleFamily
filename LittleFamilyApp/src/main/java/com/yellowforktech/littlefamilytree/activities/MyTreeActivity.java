@@ -511,7 +511,7 @@ public class MyTreeActivity extends LittleFamilyActivity implements TreeLoaderTa
             }
             if (levelArrows.get(level-1)!=null) {
                 for(Sprite a : levelArrows.get(level-1)) {
-                    if (!treeView.getSprites().contains(a)) {
+                    if (treeView.getSprites()== null || !treeView.getSprites().contains(a)) {
                         treeView.addSprite(a);
                     }
                 }

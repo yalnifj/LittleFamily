@@ -15,6 +15,7 @@ import android.widget.ImageView;
 
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.data.DataService;
+import com.yellowforktech.littlefamilytree.db.FireHelper;
 import com.yellowforktech.littlefamilytree.events.EventListener;
 import com.yellowforktech.littlefamilytree.events.EventQueue;
 import com.yellowforktech.littlefamilytree.sprites.TouchStateAnimatedBitmapSprite;
@@ -116,6 +117,17 @@ public class SplashActivity extends Activity implements EventListener {
 
     public void gotoChooseFamilyMember(View view) {
         try {
+            String premStr = DataService.getInstance().getDBHelper().getProperty(LittleFamilyActivity.PROP_HAS_PREMIUM);
+            boolean premium = false;
+            if (premStr.equals("true")) {
+                premium = true;
+            }
+            String username = DataService.getInstance().getDBHelper().getProperty(DataService.SERVICE_USERNAME);
+            String serviceType = PreferenceManager.getDefaultSharedPreferences(this).getString(DataService.SERVICE_TYPE, null);
+            if (username != null && serviceType != null) {
+                FireHelper.getInstance().createOrUpdateUser(username, serviceType, premium);
+            }
+
             if (dataService.getServiceType()==null || !dataService.hasData()) {
                 Intent intent = new Intent(this, ChooseRemoteService.class);
                 startActivity(intent);
