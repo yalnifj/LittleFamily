@@ -24,6 +24,7 @@ import com.yellowforktech.littlefamilytree.data.DataNetworkStateListener;
 import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.db.FireHelper;
+import com.yellowforktech.littlefamilytree.db.Sale;
 import com.yellowforktech.littlefamilytree.events.EventListener;
 import com.yellowforktech.littlefamilytree.events.EventQueue;
 
@@ -249,17 +250,27 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         }
     }
 
-    public void showBuyTryDialog(int tries, PremiumDialog.ActionListener listener) {
-        try {
-            premiumDialog = new PremiumDialog();
-            premiumDialog.setTries(tries);
-            premiumDialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Theme_AppCompat_Light_Dialog);
-            premiumDialog.setListener(listener);
-            premiumDialog.setCancelable(false);
-            premiumDialog.show(getFragmentManager(), "Authenticate");
-        } catch (Exception e) {
-            Log.e("LittleFamilyActivity", "Error Showing buy dialog", e);
-        }
+    public void showBuyTryDialog(final int tries, final PremiumDialog.ActionListener listener) {
+        FireHelper.getInstance().isOnSale(new FireHelper.SaleListener() {
+            @Override
+            public void onSale(Sale sale) {
+                try {
+                    premiumDialog = new PremiumDialog();
+                    premiumDialog.setTries(tries);
+                    premiumDialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Theme_AppCompat_Light_Dialog);
+                    premiumDialog.setListener(listener);
+                    if (sale!=null) {
+                        premiumDialog.setOnSale(true);
+                        premiumDialog.setSalePrice(sale.getPrice());
+                        premiumDialog.setSaleText(sale.getSalesText());
+                    }
+                    premiumDialog.setCancelable(false);
+                    premiumDialog.show(getFragmentManager(), "Authenticate");
+                } catch (Exception e) {
+                    Log.e("LittleFamilyActivity", "Error Showing buy dialog", e);
+                }
+            }
+        });
     }
 
     public void hideBuyTryDialog() {

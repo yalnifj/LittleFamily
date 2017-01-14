@@ -21,14 +21,42 @@ import java.lang.reflect.Field;
  */
 public class PremiumDialog extends DialogFragment {
 
+    private String saleText;
+    private double salePrice;
+    private boolean onSale;
     private int tries;
     private ActionListener listener;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		
-        View v = inflater.inflate(R.layout.fragment_lock_dialog, container, false);
+
+        View v = null;
+        if (onSale) {
+            v = inflater.inflate(R.layout.fragment_lock_dialog_sale, container, false);
+
+            TextView saleTextView = (TextView) v.findViewById(R.id.sale_text);
+            saleTextView.setText(saleText);
+
+            if (salePrice==1.99) {
+                ImageView lock = (ImageView) v.findViewById(R.id.lock_image);
+                lock.setImageResource(R.drawable.lock_50);
+
+                ImageView buyButton = (ImageView) v.findViewById(R.id.buy_button);
+                buyButton.setImageResource(R.drawable.buy_button_199);
+            }
+
+            if (salePrice==2.99) {
+                ImageView lock = (ImageView) v.findViewById(R.id.lock_image);
+                lock.setImageResource(R.drawable.lock_25);
+
+                ImageView buyButton = (ImageView) v.findViewById(R.id.buy_button);
+                buyButton.setImageResource(R.drawable.buy_button_299);
+            }
+
+        } else {
+            v = inflater.inflate(R.layout.fragment_lock_dialog, container, false);
+        }
 
         TextView triesText = (TextView) v.findViewById(R.id.tries_left_text);
         if (tries > 0) {
@@ -100,6 +128,18 @@ public class PremiumDialog extends DialogFragment {
 
     public void setListener(ActionListener listener) {
         this.listener = listener;
+    }
+
+    public void setSaleText(String saleText) {
+        this.saleText = saleText;
+    }
+
+    public void setOnSale(boolean onSale) {
+        this.onSale = onSale;
+    }
+
+    public void setSalePrice(double salePrice) {
+        this.salePrice = salePrice;
     }
 
     public interface ActionListener {

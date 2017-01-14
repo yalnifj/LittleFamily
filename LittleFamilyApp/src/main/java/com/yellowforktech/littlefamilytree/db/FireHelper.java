@@ -160,6 +160,38 @@ public class FireHelper implements FirebaseAuth.AuthStateListener {
         });
     }
 
+    public void isOnSale(final SaleListener listener) {
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+        database.child("sales").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot!=null && dataSnapshot.exists()) {
+                    long now = (new Date()).getTime();
+                    for(DataSnapshot sale : dataSnapshot.getChildren()) {
+                        long start = (long) sale.child("start").getValue();
+                        long end = (long) sale.child("end").getValue();
+                        if (now>=start && now<=end) {
+                            Sale saleData = new Sale();
+                            saleData.setEndDate(new Date(end));
+                            saleData.setStartDate(new Date(start));
+                            saleData.setPrice((Double) sale.child("price").getValue());
+                            saleData.setSalesText((String) sale.child("salesText").getValue());
+
+                            listener.onSale(saleData);
+                            return;
+                        }
+                    }
+                }
+                listener.onSale(null);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onSale(null);
+            }
+        });
+    }
+
     public void validateCode(final String usern, final String code, final ValidateListener listener) {
        final String username = safeUsername(usern);
         if (authenticated) {
@@ -235,5 +267,9 @@ public class FireHelper implements FirebaseAuth.AuthStateListener {
 
     public interface ValidateListener {
         public void results(boolean valid, String status);
+    }
+
+    public interface SaleListener {
+        public void onSale(Sale sale);
     }
 }
