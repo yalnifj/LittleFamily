@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:minHeight="400dp"
     android:minWidth="350dp">
 
@@ -22,14 +22,19 @@
         android:layout_margin="5dp"/>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Premium Upgrade is Currently On Sale!"
         android:id="@+id/sale_text"
         android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:maxLines="2"
         android:layout_marginTop="5dp"
-        android:layout_marginBottom="40dp"/>
+        android:layout_marginBottom="25dp"
+        android:padding="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" />
 
     <TextView
         android:layout_width="wrap_content"

@@ -119,7 +119,7 @@ public class SplashActivity extends Activity implements EventListener {
         try {
             String premStr = DataService.getInstance().getDBHelper().getProperty(LittleFamilyActivity.PROP_HAS_PREMIUM);
             boolean premium = false;
-            if (premStr.equals("true")) {
+            if (premStr!=null && premStr.equals("true")) {
                 premium = true;
             }
             String username = DataService.getInstance().getDBHelper().getProperty(DataService.SERVICE_USERNAME);
