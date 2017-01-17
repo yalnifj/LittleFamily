@@ -10,7 +10,11 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.yellowforktech.littlefamilytree.R;
@@ -29,6 +33,7 @@ public class NewSettingsActivity extends Activity {
     private CheckBox chkShowStepChildren;
     private CheckBox chkQuietMode;
     private TextView txtVersion;
+    private ImageView imgSkinView;
 
     private LittlePerson selectedPerson;
 
@@ -75,6 +80,20 @@ public class NewSettingsActivity extends Activity {
         chkQuietMode = (CheckBox) findViewById(R.id.chkQuietMode);
         Boolean quietMode = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("quiet_mode", false);
         chkQuietMode.setChecked(quietMode);
+
+        imgSkinView = (ImageView) findViewById(R.id.skinView);
+        String skinColor = PreferenceManager.getDefaultSharedPreferences(this).getString("skin_color", "light");
+        int skinViewResourceId = R.drawable.boy;
+        switch (skinColor) {
+            case "mid":
+                skinViewResourceId = R.drawable.boy_mid;
+                break;
+            case "dark":
+                skinViewResourceId = R.drawable.boy_dark;
+                break;
+        }
+        imgSkinView.setImageResource(skinViewResourceId);
+
 
         txtVersion = (TextView) findViewById(R.id.txtVersion);
         try {
@@ -162,5 +181,75 @@ public class NewSettingsActivity extends Activity {
                 });
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    public void onChooseSkin(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        final ListAdapter adapter = new SkinListAdapter();
+        builder.setTitle(R.string.pref_title_skin_color)
+                .setAdapter(adapter, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String skinColor = (String) adapter.getItem(which);
+                        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(NewSettingsActivity.this).edit();
+                        editor.putString("skin_color", skinColor);
+                        editor.commit();
+
+                        int skinViewResourceId = R.drawable.boy;
+                        switch (skinColor) {
+                            case "mid":
+                                skinViewResourceId = R.drawable.boy_mid;
+                                break;
+                            case "dark":
+                                skinViewResourceId = R.drawable.boy_dark;
+                                break;
+                        }
+                        imgSkinView.setImageResource(skinViewResourceId);
+
+                        dialog.dismiss();
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    class SkinListAdapter extends BaseAdapter {
+
+        int[] items = {R.drawable.boy, R.drawable.boy_mid, R.drawable.boy_dark};
+        String[] prefs = {"light", "mid", "dark"};
+
+        @Override
+        public int getCount() {
+            return items.length;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return prefs[position];
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ImageView view = null;
+            if (convertView!=null) {
+                view = (ImageView) convertView.getTag();
+            }
+
+            if (view==null) {
+                view = new ImageView(NewSettingsActivity.this);
+                convertView.setTag(view);
+            }
+
+            int resourceId = items[position];
+            view.setImageResource(resourceId);
+
+            return view;
+        }
     }
 }

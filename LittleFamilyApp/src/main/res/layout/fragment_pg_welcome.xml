@@ -36,31 +36,4 @@
             android:scaleType="fitCenter" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/textView7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/visit_website"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_marginTop="10dp" />
-
-    <TextView
-        android:id="@+id/textView8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/visit_web_desc"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_marginTop="10dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="http://www.littlefamilytree.com"
-        android:id="@+id/websiteLink"
-        android:layout_marginTop="10dp"
-        android:textColor="#007bff"
-        android:linksClickable="false"
-        android:onClick="launchWebsite" />
-
 </LinearLayout>

@@ -30,13 +30,13 @@ public class ParentsGuideDialog extends DialogFragment {
 
     private int[] pages = {
             R.layout.fragment_pg_welcome,
-            R.layout.fragment_pg_photos,
             R.layout.fragment_pg_playtogether,
+            R.layout.fragment_pg_photos,
             R.layout.fragment_pg_chooseplayer,
             R.layout.fragment_pg_home,
             R.layout.fragment_pg_stars,
             R.layout.fragment_pg_settings,
-            R.layout.fragment_pg_kidheritage
+            R.layout.fragment_pg_website
     };
 
     @Override
