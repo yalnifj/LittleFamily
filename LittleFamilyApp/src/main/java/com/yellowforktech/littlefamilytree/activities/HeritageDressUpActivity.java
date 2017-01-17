@@ -55,7 +55,7 @@ public class HeritageDressUpActivity extends LittleFamilyActivity implements Dre
         person = (LittlePerson) intent.getSerializableExtra(ChooseFamilyMember.SELECTED_PERSON);
         if (dollConfig==null) {
             DressUpDolls dressUpDolls = new DressUpDolls();
-            dollConfig = dressUpDolls.getDollConfig(PlaceHelper.getTopPlace(person.getBirthPlace()), person);
+            dollConfig = dressUpDolls.getDollConfig(PlaceHelper.getTopPlace(person.getBirthPlace()), person, this);
         }
 
         dressUpView = (DressUpView) findViewById(R.id.dress_up_view);
@@ -100,7 +100,7 @@ public class HeritageDressUpActivity extends LittleFamilyActivity implements Dre
         }
         Collections.sort(allPlaces);
         for(String place : allPlaces) {
-            allDolls.add(dressUpDolls.getDollConfig(place, person));
+            allDolls.add(dressUpDolls.getDollConfig(place, person, this));
         }
 
         DollConfigLoader dcl = new DollConfigLoader();

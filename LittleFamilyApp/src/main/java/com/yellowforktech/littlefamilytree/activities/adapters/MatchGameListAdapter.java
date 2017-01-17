@@ -109,7 +109,7 @@ public class MatchGameListAdapter extends BaseAdapter {
                         if (person.getPerson().getPhotoPath() != null) {
                             bm = ImageHelper.loadBitmapFromFile(person.getPerson().getPhotoPath(), ImageHelper.getOrientation(person.getPerson().getPhotoPath()), width, height, false);
                         } else {
-                            bm = ImageHelper.loadBitmapFromResource(context, person.getPerson().getDefaultPhotoResource(), 0, width, height);
+                            bm = ImageHelper.loadBitmapFromResource(context, ImageHelper.getPersonDefaultImage(context, person.getPerson()), 0, width, height);
                         }
                         toDraw = ImageHelper.overlay(bm, frame, width, height, paint);
                         holder.back = toDraw;

@@ -42,7 +42,7 @@ public class FlyingPersonLeafSprite extends MovingAnimatedBitmapSprite {
                 photo = ImageHelper.loadBitmapFromFile(person.getPhotoPath(), ImageHelper.getOrientation(person.getPhotoPath()), (int) (width * 0.5), (int) (width * 0.5), false);
             }
             if (photo == null) {
-                photo = ImageHelper.loadBitmapFromResource(context, person.getDefaultPhotoResource(), 0, (int) (width * 0.5), (int) (width * 0.5));
+                photo = ImageHelper.loadBitmapFromResource(context, ImageHelper.getPersonDefaultImage(context, person), 0, (int) (width * 0.5), (int) (width * 0.5));
             }
         }
     }

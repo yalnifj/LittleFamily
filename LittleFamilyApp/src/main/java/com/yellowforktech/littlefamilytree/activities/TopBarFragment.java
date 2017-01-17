@@ -106,7 +106,7 @@ public class TopBarFragment extends Fragment {
                     Bitmap bm = ImageHelper.loadBitmapFromFile(person.getPhotoPath(), ImageHelper.getOrientation(person.getPhotoPath()), width, width, false);
                     profileButton.setImageBitmap(bm);
                 } else {
-                    Bitmap bm = ImageHelper.loadBitmapFromResource(context, person.getDefaultPhotoResource(), 0, width, width);
+                    Bitmap bm = ImageHelper.loadBitmapFromResource(context, ImageHelper.getPersonDefaultImage(context, person), 0, width, width);
                     profileButton.setImageBitmap(bm);
                 }
             }

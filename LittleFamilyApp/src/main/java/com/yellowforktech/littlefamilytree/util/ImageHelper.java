@@ -14,10 +14,16 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Contacts.Photo;
 import android.provider.MediaStore;
 import android.util.Log;
+
+import com.yellowforktech.littlefamilytree.R;
+import com.yellowforktech.littlefamilytree.data.LittlePerson;
+
+import org.gedcomx.types.GenderType;
 
 import java.io.File;
 import java.io.FileDescriptor;
@@ -502,5 +508,102 @@ public class ImageHelper {
             texts.add(text);
         }
         return texts;
+    }
+
+    public static int getPersonDefaultImage(Context context, LittlePerson person) {
+        String skinColor = PreferenceManager.getDefaultSharedPreferences(context).getString("skin_color", "light");
+        if (person.getAge()!=null) {
+            if (person.getAge() < 2) {
+                switch(skinColor) {
+                    case "mid":
+                        return R.drawable.baby_mid;
+                    case "dark":
+                        return R.drawable.baby_dark;
+                    default:
+                        return R.drawable.baby;
+                }
+            }
+            if (person.getAge() < 18) {
+                if (person.getGender()== GenderType.Female) {
+                    switch(skinColor) {
+                        case "mid":
+                            return com.yellowforktech.littlefamilytree.R.drawable.girl_mid;
+                        case "dark":
+                            return com.yellowforktech.littlefamilytree.R.drawable.girl_dark;
+                        default:
+                            return com.yellowforktech.littlefamilytree.R.drawable.girl;
+                    }
+                } else {
+                    switch(skinColor) {
+                        case "mid":
+                            return com.yellowforktech.littlefamilytree.R.drawable.boy_mid;
+                        case "dark":
+                            return com.yellowforktech.littlefamilytree.R.drawable.boy_dark;
+                        default:
+                            return com.yellowforktech.littlefamilytree.R.drawable.boy;
+                    }
+                }
+            }
+            if (person.getAge() < 50) {
+                if (person.getGender()==GenderType.Female) {
+                    switch(skinColor) {
+                        case "mid":
+                            return com.yellowforktech.littlefamilytree.R.drawable.mom_mid;
+                        case "dark":
+                            return com.yellowforktech.littlefamilytree.R.drawable.mom_dark;
+                        default:
+                            return com.yellowforktech.littlefamilytree.R.drawable.mom;
+                    }
+                } else {
+                    switch(skinColor) {
+                        case "mid":
+                            return com.yellowforktech.littlefamilytree.R.drawable.dad_mid;
+                        case "dark":
+                            return com.yellowforktech.littlefamilytree.R.drawable.dad_dark;
+                        default:
+                            return com.yellowforktech.littlefamilytree.R.drawable.dad;
+                    }
+                }
+            }
+            if (person.getGender()==GenderType.Female) {
+                switch(skinColor) {
+                    case "mid":
+                        return com.yellowforktech.littlefamilytree.R.drawable.grandma_mid;
+                    case "dark":
+                        return com.yellowforktech.littlefamilytree.R.drawable.grandma_dark;
+                    default:
+                        return com.yellowforktech.littlefamilytree.R.drawable.grandma;
+                }
+            } else {
+                switch(skinColor) {
+                    case "mid":
+                        return com.yellowforktech.littlefamilytree.R.drawable.grandpa_mid;
+                    case "dark":
+                        return com.yellowforktech.littlefamilytree.R.drawable.grandpa_dark;
+                    default:
+                        return com.yellowforktech.littlefamilytree.R.drawable.grandpa;
+                }
+            }
+        } else {
+            if (person.getGender()==GenderType.Female) {
+                switch(skinColor) {
+                    case "mid":
+                        return com.yellowforktech.littlefamilytree.R.drawable.mom_mid;
+                    case "dark":
+                        return com.yellowforktech.littlefamilytree.R.drawable.mom_dark;
+                    default:
+                        return com.yellowforktech.littlefamilytree.R.drawable.mom;
+                }
+            } else {
+                switch(skinColor) {
+                    case "mid":
+                        return com.yellowforktech.littlefamilytree.R.drawable.dad_mid;
+                    case "dark":
+                        return com.yellowforktech.littlefamilytree.R.drawable.dad_dark;
+                    default:
+                        return com.yellowforktech.littlefamilytree.R.drawable.dad;
+                }
+            }
+        }
     }
 }

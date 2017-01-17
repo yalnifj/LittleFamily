@@ -105,7 +105,7 @@ public class ChooseCultureActivity extends LittleFamilyBillingActivity implement
         if (selectedPath!=null) {
             Intent intent = new Intent(this, HeritageDressUpActivity.class);
             intent.putExtra(ChooseFamilyMember.SELECTED_PERSON, selectedPerson);
-            DollConfig dollConfig = dressUpDolls.getDollConfig(selectedPath.getPlace(), person);
+            DollConfig dollConfig = dressUpDolls.getDollConfig(selectedPath.getPlace(), person, this);
             intent.putExtra(DOLL_CONFIG, dollConfig);
             startActivity(intent);
         }
@@ -150,7 +150,7 @@ public class ChooseCultureActivity extends LittleFamilyBillingActivity implement
         personContainer.getViewPager().setCurrentItem(0);
         personContainer.invalidate();
 
-        DollConfig dollConfig = dressUpDolls.getDollConfig(selectedPath.getPlace(), person);
+        DollConfig dollConfig = dressUpDolls.getDollConfig(selectedPath.getPlace(), person, this);
         String thumbnailFile = dollConfig.getThumbnail();
         try {
             InputStream is = getAssets().open(thumbnailFile);

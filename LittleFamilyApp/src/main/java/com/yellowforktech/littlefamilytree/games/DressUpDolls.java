@@ -1,5 +1,8 @@
 package com.yellowforktech.littlefamilytree.games;
 
+import android.content.Context;
+import android.preference.PreferenceManager;
+
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 
 import org.gedcomx.types.GenderType;
@@ -40,7 +43,7 @@ public class DressUpDolls {
         countryMappings.put("philippines", "philippines");
     }
 
-    public DollConfig getDollConfig(String place, LittlePerson person) {
+    public DollConfig getDollConfig(String place, LittlePerson person, Context context) {
         String folder = null;
         if (place!=null) folder = countryMappings.get(place.toLowerCase());
         else place = "unknown";
@@ -53,6 +56,9 @@ public class DressUpDolls {
         else
             dc.setBoygirl("boy");
         dc.setOriginalPlace(place);
+
+        String skinColor = PreferenceManager.getDefaultSharedPreferences(context).getString("skin_color", "light");
+        dc.setSkinTone(skinColor);
 
         return dc;
     }

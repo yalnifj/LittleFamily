@@ -93,13 +93,13 @@ public class TreePersonAnimatedSprite extends Sprite {
                 photo = ImageHelper.loadBitmapFromFile(node.getPerson().getPhotoPath(), ImageHelper.getOrientation(node.getPerson().getPhotoPath()), (int) (leftLeaf.getWidth() * 0.7), (int) (height * 0.7), false);
             }
             if (photo == null) {
-                photo = ImageHelper.loadBitmapFromResource(activity, node.getPerson().getDefaultPhotoResource(), 0, (int) (leftLeaf.getWidth() * 0.7), (int) (height * 0.7));
+                photo = ImageHelper.loadBitmapFromResource(activity, ImageHelper.getPersonDefaultImage(activity, node.getPerson()), 0, (int) (leftLeaf.getWidth() * 0.7), (int) (height * 0.7));
             }
             String place = "unknown";
             if (node.getPerson().getBirthPlace() != null) {
                 place = node.getPerson().getBirthPlace();
             }
-            DollConfig dollConfig = activity.getDressUpDolls().getDollConfig(PlaceHelper.getTopPlace(place), node.getPerson());
+            DollConfig dollConfig = activity.getDressUpDolls().getDollConfig(PlaceHelper.getTopPlace(place), node.getPerson(), activity);
             String thumbnailFile = dollConfig.getThumbnail();
             try {
                 InputStream is = activity.getAssets().open(thumbnailFile);
@@ -125,13 +125,13 @@ public class TreePersonAnimatedSprite extends Sprite {
                 spPhoto = ImageHelper.loadBitmapFromFile(node.getSpouse().getPhotoPath(), ImageHelper.getOrientation(node.getSpouse().getPhotoPath()), (int) (leftLeaf.getWidth() * 0.7), (int) (height * 0.7), false);
             }
             if (spPhoto==null) {
-                spPhoto = ImageHelper.loadBitmapFromResource(activity, node.getSpouse().getDefaultPhotoResource(), 0, (int) (leftLeaf.getWidth() * 0.7), (int) (height * 0.7));
+                spPhoto = ImageHelper.loadBitmapFromResource(activity, ImageHelper.getPersonDefaultImage(activity, node.getSpouse()), 0, (int) (leftLeaf.getWidth() * 0.7), (int) (height * 0.7));
             }
             String place = "unknown";
             if (node.getSpouse().getBirthPlace() != null) {
                 place = node.getSpouse().getBirthPlace();
             }
-            DollConfig dollConfig = activity.getDressUpDolls().getDollConfig(PlaceHelper.getTopPlace(place), node.getSpouse());
+            DollConfig dollConfig = activity.getDressUpDolls().getDollConfig(PlaceHelper.getTopPlace(place), node.getSpouse(), activity);
             String thumbnailFile = dollConfig.getThumbnail();
             try {
                 InputStream is = activity.getAssets().open(thumbnailFile);

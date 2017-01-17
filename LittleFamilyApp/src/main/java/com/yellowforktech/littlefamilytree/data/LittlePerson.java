@@ -299,25 +299,6 @@ public class LittlePerson implements Serializable {
         this.age = age;
     }
 
-    public int getDefaultPhotoResource() {
-        if (age!=null) {
-            if (age < 2) return com.yellowforktech.littlefamilytree.R.drawable.baby;
-            if (age < 18) {
-                if (gender==GenderType.Female) return com.yellowforktech.littlefamilytree.R.drawable.girl;
-                return com.yellowforktech.littlefamilytree.R.drawable.boy;
-            }
-            if (age < 50) {
-                if (gender==GenderType.Female) return com.yellowforktech.littlefamilytree.R.drawable.mom;
-                return com.yellowforktech.littlefamilytree.R.drawable.dad;
-            }
-            if (gender==GenderType.Female) return com.yellowforktech.littlefamilytree.R.drawable.grandma;
-            return com.yellowforktech.littlefamilytree.R.drawable.grandpa;
-        } else {
-            if (gender==GenderType.Female) return com.yellowforktech.littlefamilytree.R.drawable.mom;
-            return com.yellowforktech.littlefamilytree.R.drawable.dad;
-        }
-    }
-
     public Date getLastSync() {
         return lastSync;
     }

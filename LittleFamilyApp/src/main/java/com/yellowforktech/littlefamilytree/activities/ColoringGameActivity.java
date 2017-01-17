@@ -222,7 +222,7 @@ public class ColoringGameActivity extends LittleFamilyBillingActivity implements
         if (photo==null) {
             //-- could not find any images, fallback to a default image
             if (selectedPerson!=null) {
-                imageBitmap = ImageHelper.loadBitmapFromResource(this, selectedPerson.getDefaultPhotoResource(), 0, width, height);
+                imageBitmap = ImageHelper.loadBitmapFromResource(this, ImageHelper.getPersonDefaultImage(this, selectedPerson), 0, width, height);
             } else {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage(R.string.low_media);
@@ -237,7 +237,7 @@ public class ColoringGameActivity extends LittleFamilyBillingActivity implements
                     selectedPerson = super.selectedPerson;
                 }
                 if (selectedPerson!=null) {
-                    imageBitmap = ImageHelper.loadBitmapFromResource(this, selectedPerson.getDefaultPhotoResource(), 0, width, height);
+                    imageBitmap = ImageHelper.loadBitmapFromResource(this, ImageHelper.getPersonDefaultImage(this, selectedPerson), 0, width, height);
                 } else {
                     mediaChooser.loadRandomImage();
                     return;

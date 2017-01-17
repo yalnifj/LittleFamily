@@ -98,7 +98,7 @@ public class PersonLeavesButton extends Sprite {
             if (people.get(person).getPhotoPath() != null) {
                 photo = ImageHelper.loadBitmapFromFile(people.get(person).getPhotoPath(), ImageHelper.getOrientation(people.get(person).getPhotoPath()), (int) (width * 0.7), (int) (height * 0.7), false);
             }else {
-                photo = ImageHelper.loadBitmapFromResource(context, people.get(person).getDefaultPhotoResource(), 0, (int)(width*0.7), (int) (height*0.7));
+                photo = ImageHelper.loadBitmapFromResource(context, ImageHelper.getPersonDefaultImage(context, people.get(person)), 0, (int)(width*0.7), (int) (height*0.7));
             }
         }
 

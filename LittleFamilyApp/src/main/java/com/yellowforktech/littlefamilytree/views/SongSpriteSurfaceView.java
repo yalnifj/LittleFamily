@@ -611,7 +611,7 @@ public class SongSpriteSurfaceView extends SpritedSurfaceView implements EventLi
                         photo = ImageHelper.loadBitmapFromFile(person.getPhotoPath(), ImageHelper.getOrientation(person.getPhotoPath()), width, width, false);
                     }
                     if (photo == null) {
-                        photo = ImageHelper.loadBitmapFromResource(activity, person.getDefaultPhotoResource(), 0, width, width);
+                        photo = ImageHelper.loadBitmapFromResource(activity, ImageHelper.getPersonDefaultImage(activity, person), 0, width, width);
                     }
                     DraggablePersonSprite sprite = new DraggablePersonSprite(photo, person, getWidth(), maxHeight, TOPIC_PERSON_TOUCHED, dm);
                     sprite.setX(x);

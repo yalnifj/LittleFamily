@@ -80,7 +80,7 @@ public class CupcakeSprite extends TouchEventGameSprite {
                 photo = ImageHelper.loadBitmapFromFile(person.getPhotoPath(), ImageHelper.getOrientation(person.getPhotoPath()), width/2, width/2, false);
             }
             if (photo == null) {
-                photo = ImageHelper.loadBitmapFromResource(context, person.getDefaultPhotoResource(), 0, width/2, width/2);
+                photo = ImageHelper.loadBitmapFromResource(context, ImageHelper.getPersonDefaultImage(context, person), 0, width/2, width/2);
             }
         }
         if (photo!= null) {

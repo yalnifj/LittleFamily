@@ -77,7 +77,7 @@ public class PersonStackAdapter extends BaseAdapter {
         if (person.getPhotoPath() != null) {
             bm = ImageHelper.loadBitmapFromFile(person.getPhotoPath(), ImageHelper.getOrientation(person.getPhotoPath()), parent.getWidth(), parent.getWidth(), false);
         } else {
-            bm = ImageHelper.loadBitmapFromResource(context, person.getDefaultPhotoResource(), 0, parent.getWidth(), parent.getWidth());
+            bm = ImageHelper.loadBitmapFromResource(context, ImageHelper.getPersonDefaultImage(context, person), 0, parent.getWidth(), parent.getWidth());
         }
         portrait.setImageBitmap(bm);
 

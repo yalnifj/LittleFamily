@@ -371,7 +371,7 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
                     birthdayPhoto = ImageHelper.loadBitmapFromFile(birthdayPerson.getPhotoPath(), ImageHelper.getOrientation(birthdayPerson.getPhotoPath()), width, width, false);
                 }
                 if (birthdayPhoto == null) {
-                    birthdayPhoto = ImageHelper.loadBitmapFromResource(activity, birthdayPerson.getDefaultPhotoResource(), 0, width, width);
+                    birthdayPhoto = ImageHelper.loadBitmapFromResource(activity, ImageHelper.getPersonDefaultImage(activity, birthdayPerson), 0, width, width);
                 }
                 AnimatedBitmapSprite birthdayPersonSprite = new AnimatedBitmapSprite(birthdayPhoto);
                 birthdayPersonSprite.setX(mirrorRight + 15*dm.density);
@@ -384,7 +384,7 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
                     photo = ImageHelper.loadBitmapFromFile(person.getPhotoPath(), ImageHelper.getOrientation(person.getPhotoPath()), width, width, false);
                 }
                 if (photo == null) {
-                    photo = ImageHelper.loadBitmapFromResource(activity, person.getDefaultPhotoResource(), 0, width, width);
+                    photo = ImageHelper.loadBitmapFromResource(activity, ImageHelper.getPersonDefaultImage(activity, person), 0, width, width);
                 }
                 AnimatedBitmapSprite personSprite = new AnimatedBitmapSprite(photo);
                 personSprite.setX(mirrorRight + 15*dm.density + width + 3*dm.density);

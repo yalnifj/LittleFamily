@@ -15,6 +15,7 @@ import java.util.Scanner;
 public class DollConfig implements Serializable{
     private String folderName;
     private String boygirl;
+    private String skinTone;
     private String originalPlace;
     private DollClothing[] boyclothing;
     private DollClothing[] girlclothing;
@@ -39,6 +40,14 @@ public class DollConfig implements Serializable{
         girlclothing = null;
     }
 
+    public String getSkinTone() {
+        return skinTone;
+    }
+
+    public void setSkinTone(String skinTone) {
+        this.skinTone = skinTone;
+    }
+
     public String getOriginalPlace() {
         return originalPlace;
     }
@@ -59,7 +68,11 @@ public class DollConfig implements Serializable{
     }
 
     public String getDoll() {
-        return "dolls/"+boygirl+".png";
+        if (skinTone==null || skinTone.isEmpty() || skinTone.equals("light")) {
+            return "dolls/"+boygirl+".png";
+        } else {
+            return "dolls/"+boygirl+"_"+skinTone+".png";
+        }
     }
 
     public DollClothing[] getClothing(Context context) {

@@ -108,7 +108,7 @@ public class FamilyMemberListAdapter extends BaseAdapter {
                     bitmaps.put(person.getId(), bm);
                 }
                 if (bm==null) {
-                    bm = ImageHelper.loadBitmapFromResource(context, person.getDefaultPhotoResource(), 0, width, height);
+                    bm = ImageHelper.loadBitmapFromResource(context, ImageHelper.getPersonDefaultImage(context, person), 0, width, height);
                     bitmaps.put(person.getId(), bm);
                 }
             }

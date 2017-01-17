@@ -49,7 +49,7 @@ public class DressUpDollsAdapter extends BaseAdapter {
                 }
             }
             allPlaces.add(upPlace);
-            allDolls.add(dressUpDolls.getDollConfig(place, person));
+            allDolls.add(dressUpDolls.getDollConfig(place, person, context));
         }
     }
 

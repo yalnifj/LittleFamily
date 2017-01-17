@@ -69,7 +69,7 @@ public class PersonDetailsDialog extends DialogFragment implements CompoundButto
 			Bitmap bm = ImageHelper.loadBitmapFromFile(person.getPhotoPath(), ImageHelper.getOrientation(person.getPhotoPath()), width, height, false);
 			portrait.setImageBitmap(bm);
 		} else {
-			Bitmap bm = ImageHelper.loadBitmapFromResource(this.getActivity(), person.getDefaultPhotoResource(), 0, width, height);
+			Bitmap bm = ImageHelper.loadBitmapFromResource(this.getActivity(), ImageHelper.getPersonDefaultImage(getContext(), selectedPerson), 0, width, height);
 			portrait.setImageBitmap(bm);
 		}
 

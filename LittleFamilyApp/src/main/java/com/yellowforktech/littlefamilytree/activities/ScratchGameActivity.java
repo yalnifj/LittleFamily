@@ -124,7 +124,7 @@ public class ScratchGameActivity extends LittleFamilyActivity implements Scratch
             //-- could not find any images, fallback to a default image
             imageBitmap = null;
             if (selectedPerson!=null) {
-                imageBitmap = ImageHelper.loadBitmapFromResource(this, selectedPerson.getDefaultPhotoResource(), 0, width, height);
+                imageBitmap = ImageHelper.loadBitmapFromResource(this, ImageHelper.getPersonDefaultImage(this, selectedPerson), 0, width, height);
             }
             if (imageBitmap != null) {
                 setupCanvas();

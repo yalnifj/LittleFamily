@@ -62,7 +62,7 @@ public class PersonPagerAdapter extends PagerAdapter {
         if (person.getPhotoPath() != null) {
             bm = ImageHelper.loadBitmapFromFile(person.getPhotoPath(), ImageHelper.getOrientation(person.getPhotoPath()), parent.getHeight(), parent.getHeight(), false);
         } else {
-            bm = ImageHelper.loadBitmapFromResource(context, person.getDefaultPhotoResource(), 0, parent.getHeight(), parent.getHeight());
+            bm = ImageHelper.loadBitmapFromResource(context, ImageHelper.getPersonDefaultImage(context, person), 0, parent.getHeight(), parent.getHeight());
         }
         portrait.setImageBitmap(bm);
         portrait.setTag(person);
