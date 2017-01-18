@@ -10,14 +10,13 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.yellowforktech.littlefamilytree.R;
+import com.yellowforktech.littlefamilytree.activities.adapters.SkinListAdapter;
 import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 
@@ -186,7 +185,7 @@ public class NewSettingsActivity extends Activity {
     public void onChooseSkin(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        final ListAdapter adapter = new SkinListAdapter();
+        final ListAdapter adapter = new SkinListAdapter(this);
         builder.setTitle(R.string.pref_title_skin_color)
                 .setAdapter(adapter, new DialogInterface.OnClickListener() {
                     @Override
@@ -214,42 +213,4 @@ public class NewSettingsActivity extends Activity {
         dialog.show();
     }
 
-    class SkinListAdapter extends BaseAdapter {
-
-        int[] items = {R.drawable.boy, R.drawable.boy_mid, R.drawable.boy_dark};
-        String[] prefs = {"light", "mid", "dark"};
-
-        @Override
-        public int getCount() {
-            return items.length;
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return prefs[position];
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ImageView view = null;
-            if (convertView!=null) {
-                view = (ImageView) convertView.getTag();
-            }
-
-            if (view==null) {
-                view = new ImageView(NewSettingsActivity.this);
-                convertView.setTag(view);
-            }
-
-            int resourceId = items[position];
-            view.setImageResource(resourceId);
-
-            return view;
-        }
-    }
 }

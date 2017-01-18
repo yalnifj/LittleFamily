@@ -1,5 +1,7 @@
 package com.yellowforktech.littlefamilytree.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,10 +16,12 @@ import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.Space;
 import android.widget.TextView;
 
 import com.yellowforktech.littlefamilytree.R;
+import com.yellowforktech.littlefamilytree.activities.adapters.SkinListAdapter;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
 import com.yellowforktech.littlefamilytree.games.DollConfig;
 import com.yellowforktech.littlefamilytree.games.DressUpDolls;
@@ -44,6 +48,7 @@ public class HeritageDressUpActivity extends LittleFamilyActivity implements Dre
     private DressUpDolls dressUpDolls;
     private List<DollConfig> allDolls;
     private List<String> allPlaces;
+    private String skinColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,9 +78,29 @@ public class HeritageDressUpActivity extends LittleFamilyActivity implements Dre
     }
 
     @Override
+    public void setupTopBar() {
+        if (findViewById(R.id.topBarFragment)!=null) {
+            topBar = (TopBarFragment) getSupportFragmentManager().findFragmentById(R.id.topBarFragment);
+            if (topBar == null) {
+                topBar = TopBarFragment.newInstance(selectedPerson, R.layout.fragment_top_bar_dressup);
+                getSupportFragmentManager().beginTransaction().replace(R.id.topBarFragment, topBar).commit();
+            } else {
+                if (selectedPerson != null) {
+                    topBar.getArguments().putSerializable(TopBarFragment.ARG_PERSON, selectedPerson);
+                    topBar.updatePerson(selectedPerson);
+                }
+            }
+        }
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
 
+        int skinViewResourceId = ImageHelper.getPersonDefaultImage(this, selectedPerson);
+
+        ImageView imageView = (ImageView) topBar.getView().findViewById(R.id.skinBtn);
+        imageView.setImageResource(skinViewResourceId);
 
         dressUpView.setDollConfig(dollConfig);
         dressUpView.addListener(this);
@@ -121,6 +146,31 @@ public class HeritageDressUpActivity extends LittleFamilyActivity implements Dre
         dollConfig = (DollConfig) v.getTag();
         dressUpView.setDollConfig(dollConfig);
         dollScroller.setVisibility(View.INVISIBLE);
+    }
+
+    public void changeSkin(View v) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        final ListAdapter adapter = new SkinListAdapter(this);
+        builder.setTitle(R.string.pref_title_skin_color)
+                .setAdapter(adapter, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        skinColor = (String) adapter.getItem(which);
+
+                        int skinViewResourceId = ImageHelper.getPersonCartoon(selectedPerson, skinColor);
+
+                        ImageView imageView = (ImageView) topBar.getView().findViewById(R.id.skinBtn);
+                        imageView.setImageResource(skinViewResourceId);
+
+                        dollConfig.setSkinTone(skinColor);
+                        dressUpView.setDollConfig(dollConfig);
+
+                        dialog.dismiss();
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
 

@@ -92,13 +92,13 @@ Please wait...</string>
     <string name="title_activity_song">SongActivity</string>
     <string name="title_activity_parents_guide">Parent\'s Guide</string>
     <string name="title_full_tree">More Photos, More Fun!</string>
-    <string name="guide_full_photo_tree">The family history data used in the games comes from an adult's online family tree. The more information--especially photos--that you add to your online tree, the more fun Little Family Tree will be for your child. This app can read the data from the online tree, but DOES NOT change the online tree.</string>
+    <string name="guide_full_photo_tree">The family history data used in the games comes from an adult\'s online family tree. The more information--especially photos--that you add to your online tree, the more fun Little Family Tree will be for your child. This app can read the data from the online tree, but DOES NOT change the online tree.</string>
     <string name="title_welcome">Welcome!</string>
     <string name="guide_welcome_text">Little Family Tree engages young children with their personal family history through games and activities designed for their level. (Most of the games are fun for the kid in all of us.)</string>
     <string name="guide_engage_children">Playing with your child will give you the opportunity to strengthen family associations and enhance the experience through your personal memories and stories.</string>
     <string name="title_play_together">Play Together!</string>
     <string name="title_guide_choose_player">Choosing a Player</string>
-    <string name="guide_choosing_player">The games and activities in Little Family Tree are centered around the person who is playing and their relationships to family members. You may choose a different player by tapping the player's picture on any screen.</string>
+    <string name="guide_choosing_player">The games and activities in Little Family Tree are centered around the person who is playing and their relationships to family members. You may choose a different player by tapping the player\'s picture on any screen.</string>
     <string name="title_guide_home">Home Activity</string>
     <string name="guide_home_activity">There is very little text used in the app, making it easy for even the youngest child to play.  The home screen is the hub of the game.  Return home anytime by using the home button at the top of every screen.</string>
     <string name="title_guide_follow_the_stars">Follow the Stars!</string>

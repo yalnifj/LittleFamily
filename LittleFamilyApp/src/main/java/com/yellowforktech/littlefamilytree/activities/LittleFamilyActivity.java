@@ -498,7 +498,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return tries;
+        return 10;
     }
 
     public void onHomeButtonPressed(View view) {

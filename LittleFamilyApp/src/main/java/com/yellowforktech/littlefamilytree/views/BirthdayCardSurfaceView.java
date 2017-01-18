@@ -466,7 +466,7 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
                             photo = ImageHelper.loadBitmapFromFile(p.getPhotoPath(), ImageHelper.getOrientation(p.getPhotoPath()), width, width, false);
                         }
                         if (photo == null) {
-                            photo = ImageHelper.loadBitmapFromResource(activity, p.getDefaultPhotoResource(), 0, width, width);
+                            photo = ImageHelper.loadBitmapFromResource(activity, ImageHelper.getPersonDefaultImage(context, p), 0, width, width);
                         }
                         float ratio = (float)(photo.getWidth()) / (float)(photo.getHeight());
                         int tw = (int) (vanityTop.getWidth() / 7f);

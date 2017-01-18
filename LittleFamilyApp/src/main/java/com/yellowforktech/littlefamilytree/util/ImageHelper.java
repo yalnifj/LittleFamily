@@ -512,6 +512,10 @@ public class ImageHelper {
 
     public static int getPersonDefaultImage(Context context, LittlePerson person) {
         String skinColor = PreferenceManager.getDefaultSharedPreferences(context).getString("skin_color", "light");
+        return getPersonCartoon(person, skinColor);
+    }
+
+    public static int getPersonCartoon(LittlePerson person, String skinColor) {
         if (person.getAge()!=null) {
             if (person.getAge() < 2) {
                 switch(skinColor) {
