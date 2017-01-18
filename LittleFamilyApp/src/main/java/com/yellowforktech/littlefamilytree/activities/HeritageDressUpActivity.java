@@ -165,6 +165,7 @@ public class HeritageDressUpActivity extends LittleFamilyActivity implements Dre
 
                         dollConfig.setSkinTone(skinColor);
                         dressUpView.setDollConfig(dollConfig);
+                        dollScroller.setVisibility(View.INVISIBLE);
 
                         dialog.dismiss();
                     }
