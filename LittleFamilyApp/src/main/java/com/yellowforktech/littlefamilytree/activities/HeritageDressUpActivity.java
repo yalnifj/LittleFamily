@@ -144,6 +144,7 @@ public class HeritageDressUpActivity extends LittleFamilyActivity implements Dre
     @Override
     public void onClick(View v) {
         dollConfig = (DollConfig) v.getTag();
+        dollConfig.setSkinTone(skinColor);
         dressUpView.setDollConfig(dollConfig);
         dollScroller.setVisibility(View.INVISIBLE);
     }
