@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.adapters.SkinListAdapter;
 import com.yellowforktech.littlefamilytree.data.DataService;
@@ -102,6 +103,11 @@ public class NewSettingsActivity extends Activity {
                 versionName += " Premium";
             }
             txtVersion.setText(versionName);
+
+            Bundle logBundle = new Bundle();
+            logBundle.putString(FirebaseAnalytics.Param.ITEM_NAME, getLocalClassName());
+            logBundle.putString("Version", versionName);
+            FirebaseAnalytics.getInstance(this).logEvent(FirebaseAnalytics.Event.VIEW_ITEM, logBundle);
         } catch (Exception e) {
             Log.e(this.getClass().getSimpleName(), "Error getting version number", e);
         }

@@ -9,6 +9,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.amazon.device.iap.PurchasingService;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.tasks.WaitTask;
 import com.yellowforktech.littlefamilytree.data.DataService;
@@ -33,6 +34,9 @@ public class RestorePurchases extends LittleFamilyBillingActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        Bundle logBundle = new Bundle();
+        logBundle.putString(FirebaseAnalytics.Param.ITEM_NAME, getLocalClassName());
+        FirebaseAnalytics.getInstance(this).logEvent(FirebaseAnalytics.Event.VIEW_ITEM, logBundle);
     }
 
     @Override

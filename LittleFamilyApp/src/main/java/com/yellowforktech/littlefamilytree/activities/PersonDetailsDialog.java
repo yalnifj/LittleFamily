@@ -20,6 +20,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.tasks.ForceSynceTask;
 import com.yellowforktech.littlefamilytree.data.DataService;
@@ -55,6 +56,10 @@ public class PersonDetailsDialog extends DialogFragment implements CompoundButto
         view = inflater.inflate(R.layout.fragment_person_details, container, false);
 		updatePerson();
 
+		Bundle logBundle = new Bundle();
+		logBundle.putString(FirebaseAnalytics.Param.ITEM_NAME, this.getClass().getSimpleName());
+		FirebaseAnalytics.getInstance(getActivity()).logEvent(FirebaseAnalytics.Event.VIEW_ITEM, logBundle);
+
 		return view;
     }
 
@@ -69,7 +74,7 @@ public class PersonDetailsDialog extends DialogFragment implements CompoundButto
 			Bitmap bm = ImageHelper.loadBitmapFromFile(person.getPhotoPath(), ImageHelper.getOrientation(person.getPhotoPath()), width, height, false);
 			portrait.setImageBitmap(bm);
 		} else {
-			Bitmap bm = ImageHelper.loadBitmapFromResource(this.getActivity(), ImageHelper.getPersonDefaultImage(getContext(), selectedPerson), 0, width, height);
+			Bitmap bm = ImageHelper.loadBitmapFromResource(this.getActivity(), ImageHelper.getPersonDefaultImage(getActivity(), selectedPerson), 0, width, height);
 			portrait.setImageBitmap(bm);
 		}
 

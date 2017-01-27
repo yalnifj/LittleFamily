@@ -20,6 +20,7 @@ import android.widget.ListAdapter;
 import android.widget.Space;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.adapters.SkinListAdapter;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
@@ -49,6 +50,7 @@ public class HeritageDressUpActivity extends LittleFamilyActivity implements Dre
     private List<DollConfig> allDolls;
     private List<String> allPlaces;
     private String skinColor;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +77,9 @@ public class HeritageDressUpActivity extends LittleFamilyActivity implements Dre
         dollLayout = (LinearLayout) findViewById(R.id.dollLayout);
 
         setupTopBar();
+
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
     }
 
     @Override
@@ -101,6 +106,12 @@ public class HeritageDressUpActivity extends LittleFamilyActivity implements Dre
 
         ImageView imageView = (ImageView) topBar.getView().findViewById(R.id.skinBtn);
         imageView.setImageResource(skinViewResourceId);
+
+        Bundle logBundle = new Bundle();
+        logBundle.putString(FirebaseAnalytics.Param.ITEM_NAME, getLocalClassName());
+        logBundle.putString("Place", dollConfig.getOriginalPlace());
+        logBundle.putString("DollFolder", dollConfig.getFolderName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM, logBundle);
 
         dressUpView.setDollConfig(dollConfig);
         dressUpView.addListener(this);

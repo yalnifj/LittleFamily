@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.yellowforktech.littlefamilytree.R;
 
 public class ParentsGuideActivity extends FragmentActivity {
@@ -24,6 +25,10 @@ public class ParentsGuideActivity extends FragmentActivity {
         ParentsGuideDialog dialog = new ParentsGuideDialog();
         dialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Theme_AppCompat_Light_Dialog);
         dialog.show(getSupportFragmentManager(), "Parent's Guide");
+
+        Bundle logBundle = new Bundle();
+        logBundle.putString(FirebaseAnalytics.Param.ITEM_NAME, getLocalClassName());
+        FirebaseAnalytics.getInstance(this).logEvent(FirebaseAnalytics.Event.VIEW_ITEM, logBundle);
     }
 
     public void dismiss(View view) {

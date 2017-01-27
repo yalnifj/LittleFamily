@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.data.DataService;
 import com.yellowforktech.littlefamilytree.data.LittlePerson;
@@ -84,6 +85,10 @@ public class RecordAudioDialog extends DialogFragment implements View.OnClickLis
         closeButton.setOnClickListener(this);
 
         setButtonStates();
+
+        Bundle logBundle = new Bundle();
+        logBundle.putString(FirebaseAnalytics.Param.ITEM_NAME, this.getClass().getSimpleName());
+        FirebaseAnalytics.getInstance(getActivity()).logEvent(FirebaseAnalytics.Event.VIEW_ITEM, logBundle);
 
         return view;
     }

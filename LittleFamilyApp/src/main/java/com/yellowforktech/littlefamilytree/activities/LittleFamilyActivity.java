@@ -17,6 +17,7 @@ import android.view.Display;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.tasks.WaitTask;
 import com.yellowforktech.littlefamilytree.data.DataNetworkState;
@@ -103,6 +104,10 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
 		System.gc();
         successPlayer = MediaPlayer.create(this, R.raw.powerup_success);
         buzzPlayer = MediaPlayer.create(this, R.raw.beepboop);
+
+        Bundle logBundle = new Bundle();
+        logBundle.putString(FirebaseAnalytics.Param.ITEM_NAME, getLocalClassName());
+        FirebaseAnalytics.getInstance(this).logEvent(FirebaseAnalytics.Event.VIEW_ITEM, logBundle);
     }
 
     /**

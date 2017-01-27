@@ -1,25 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
-<svg
-   xmlns:osb="http://www.openswatchbook.org/uri/2009/osb"
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="210mm"
-   height="297mm"
-   viewBox="0 0 744.09448819 1052.3622047"
-   id="svg2"
-   version="1.1"
-   inkscape:version="0.91 r13725"
-   sodipodi:docname="logos.svg">
+<svg xmlns:osb="http://www.openswatchbook.org/uri/2009/osb" xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="210mm" height="297mm"
+    viewBox="0 0 744.09448819 1052.3622047" id="svg2" version="1.1" inkscape:version="0.91 r13725"
+    sodipodi:docname="logos.svg" inkscape:export-filename="C:\Users\john\Documents\GitHub\LittleFamily\textlightgreenAppForChildren.png"
+    inkscape:export-xdpi="133.7" inkscape:export-ydpi="133.7">
   <defs
      id="defs4">
+    <linearGradient
+       id="linearGradient5103"
+       osb:paint="solid">
+      <stop
+         style="stop-color:#000000;stop-opacity:1;"
+         offset="0"
+         id="stop5105" />
+    </linearGradient>
     <linearGradient
        id="linearGradient7605"
        y2="923.34003"
@@ -3046,6 +3044,242 @@
        y1="347.43015"
        x2="291.29169"
        y2="379.47369" />
+    <filter
+       style="color-interpolation-filters:sRGB"
+       inkscape:label="Drop Shadow"
+       id="filter7723-4-8">
+      <feFlood
+         flood-opacity="0.498039"
+         flood-color="rgb(0,0,0)"
+         result="flood"
+         id="feFlood7725-8-8" />
+      <feComposite
+         in="flood"
+         in2="SourceGraphic"
+         operator="in"
+         result="composite1"
+         id="feComposite7727-4-1" />
+      <feGaussianBlur
+         in="composite1"
+         stdDeviation="3"
+         result="blur"
+         id="feGaussianBlur7729-0-2" />
+      <feOffset
+         dx="3"
+         dy="-2"
+         result="offset"
+         id="feOffset7731-9-8" />
+      <feComposite
+         in="SourceGraphic"
+         in2="offset"
+         operator="over"
+         result="composite2"
+         id="feComposite7733-0-6" />
+    </filter>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient7605"
+       id="linearGradient5085"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-133.61632,0.0435385)"
+       x1="291.40851"
+       y1="347.43015"
+       x2="291.29169"
+       y2="379.47369" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient7605"
+       id="linearGradient5093"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-133.61632,0.0435385)"
+       x1="291.40851"
+       y1="347.43015"
+       x2="291.29169"
+       y2="379.47369" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient7605"
+       id="linearGradient5140"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-133.61632,0.0435385)"
+       x1="291.40851"
+       y1="347.43015"
+       x2="291.29169"
+       y2="379.47369" />
+    <filter
+       style="color-interpolation-filters:sRGB"
+       inkscape:label="Drop Shadow"
+       id="filter7723-4-1">
+      <feFlood
+         flood-opacity="0.498039"
+         flood-color="rgb(0,0,0)"
+         result="flood"
+         id="feFlood7725-8-0" />
+      <feComposite
+         in="flood"
+         in2="SourceGraphic"
+         operator="in"
+         result="composite1"
+         id="feComposite7727-4-3" />
+      <feGaussianBlur
+         in="composite1"
+         stdDeviation="3"
+         result="blur"
+         id="feGaussianBlur7729-0-6" />
+      <feOffset
+         dx="3"
+         dy="-2"
+         result="offset"
+         id="feOffset7731-9-7" />
+      <feComposite
+         in="SourceGraphic"
+         in2="offset"
+         operator="over"
+         result="composite2"
+         id="feComposite7733-0-0" />
+    </filter>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient7605"
+       id="linearGradient22977"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-133.61632,0.0435385)"
+       x1="291.40851"
+       y1="347.43015"
+       x2="291.29169"
+       y2="379.47369" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient7605"
+       id="linearGradient22985"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-133.61632,0.0435385)"
+       x1="291.40851"
+       y1="347.43015"
+       x2="291.29169"
+       y2="379.47369" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient7605"
+       id="linearGradient23032"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-133.61632,0.0435385)"
+       x1="291.40851"
+       y1="347.43015"
+       x2="291.29169"
+       y2="379.47369" />
+    <linearGradient
+       id="linearGradient4348">
+      <stop
+         id="stop4350"
+         offset="0"
+         stop-color="#a9e2af" />
+      <stop
+         id="stop4352"
+         offset="0.111111"
+         stop-color="#4ebf52" />
+      <stop
+         id="stop4354"
+         offset="0.222222"
+         stop-color="#1ba615" />
+      <stop
+         id="stop4356"
+         offset="0.333333"
+         stop-color="#25ac27" />
+      <stop
+         id="stop4358"
+         offset="0.444444"
+         stop-color="#2dae31" />
+      <stop
+         id="stop4360"
+         offset="0.555556"
+         stop-color="#2daf32" />
+      <stop
+         id="stop4362"
+         offset="0.666667"
+         stop-color="#26af2a" />
+      <stop
+         id="stop4364"
+         offset="0.777778"
+         stop-color="#12a20f" />
+      <stop
+         id="stop4366"
+         offset="0.888889"
+         stop-color="#3cb755" />
+      <stop
+         id="stop4368"
+         offset="1"
+         stop-color="#12991b" />
+    </linearGradient>
+    <linearGradient
+       xlink:href="#linearGradient4348"
+       id="linearGradient4401"
+       x1="54.647392"
+       y1="94.259621"
+       x2="432.56866"
+       y2="349.02646"
+       gradientUnits="userSpaceOnUse" />
+    <filter
+       style="color-interpolation-filters:sRGB;"
+       id="filter4538"
+       y="0"
+       height="1"
+       x="0"
+       width="1">
+      <feGaussianBlur
+         stdDeviation="6"
+         in="SourceGraphic"
+         result="result0"
+         id="feGaussianBlur4540" />
+      <feDiffuseLighting
+         lighting-color="rgb(255,255,255)"
+         diffuseConstant="1"
+         surfaceScale="4"
+         result="result5"
+         id="feDiffuseLighting4542">
+        <feDistantLight
+           elevation="45"
+           azimuth="235"
+           id="feDistantLight4544" />
+      </feDiffuseLighting>
+      <feComposite
+         k1="1.4"
+         in2="SourceGraphic"
+         in="result5"
+         result="fbSourceGraphic"
+         operator="arithmetic"
+         id="feComposite4546" />
+      <feGaussianBlur
+         result="result0"
+         in="fbSourceGraphic"
+         stdDeviation="6"
+         id="feGaussianBlur4548" />
+      <feSpecularLighting
+         specularExponent="25"
+         specularConstant="1"
+         surfaceScale="4"
+         lighting-color="rgb(166,254,15)"
+         result="result1"
+         in="result0"
+         id="feSpecularLighting4550">
+        <fePointLight
+           id="fePointLight4558" />
+      </feSpecularLighting>
+      <feComposite
+         k3="1"
+         k2="1"
+         operator="arithmetic"
+         in="fbSourceGraphic"
+         in2="result1"
+         result="result4"
+         id="feComposite4554" />
+      <feComposite
+         operator="in"
+         result="result2"
+         in2="SourceGraphic"
+         in="result4"
+         id="feComposite4556" />
+    </filter>
   </defs>
   <sodipodi:namedview
      id="base"
@@ -3054,16 +3288,16 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.53081324"
-     inkscape:cx="883.06265"
-     inkscape:cy="15.584436"
+     inkscape:zoom="0.75068328"
+     inkscape:cx="-937.00394"
+     inkscape:cy="165.07398"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1366"
-     inkscape:window-height="705"
-     inkscape:window-x="1272"
-     inkscape:window-y="248"
+     inkscape:window-width="1680"
+     inkscape:window-height="987"
+     inkscape:window-x="1672"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1"
      showguides="false" />
   <metadata
@@ -3082,6 +3316,49 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1">
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:139.99999762%;font-family:sans-serif;letter-spacing:2.57999945px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       x="-519.16241"
+       y="1209.9792"
+       id="text4917-6-0-9-8-2"
+       sodipodi:linespacing="140%"
+       inkscape:export-xdpi="133.7"
+       inkscape:export-ydpi="133.7"><tspan
+         sodipodi:role="line"
+         x="-517.87244"
+         y="1209.9792"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40px;line-height:139.99999762%;font-family:Big_Bottom_Cartoon;-inkscape-font-specification:'Big_Bottom_Cartoon, Normal';text-align:center;letter-spacing:2.57999945px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="tspan5168-9-0-2">Children</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:174.00000095%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       x="-512.25739"
+       y="997.14221"
+       id="text4917-6-0-9-6-3"
+       sodipodi:linespacing="174%"
+       inkscape:export-xdpi="133.7"
+       inkscape:export-ydpi="133.7"><tspan
+         sodipodi:role="line"
+         x="-512.25739"
+         y="997.14221"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40px;line-height:174.00000095%;font-family:Big_Bottom_Cartoon;-inkscape-font-specification:'Big_Bottom_Cartoon, Normal';text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="tspan5168-9-5-7">A</tspan><tspan
+         sodipodi:role="line"
+         x="-512.25739"
+         y="1066.7422"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40px;line-height:174.00000095%;font-family:Big_Bottom_Cartoon;-inkscape-font-specification:'Big_Bottom_Cartoon, Normal';text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="tspan4988-2">Family History</tspan><tspan
+         sodipodi:role="line"
+         x="-512.25739"
+         y="1136.3422"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40px;line-height:174.00000095%;font-family:Big_Bottom_Cartoon;-inkscape-font-specification:'Big_Bottom_Cartoon, Normal';text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="tspan4990-3">App For</tspan><tspan
+         sodipodi:role="line"
+         x="-512.25739"
+         y="1205.9423"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40px;line-height:174.00000095%;font-family:Big_Bottom_Cartoon;-inkscape-font-specification:'Big_Bottom_Cartoon, Normal';text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="tspan4992-3" /></text>
     <g
        id="g7840"
        transform="translate(114.24218,309.2898)">
@@ -4581,9 +4858,9 @@
        transform="matrix(0.85933165,0,0,0.95135483,-121.442,311.55294)"
        inkscape:label="Capa 1"
        id="layer1-9-6"
-       inkscape:export-filename="C:\Development\LittleFamily\LittleFamilyApp\src\main\res\drawable\house_tree1.png"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96">
+       inkscape:export-filename="C:\Users\john\Documents\GitHub\LittleFamily\LFT Merchandise\LFTlogomerch.png"
+       inkscape:export-xdpi="764.50415"
+       inkscape:export-ydpi="764.50415">
       <g
          transform="matrix(0.71878,0,0,0.71878,518.2,295.57)"
          id="g7078-9">
@@ -4702,9 +4979,9 @@
        transform="translate(-34.308823,708.62536)"
        id="g6042-4-6"
        style="filter:url(#filter6058-6-3)"
-       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\little_family_logo.png"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96">
+       inkscape:export-filename="C:\Users\john\Documents\GitHub\LittleFamily\LFT Merchandise\LFTlogomerch.png"
+       inkscape:export-xdpi="764.50415"
+       inkscape:export-ydpi="764.50415">
       <g
          id="g6932-8-3-0-1"
          transform="matrix(1.4034072,0,0,1.4034072,236.28298,35.534531)">
@@ -4800,9 +5077,9 @@
        transform="translate(-175.94975,713.20585)"
        id="g5932-4-1"
        style="filter:url(#filter5944-3-2)"
-       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\little_family_logo.png"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96">
+       inkscape:export-filename="C:\Users\john\Documents\GitHub\LittleFamily\LFT Merchandise\LFTlogomerch.png"
+       inkscape:export-xdpi="764.50415"
+       inkscape:export-ydpi="764.50415">
       <g
          transform="matrix(1.4594657,0,0,1.5394249,111.84979,8.7475528)"
          id="g6932-7-5-4">
@@ -4871,9 +5148,9 @@
        transform="translate(-34.308823,708.62536)"
        id="g5972-1-9"
        style="filter:url(#filter5983-8-1)"
-       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\little_family_logo.png"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96">
+       inkscape:export-filename="C:\Users\john\Documents\GitHub\LittleFamily\LFT Merchandise\LFTlogomerch.png"
+       inkscape:export-xdpi="764.50415"
+       inkscape:export-ydpi="764.50415">
       <ellipse
          ry="64.377678"
          rx="59.352062"
@@ -4940,9 +5217,9 @@
        transform="translate(-178.57426,712.89566)"
        id="g5865-2-0"
        style="filter:url(#filter5879-3-6)"
-       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\little_family_logo.png"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96">
+       inkscape:export-filename="C:\Users\john\Documents\GitHub\LittleFamily\LFT Merchandise\LFTlogomerch.png"
+       inkscape:export-xdpi="764.50415"
+       inkscape:export-ydpi="764.50415">
       <ellipse
          ry="16.470169"
          rx="11.096388"
@@ -5034,9 +5311,9 @@
     <g
        id="g6082-0-6"
        style="filter:url(#filter6101-6-9)"
-       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\little_family_logo.png"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96"
+       inkscape:export-filename="C:\Users\john\Documents\GitHub\LittleFamily\LFT Merchandise\LFTlogomerch.png"
+       inkscape:export-xdpi="764.50415"
+       inkscape:export-ydpi="764.50415"
        transform="translate(-222.09752,723.59312)">
       <g
          id="g6932-8-0-9"
@@ -5144,9 +5421,9 @@
     <g
        id="g5905-3-0"
        style="filter:url(#filter5920-6-1)"
-       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\little_family_logo.png"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96"
+       inkscape:export-filename="C:\Users\john\Documents\GitHub\LittleFamily\LFT Merchandise\LFTlogomerch.png"
+       inkscape:export-xdpi="764.50415"
+       inkscape:export-ydpi="764.50415"
        transform="translate(-17.613183,729.77271)">
       <g
          transform="translate(56.677792,111.29511)"
@@ -5235,9 +5512,9 @@
     <g
        id="g6021-1-1"
        style="filter:url(#filter6070-9-5)"
-       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\little_family_logo.png"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96"
+       inkscape:export-filename="C:\Users\john\Documents\GitHub\LittleFamily\LFT Merchandise\LFTlogomerch.png"
+       inkscape:export-xdpi="764.50415"
+       inkscape:export-ydpi="764.50415"
        transform="translate(-222.09752,729.59312)">
       <circle
          r="45.872417"
@@ -5323,9 +5600,9 @@
        id="g4644-6-2"
        transform="translate(39.064621,841.06782)"
        style="filter:url(#filter5853-2-6)"
-       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\little_family_logo.png"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96">
+       inkscape:export-filename="C:\Users\john\Documents\GitHub\LittleFamily\LFT Merchandise\LFTlogomerch.png"
+       inkscape:export-xdpi="764.50415"
+       inkscape:export-ydpi="764.50415">
       <circle
          r="10.698911"
          cy="60.920246"
@@ -5620,9 +5897,9 @@
        y="381.88266"
        id="text6113-77"
        sodipodi:linespacing="50%"
-       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\little_family_logo.png"
-       inkscape:export-xdpi="133.7"
-       inkscape:export-ydpi="133.7"
+       inkscape:export-filename="C:\Users\john\Documents\GitHub\LittleFamily\LFT Merchandise\LFTlogomerch.png"
+       inkscape:export-xdpi="764.50415"
+       inkscape:export-ydpi="764.50415"
        transform="matrix(0.71223207,0,0,0.81010618,-45.528662,789.90186)"><tspan
          sodipodi:role="line"
          id="tspan6115-6"
@@ -5683,5 +5960,199 @@
          y="1010.628"
          id="tspan5030"
          style="stroke-width:1.02379143">For FREE</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:174.00000095%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#2b912b;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;"
+       x="-514.25549"
+       y="994.85443"
+       id="text4917-6-0-9-6"
+       sodipodi:linespacing="174%"
+       inkscape:export-xdpi="133.7"
+       inkscape:export-ydpi="133.7"><tspan
+         sodipodi:role="line"
+         x="-514.25549"
+         y="994.85443"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40px;line-height:174.00000095%;font-family:Big_Bottom_Cartoon;-inkscape-font-specification:'Big_Bottom_Cartoon, Normal';text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#2b912b;fill-opacity:1;stroke:#000000;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;"
+         id="tspan5168-9-5">A</tspan><tspan
+         sodipodi:role="line"
+         x="-514.25549"
+         y="1064.4545"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40px;line-height:174.00000095%;font-family:Big_Bottom_Cartoon;-inkscape-font-specification:'Big_Bottom_Cartoon, Normal';text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#2b912b;fill-opacity:1;stroke:#000000;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;"
+         id="tspan4988">Family History</tspan><tspan
+         sodipodi:role="line"
+         x="-514.25549"
+         y="1134.0544"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40px;line-height:174.00000095%;font-family:Big_Bottom_Cartoon;-inkscape-font-specification:'Big_Bottom_Cartoon, Normal';text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#2b912b;fill-opacity:1;stroke:#000000;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;"
+         id="tspan4990">App For</tspan><tspan
+         sodipodi:role="line"
+         x="-514.25549"
+         y="1203.6544"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40px;line-height:174.00000095%;font-family:Big_Bottom_Cartoon;-inkscape-font-specification:'Big_Bottom_Cartoon, Normal';text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#2b912b;fill-opacity:1;stroke:#000000;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;"
+         id="tspan4992" /></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:139.99999762%;font-family:sans-serif;letter-spacing:2.57999945px;word-spacing:0px;fill:#2b912b;fill-opacity:1;stroke:none;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;"
+       x="-521.5589"
+       y="1207.6193"
+       id="text4917-6-0-9-8"
+       sodipodi:linespacing="140%"
+       inkscape:export-xdpi="133.7"
+       inkscape:export-ydpi="133.7"><tspan
+         sodipodi:role="line"
+         x="-520.26892"
+         y="1207.6193"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40px;line-height:139.99999762%;font-family:Big_Bottom_Cartoon;-inkscape-font-specification:'Big_Bottom_Cartoon, Normal';text-align:center;letter-spacing:2.57999945px;writing-mode:lr-tb;text-anchor:middle;fill:#2b912b;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;"
+         id="tspan5168-9-0">Children</tspan></text>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot5057"
+       style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:sans-serif;font-style:normal;font-weight:normal;font-size:40px;line-height:125%;letter-spacing:0px;word-spacing:0px"
+       inkscape:export-xdpi="133.7"
+       inkscape:export-ydpi="133.7"><flowRegion
+         id="flowRegion5059"><rect
+           id="rect5061"
+           width="548.21539"
+           height="357.94135"
+           x="-776.16754"
+           y="926.14081" /></flowRegion><flowPara
+         id="flowPara5063" /></flowRoot>    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:39.13503647px;line-height:50%;font-family:Big_Bottom_Cartoon;-inkscape-font-specification:'Big_Bottom_Cartoon, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="-55.242149"
+       y="1271.2959"
+       id="text6113-77-8"
+       sodipodi:linespacing="50%"
+       inkscape:export-filename="C:\Users\jfinlay\AndroidStudioProjects\LittleFamily\LittleFamilyApp\src\main\res\drawable\little_family_logo.png"
+       inkscape:export-xdpi="133.7"
+       inkscape:export-ydpi="133.7"
+       transform="scale(0.93764791,1.0664984)"><tspan
+         sodipodi:role="line"
+         id="tspan6115-6-2"
+         x="-55.242149"
+         y="1271.2959"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:39.13503647px;line-height:50%;font-family:Big_Bottom_Cartoon;-inkscape-font-specification:'Big_Bottom_Cartoon, Normal';text-align:start;letter-spacing:0.78270072px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-opacity:1"
+         dx="0">Little <tspan
+   style="letter-spacing:2.34810233px;fill:#000000;fill-opacity:1;stroke:none"
+   id="tspan5482-6-7">Family</tspan> Tree</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:51.52096939px;line-height:50%;font-family:Big_Bottom_Cartoon;-inkscape-font-specification:'Big_Bottom_Cartoon, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient23032);fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;filter:url(#filter7723-4-1)"
+       x="-22.634499"
+       y="381.88266"
+       id="text6113-77-7"
+       sodipodi:linespacing="73%"
+       inkscape:export-filename="C:\Users\john\Documents\GitHub\LittleFamily\LFT Merchandise\LFTlogomerchflyer.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"
+       transform="matrix(0.71223207,0,0,0.81010618,-1509.0011,862.63706)"><tspan
+         sodipodi:role="line"
+         id="tspan6115-6-3"
+         x="-22.634499"
+         y="381.88266"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:51.52096939px;line-height:73%;font-family:Big_Bottom_Cartoon;-inkscape-font-specification:'Big_Bottom_Cartoon, Normal';text-align:start;letter-spacing:3.18591094px;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient23032);fill-opacity:1;stroke:#000000;stroke-opacity:1"
+         dx="0">Little Family Tree</tspan><tspan
+         sodipodi:role="line"
+         x="-22.634499"
+         y="407.64316"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:51.52096939px;line-height:73%;font-family:Big_Bottom_Cartoon;-inkscape-font-specification:'Big_Bottom_Cartoon, Normal';text-align:start;letter-spacing:3.18591094px;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient23032);fill-opacity:1;stroke:#000000;stroke-opacity:1"
+         dx="0"
+         id="tspan23034" /><tspan
+         sodipodi:role="line"
+         x="-22.634499"
+         y="433.40363"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:51.52096939px;line-height:73%;font-family:Big_Bottom_Cartoon;-inkscape-font-specification:'Big_Bottom_Cartoon, Normal';text-align:start;letter-spacing:3.18591094px;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient23032);fill-opacity:1;stroke:#000000;stroke-opacity:1"
+         dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"
+         id="tspan23036">Logo Merchandise</tspan></text>
+    <g
+       id="g4565"
+       transform="translate(-1473.0053,601.24359)"
+       inkscape:export-filename="C:\Users\john\Documents\GitHub\LittleFamily\LFT Merchandise\50percentsalesign.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300">
+      <path
+         id="path4393"
+         d="m 232.64636,411.72827 c -13.26874,-5.48957 -11.39159,-13.49711 -5.74162,-21.79159 3.65477,-5.36542 -3.69788,-17.74184 -7.23579,-9.11472 -8.1889,19.96848 -34.87328,7.98757 -20.08229,-10.836 8.13084,-10.34762 -5.47342,-20.81681 -15.1451,-12.41123 -13.11217,11.39567 -11.08661,36.02003 -36.16354,38.628 -11.10731,1.15515 -25.21539,-5.7085 -26.09705,-16.61855 -1.59765,-19.76999 40.49709,-36.30324 20.53777,-50.82071 -14.2733,-10.38173 -25.7676,14.9651 -35.77506,27.64151 -7.240322,9.17129 -23.319484,-5.67961 -20.836158,-13.89153 3.57363,-11.81736 26.851328,-14.77141 25.614868,-29.61377 -0.89746,-10.77305 -9.31782,-15.84823 -19.305258,-12.65331 -13.371054,4.27732 -27.055444,11.05099 -40.803234,10.8414 -7.09387,-0.10815 -17.365149,-1.29731 -20.68252,-7.34823 -4.19147,-7.64529 -0.0085,-18.09222 8.594091,-22.05067 13.08956,-6.02311 29.398976,-11.2721 34.555856,-26.56308 2.400445,-7.11771 -1.483202,-13.65874 -9.833161,-13.25837 -9.68494,0.46438 -38.957863,2.99407 -30.235993,-10.63864 8.026147,-12.54526 58.787368,-15.02855 31.059768,-31.01595 -13.500464,-7.7842 -55.30768,8.39046 -49.132941,-15.97284 5.816382,-22.94935 38.388893,-23.4363 58.826888,-23.1042 14.523163,0.23599 24.07342,-18.55703 10.177939,-23.79843 -11.296945,-4.26122 -34.347852,-15.24406 -12.553768,-24.19369 10.2618,-4.21395 20.258615,-0.33654 29.956373,1.31886 8.88907,1.51736 39.36821,12.01623 26.42372,-4.86715 -6.11722,-7.97863 -18.31512,-24.462114 -5.67659,-27.9916 17.06709,-4.766223 31.64954,22.67289 47.97749,17.476734 19.82281,-6.308344 -9.92119,-37.30849 1.52249,-51.609648 13.0279,-16.280961 41.67553,-5.375823 54.18448,8.785347 10.92291,12.365645 31.55331,26.750197 28.95313,0.388705 -2.0065,-20.342548 17.06829,-21.85276 22.84668,-4.256963 3.87307,11.793884 18.26532,32.506578 28.00011,16.918226 6.51881,-10.438592 5.37166,-37.839365 23.16547,-33.280496 8.28742,2.123281 10.20112,6.676579 12.52132,14.678462 3.99669,13.78373 -3.19056,57.132983 16.87823,45.25651 14.50077,-8.581386 26.24915,-19.362288 42.45607,-22.394989 10.09631,-1.88926 23.06218,1.027402 30.14575,8.421919 5.08698,5.310284 1.64463,12.929564 -4.63452,19.293083 -13.00426,13.179 -37.6837,12.75392 -44.03761,29.4238 -3.9863,10.4583 13.90536,5.31221 21.51877,5.16545 17.67531,-0.34072 37.52067,-9.32217 53.03919,-0.38313 7.84045,4.51629 7.54662,15.78654 2.38691,25.24875 -3.80098,6.97049 -7.10442,11.2552 -14.38531,13.90063 -12.62634,4.58764 -29.2152,2.61741 -38.1934,12.57263 -13.43756,14.89985 19.47921,11.29703 31.10497,13.68441 11.45776,2.35288 24.28052,-0.75945 34.2137,6.66263 12.78537,9.55324 6.3511,27.45688 -8.76755,28.29764 -10.93865,0.60831 -24.49339,-11.55275 -32.63966,-4.44419 -15.91069,13.8839 17.84153,18.91199 30.3591,21.28493 5.66017,1.07299 12.25186,7.69914 11.91514,14.69168 -0.56858,11.80759 -17.22789,11.32529 -25.69733,9.17618 -13.49614,-3.42464 -39.66351,-15.53128 -40.77654,1.0133 -1.12712,16.75398 27.08738,20.154 37.82053,32.91992 4.93827,5.87354 2.23795,15.28679 -8.02643,17.70659 -7.50333,1.76889 -12.97796,4.65733 -19.87296,-0.18755 -8.50228,-5.97426 -26.19098,-14.87916 -32.0822,-7.57845 -9.67939,11.99521 15.04874,20.37719 16.91521,31.47294 1.36722,8.12783 -1.97349,17.18305 -10.64033,14.83314 -17.39589,-4.71669 -31.68799,-23.77286 -49.69217,-22.36497 -15.44604,1.20785 8.1886,21.86432 10.31524,32.49913 3.10789,15.54178 -4.96186,30.28761 -20.80682,28.07034 -17.25711,-2.41488 -14.79028,-25.61428 -19.86713,-39.4371 -7.00159,-19.06334 -13.9955,17.88812 -12.91662,25.87694 1.35556,10.03757 -14.81247,16.57811 -20.45859,7.59935 -4.39349,-6.98677 1.56999,-18.89107 -1.46918,-27.29461 -5.16463,-14.28061 -14.11899,2.98 -12.26724,13.52104 3.64544,20.75162 -8.54667,35.9941 -31.45559,26.51618 z"
+         style="fill:url(#linearGradient4401);fill-opacity:1;filter:url(#filter4538)"
+         inkscape:connector-curvature="0" />
+      <path
+         id="path4391"
+         d="m 380.51739,396.20707 c -17.07477,-28.26432 38.24147,-1.94409 14.08273,13.12744 -10.79148,6.73231 -9.6739,-5.82938 -14.08273,-13.12744 z"
+         style="fill:#21b04b;filter:url(#filter4538)"
+         inkscape:connector-curvature="0" />
+      <path
+         id="path4389"
+         d="m 35.868459,362.44525 c -14.262795,-10.17128 29.728679,-35.54692 30.764799,-26.49697 1.37187,11.98255 -19.151009,34.77915 -30.764799,26.49697 z"
+         style="fill:#21b04b;filter:url(#filter4538)"
+         inkscape:connector-curvature="0" />
+      <path
+         id="path4387"
+         d="M 99.366954,70.013015 C 79.562662,63.934103 76.277097,37.595284 97.671744,54.617693 c 7.698296,6.125064 23.433186,22.067778 1.69521,15.395322 z"
+         style="fill:#21b04b;filter:url(#filter4538)"
+         inkscape:connector-curvature="0" />
+      <path
+         id="path4136"
+         d="m 367.90472,51.13588 c -6.71293,-6.589553 1.37982,-18.300082 7.65639,-26.879647 13.75289,-18.7990754 32.77362,-1.152421 13.00305,11.993889 -6.99072,4.648431 -14.6161,20.818027 -20.65944,14.885758 z"
+         style="fill:#21b04b;filter:url(#filter4538)"
+         inkscape:connector-curvature="0" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:28.08781815px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="-1211.2789"
+       y="729.00385"
+       id="text5083"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="C:\Users\john\Documents\GitHub\LittleFamily\LFT Merchandise\50percentsalesign.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"><tspan
+         sodipodi:role="line"
+         id="tspan5085"
+         x="-1211.2789"
+         y="729.00385"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:28.08781815px;line-height:125%;font-family:Big_Bottom_Cartoon;-inkscape-font-specification:'Big_Bottom_Cartoon, Normal';text-align:center;writing-mode:lr-tb;text-anchor:middle">Premium</tspan><tspan
+         sodipodi:role="line"
+         x="-1211.2789"
+         y="764.11365"
+         id="tspan5087"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:28.08781815px;line-height:125%;font-family:Big_Bottom_Cartoon;-inkscape-font-specification:'Big_Bottom_Cartoon, Normal';text-align:center;writing-mode:lr-tb;text-anchor:middle">Games</tspan><tspan
+         sodipodi:role="line"
+         x="-1211.2789"
+         y="799.22339"
+         id="tspan5089" /></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:62.97701263px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:#080808;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       x="-1395.1182"
+       y="855.70197"
+       id="text5091"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="C:\Users\john\Documents\GitHub\LittleFamily\LFT Merchandise\50percentsalesign.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"><tspan
+         sodipodi:role="line"
+         x="-1395.1182"
+         y="855.70197"
+         id="tspan5095"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:62.97701263px;line-height:125%;font-family:Big_Bottom_Cartoon;-inkscape-font-specification:'Big_Bottom_Cartoon, Normal';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:#080808;stroke-width:3;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">50%OFF</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:25.37322807px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="-1213.8937"
+       y="902.91559"
+       id="text5097"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="C:\Users\john\Documents\GitHub\LittleFamily\LFT Merchandise\50percentsalesign.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"><tspan
+         sodipodi:role="line"
+         id="tspan5099"
+         x="-1213.8937"
+         y="902.91559"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.37322807px;line-height:125%;font-family:Big_Bottom_Cartoon;-inkscape-font-specification:'Big_Bottom_Cartoon, Normal';text-align:center;writing-mode:lr-tb;text-anchor:middle">This Week</tspan><tspan
+         sodipodi:role="line"
+         x="-1213.8937"
+         y="934.63214"
+         id="tspan5101"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.37322807px;line-height:125%;font-family:Big_Bottom_Cartoon;-inkscape-font-specification:'Big_Bottom_Cartoon, Normal';text-align:center;writing-mode:lr-tb;text-anchor:middle">Only</tspan></text>
   </g>
 </svg>

@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.adapters.PersonSearchListAdapter;
 import com.yellowforktech.littlefamilytree.activities.tasks.FamilyLoaderTask;
@@ -44,6 +45,10 @@ public class PersonSearchActivity extends Activity implements SearchLoaderTask.L
         adapter = new PersonSearchListAdapter(this);
         personList.setAdapter(adapter);
         personList.setOnItemClickListener(this);
+
+        Bundle logBundle = new Bundle();
+        logBundle.putString(FirebaseAnalytics.Param.ITEM_NAME, getLocalClassName());
+        FirebaseAnalytics.getInstance(this).logEvent(FirebaseAnalytics.Event.VIEW_ITEM, logBundle);
     }
 
     public void search(View v) {

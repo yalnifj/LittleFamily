@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.activities.adapters.PersonPagerAdapter;
 import com.yellowforktech.littlefamilytree.activities.tasks.HeritageCalculatorTask;
@@ -52,6 +53,7 @@ public class ChooseCultureActivity extends LittleFamilyBillingActivity implement
     private PagerContainer personContainer;
     private PersonPagerAdapter adapter;
     private MyPageTransformer transformer;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +99,8 @@ public class ChooseCultureActivity extends LittleFamilyBillingActivity implement
         dressUpDolls = new DressUpDolls();
 
         setupTopBar();
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
     }
 
 
@@ -235,6 +239,11 @@ public class ChooseCultureActivity extends LittleFamilyBillingActivity implement
                 if (uniquepaths.size()>0) {
                     setSelectedPath(uniquepaths.get(0));
                 }
+
+                Bundle logBundle = new Bundle();
+                logBundle.putString(FirebaseAnalytics.Param.ITEM_NAME, ChooseCultureActivity.this.getLocalClassName());
+                logBundle.putInt("NumberOfCultures", cultures.size());
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM, logBundle);
 
                 if (countLevel > 0 && cultures.size() < 3 && totalLevel / countLevel < 6) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(ChooseCultureActivity.this);
