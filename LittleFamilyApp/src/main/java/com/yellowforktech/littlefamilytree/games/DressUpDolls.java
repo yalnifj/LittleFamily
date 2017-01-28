@@ -37,7 +37,7 @@ public class DressUpDolls {
         countryMappings.put("spain", "spain");
         countryMappings.put("portugal", "portugal");
         countryMappings.put("italy", "italy");
-        countryMappings.put("columbia", "columbia");
+        countryMappings.put("colombia", "columbia");
         countryMappings.put("chile", "chile");
         countryMappings.put("india", "india");
         countryMappings.put("philippines", "philippines");
