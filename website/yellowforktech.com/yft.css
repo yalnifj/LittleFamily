@@ -1,11 +1,11 @@
 .content-start {
     display: block;
-    margin-top: 100px;
-    min-height: 500px;
+    margin-top: 50px;
+    min-height: 300px;
 }
 section {
     margin-top: 50px;
-    min-height: 500px;
+    min-height: 300px;
 }
 .navbar-toggle {
     float: left;

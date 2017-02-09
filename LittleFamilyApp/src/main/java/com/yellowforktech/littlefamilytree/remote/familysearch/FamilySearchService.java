@@ -425,7 +425,7 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
             throw new RemoteServiceSearchException("Not Authenticated with FamilySearch.", 0);
         }
 
-        Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/"+personId+"/families");
+        Uri uri = Uri.parse(FS_PLATFORM_PATH + "tree/persons/"+personId+"/families");
         Bundle headers = new Bundle();
         headers.putString("Authorization", "Bearer " + sessionId);
         headers.putString("Accept", "application/x-fs-v1+xml");
@@ -435,7 +435,7 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
         if (result!=null) {
             if (result.isSuccess()) {
                 Serializer serializer = GedcomxSerializer.create();
-                try {
+                try {karla
                     Gedcomx doc = serializer.read(Gedcomx.class, result.getData());
                     if (doc.getRelationships() != null && doc.getRelationships().size() > 0) {
                         List<Relationship> relatives = new ArrayList<>(doc.getRelationships());

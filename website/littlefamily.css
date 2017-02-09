@@ -51,7 +51,8 @@ header .header-content, section .container, section .container-fluid{
     max-width: 500px;
 }
 .logo-text-img {
-	margin-top: 25%;
+	/* margin-top: 25%; no sale, 5% for sale. */
+	margin-top: 5%;
 	width: 100%;
 	max-width: 600px;
 }
@@ -329,6 +330,8 @@ header .header-content, section .container, section .container-fluid{
     width: 250px;
     margin-bottom: 20px;
 }
+
+
 
 @media(min-width:768px) {
     .portfolio-box .portfolio-box-caption .portfolio-box-caption-content .project-category {
