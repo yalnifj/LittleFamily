@@ -435,7 +435,7 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
         if (result!=null) {
             if (result.isSuccess()) {
                 Serializer serializer = GedcomxSerializer.create();
-                try {karla
+                try {
                     Gedcomx doc = serializer.read(Gedcomx.class, result.getData());
                     if (doc.getRelationships() != null && doc.getRelationships().size() > 0) {
                         List<Relationship> relatives = new ArrayList<>(doc.getRelationships());

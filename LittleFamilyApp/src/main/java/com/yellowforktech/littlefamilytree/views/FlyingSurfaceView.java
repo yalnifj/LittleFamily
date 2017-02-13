@@ -18,6 +18,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.yellowforktech.littlefamilytree.R;
+import com.yellowforktech.littlefamilytree.activities.AdultsAuthDialog;
 import com.yellowforktech.littlefamilytree.activities.FlyingActivity;
 import com.yellowforktech.littlefamilytree.activities.PremiumDialog;
 import com.yellowforktech.littlefamilytree.data.DataService;
@@ -443,7 +444,17 @@ public class FlyingSurfaceView extends SpritedSurfaceView implements SensorEvent
                                 @Override
                                 public void onBuy() {
                                     activity.hideBuyTryDialog();
-                                    activity.buyUpgrade();
+                                    activity.showAdultAuthDialog(new AdultsAuthDialog.AuthCompleteAction() {
+                                        @Override
+                                        public void doAction(boolean success) {
+                                            activity.hideAdultAuthDialog();
+                                            activity.buyUpgrade();
+                                        }
+
+                                        public void onClose() {
+                                            activity.finish();
+                                        }
+                                    });
                                 }
 
                                 @Override

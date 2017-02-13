@@ -256,6 +256,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     }
 
     public void showBuyTryDialog(final int tries, final PremiumDialog.ActionListener listener) {
+        final PremiumDialog.ActionListener theListener = listener;
         FireHelper.getInstance().isOnSale(new FireHelper.SaleListener() {
             @Override
             public void onSale(Sale sale) {
@@ -263,7 +264,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
                     premiumDialog = new PremiumDialog();
                     premiumDialog.setTries(tries);
                     premiumDialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Theme_AppCompat_Light_Dialog);
-                    premiumDialog.setListener(listener);
+                    premiumDialog.setListener(theListener);
                     if (sale!=null) {
                         premiumDialog.setOnSale(true);
                         premiumDialog.setSalePrice(sale.getPrice());

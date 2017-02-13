@@ -175,15 +175,18 @@ public class HomeView extends ScaledSpritedClippedSurfaceView {
     protected void touch_up(float x, float y) {
         super.touch_up(x, y);
 
-        if (lockSprite!=null && lockSprite.inSprite(x, y)) {
-            lockSprite.onRelease(x, y);
+        if (lockSprite!=null) {
+            if (lockSprite.inSprite(x, y)) {
+                lockSprite.onRelease(x, y);
+            }
+            lockSprite.setSelected(false);
         }
-		if (profileSprite!=null && profileSprite.inSprite(x, y)) {
-            profileSprite.onRelease(x, y);
+		if (profileSprite!=null) {
+            if (profileSprite.inSprite(x, y)) {
+                profileSprite.onRelease(x, y);
+            }
+            profileSprite.setSelected(false);
         }
-
-        lockSprite.setSelected(false);
-		profileSprite.setSelected(false);
     }
 
 }
