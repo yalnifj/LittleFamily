@@ -96,8 +96,10 @@ public class SpritedClippedSurfaceView extends AbstractTouchAnimatedSurfaceView 
     }
 
     public void removeSprite(Sprite s) {
-        synchronized (sprites) {
-            sprites.remove(s);
+        if (sprites != null) {
+            synchronized (sprites) {
+                sprites.remove(s);
+            }
         }
     }
 

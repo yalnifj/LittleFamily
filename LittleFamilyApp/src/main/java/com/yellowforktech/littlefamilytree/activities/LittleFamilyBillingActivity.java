@@ -166,7 +166,7 @@ public class LittleFamilyBillingActivity extends LittleFamilyActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(this.getClass().getName().toString(), "onActivityResult requestCode="+requestCode+" resultCode="+resultCode);
-        if (requestCode == 1001) {
+        if (requestCode == 1001 && data != null) {
             int responseCode = data.getIntExtra("RESPONSE_CODE", 0);
             String purchaseData = data.getStringExtra("INAPP_PURCHASE_DATA");
             String dataSignature = data.getStringExtra("INAPP_DATA_SIGNATURE");

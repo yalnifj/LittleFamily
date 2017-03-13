@@ -697,7 +697,24 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
 
     @Override
     protected void touch_start(float x, float y) {
-        super.touch_start(x, y);
+        //super.touch_start(x, y);
+        onTouchStartTime = System.currentTimeMillis();
+        mX = x;
+        mY = y;
+
+        for(int i=sprites.size()-1; i>=0; i--) {
+            Sprite s = sprites.get(i);
+            float dy = y;
+            if (birthdayPerson==null) {
+                dy += clipY;
+            }
+            if (s.inSprite(x, dy)) {
+                selectedSprites.add(s);
+                s.onSelect(x, dy);
+                if (!multiSelect) break;
+            }
+        }
+
         for(int i=stickerSprites.size()-1; i>=0; i--) {
             Sprite s = stickerSprites.get(i);
             if (s.inSprite(x, y)) {
@@ -790,6 +807,10 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
                 }
             }
         }
+        float dy = y;
+        if (birthdayPerson==null) {
+            dy += clipY;
+        }
         synchronized (sprites) {
             for (Sprite s : selectedSprites) {
                 if (cardRect!=null) {
@@ -813,7 +834,7 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
                         }
                     }
                 }
-                s.onRelease(x, y);
+                s.onRelease(x, dy);
             }
         }
 
@@ -836,7 +857,7 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
     public boolean onScale(ScaleGestureDetector detector) {
         float scaleDiff = oldScale - detector.getScaleFactor();
         oldScale = detector.getScaleFactor();
-        if (selectedSprites.size()>0) {
+        if (selectedSprites.size()>0 && cardRect != null) {
             for(Sprite s : selectedSprites) {
                 if (stickerSprites.contains(s)) {
                     DraggableSprite ds = (DraggableSprite) s;

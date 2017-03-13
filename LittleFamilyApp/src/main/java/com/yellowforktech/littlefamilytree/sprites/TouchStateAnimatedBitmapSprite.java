@@ -142,21 +142,23 @@ public class TouchStateAnimatedBitmapSprite extends AnimatedBitmapSprite {
                 }
                 if (bitmaps!=null) {
                     List<Bitmap> frames = bitmaps.get(state);
-                    Bitmap bitmap = frames.get(frame);
-                    int bx = (int)((tx/scale)-x) - 2;
-                    int by = (int)((ty/scale)-y) - 2;
-                    for(int cx=0; cx<5; cx++) {
-                        for(int cy=0; cy<5; cy++) {
-                            if (bx >= 0 && bx < bitmap.getWidth() && by >= 0 && by < bitmap.getHeight()) {
-                                int color = bitmap.getPixel(bx, by);
-                                int alpha = Color.alpha(color);
-                                if (alpha > 50) {
-                                    return true;
+                    if (frames != null) {
+                        Bitmap bitmap = frames.get(frame);
+                        int bx = (int) ((tx / scale) - x) - 2;
+                        int by = (int) ((ty / scale) - y) - 2;
+                        for (int cx = 0; cx < 5; cx++) {
+                            for (int cy = 0; cy < 5; cy++) {
+                                if (bx >= 0 && bx < bitmap.getWidth() && by >= 0 && by < bitmap.getHeight()) {
+                                    int color = bitmap.getPixel(bx, by);
+                                    int alpha = Color.alpha(color);
+                                    if (alpha > 50) {
+                                        return true;
+                                    }
                                 }
+                                by += cy;
                             }
-                            by += cy;
+                            bx += cx;
                         }
-                        bx += cx;
                     }
                 }
             }

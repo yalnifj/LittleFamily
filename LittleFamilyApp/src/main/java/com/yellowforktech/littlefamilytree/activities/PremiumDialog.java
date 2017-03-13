@@ -85,7 +85,7 @@ public class PremiumDialog extends DialogFragment {
             tryButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onTry();
+                    if (listener != null) listener.onTry();
                 }
             });
         }
@@ -94,7 +94,7 @@ public class PremiumDialog extends DialogFragment {
         buyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onBuy();
+                if (listener != null) listener.onBuy();
             }
         });
 

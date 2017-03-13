@@ -193,12 +193,14 @@ public class WaterColorImageView extends View {
     }
 
     private void touch_up(float x, float y) {
-        for(int i=0; i<colorRects.size(); i++) {
-            Rect r = colorRects.get(i);
-            if (r.contains((int)x, (int)y)) {
-                activeColor = i;
-                fireColorChanged(colors.get(activeColor));
-                break;
+        if (colorRects!=null) {
+            for (int i = 0; i < colorRects.size(); i++) {
+                Rect r = colorRects.get(i);
+                if (r.contains((int) x, (int) y)) {
+                    activeColor = i;
+                    fireColorChanged(colors.get(activeColor));
+                    break;
+                }
             }
         }
     }

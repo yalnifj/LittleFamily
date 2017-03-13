@@ -1,9 +1,12 @@
 package com.yellowforktech.littlefamilytree.activities;
 
 import android.app.DialogFragment;
+import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,6 +48,9 @@ public class RecordAudioDialog extends DialogFragment implements View.OnClickLis
 
     private MediaPlayer mPlayer;
     private MediaRecorder mRecorder;
+
+    private boolean permissionToRecordAccepted = false;
+    private String [] permissions = {"android.permission.RECORD_AUDIO"};
 
     @Override
     public void setArguments(Bundle args) {
@@ -90,7 +96,25 @@ public class RecordAudioDialog extends DialogFragment implements View.OnClickLis
         logBundle.putString(FirebaseAnalytics.Param.ITEM_NAME, this.getClass().getSimpleName());
         FirebaseAnalytics.getInstance(getActivity()).logEvent(FirebaseAnalytics.Event.VIEW_ITEM, logBundle);
 
+        // Add the following code to your onCreate
+        int requestCode = 200;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(permissions, requestCode);
+        }
+
         return view;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case 200:
+                permissionToRecordAccepted  = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                break;
+        }
+        if (!permissionToRecordAccepted ) this.dismissAllowingStateLoss();
+
     }
 
     public void setButtonStates() {
