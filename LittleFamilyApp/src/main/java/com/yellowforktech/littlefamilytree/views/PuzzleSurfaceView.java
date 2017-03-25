@@ -2,20 +2,28 @@ package com.yellowforktech.littlefamilytree.views;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PointF;
 import android.graphics.Rect;
+import android.media.MediaPlayer;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
+import com.yellowforktech.littlefamilytree.R;
 import com.yellowforktech.littlefamilytree.data.PuzzlePiece;
 import com.yellowforktech.littlefamilytree.games.PuzzleGame;
+import com.yellowforktech.littlefamilytree.sprites.MovingAnimatedBitmapSprite;
 import com.yellowforktech.littlefamilytree.sprites.Sprite;
+import com.yellowforktech.littlefamilytree.sprites.SpriteAnimator;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by jfinlay on 5/14/2015.
@@ -29,6 +37,14 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
     private Paint outlinePaint;
     private Paint shadowPaint;
     private Paint textPaint;
+
+    private Bitmap lightbulbOn;
+    private Bitmap lightbulbOff;
+    private boolean helpAvailable = true;
+    private Date lastHelp = null;
+    private Paint lightBulbPaint = new Paint();
+    private int lightDelay = 20;
+    private SpriteAnimator helpAnimator;
 
     private int sRow;
     private int sCol;
@@ -47,6 +63,8 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
 	
 	protected int starDelay = 1;
     private String relationship;
+
+    private MediaPlayer mediaPlayer;
 
     public PuzzleSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -75,6 +93,9 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
     @Override
     public void doStep() {
 		super.doStep();
+        if (helpAnimator!=null && !helpAnimator.isFinished()) {
+            helpAnimator.doStep();
+        }
         animating = false;
         for(int r=0; r<game.getRows(); r++) {
             for (int c = 0; c < game.getCols(); c++) {
@@ -105,6 +126,17 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
                         animating = true;
                     }
                 }
+            }
+        }
+
+        if (!helpAvailable) {
+            int diff = (int) ((System.currentTimeMillis() - lastHelp.getTime())/1000);
+            if (diff >= lightDelay) {
+                helpAvailable = true;
+                lightBulbPaint.setAlpha(100);
+            } else {
+                float alpha = 100.0f * ((float)diff / (float)lightDelay);
+                lightBulbPaint.setAlpha((int) alpha);
             }
         }
 
@@ -214,6 +246,21 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
                     canvas.drawBitmap(bitmap, null, dst1, null);
                 }
 
+                Rect helpBtnRect = new Rect();
+                if (lightbulbOff==null) {
+                    lightbulbOff = BitmapFactory.decodeResource(getResources(), R.drawable.lightbulb_off);
+                }
+                if (lightbulbOn==null) {
+                    lightbulbOn = BitmapFactory.decodeResource(getResources(), R.drawable.lightbulb_on);
+                }
+                float r2 = (float) lightbulbOff.getWidth() / (float)lightbulbOff.getHeight();
+                int helpLeft = (int) (thumbnailHeight * ratio) + 10;
+                helpBtnRect.set(helpLeft, height, (int)(helpLeft + thumbnailHeight * r2), height + thumbnailHeight);
+                canvas.drawBitmap(lightbulbOff, null, helpBtnRect, null);
+
+                canvas.drawBitmap(lightbulbOn, null, helpBtnRect, lightBulbPaint);
+
+
                 if (complete) {
                     int ttop = (int) (top + puzzleHeight + textPaint.getTextSize());
                     if (ttop + textPaint.getTextSize() > getHeight()) {
@@ -239,6 +286,72 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
         }
     }
 
+    public void startHelpAnimation() {
+        Random random = new Random();
+        int r = random.nextInt(game.getRows());
+        int c = random.nextInt(game.getCols());
+        PuzzlePiece piece = game.getPiece(r,c);
+        int count = 0;
+        while (piece.isInPlace() && count < game.getCols()*game.getCols()) {
+            c++;
+            count++;
+            if (c >= game.getCols()) {
+                c = 0;
+                r++;
+                if (r >= game.getRows()) {
+                    r = 0;
+                }
+            }
+            piece = game.getPiece(r, c);
+        }
+
+        int centerX = getWidth() / 2;
+        int centerY = (getHeight() - thumbnailHeight) / 2;
+
+        int puzzleWidth = pieceWidth * game.getCols();
+        int puzzleHeight = pieceHeight * game.getRows();
+
+        int left = centerX - (puzzleWidth / 2);
+        if (left < 0) left = 0;
+        int top = centerY - (puzzleHeight / 2);
+        if (top < 0) top = 0;
+
+        float targetX = left + pieceWidth * piece.getCol();
+        float targetY = top + pieceHeight * piece.getRow();
+        PointF tagetPoint = new PointF(targetX, targetY);
+
+        Bitmap hand = BitmapFactory.decodeResource(getResources(), R.drawable.pointing_hand);
+        MovingAnimatedBitmapSprite handSprite = new MovingAnimatedBitmapSprite(hand, this.getWidth(), this.getHeight());
+        float ratio = hand.getWidth() / hand.getHeight();
+        int height = (int) Math.max(37*dm.density, pieceHeight/2);
+        int width = (int) (height * ratio);
+        handSprite.setHeight(height);
+        handSprite.setWidth(width);
+        handSprite.setWrap(true);
+        handSprite.setX(piece.getX()+5);
+        handSprite.setY(piece.getY()+5);
+        handSprite.setStateTarget(0, tagetPoint);
+        handSprite.setStateTarget(1, new PointF(piece.getX()+5, piece.getY()+5));
+
+        float speed0 = (targetX - handSprite.getX()) / 25;
+        float slope0 = (targetY - handSprite.getY()) / 25;
+        handSprite.setStateSpeed(0, new PointF(speed0, slope0));
+
+        float speed1 = (handSprite.getX() - targetX) / 5;
+        float slope1 = (handSprite.getY() - targetY) / 5;
+        handSprite.setStateSpeed(1, new PointF(speed1, slope1));
+
+        addSprite(handSprite);
+
+        helpAnimator = new SpriteAnimator();
+        helpAnimator.addTiming(2000, handSprite, 1);
+        helpAnimator.addTiming(2500, handSprite, 0);
+        helpAnimator.addTiming(4500, handSprite, 1);
+        helpAnimator.addTiming(5000, handSprite, 0);
+        helpAnimator.addTiming(7000, handSprite, -1);
+        helpAnimator.start();
+    }
+
     @Override
     protected void touch_start(float x, float y) {
         super.touch_start(x, y);
@@ -248,6 +361,27 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
                 if (x <= thumbnailHeight * ratio && y >= getHeight() - thumbnailHeight) {
                     showHint = true;
                     return;
+                }
+
+                float r2 = (float) lightbulbOff.getWidth() / (float) lightbulbOff.getHeight();
+                int helpLeft = (int) (thumbnailHeight * ratio) + 10;
+                int helpRigth = (int) (helpLeft + thumbnailHeight * r2);
+                if (x >= helpLeft && x <= helpRigth && y >= getHeight() - thumbnailHeight) {
+                    if (helpAvailable && selected==null && !complete) {
+                        lastHelp = new Date();
+                        helpAvailable = false;
+                        startHelpAnimation();
+                        return;
+                    } else {
+                        mediaPlayer = MediaPlayer.create(getContext(), R.raw.beepboop);
+                        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                            @Override
+                            public void onCompletion(MediaPlayer mp) {
+                                mp.release();
+                            }
+                        });
+                        mediaPlayer.start();
+                    }
                 }
 
                 if (selected!=null) {

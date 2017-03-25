@@ -42,13 +42,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/betaDebug/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/betaDebug/rs" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/betaDebug/shaders" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/testBetaDebug/res" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/testBetaDebug/resources" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/testBetaDebug/assets" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/testBetaDebug/aidl" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/testBetaDebug/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/testBetaDebug/rs" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/testBetaDebug/shaders" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/r/androidTest/beta/debug" isTestSource="true" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/aidl/androidTest/beta/debug" isTestSource="true" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/androidTest/beta/debug" isTestSource="true" generated="true" />
@@ -56,6 +49,13 @@
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/apt/androidTest/beta/debug" isTestSource="true" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/androidTest/beta/debug" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/res/resValues/androidTest/beta/debug" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testBetaDebug/res" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testBetaDebug/resources" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testBetaDebug/assets" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testBetaDebug/aidl" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testBetaDebug/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testBetaDebug/rs" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testBetaDebug/shaders" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/beta/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/beta/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/beta/assets" type="java-resource" />

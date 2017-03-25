@@ -131,12 +131,13 @@ public class PuzzleGameActivity extends LittleFamilyActivity implements RandomMe
                 } else {
                     selectedPerson = super.selectedPerson;
                 }
-            }
-            imageBitmap = ImageHelper.loadBitmapFromResource(this, ImageHelper.getPersonDefaultImage(this, selectedPerson), 0, width, height);
-            if (imageBitmap != null) {
-                setupGame();
-            } else {
-                mediaChooser.loadRandomImage();
+
+                imageBitmap = ImageHelper.loadBitmapFromResource(this, ImageHelper.getPersonDefaultImage(this, selectedPerson), 0, width, height);
+                if (imageBitmap != null) {
+                    setupGame();
+                } else {
+                    mediaChooser.loadRandomImage();
+                }
             }
         } else {
             imagePath = photo.getLocalPath();
