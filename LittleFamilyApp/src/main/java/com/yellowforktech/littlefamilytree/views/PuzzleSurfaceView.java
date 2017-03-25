@@ -322,7 +322,7 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
 
         Bitmap hand = BitmapFactory.decodeResource(getResources(), R.drawable.pointing_hand);
         MovingAnimatedBitmapSprite handSprite = new MovingAnimatedBitmapSprite(hand, this.getWidth(), this.getHeight());
-        float ratio = hand.getWidth() / hand.getHeight();
+        float ratio = (float) hand.getWidth() / (float) hand.getHeight();
         int height = (int) Math.max(37*dm.density, pieceHeight/2);
         int width = (int) (height * ratio);
         handSprite.setHeight(height);
@@ -370,6 +370,14 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
                     if (helpAvailable && selected==null && !complete) {
                         lastHelp = new Date();
                         helpAvailable = false;
+                        mediaPlayer = MediaPlayer.create(getContext(), R.raw.powerup_success);
+                        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                            @Override
+                            public void onCompletion(MediaPlayer mp) {
+                                mp.release();
+                            }
+                        });
+                        mediaPlayer.start();
                         startHelpAnimation();
                         return;
                     } else {
@@ -381,6 +389,7 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
                             }
                         });
                         mediaPlayer.start();
+                        return;
                     }
                 }
 
