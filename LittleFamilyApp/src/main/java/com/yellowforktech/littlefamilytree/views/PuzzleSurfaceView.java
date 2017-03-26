@@ -43,7 +43,7 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
     private boolean helpAvailable = true;
     private Date lastHelp = null;
     private Paint lightBulbPaint = new Paint();
-    private int lightDelay = 20;
+    private int lightDelay = 10;
     private SpriteAnimator helpAnimator;
 
     private int sRow;
@@ -135,7 +135,7 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
                 helpAvailable = true;
                 lightBulbPaint.setAlpha(100);
             } else {
-                float alpha = 100.0f * ((float)diff / (float)lightDelay);
+                float alpha = 0.0f; //100.0f * ((float)diff / (float)lightDelay);
                 lightBulbPaint.setAlpha((int) alpha);
             }
         }
