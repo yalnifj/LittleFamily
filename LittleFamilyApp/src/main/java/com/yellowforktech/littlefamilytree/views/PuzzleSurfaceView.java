@@ -97,33 +97,35 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
             helpAnimator.doStep();
         }
         animating = false;
-        for(int r=0; r<game.getRows(); r++) {
-            for (int c = 0; c < game.getCols(); c++) {
-                PuzzlePiece pp = game.getPiece(r, c);
-                if (pp.isAnimating()) {
-                    if (pp.getX()==pp.getToX() && pp.getY()==pp.getToY()) {
-                        pp.setAnimating(false);
-                    } else {
-                        int dx = 0;
-                        int dy = 0;
-                        if (pp.getX() != pp.getToX()) {
-                            dx = (int) ((pp.getToX() - pp.getX()) / 3);
-                            if (dx==0) {
-                                if (pp.getToX() < pp.getX()) dx = -1;
-                                else dx = 1;
+        synchronized (game) {
+            for (int r = 0; r < game.getRows(); r++) {
+                for (int c = 0; c < game.getCols(); c++) {
+                    PuzzlePiece pp = game.getPiece(r, c);
+                    if (pp.isAnimating()) {
+                        if (pp.getX() == pp.getToX() && pp.getY() == pp.getToY()) {
+                            pp.setAnimating(false);
+                        } else {
+                            int dx = 0;
+                            int dy = 0;
+                            if (pp.getX() != pp.getToX()) {
+                                dx = (int) ((pp.getToX() - pp.getX()) / 3);
+                                if (dx == 0) {
+                                    if (pp.getToX() < pp.getX()) dx = -1;
+                                    else dx = 1;
+                                }
                             }
-                        }
-                        if (pp.getY() != pp.getToY()) {
-                            dy = (int) ((pp.getToY() - pp.getY()) / 3);
-                            if (dy==0) {
-                                if (pp.getToY() < pp.getY()) dy = -1;
-                                else dy = 1;
+                            if (pp.getY() != pp.getToY()) {
+                                dy = (int) ((pp.getToY() - pp.getY()) / 3);
+                                if (dy == 0) {
+                                    if (pp.getToY() < pp.getY()) dy = -1;
+                                    else dy = 1;
+                                }
                             }
+                            pp.setX(pp.getX() + dx);
+                            pp.setY(pp.getY() + dy);
+                            //Log.d("PuzzleSurfaceView", "Animating r=" + r + " c=" + c + " x="+pp.getX()+" y="+pp.getY());
+                            animating = true;
                         }
-                        pp.setX(pp.getX() + dx);
-                        pp.setY(pp.getY() + dy);
-                        //Log.d("PuzzleSurfaceView", "Animating r=" + r + " c=" + c + " x="+pp.getX()+" y="+pp.getY());
-                        animating = true;
                     }
                 }
             }
@@ -355,7 +357,7 @@ public class PuzzleSurfaceView extends SpritedSurfaceView {
     @Override
     protected void touch_start(float x, float y) {
         super.touch_start(x, y);
-        if (bitmap!=null) {
+        if (bitmap!=null && lightbulbOff!=null) {
             synchronized(bitmap) {
                 float ratio = (float) bitmap.getWidth() / bitmap.getHeight();
                 if (x <= thumbnailHeight * ratio && y >= getHeight() - thumbnailHeight) {

@@ -453,6 +453,9 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
             onMirror.clear();
 
             clipY = 0;
+            if (vanityTop==null) {
+                return;
+            }
             int width = (int) (vanityTop.getWidth() / 5f);
 
             if (birthdayPerson!=null) {
@@ -519,6 +522,10 @@ public class BirthdayCardSurfaceView extends SpritedSurfaceView implements Event
             int x = (int) (mirrorLeft + 35*dm.density);
             int y = (int) (yOffset + 20 * dm.density);
             clipY = 0;
+
+            if (vanityTop==null) {
+                return;
+            }
 
             int prevTh = 0;
             List<String> stickerFiles = stickerMap.get(type);

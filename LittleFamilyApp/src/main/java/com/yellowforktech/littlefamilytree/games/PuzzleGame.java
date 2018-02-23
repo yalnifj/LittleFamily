@@ -65,7 +65,7 @@ public class PuzzleGame {
     }
 
     public PuzzlePiece getPiece(int row, int col) {
-        if (row >= rows || col >= cols || row < 0 || col < 0)
+        if (row >= rows || row >= board.length || col >= cols || col >= board[row].length || row < 0 || col < 0)
             throw new IllegalArgumentException("Row or column out of bounds (" + row + "," + col + ")");
         return board[row][col];
     }

@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/LittleFamily.iml" filepath="$PROJECT_DIR$/LittleFamily.iml" />
       <module fileurl="file://$PROJECT_DIR$/LittleFamilyApp/LittleFamilyApp.iml" filepath="$PROJECT_DIR$/LittleFamilyApp/LittleFamilyApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LittleFamilyTree-android.iml" filepath="$PROJECT_DIR$/LittleFamilyTree-android.iml" />
     </modules>
   </component>
 </project>

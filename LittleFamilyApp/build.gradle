@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.0'
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.yellowforktech.littlefamilytree"
         minSdkVersion 15
@@ -24,21 +24,26 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
 
+    flavorDimensions "tier"
+
     productFlavors {
         local {
             minSdkVersion 15
             applicationId 'com.yellowforktech.littlefamilytree'
             targetSdkVersion 24
+            dimension "tier"
         }
         beta {
             minSdkVersion 15
             applicationId 'com.yellowforktech.littlefamilytreefree'
             targetSdkVersion 24
+            dimension "tier"
         }
         production {
             minSdkVersion 15
             applicationId 'com.yellowforktech.littlefamilytree.com.yellowforktech.littlefamilytree.littlefamilytree1'
             targetSdkVersion 24
+            dimension "tier"
         }
     }
     useLibrary 'org.apache.http.legacy'

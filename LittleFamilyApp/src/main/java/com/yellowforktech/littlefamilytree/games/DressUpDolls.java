@@ -41,6 +41,7 @@ public class DressUpDolls {
         countryMappings.put("chile", "chile");
         countryMappings.put("india", "india");
         countryMappings.put("philippines", "philippines");
+        countryMappings.put("finland", "finland");
     }
 
     public DollConfig getDollConfig(String place, LittlePerson person, Context context) {

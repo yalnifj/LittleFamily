@@ -97,7 +97,9 @@ public class PuzzleGameActivity extends LittleFamilyActivity implements RandomMe
                 if (puzzleSurfaceView.getWidth() > puzzleSurfaceView.getHeight()) cols++;
                 else rows++;
             }
-            puzzleGame.setupLevel(rows, cols);
+            synchronized (puzzleGame) {
+                puzzleGame.setupLevel(rows, cols);
+            }
         }
         String relationship = RelationshipCalculator.getRelationship(player, selectedPerson, this);
         puzzleSurfaceView.setBitmap(imageBitmap, selectedPerson.getName(), relationship);

@@ -106,7 +106,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         buzzPlayer = MediaPlayer.create(this, R.raw.beepboop);
 
         Bundle logBundle = new Bundle();
-        logBundle.putString(FirebaseAnalytics.Param.ITEM_NAME, getLocalClassName());
+        logBundle.putString(FirebaseAnalytics.Param.ITEM_NAME, getClass().getSimpleName());
         FirebaseAnalytics.getInstance(this).logEvent(FirebaseAnalytics.Event.VIEW_ITEM, logBundle);
     }
 
@@ -288,7 +288,11 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     @Override
     public void onInit(int code) {
         if (code == TextToSpeech.SUCCESS) {
-            tts.setLanguage(Locale.getDefault());
+            if (tts.isLanguageAvailable(Locale.getDefault())==TextToSpeech.LANG_AVAILABLE) {
+                tts.setLanguage(Locale.getDefault());
+            } else {
+                tts.setLanguage(Locale.ENGLISH);
+            }
             tts.setSpeechRate(1.1f);
             setVoiceFromPreferences();
         } else {
