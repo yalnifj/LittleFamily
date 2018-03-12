@@ -51,7 +51,7 @@ public class FamilySearchService extends RemoteServiceBase implements RemoteServ
     //private static final String FS_IDENTITY_PATH = "https://api.familysearch.org/identity/v2/login";
 
     //private static final String FS_PLATFORM_PATH = "https://sandbox.familysearch.org/platform/";
-    private static final String FS_PLATFORM_PATH = "https://familysearch.org/platform/";
+    private static final String FS_PLATFORM_PATH = "https://api.familysearch.org/platform/";
 
     //private static final String FS_OAUTH2_PATH = "https://sandbox.familysearch.org/cis-web/oauth2/v3/token";
     private static final String FS_OAUTH2_PATH = "https://ident.familysearch.org/cis-web/oauth2/v3/token";
