@@ -465,6 +465,8 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
     }
 
     public void userHasPremium(final FireHelper.PremiumListener listener) {
+        listener.results(true);
+        /*
         try {
             if (hasPremium!=null) {
                 listener.results(hasPremium);
@@ -496,6 +498,7 @@ public class LittleFamilyActivity extends FragmentActivity implements TextToSpee
         } catch (Exception e) {
             Log.e("LittleFamilyActivity", "Error getting property", e);
         }
+        */
     }
 
     public int getTries(String gameCode) {
