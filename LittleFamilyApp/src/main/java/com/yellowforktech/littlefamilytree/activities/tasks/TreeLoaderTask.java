@@ -36,6 +36,7 @@ public class TreeLoaderTask extends AsyncTask<LittlePerson, Integer, TreeNode> {
         Log.d(this.getClass().getSimpleName(), "Starting TreeLoaderTask.doInBackground " + persons);
         TreeNode root = new TreeNode();
         LittlePerson person = persons[0];
+        Log.d(this.getClass().getSimpleName(), "Root person is "+person.getName());
         try {
             root.setPerson(person);
             root.setDepth(startingDepth);
@@ -68,6 +69,7 @@ public class TreeLoaderTask extends AsyncTask<LittlePerson, Integer, TreeNode> {
             LittlePerson person = node.getPerson();
             if (person!=null) {
                 List<LittlePerson> parents = dataService.getParents(person);
+                Log.d(this.getClass().getSimpleName(), "Parents = "+parents);
                 if (parents != null && parents.size() > 0) {
                     node.setHasParents(true);
                 } else {
@@ -89,6 +91,7 @@ public class TreeLoaderTask extends AsyncTask<LittlePerson, Integer, TreeNode> {
         LittlePerson person = node.getPerson();
         if (person!=null) {
             List<LittlePerson> parents = dataService.getParents(person);
+            Log.d(this.getClass().getSimpleName(), "Parents = "+parents);
             if (parents != null && parents.size() > 0) {
                 pNode.setPerson(parents.get(0));
                 List<LittlePerson> couple = dataService.getParentCouple(person, parents.get(0));
@@ -100,7 +103,7 @@ public class TreeLoaderTask extends AsyncTask<LittlePerson, Integer, TreeNode> {
         }
         addParents(pNode,isInLaw);
 
-        if (person!=null && person.getGender()== GenderType.Female) {
+        if (pNode.getPerson()!=null && pNode.getPerson().getGender() == GenderType.Female) {
             node.setRight(pNode);
         } else {
             node.setLeft(pNode);

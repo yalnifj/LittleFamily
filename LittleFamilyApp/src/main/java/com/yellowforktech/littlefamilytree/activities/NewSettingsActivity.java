@@ -129,11 +129,6 @@ public class NewSettingsActivity extends Activity {
         startActivity(intent);
     }
 
-    public void restorePremium(View view) {
-        Intent intent = new Intent( this, RestorePurchases.class );
-        startActivity(intent);
-    }
-
     public void onSyncBackground(View view) {
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
         editor.putBoolean("sync_background", chkBackgroundSync.isChecked());

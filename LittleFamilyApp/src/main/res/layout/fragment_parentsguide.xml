@@ -32,12 +32,12 @@
         android:visibility="invisible" />
 
     <Button
+        android:id="@+id/okBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/close"
-        android:id="@+id/okBtn"
         android:layout_gravity="center_horizontal|bottom"
-        android:visibility="invisible" />
+        android:text="@string/close"
+        android:visibility="visible" />
 
     <ImageView
         android:layout_width="wrap_content"

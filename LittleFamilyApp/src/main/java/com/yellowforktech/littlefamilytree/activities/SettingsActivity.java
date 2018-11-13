@@ -177,6 +177,7 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
             }
         });
 
+        /*
         Preference restorePurchases = findPreference("restore");
         restorePurchases.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -186,6 +187,7 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
                 return true;
             }
         });
+        */
 
         /*
         // Add 'notifications' preferences, and a corresponding header.
@@ -420,6 +422,7 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
                 }
             });
 
+            /*
             Preference restorePurchases = findPreference("restore");
             parentsGuide.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
@@ -429,6 +432,7 @@ public class SettingsActivity extends PreferenceActivity implements TextToSpeech
                     return true;
                 }
             });
+            */
 
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences
             // to their values. When their values change, their summaries are

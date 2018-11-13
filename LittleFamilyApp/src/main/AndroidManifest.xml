@@ -156,14 +156,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.yellowforktech.littlefamilytree.activities.HomeActivity"/>
         </activity>
-        <activity
-            android:name=".activities.RestorePurchases"
-            android:label="@string/title_activity_restore_purchases"
-            android:parentActivityName=".activities.SettingsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.yellowforktech.littlefamilytree.activities.SettingsActivity"/>
-        </activity>
 
         <service
             android:name=".events.LittleFamilyNotificationService"

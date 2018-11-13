@@ -51,16 +51,6 @@
         android:summary="@string/pref_summary_visit_web" android:key="website">
     </Preference>
 
-    <Preference android:title="@string/pref_title_restore_purchases"
-        android:summary="@string/pref_summary_restore_purchases" android:key="restore">
-    </Preference>
-
-    <!--
-    <Preference android:title="@string/pref_title_enter_premium_code"
-        android:summary="@string/pref_summary_enter_code" android:key="enter_code">
-    </Preference>
-    -->
-
     <Preference android:title="@string/pref_title_version" android:key="version">
     </Preference>
 
